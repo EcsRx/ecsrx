@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{108089FC-5BDC-4663-BD9D-94839AEB574E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EcsRx</RootNamespace>
+    <AssemblyName>EcsRx</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Reactive.Core, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net46\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Interfaces.3.1.1\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Linq.3.1.1\lib\net46\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\PriorityAttribute.cs" />
+    <Compile Include="Blueprints\IBlueprint.cs" />
+    <Compile Include="Components\IComponent.cs" />
+    <Compile Include="Entities\DefaultEntityFactory.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\IEntity.cs" />
+    <Compile Include="Entities\IEntityFactory.cs" />
+    <Compile Include="Events\ComponentAddedEvent.cs" />
+    <Compile Include="Events\ComponentRemovedEvent.cs" />
+    <Compile Include="Events\EntityAddedEvent.cs" />
+    <Compile Include="Events\EntityRemovedEvent.cs" />
+    <Compile Include="Events\EventSystem.cs" />
+    <Compile Include="Events\IEventSystem.cs" />
+    <Compile Include="Events\PoolAddedEvent.cs" />
+    <Compile Include="Events\PoolRemovedEvent.cs" />
+    <Compile Include="Exceptions\InvalidEntityException.cs" />
+    <Compile Include="Executor\Handlers\IManualSystemHandler.cs" />
+    <Compile Include="Executor\Handlers\IReactToDataSystemHandler.cs" />
+    <Compile Include="Executor\Handlers\IReactToEntitySystemHandler.cs" />
+    <Compile Include="Executor\Handlers\IReactToGroupSystemHandler.cs" />
+    <Compile Include="Executor\Handlers\ISetupSystemHandler.cs" />
+    <Compile Include="Executor\Handlers\ManualSystemHandler.cs" />
+    <Compile Include="Executor\Handlers\ReactToDataSystemHandler.cs" />
+    <Compile Include="Executor\Handlers\ReactToEntitySystemHandler.cs" />
+    <Compile Include="Executor\Handlers\ReactToGroupSystemHandler.cs" />
+    <Compile Include="Executor\Handlers\SetupSystemHandler.cs" />
+    <Compile Include="Executor\ISystemExecutor.cs" />
+    <Compile Include="Executor\SubscriptionToken.cs" />
+    <Compile Include="Executor\SystemExecutor.cs" />
+    <Compile Include="Extensions\IDictionaryExtensions.cs" />
+    <Compile Include="Extensions\IDisposableExtensions.cs" />
+    <Compile Include="Extensions\IEntityExtensions.cs" />
+    <Compile Include="Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="Extensions\IGroupAccessorExtensions.cs" />
+    <Compile Include="Extensions\IGroupExtensions.cs" />
+    <Compile Include="Extensions\IListExtensions.cs" />
+    <Compile Include="Extensions\IObservableExtensions.cs" />
+    <Compile Include="Extensions\IPoolExtensions.cs" />
+    <Compile Include="Extensions\ISystemExtensions.cs" />
+    <Compile Include="Extensions\PoolManagerExtensions.cs" />
+    <Compile Include="Factories\IFactory.cs" />
+    <Compile Include="Groups\Accessors\CacheableGroupAccessor.cs" />
+    <Compile Include="Groups\Accessors\DefaultGroupAccessorFactory.cs" />
+    <Compile Include="Groups\Accessors\GroupAccessor.cs" />
+    <Compile Include="Groups\Accessors\GroupAccessorConfiguration.cs" />
+    <Compile Include="Groups\Accessors\GroupAccessorToken.cs" />
+    <Compile Include="Groups\Accessors\IGroupAccessor.cs" />
+    <Compile Include="Groups\Accessors\IGroupAccessorFactory.cs" />
+    <Compile Include="Groups\Accessors\IGroupAccessorQuery.cs" />
+    <Compile Include="Groups\EmptyGroup.cs" />
+    <Compile Include="Groups\Filtration\CacheableGroupAccessorFilter.cs" />
+    <Compile Include="Groups\Filtration\IGroupAccessorFilter.cs" />
+    <Compile Include="Groups\Group.cs" />
+    <Compile Include="Groups\GroupBuilder.cs" />
+    <Compile Include="Groups\IGroup.cs" />
+    <Compile Include="Groups\IHasPredicate.cs" />
+    <Compile Include="Groups\ITypeGroup.cs" />
+    <Compile Include="Groups\Watchers\DefaultGroupWatcher.cs" />
+    <Compile Include="Groups\Watchers\IGroupWatcher.cs" />
+    <Compile Include="Reactive\IMessageBroker.cs" />
+    <Compile Include="Reactive\MessageBroker.cs" />
+    <Compile Include="Reactive\ReactiveProperty.cs" />
+    <Compile Include="Pools\DefaultPoolFactory.cs" />
+    <Compile Include="Pools\IPool.cs" />
+    <Compile Include="Pools\IPoolFactory.cs" />
+    <Compile Include="Pools\IPoolManager.cs" />
+    <Compile Include="Pools\IPoolQuery.cs" />
+    <Compile Include="Pools\Pool.cs" />
+    <Compile Include="Pools\PoolManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Systems\Custom\EventReactionSystem.cs" />
+    <Compile Include="Systems\IManualSystem.cs" />
+    <Compile Include="Systems\IReactToDataSystem.cs" />
+    <Compile Include="Systems\IReactToEntitySystem.cs" />
+    <Compile Include="Systems\IReactToGroupSystem.cs" />
+    <Compile Include="Systems\ISetupSystem.cs" />
+    <Compile Include="Systems\ISystem.cs" />
+    <Compile Include="Systems\ITeardownSystem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -13,7 +13,7 @@ namespace EcsRx.Groups.Accessors
 
         public IObservableGroup Create(ObservableGroupConfiguration arg)
         {
-            var groupAccessor = new CacheableObservableGroup(arg.ObservableGroupToken, arg.InitialEntities, _eventSystem);
+            var groupAccessor = new ObservableGroup(_eventSystem, arg.ObservableGroupToken, arg.InitialEntities);
             return groupAccessor;            
         }
     }

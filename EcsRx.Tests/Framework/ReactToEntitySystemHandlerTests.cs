@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
 using EcsRx.Entities;
+using EcsRx.Events;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Accessors;
 using EcsRx.Groups;
 using EcsRx.Pools;
+using EcsRx.Reactive;
 using EcsRx.Systems;
 using EcsRx.Tests.Components;
 using NSubstitute;
@@ -37,9 +39,11 @@ namespace EcsRx.Tests
         {
             var dummyGroup = new GroupBuilder().WithComponent<TestComponentOne>().Build();
             var mockEntity = Substitute.For<IEntity>();
+            var fakeEventSystem = new EventSystem(new MessageBroker());
 
             var mockPoolManager = Substitute.For<IPoolManager>();
-            mockPoolManager.CreateObservableGroup(dummyGroup).Returns(new ObservableGroup(null, new[] {mockEntity}));
+            var observableGroup = new ObservableGroup(fakeEventSystem, null, new[] {mockEntity});
+            mockPoolManager.CreateObservableGroup(dummyGroup).Returns(observableGroup);
 
             var mockSystem = Substitute.For<IReactToEntitySystem>();
             mockSystem.TargetGroup.Returns(dummyGroup);

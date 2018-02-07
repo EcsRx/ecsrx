@@ -86,9 +86,8 @@
     <Compile Include="Extensions\ISystemExtensions.cs" />
     <Compile Include="Extensions\PoolManagerExtensions.cs" />
     <Compile Include="Factories\IFactory.cs" />
-    <Compile Include="Groups\Accessors\CacheableObservableGroup.cs" />
-    <Compile Include="Groups\Accessors\DefaultObservableObservableGroupFactory.cs" />
     <Compile Include="Groups\Accessors\ObservableGroup.cs" />
+    <Compile Include="Groups\Accessors\DefaultObservableObservableGroupFactory.cs" />
     <Compile Include="Groups\Accessors\ObservableGroupConfiguration.cs" />
     <Compile Include="Groups\Accessors\ObservableGroupToken.cs" />
     <Compile Include="Groups\Accessors\IObservableGroup.cs" />
@@ -106,6 +105,7 @@
     <Compile Include="Groups\Watchers\IGroupWatcher.cs" />
     <Compile Include="Reactive\IMessageBroker.cs" />
     <Compile Include="Reactive\MessageBroker.cs" />
+    <Compile Include="Reactive\ReactiveCollection.cs" />
     <Compile Include="Reactive\ReactiveProperty.cs" />
     <Compile Include="Pools\DefaultPoolFactory.cs" />
     <Compile Include="Pools\IPool.cs" />

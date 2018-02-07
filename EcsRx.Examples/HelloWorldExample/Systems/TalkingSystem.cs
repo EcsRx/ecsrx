@@ -12,8 +12,8 @@ namespace EcsRx.Examples.HelloWorldExample.Systems
     {
         public IGroup TargetGroup => new Group(typeof(CanTalkComponent));
 
-        public IObservable<IGroupAccessor> ReactToGroup(IGroupAccessor group)
-        { return Observable.Interval(TimeSpan.FromSeconds(2)).Select(x => group); }
+        public IObservable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
+        { return Observable.Interval(TimeSpan.FromSeconds(2)).Select(x => observableGroup); }
 
         public void Execute(IEntity entity)
         {

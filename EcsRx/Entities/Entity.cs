@@ -11,10 +11,10 @@ namespace EcsRx.Entities
     {
         private readonly Dictionary<Type, IComponent> _components;
 
-        public IEventSystem EventSystem { get; private set; }
+        public IEventSystem EventSystem { get; }
 
-        public Guid Id { get; private set; }
-        public IEnumerable<IComponent> Components { get { return _components.Values; } }
+        public Guid Id { get; }
+        public IEnumerable<IComponent> Components => _components.Values;
 
         public Entity(Guid id, IEventSystem eventSystem)
         {
@@ -67,7 +67,15 @@ namespace EcsRx.Entities
             if(_components.Count == 0)
             { return false; }
 
-            return componentTypes.All(x => _components.ContainsKey(x));
+            //return componentTypes.All(x => _components.ContainsKey(x));
+            
+            for (var index = componentTypes.Length - 1; index >= 0; index--)
+            {
+                var x = componentTypes[index];
+                if (!_components.ContainsKey(x)) return false;
+            }
+
+            return true;
         }
 
         public T GetComponent<T>() where T : class, IComponent

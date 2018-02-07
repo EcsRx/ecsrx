@@ -19,7 +19,7 @@ namespace EcsRx.Tests
             var messageBroker = new EventSystem(new MessageBroker());
             var entityFactory = new DefaultEntityFactory(messageBroker);
             var poolFactory = new DefaultPoolFactory(entityFactory, messageBroker);
-            var groupAccessorFactory = new DefaultGroupAccessorFactory(messageBroker);
+            var groupAccessorFactory = new DefaultObservableObservableGroupFactory(messageBroker);
             var poolManager = new PoolManager(messageBroker, poolFactory, groupAccessorFactory);
             var reactsToEntityHandler = new ReactToEntitySystemHandler(poolManager);
             var reactsToGroupHandler = new ReactToGroupSystemHandler(poolManager);

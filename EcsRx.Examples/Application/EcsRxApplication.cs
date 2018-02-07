@@ -25,7 +25,7 @@ namespace EcsRx.Examples.Application
 
             var entityFactory = new DefaultEntityFactory(EventSystem);
             var poolFactory = new DefaultPoolFactory(entityFactory, EventSystem);
-            var groupAccessorFactory = new DefaultGroupAccessorFactory(EventSystem);
+            var groupAccessorFactory = new DefaultObservableObservableGroupFactory(EventSystem);
             PoolManager = new PoolManager(EventSystem, poolFactory, groupAccessorFactory);
 
 

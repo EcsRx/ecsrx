@@ -16,8 +16,8 @@ namespace EcsRx.Tests
         {
             var mockPoolManager = Substitute.For<IPoolManager>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
-            var mockSubscription = Substitute.For<IObservable<IGroupAccessor>>();
-            mockSystem.ReactToGroup(Arg.Any<IGroupAccessor>()).Returns(mockSubscription);
+            var mockSubscription = Substitute.For<IObservable<IObservableGroup>>();
+            mockSystem.ReactToGroup(Arg.Any<IObservableGroup>()).Returns(mockSubscription);
 
             var handler = new ReactToGroupSystemHandler(mockPoolManager);
             var subscriptionToken = handler.Setup(mockSystem);

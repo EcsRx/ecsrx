@@ -5,6 +5,6 @@ namespace EcsRx.Groups
 {
     public interface IGroup
     {
-        IEnumerable<Type> TargettedComponents { get; }
+        IEnumerable<Type> MatchesComponents { get; }
     }
 }

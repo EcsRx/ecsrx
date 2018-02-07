@@ -18,7 +18,7 @@ namespace EcsRx.Executor.Handlers
         public SubscriptionToken Setup(IReactToGroupSystem system)
         {
             var hasEntityPredicate = system.TargetGroup is IHasPredicate;
-            var groupAccessor = PoolManager.CreateGroupAccessor(system.TargetGroup);
+            var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
             var subscription = system.ReactToGroup(groupAccessor)
                 .Subscribe(accessor =>
                 {

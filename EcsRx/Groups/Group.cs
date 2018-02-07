@@ -6,15 +6,15 @@ namespace EcsRx.Groups
 {
     public class Group : IGroup, IHasPredicate
     {
-        public IEnumerable<Type> TargettedComponents { get; private set; }
-		public Predicate<IEntity> TargettedEntities { get; private set; }
+        public IEnumerable<Type> MatchesComponents { get; }
+		public Predicate<IEntity> TargettedEntities { get; }
         
 		public Group(params Type[] targettedComponents) : this(null, targettedComponents) {}
 
-        public Group(Predicate<IEntity> targettedEntities, params Type[] targettedComponents)
+        public Group(Predicate<IEntity> targettedEntities, params Type[] matchesComponents)
         {
 			TargettedEntities = targettedEntities;
-            TargettedComponents = targettedComponents;
+            MatchesComponents = matchesComponents;
         }
 
 		public bool CanProcessEntity (IEntity entity) {

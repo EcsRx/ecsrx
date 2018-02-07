@@ -6,7 +6,7 @@ namespace EcsRx.Extensions
 {
     public static class IGroupAccessorExtensions
     {
-        public static IEnumerable<IEntity> Query(this IGroupAccessor groupAccesssor, IGroupAccessorQuery query)
-        { return query.Execute(groupAccesssor); }
+        public static IEnumerable<IEntity> Query(this IObservableGroup observableGroupAccesssor, IObservableGroupQuery query)
+        { return query.Execute(observableGroupAccesssor); }
     }
 }

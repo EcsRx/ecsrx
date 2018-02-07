@@ -21,7 +21,7 @@ namespace EcsRx.Tests
         public void should_include_entity_snapshot_on_creation()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var accessorToken = new GroupAccessorToken(new Type[] { }, "default");
+            var accessorToken = new ObservableGroupToken(new Type[] { }, "default");
 
             var dummyEntitySnapshot = new List<IEntity>
             {
@@ -30,7 +30,7 @@ namespace EcsRx.Tests
                 new Entity(Guid.NewGuid(), mockEventSystem)
             };
 
-            var cacheableGroupAccessor = new CacheableGroupAccessor(accessorToken, dummyEntitySnapshot, mockEventSystem);
+            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, dummyEntitySnapshot, mockEventSystem);
 
             Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(3));
             Assert.That(cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[0].Id], Is.EqualTo(dummyEntitySnapshot[0]));
@@ -43,7 +43,7 @@ namespace EcsRx.Tests
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
             var poolName = "defaut";
-            var accessorToken = new GroupAccessorToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, poolName);
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, poolName);
             var mockPool = Substitute.For<IPool>();
             mockPool.Name.Returns(poolName);
             
@@ -60,7 +60,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableGroupAccessor(accessorToken, new IEntity[] { }, mockEventSystem);
+            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] { }, mockEventSystem);
             cacheableGroupAccessor.MonitorEntityChanges();
             
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
@@ -74,7 +74,7 @@ namespace EcsRx.Tests
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
             var poolName = "defaut";
-            var accessorToken = new GroupAccessorToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "some-other-pool-name");
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "some-other-pool-name");
             var mockPool = Substitute.For<IPool>();
             mockPool.Name.Returns(poolName);
 
@@ -91,7 +91,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableGroupAccessor(accessorToken, new IEntity[] { }, mockEventSystem);
+            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] { }, mockEventSystem);
             cacheableGroupAccessor.MonitorEntityChanges();
 
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
@@ -103,7 +103,7 @@ namespace EcsRx.Tests
         public void should_only_remove_applicable_entity_when_entity_removed()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var accessorToken = new GroupAccessorToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
             var mockPool = Substitute.For<IPool>();
 
             var existingEntityOne = new Entity(Guid.NewGuid(), mockEventSystem);
@@ -123,7 +123,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableGroupAccessor(accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo }, mockEventSystem);
+            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo }, mockEventSystem);
             cacheableGroupAccessor.MonitorEntityChanges();
 
             underlyingEvent.SetValueAndForceNotify(new EntityRemovedEvent(existingEntityOne, mockPool));
@@ -136,7 +136,7 @@ namespace EcsRx.Tests
         public void should_only_remove_entity_when_components_no_longer_match_group()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var accessorToken = new GroupAccessorToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
 
             var existingEntityOne = new Entity(Guid.NewGuid(), mockEventSystem);
             var componentToRemove = new TestComponentOne();
@@ -156,7 +156,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableGroupAccessor(accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo }, mockEventSystem);
+            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo }, mockEventSystem);
             cacheableGroupAccessor.MonitorEntityChanges();
 
             existingEntityOne.RemoveComponent(componentToRemove);
@@ -173,7 +173,7 @@ namespace EcsRx.Tests
         public void should_only_add_entity_when_components_match_group()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var accessorToken = new GroupAccessorToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
 
             var existingEntityOne = new Entity(Guid.NewGuid(), mockEventSystem);
             var componentToAdd = new TestComponentOne();
@@ -190,7 +190,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableGroupAccessor(accessorToken, new IEntity[] {}, mockEventSystem);
+            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] {}, mockEventSystem);
 
             cacheableGroupAccessor.MonitorEntityChanges();
 

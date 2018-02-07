@@ -5,7 +5,7 @@ using EcsRx.Groups.Accessors;
 
 namespace EcsRx.Groups.Filtration
 {
-    public abstract class CacheableGroupAccessorFilter<T> : IGroupAccessorFilter<T>, IDisposable
+    public abstract class CacheableComputedGroup<T> : IComputedGroup<T>, IDisposable
     {
         private IDisposable _triggerSubscription;
         private bool _needsUpdate = true;
@@ -14,11 +14,11 @@ namespace EcsRx.Groups.Filtration
         protected abstract IObservable<Unit> TriggerOnChange();
         protected abstract IEnumerable<T> FilterQuery();
 
-        public IGroupAccessor GroupAccessor { get; private set; }
+        public IObservableGroup ObservableGroup { get; }
 
-        protected CacheableGroupAccessorFilter(IGroupAccessor groupAccessor)
+        protected CacheableComputedGroup(IObservableGroup observableGroup)
         {
-            GroupAccessor = groupAccessor;
+            ObservableGroup = observableGroup;
             SetupTriggers();
         }
 

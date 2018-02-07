@@ -4,9 +4,9 @@ using EcsRx.Pools;
 
 namespace EcsRx.Groups.Accessors
 {
-    public interface IGroupAccessor
+    public interface IObservableGroup
     {
-        GroupAccessorToken AccessorToken { get; }
+        ObservableGroupToken Token { get; }
         IEnumerable<IEntity> Entities { get; }
     }
 }

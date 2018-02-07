@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using EcsRx.Components;
+using EcsRx.Examples.Application;
+using EcsRx.Examples.GroupPerformance.Helper;
+using EcsRx.Extensions;
+using EcsRx.Groups;
+
+namespace EcsRx.Examples.HealthExample
+{
+    public class GroupPerformanceApplication : EcsRxApplication
+    {
+        private IEnumerable<IComponent> _availableComponents;
+        private RandomGroupFactory _groupFactory = new RandomGroupFactory();
+        private readonly Random _random = new Random();
+
+        public override void StartApplication()
+        {
+            _availableComponents = _groupFactory.GetComponenTypes.Select(x => Activator.CreateInstance(x) as IComponent).ToList();
+            var groups = _groupFactory.CreateTestGroups().ToArray();
+            foreach (var group in groups)
+            { PoolManager.CreateObservableGroup(group); }
+
+            var firstRun = ProcesEntities(10000);
+            var secondRun = ProcesEntities(10000);
+            var thirdRun = ProcesEntities(10000);
+
+            Console.WriteLine($"Finished In: {(firstRun + secondRun + thirdRun).TotalSeconds}s");
+            Console.WriteLine($"First Took: {firstRun.TotalSeconds}s");
+            Console.WriteLine($"Second Took: {secondRun.TotalSeconds}s");
+            Console.WriteLine($"Third Took: {thirdRun.TotalSeconds}s");
+            Console.WriteLine("Press Enter To Exit");
+            Console.ReadKey();
+        }
+
+        private TimeSpan ProcesEntities(int amount)
+        {
+            var defaultPool = PoolManager.GetPool();
+            PoolManager.Pools.ForEachRun(x => x.RemoveAllEntities());
+            var startTime = DateTime.Now;
+
+            for (var i = 0; i < amount; i++)
+            {
+                var entity = defaultPool.CreateEntity();
+
+                foreach (var component in _availableComponents)
+                {
+                    entity.AddComponent(component);
+                }
+            }
+            
+            var endTime = DateTime.Now;
+            return endTime - startTime;
+        }
+    }
+}

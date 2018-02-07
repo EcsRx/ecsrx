@@ -4,9 +4,9 @@ using EcsRx.Pools;
 
 namespace EcsRx.Groups.Accessors
 {
-    public class GroupAccessorConfiguration
+    public class ObservableGroupConfiguration
     {
-        public GroupAccessorToken GroupAccessorToken { get; set; }
+        public ObservableGroupToken ObservableGroupToken { get; set; }
         public IEnumerable<IEntity> InitialEntities { get; set; }
     }
 }

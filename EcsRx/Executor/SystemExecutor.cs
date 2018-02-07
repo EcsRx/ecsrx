@@ -16,15 +16,15 @@ namespace EcsRx.Executor
         private readonly IList<IDisposable> _eventSubscriptions;
         private readonly Dictionary<ISystem, IList<SubscriptionToken>> _systemSubscriptions;
 
-        public IEventSystem EventSystem { get; private set; }
-        public IPoolManager PoolManager { get; private set; }
-        public IEnumerable<ISystem> Systems { get { return _systems; } }
+        public IEventSystem EventSystem { get; }
+        public IPoolManager PoolManager { get; }
+        public IEnumerable<ISystem> Systems => _systems;
 
-        public IReactToEntitySystemHandler ReactToEntitySystemHandler { get; private set; }
-        public IReactToGroupSystemHandler ReactToGroupSystemHandler { get; private set; }
-        public ISetupSystemHandler SetupSystemHandler { get; private set; }
-        public IReactToDataSystemHandler ReactToDataSystemHandler { get; private set; }
-        public IManualSystemHandler ManualSystemHandler { get; private set; }
+        public IReactToEntitySystemHandler ReactToEntitySystemHandler { get; }
+        public IReactToGroupSystemHandler ReactToGroupSystemHandler { get; }
+        public ISetupSystemHandler SetupSystemHandler { get; }
+        public IReactToDataSystemHandler ReactToDataSystemHandler { get; }
+        public IManualSystemHandler ManualSystemHandler { get; }
 
         public SystemExecutor(IPoolManager poolManager, IEventSystem eventSystem,
             IReactToEntitySystemHandler reactToEntitySystemHandler, IReactToGroupSystemHandler reactToGroupSystemHandler, 
@@ -59,7 +59,7 @@ namespace EcsRx.Executor
             originalComponents.Add(args.Component);
 
             var applicableSystems = _systems.GetApplicableSystems(originalComponents);
-            var effectedSystems = applicableSystems.Where(x => x.TargetGroup.TargettedComponents.Contains(args.Component.GetType()));
+            var effectedSystems = applicableSystems.Where(x => x.TargetGroup.MatchesComponents.Contains(args.Component.GetType()));
 
             foreach (var effectedSystem in effectedSystems)
             {
@@ -78,7 +78,7 @@ namespace EcsRx.Executor
         public void OnEntityComponentAdded(ComponentAddedEvent args)
         {
             var applicableSystems = _systems.GetApplicableSystems(args.Entity);
-            var effectedSystems = applicableSystems.Where(x => x.TargetGroup.TargettedComponents.Contains(args.Component.GetType()));
+            var effectedSystems = applicableSystems.Where(x => x.TargetGroup.MatchesComponents.Contains(args.Component.GetType()));
             
             ApplyEntityToSystems(effectedSystems, args.Entity);
         }

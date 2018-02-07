@@ -26,7 +26,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -48,7 +48,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -70,7 +70,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -92,7 +92,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -114,7 +114,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -138,7 +138,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var entity = new Entity(Guid.NewGuid(), mockEventSystem);
@@ -183,7 +183,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -220,7 +220,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -259,7 +259,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -296,7 +296,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -335,7 +335,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -366,7 +366,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,
@@ -376,13 +376,13 @@ namespace EcsRx.Tests
 
             var entity = new Entity(Guid.NewGuid(), mockEventSystem);
             entity.AddComponent(new TestComponentOne());
-            systemExecutor.OnEntityComponentAdded(new ComponentAddedEvent(entity, new TestComponentOne()));
+            systemExecutor.OnEntityComponentAdded(new ComponentsAddedEvent(entity, new[]{new TestComponentOne()}));
             
             entity.AddComponent(new TestComponentTwo());
-            systemExecutor.OnEntityComponentAdded(new ComponentAddedEvent(entity, new TestComponentTwo()));
+            systemExecutor.OnEntityComponentAdded(new ComponentsAddedEvent(entity, new[]{new TestComponentTwo()}));
 
             entity.AddComponent(new TestComponentThree());
-            systemExecutor.OnEntityComponentAdded(new ComponentAddedEvent(entity, new TestComponentThree()));
+            systemExecutor.OnEntityComponentAdded(new ComponentsAddedEvent(entity, new[]{new TestComponentThree()}));
 
             mockSetupSystemHandler.Received(1).ProcessEntity(Arg.Is(fakeSystem), Arg.Is(entity));
         }
@@ -398,7 +398,7 @@ namespace EcsRx.Tests
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
-            mockEventSystem.Receive<ComponentAddedEvent>().Returns(Observable.Empty<ComponentAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
             var systemExecutor = new SystemExecutor(mockPoolManager, mockEventSystem,

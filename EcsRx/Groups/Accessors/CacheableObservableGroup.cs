@@ -24,9 +24,11 @@ namespace EcsRx.Groups.Accessors
 
             CachedEntities = initialEntities.ToDictionary(x => x.Id, x => x);
             Subscriptions = new List<IDisposable>();
+
+            MonitorEntityChanges();
         }
 
-        public void MonitorEntityChanges()
+        private void MonitorEntityChanges()
         {
             var addEntitySubscription = EventSystem.Receive<EntityAddedEvent>()
                 .Subscribe(OnEntityAddedToPool);
@@ -35,7 +37,7 @@ namespace EcsRx.Groups.Accessors
                 .Where(x => CachedEntities.ContainsKey(x.Entity.Id))
                 .Subscribe(OnEntityRemovedFromPool);
 
-            var addComponentSubscription = EventSystem.Receive<ComponentAddedEvent>()
+            var addComponentSubscription = EventSystem.Receive<ComponentsAddedEvent>()
                 .Subscribe(OnEntityComponentAdded);
 
             var removeComponentEntitySubscription = EventSystem.Receive<ComponentRemovedEvent>()
@@ -54,7 +56,7 @@ namespace EcsRx.Groups.Accessors
             { CachedEntities.Remove(args.Entity.Id); }
         }
 
-        public void OnEntityComponentAdded(ComponentAddedEvent args)
+        public void OnEntityComponentAdded(ComponentsAddedEvent args)
         {
             if(CachedEntities.ContainsKey(args.Entity.Id)) { return; }
 

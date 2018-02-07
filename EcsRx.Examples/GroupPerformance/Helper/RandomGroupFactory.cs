@@ -9,10 +9,10 @@ namespace EcsRx.Examples.GroupPerformance.Helper
 {
     public class RandomGroupFactory
     {
-        public IEnumerable<Type> GetComponenTypes => _componenTypes;
+        public IEnumerable<Type> GetComponentTypes => _componentTypes;
         
         private Random _random = new Random();
-        private List<Type> _componenTypes;
+        private List<Type> _componentTypes;
 
         public RandomGroupFactory()
         {
@@ -21,7 +21,7 @@ namespace EcsRx.Examples.GroupPerformance.Helper
         
         private void PopulateComponentList()
         {
-            _componenTypes = new List<Type>
+            _componentTypes = new List<Type>
             {
                 typeof(Component1),
                 typeof(Component2),
@@ -48,17 +48,17 @@ namespace EcsRx.Examples.GroupPerformance.Helper
 
         public IGroup CreateRandomGroup()
         {
-            var randomSize = _random.Next(_componenTypes.Count / 2);
-            return new Group(_componenTypes.Random(randomSize).ToArray());
+            var randomSize = _random.Next(_componentTypes.Count / 2);
+            return new Group(_componentTypes.Random(randomSize).ToArray());
         }
 
         public IEnumerable<IGroup> CreateTestGroups(int cycles = 5)
         {
             for (var i = 1; i < cycles; i++)
             {
-                for (var j = i; j < _componenTypes.Count; j+= i)
+                for (var j = i; j < _componentTypes.Count; j+= i)
                 {
-                    yield return new Group(_componenTypes.Skip(j-i).Take(j).ToArray());
+                    yield return new Group(_componentTypes.Skip(j-i).Take(j).ToArray());
                 }
             }
             /*

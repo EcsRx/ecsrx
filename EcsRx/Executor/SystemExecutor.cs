@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Components;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
+using EcsRx.Groups;
 using EcsRx.Pools;
 using EcsRx.Systems;
 
@@ -41,7 +43,7 @@ namespace EcsRx.Executor
 
             var addEntitySubscription = EventSystem.Receive<EntityAddedEvent>().Subscribe(OnEntityAddedToPool);
             var removeEntitySubscription = EventSystem.Receive<EntityRemovedEvent>().Subscribe(OnEntityRemovedFromPool);
-            var addComponentSubscription = EventSystem.Receive<ComponentAddedEvent>().Subscribe(OnEntityComponentAdded);
+            var addComponentSubscription = EventSystem.Receive<ComponentsAddedEvent>().Subscribe(OnEntityComponentAdded);
             var removeComponentSubscription = EventSystem.Receive<ComponentRemovedEvent>().Subscribe(OnEntityComponentRemoved);
             
             _systems = new List<ISystem>();
@@ -75,13 +77,15 @@ namespace EcsRx.Executor
             }
         }
 
-        public void OnEntityComponentAdded(ComponentAddedEvent args)
+        public void OnEntityComponentAdded(ComponentsAddedEvent args)
         {
             var applicableSystems = _systems.GetApplicableSystems(args.Entity);
-            var effectedSystems = applicableSystems.Where(x => x.TargetGroup.MatchesComponents.Contains(args.Component.GetType()));
+            var effectedSystems = applicableSystems.Where(x => x.TargetGroup.ContainsAllComponents(args.Components));
             
             ApplyEntityToSystems(effectedSystems, args.Entity);
         }
+
+        
 
         public void OnEntityAddedToPool(EntityAddedEvent args)
         {

@@ -19,5 +19,6 @@ namespace EcsRx.Entities
 
         bool HasComponent<T>() where T : class, IComponent;
         bool HasComponents(params Type[] component);
+        void AddComponents(params IComponent[] components);
     }
 }

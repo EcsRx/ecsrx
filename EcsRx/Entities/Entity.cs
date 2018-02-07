@@ -26,9 +26,18 @@ namespace EcsRx.Entities
         public IComponent AddComponent(IComponent component)
         {
             _components.Add(component.GetType(), component);
-            EventSystem.Publish(new ComponentAddedEvent(this, component));
+            EventSystem.Publish(new ComponentsAddedEvent(this, new []{component}));
             return component;
         }
+
+        public void AddComponents(params IComponent[] components)
+        {
+            for (var i = components.Length - 1; i >= 0; i--)
+            { _components.Add(components[i].GetType(), components[i]); }
+            
+            EventSystem.Publish(new ComponentsAddedEvent(this, components));
+        }
+        
 
         public T AddComponent<T>() where T : class, IComponent, new()
         { return (T)AddComponent(new T()); }

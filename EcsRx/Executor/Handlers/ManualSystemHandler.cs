@@ -14,13 +14,13 @@ namespace EcsRx.Executor.Handlers
 
         public void Start(IManualSystem system)
         {
-            var groupAccessor = PoolManager.CreateGroupAccessor(system.TargetGroup);
+            var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
             system.StartSystem(groupAccessor);
         }
 
         public void Stop(IManualSystem system)
         {
-            var groupAccessor = PoolManager.CreateGroupAccessor(system.TargetGroup);
+            var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
             system.StopSystem(groupAccessor);
         }
     }

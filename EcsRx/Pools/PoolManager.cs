@@ -13,21 +13,21 @@ namespace EcsRx.Pools
     {
         public const string DefaultPoolName = "default";
         
-        private readonly IDictionary<GroupAccessorToken, IGroupAccessor> _groupAccessors;
+        private readonly IDictionary<ObservableGroupToken, IObservableGroup> _groupAccessors;
         private readonly IDictionary<string, IPool> _pools;
 
-        public IEventSystem EventSystem { get; private set; }
-        public IEnumerable<IPool> Pools { get { return _pools.Values; } }
-        public IPoolFactory PoolFactory { get; private set; }
-        public IGroupAccessorFactory GroupAccessorFactory { get; private set; }
+        public IEventSystem EventSystem { get; }
+        public IEnumerable<IPool> Pools => _pools.Values;
+        public IPoolFactory PoolFactory { get; }
+        public IObservableGroupFactory ObservableGroupFactory { get; }
 
-        public PoolManager(IEventSystem eventSystem, IPoolFactory poolFactory, IGroupAccessorFactory groupAccessorFactory)
+        public PoolManager(IEventSystem eventSystem, IPoolFactory poolFactory, IObservableGroupFactory observableGroupFactory)
         {
             EventSystem = eventSystem;
             PoolFactory = poolFactory;
-            GroupAccessorFactory = groupAccessorFactory;
+            ObservableGroupFactory = observableGroupFactory;
 
-            _groupAccessors = new Dictionary<GroupAccessorToken, IGroupAccessor>();
+            _groupAccessors = new Dictionary<ObservableGroupToken, IObservableGroup>();
             _pools = new Dictionary<string, IPool>();
 
             CreatePool(DefaultPoolName);
@@ -67,15 +67,15 @@ namespace EcsRx.Pools
             return Pools.GetAllEntities().MatchingGroup(group);
         }
 
-        public IGroupAccessor CreateGroupAccessor(IGroup group, string poolName = null)
+        public IObservableGroup CreateObservableGroup(IGroup group, string poolName = null)
         {
-            var groupAccessorToken = new GroupAccessorToken(group.TargettedComponents.ToArray(), poolName);
+            var groupAccessorToken = new ObservableGroupToken(group.MatchesComponents.ToArray(), poolName);
             if (_groupAccessors.ContainsKey(groupAccessorToken)) { return _groupAccessors[groupAccessorToken]; }
 
-            var entityMatches = GetEntitiesFor(@group, poolName);
-            var groupAccessor = GroupAccessorFactory.Create(new GroupAccessorConfiguration
+            var entityMatches = GetEntitiesFor(group, poolName);
+            var groupAccessor = ObservableGroupFactory.Create(new ObservableGroupConfiguration
             {
-                GroupAccessorToken = groupAccessorToken,
+                ObservableGroupToken = groupAccessorToken,
                 InitialEntities = entityMatches
             });
             

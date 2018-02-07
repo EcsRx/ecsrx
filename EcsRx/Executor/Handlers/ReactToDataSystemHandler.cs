@@ -38,7 +38,7 @@ namespace EcsRx.Executor.Handlers
 
         public IEnumerable<SubscriptionToken> Setup<T>(IReactToDataSystem<T> system)
         {
-            var groupAccessor = PoolManager.CreateGroupAccessor(system.TargetGroup);
+            var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
             return groupAccessor.Entities.Select(x => ProcessEntity(system, x));
         }
 

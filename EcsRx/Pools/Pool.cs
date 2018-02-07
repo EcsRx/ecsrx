@@ -11,10 +11,10 @@ namespace EcsRx.Pools
     {
         private readonly IDictionary<Guid, IEntity> _entities;
 
-        public string Name { get; private set; }
-        public IEnumerable<IEntity> Entities { get { return _entities.Values;} }
-        public IEventSystem EventSystem { get; private set; }
-        public IEntityFactory EntityFactory { get; private set; }
+        public string Name { get; }
+        public IEnumerable<IEntity> Entities => _entities.Values;
+        public IEventSystem EventSystem { get; }
+        public IEntityFactory EntityFactory { get; }
 
         public Pool(string name, IEntityFactory entityFactory, IEventSystem eventSystem)
         {

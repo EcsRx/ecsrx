@@ -7,6 +7,6 @@ namespace EcsRx.Tests.Systems
     [Priority(-1)]
     public class LowerThanDefaultPrioritySystem : ISystem
     {
-        public IGroup TargetGroup { get { return null; } }
+        public IGroup TargetGroup => null;
     }
 }

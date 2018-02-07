@@ -8,18 +8,18 @@ using EcsRx.Extensions;
 
 namespace EcsRx.Groups.Accessors
 {
-    public class CacheableGroupAccessor : IGroupAccessor, IDisposable
+    public class CacheableObservableGroup : IObservableGroup, IDisposable
     {
         public readonly IDictionary<Guid, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
 
-        public GroupAccessorToken AccessorToken { get; private set; }
-        public IEnumerable<IEntity> Entities { get { return CachedEntities.Values; } }
-        public IEventSystem EventSystem { get; private set; }
+        public ObservableGroupToken Token { get; }
+        public IEnumerable<IEntity> Entities => CachedEntities.Values;
+        public IEventSystem EventSystem { get; }
 
-        public CacheableGroupAccessor(GroupAccessorToken accessorToken, IEnumerable<IEntity> initialEntities, IEventSystem eventSystem)
+        public CacheableObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEventSystem eventSystem)
         {
-            AccessorToken = accessorToken;
+            Token = token;
             EventSystem = eventSystem;
 
             CachedEntities = initialEntities.ToDictionary(x => x.Id, x => x);
@@ -50,7 +50,7 @@ namespace EcsRx.Groups.Accessors
 
         public void OnEntityComponentRemoved(ComponentRemovedEvent args)
         {
-            if(!args.Entity.HasComponents(AccessorToken.ComponentTypes))
+            if(!args.Entity.HasComponents(Token.ComponentTypes))
             { CachedEntities.Remove(args.Entity.Id); }
         }
 
@@ -58,20 +58,20 @@ namespace EcsRx.Groups.Accessors
         {
             if(CachedEntities.ContainsKey(args.Entity.Id)) { return; }
 
-            if(args.Entity.HasComponents(AccessorToken.ComponentTypes))
+            if(args.Entity.HasComponents(Token.ComponentTypes))
             { CachedEntities.Add(args.Entity.Id, args.Entity); }
         }
 
         public void OnEntityAddedToPool(EntityAddedEvent args)
         {
-            if (!string.IsNullOrEmpty(AccessorToken.Pool))
+            if (!string.IsNullOrEmpty(Token.Pool))
             {
-                if(args.Pool.Name != AccessorToken.Pool)
+                if(args.Pool.Name != Token.Pool)
                 { return; }
             }
             
             if (!args.Entity.Components.Any()) { return; }
-            if (!args.Entity.HasComponents(AccessorToken.ComponentTypes)) { return; }
+            if (!args.Entity.HasComponents(Token.ComponentTypes)) { return; }
             CachedEntities.Add(args.Entity.Id, args.Entity);
         }
 

@@ -10,7 +10,7 @@ namespace EcsRx.Pools
         IEnumerable<IPool> Pools { get; }
 
         IEnumerable<IEntity> GetEntitiesFor(IGroup group, string poolName = null);
-        IGroupAccessor CreateGroupAccessor(IGroup group, string poolName = null);
+        IObservableGroup CreateObservableGroup(IGroup group, string poolName = null);
 
         IPool CreatePool(string name);
         IPool GetPool(string name = null);

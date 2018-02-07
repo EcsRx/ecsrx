@@ -19,7 +19,7 @@ namespace EcsRx.Executor.Handlers
 
         public IEnumerable<SubscriptionToken> Setup(IReactToEntitySystem system)
         {
-            var accessor = PoolManager.CreateGroupAccessor(system.TargetGroup);
+            var accessor = PoolManager.CreateObservableGroup(system.TargetGroup);
             return accessor.Entities.Select(x => ProcessEntity(system, x));
         }
 

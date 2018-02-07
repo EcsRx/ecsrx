@@ -29,7 +29,7 @@ namespace EcsRx.Extensions
 
         public static IEnumerable<IEntity> MatchingGroup(this IEnumerable<IEntity> entities, IGroup group)
         {
-            var componentTypes = group.TargettedComponents.ToArray();
+            var componentTypes = group.MatchesComponents.ToArray();
             return entities.Where(x => x.HasComponents(componentTypes));
         }
 
@@ -39,7 +39,7 @@ namespace EcsRx.Extensions
         public static IEnumerable<ISystem> GetApplicableSystems(this IEnumerable<ISystem> systems, IEnumerable<IComponent> components)
         {
             var componentTypes = components.Select(x => x.GetType());
-            return systems.Where(x => x.TargetGroup.TargettedComponents.All(y => componentTypes.Contains(y)));
+            return systems.Where(x => x.TargetGroup.MatchesComponents.All(y => componentTypes.Contains(y)));
         }
 
         public static IEnumerable<T> OrderByPriority<T>(this IEnumerable<T> systems)

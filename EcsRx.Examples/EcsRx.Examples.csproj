@@ -52,6 +52,10 @@
   <ItemGroup>
     <Compile Include="Application\EcsRxApplication.cs" />
     <Compile Include="Extensions\IObservableExtensions.cs" />
+    <Compile Include="GroupPerformance\Components\Components.cs" />
+    <Compile Include="GroupPerformance\Extensions\IEnumerableExtensions.cs" />
+    <Compile Include="GroupPerformance\GroupPerformanceApplication.cs" />
+    <Compile Include="GroupPerformance\Helper\RandomGroupFactory.cs" />
     <Compile Include="HealthExample\Systems\DisplayHealthChangesSystem.cs" />
     <Compile Include="HealthExample\Blueprints\EnemyBlueprint.cs" />
     <Compile Include="HealthExample\Events\EntityDamagedEvent.cs" />
@@ -73,6 +77,9 @@
       <Project>{108089FC-5BDC-4663-BD9D-94839AEB574E}</Project>
       <Name>EcsRx</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GroupPerformance\Systems" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

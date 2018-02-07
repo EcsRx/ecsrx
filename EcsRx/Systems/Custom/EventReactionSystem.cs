@@ -17,12 +17,12 @@ namespace EcsRx.Systems.Custom
             EventSystem = eventSystem;
         }
 
-        public virtual void StartSystem(IGroupAccessor @group)
+        public virtual void StartSystem(IObservableGroup observableGroup)
         {
             _subscription = EventSystem.Receive<T>().Subscribe(EventTriggered);
         }
 
-        public virtual void StopSystem(IGroupAccessor @group)
+        public virtual void StopSystem(IObservableGroup observableGroup)
         {
             _subscription.Dispose();
         }

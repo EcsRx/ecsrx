@@ -35,7 +35,7 @@ namespace EcsRx.Tests
                 new Entity(Guid.NewGuid(), mockEventSystem)
             };
 
-            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, dummyEntitySnapshot, mockEventSystem);
+            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, dummyEntitySnapshot);
 
             Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(3));
             Assert.That(cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[0].Id], Is.EqualTo(dummyEntitySnapshot[0]));
@@ -67,7 +67,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] { }, mockEventSystem);
+            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
             
             Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(1));
@@ -96,7 +96,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] { }, mockEventSystem);
+            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
 
             Assert.That(cacheableGroupAccessor.CachedEntities, Is.Empty);
@@ -126,7 +126,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo }, mockEventSystem);
+            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
             underlyingEvent.SetValueAndForceNotify(new EntityRemovedEvent(existingEntityOne, mockPool));
 
             Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(1));
@@ -157,7 +157,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo }, mockEventSystem);
+            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
             existingEntityOne.RemoveComponent(componentToRemove);
             underlyingEvent.SetValueAndForceNotify(new ComponentRemovedEvent(existingEntityOne, componentToRemove));
 
@@ -189,7 +189,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
 
-            var cacheableGroupAccessor = new CacheableObservableGroup(accessorToken, new IEntity[] {}, mockEventSystem);
+            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] {});
             existingEntityOne.AddComponent(componentToAdd);
             underlyingEvent.SetValueAndForceNotify(new ComponentsAddedEvent(existingEntityOne, new[]{componentToAdd}));
 

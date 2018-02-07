@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Reactive.Subjects;
 using EcsRx.Entities;
-using EcsRx.Pools;
 
 namespace EcsRx.Groups.Accessors
 {
@@ -8,5 +8,8 @@ namespace EcsRx.Groups.Accessors
     {
         ObservableGroupToken Token { get; }
         IEnumerable<IEntity> Entities { get; }
+        
+        Subject<IEntity> OnEntityAdded { get; }
+        Subject<IEntity> OnEntityRemoved { get; }
     }
 }

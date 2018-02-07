@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EcsRx.Components;
 using EcsRx.Groups;
 
@@ -12,6 +13,16 @@ namespace EcsRx.Extensions
             var componentTypes = new List<Type>(group.MatchesComponents);
             componentTypes.Add(typeof(T));
             return new Group(componentTypes.ToArray());
+        }
+        
+        public static bool ContainsAllComponents(this IGroup group, IComponent[] components)
+        {
+            for (var i = components.Length - 1; i >= 0; i--)
+            {
+                if (!group.MatchesComponents.Contains(components[i].GetType()))
+                { return false; }
+            }
+            return true;
         }
     }
 }

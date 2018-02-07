@@ -8,15 +8,15 @@ using EcsRx.Extensions;
 
 namespace EcsRx.Groups.Watchers
 {
-    public class DefaultGroupWatcher : IGroupWatcher, IDisposable
+    public class DefaultGroupWatcher : IGroupWatcher
     {
         private readonly IList<IDisposable> _subscriptions;
 
-        public IEventSystem EventSystem { get; private set; }
-        public Type[] ComponentTypes { get; private set; }
+        public IEventSystem EventSystem { get; }
+        public Type[] ComponentTypes { get; }
 
-        public Subject<IEntity> OnEntityAdded { get; private set; }
-        public Subject<IEntity> OnEntityRemoved { get; private set; }
+        public Subject<IEntity> OnEntityAdded { get; }
+        public Subject<IEntity> OnEntityRemoved { get; }
 
         public DefaultGroupWatcher(IEventSystem eventSystem, Type[] componentTypes)
         {
@@ -34,15 +34,8 @@ namespace EcsRx.Groups.Watchers
         {
             EventSystem.Receive<EntityAddedEvent>().Subscribe(OnEntityAddedToPool).AddTo(_subscriptions);
             EventSystem.Receive<EntityRemovedEvent>().Subscribe(OnEntityRemovedFromPool).AddTo(_subscriptions);
-            EventSystem.Receive<ComponentAddedEvent>().Subscribe(OnEntityComponentAdded).AddTo(_subscriptions);
+            EventSystem.Receive<ComponentsAddedEvent>().Subscribe(OnEntityComponentAdded).AddTo(_subscriptions);
             EventSystem.Receive<ComponentRemovedEvent>().Subscribe(OnEntityComponentRemoved).AddTo(_subscriptions);
-        }
-
-        public void Dispose()
-        {
-            if (OnEntityAdded != null) { OnEntityAdded.Dispose(); }
-            if (OnEntityRemoved != null) { OnEntityRemoved.Dispose(); }
-            _subscriptions.DisposeAll();
         }
 
         public void OnEntityComponentRemoved(ComponentRemovedEvent args)
@@ -50,22 +43,23 @@ namespace EcsRx.Groups.Watchers
             var originalComponents = args.Entity.Components.Select(x => x.GetType()).ToList();
             originalComponents.Add(args.Component.GetType());
 
-            var matchesGroup = originalComponents.All(x => ComponentTypes.Contains(x));
+            var matchesGroup = originalComponents.All(ComponentTypes.Contains);
 
             if (matchesGroup)
             { OnEntityRemoved.OnNext(args.Entity); }
         }
 
-        public void OnEntityComponentAdded(ComponentAddedEvent args)
+        public void OnEntityComponentAdded(ComponentsAddedEvent args)
         {
             var originalComponentTypes = args.Entity.Components.Select(x => x.GetType()).ToList();
-            originalComponentTypes.Remove(args.Component.GetType());
-
-            var previouslyMatched = ComponentTypes.All(x => originalComponentTypes.Contains(x));
+            var addedComponents = args.Components.Select(y => y.GetType());
+            foreach (var component in addedComponents)
+            { originalComponentTypes.Remove(component); }
+            
+            var previouslyMatched = ComponentTypes.All(originalComponentTypes.Contains);
             if(previouslyMatched) { return; }
 
-            var newComponentMatches = ComponentTypes.Contains(args.Component.GetType());
-
+            var newComponentMatches = addedComponents.All(ComponentTypes.Contains);
             if (newComponentMatches)
             { OnEntityAdded.OnNext(args.Entity); }
         }
@@ -87,5 +81,8 @@ namespace EcsRx.Groups.Watchers
             if (matchesGroup)
             { OnEntityRemoved.OnNext(args.Entity); }
         }
+        
+        public void Dispose()
+        { _subscriptions.DisposeAll(); }
     }
 }

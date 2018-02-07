@@ -14,7 +14,6 @@ namespace EcsRx.Groups.Accessors
         public IObservableGroup Create(ObservableGroupConfiguration arg)
         {
             var groupAccessor = new CacheableObservableGroup(arg.ObservableGroupToken, arg.InitialEntities, _eventSystem);
-            groupAccessor.MonitorEntityChanges();
             return groupAccessor;            
         }
     }

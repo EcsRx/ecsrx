@@ -18,7 +18,7 @@ namespace EcsRx.Examples.HealthExample
 
         public override void StartApplication()
         {
-            _availableComponents = _groupFactory.GetComponenTypes.Select(x => Activator.CreateInstance(x) as IComponent).ToList();
+            _availableComponents = _groupFactory.GetComponentTypes.Select(x => Activator.CreateInstance(x) as IComponent).ToList();
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
             { PoolManager.CreateObservableGroup(group); }
@@ -44,11 +44,7 @@ namespace EcsRx.Examples.HealthExample
             for (var i = 0; i < amount; i++)
             {
                 var entity = defaultPool.CreateEntity();
-
-                foreach (var component in _availableComponents)
-                {
-                    entity.AddComponent(component);
-                }
+                entity.AddComponents(_availableComponents.ToArray());
             }
             
             var endTime = DateTime.Now;

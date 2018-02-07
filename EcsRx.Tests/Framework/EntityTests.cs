@@ -33,7 +33,7 @@ namespace EcsRx.Tests
 
             entity.AddComponent(dummyComponent);
 
-            mockEventSystem.Received().Publish(Arg.Is<ComponentAddedEvent>(x => x.Entity == entity && x.Component == dummyComponent));
+            mockEventSystem.Received().Publish(Arg.Is<ComponentsAddedEvent>(x => x.Entity == entity && x.Components.Contains(dummyComponent)));
         }
 
         [Test]

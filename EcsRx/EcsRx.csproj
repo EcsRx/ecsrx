@@ -52,7 +52,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\IEntityFactory.cs" />
-    <Compile Include="Events\ComponentAddedEvent.cs" />
+    <Compile Include="Events\ComponentsAddedEvent.cs" />
     <Compile Include="Events\ComponentRemovedEvent.cs" />
     <Compile Include="Events\EntityAddedEvent.cs" />
     <Compile Include="Events\EntityRemovedEvent.cs" />

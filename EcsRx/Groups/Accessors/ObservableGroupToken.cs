@@ -6,8 +6,8 @@ namespace EcsRx.Groups.Accessors
 {
     public class ObservableGroupToken
     {
-        public Type[] ComponentTypes { get; private set; }
-        public string Pool { get; private set; }
+        public Type[] ComponentTypes { get; }
+        public string Pool { get; }
 
         public ObservableGroupToken(Type[] componentTypes, string pool)
         {

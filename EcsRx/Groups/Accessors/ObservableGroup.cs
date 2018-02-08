@@ -37,33 +37,31 @@ namespace EcsRx.Groups.Accessors
 
         private void MonitorEntityChanges()
         {
-            var addEntitySubscription = EventSystem.Receive<EntityAddedEvent>()
-                .Subscribe(OnEntityAddedToPool);
+            EventSystem.Receive<EntityAddedEvent>()
+                .Subscribe(OnEntityAddedToPool)
+                .AddTo(Subscriptions);
 
-            var removeEntitySubscription = EventSystem.Receive<EntityRemovedEvent>()
+            EventSystem.Receive<EntityRemovedEvent>()
                 .Where(x => CachedEntities.ContainsKey(x.Entity.Id))
-                .Subscribe(OnEntityRemovedFromPool);
+                .Subscribe(OnEntityRemovedFromPool)
+                .AddTo(Subscriptions);
 
-            var addComponentSubscription = EventSystem.Receive<ComponentsAddedEvent>()
-                .Subscribe(OnEntityComponentAdded);
+            EventSystem.Receive<ComponentsAddedEvent>()
+                .Subscribe(OnEntityComponentAdded)
+                .AddTo(Subscriptions);
 
-            var removeComponentEntitySubscription = EventSystem.Receive<ComponentRemovedEvent>()
+            EventSystem.Receive<ComponentRemovedEvent>()
                 .Where(x => CachedEntities.ContainsKey(x.Entity.Id))
-                .Subscribe(OnEntityComponentRemoved);
-
-            Subscriptions.Add(addEntitySubscription);
-            Subscriptions.Add(removeEntitySubscription);
-            Subscriptions.Add(addComponentSubscription);
-            Subscriptions.Add(removeComponentEntitySubscription);
+                .Subscribe(OnEntityComponentRemoved)
+                .AddTo(Subscriptions);
         }
 
         public void OnEntityComponentRemoved(ComponentRemovedEvent args)
         {
-            if (!args.Entity.HasComponents(Token.ComponentTypes))
-            {
-                CachedEntities.Remove(args.Entity.Id);
-                OnEntityRemoved.OnNext(args.Entity);
-            }
+            if (args.Entity.HasComponents(Token.ComponentTypes)) { return; }
+            
+            CachedEntities.Remove(args.Entity.Id);
+            OnEntityRemoved.OnNext(args.Entity);
         }
 
         public void OnEntityComponentAdded(ComponentsAddedEvent args)
@@ -94,8 +92,7 @@ namespace EcsRx.Groups.Accessors
 
         public void OnEntityRemovedFromPool(EntityRemovedEvent args)
         {
-            if (!CachedEntities.ContainsKey(args.Entity.Id)) 
-            { return; }
+            if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
             CachedEntities.Remove(args.Entity.Id); 
             OnEntityRemoved.OnNext(args.Entity);

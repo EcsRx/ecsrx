@@ -28,7 +28,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
-            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
             
             var dummyEntitySnapshot = new List<IEntity>
             {
@@ -67,7 +67,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<EntityAddedEvent>().Returns(underlyingEvent);
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
-            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
 
             var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
@@ -96,7 +96,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<EntityAddedEvent>().Returns(underlyingEvent);
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
-            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
 
             var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
@@ -126,7 +126,7 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(underlyingEvent);
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
-            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
 
             var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
             underlyingEvent.SetValueAndForceNotify(new EntityRemovedEvent(existingEntityOne, mockPool));
@@ -152,19 +152,19 @@ namespace EcsRx.Tests
             existingEntityTwo.AddComponent<TestComponentTwo>();
             existingEntityTwo.AddComponent(unapplicableComponent);
 
-            var dummyEventToSeedMock = new ComponentRemovedEvent(new Entity(Guid.NewGuid(), mockEventSystem), new TestComponentOne());
-            var underlyingEvent = new ReactiveProperty<ComponentRemovedEvent>(dummyEventToSeedMock);
-            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(underlyingEvent);
+            var dummyEventToSeedMock = new ComponentsRemovedEvent(new Entity(Guid.NewGuid(), mockEventSystem), new[] {new TestComponentOne()});
+            var underlyingEvent = new ReactiveProperty<ComponentsRemovedEvent>(dummyEventToSeedMock);
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(underlyingEvent);
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
 
             var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
             existingEntityOne.RemoveComponent(componentToRemove);
-            underlyingEvent.SetValueAndForceNotify(new ComponentRemovedEvent(existingEntityOne, componentToRemove));
+            underlyingEvent.SetValueAndForceNotify(new ComponentsRemovedEvent(existingEntityOne, new [] {componentToRemove}));
 
             existingEntityTwo.RemoveComponent(unapplicableComponent);
-            underlyingEvent.SetValueAndForceNotify(new ComponentRemovedEvent(existingEntityTwo, unapplicableComponent));
+            underlyingEvent.SetValueAndForceNotify(new ComponentsRemovedEvent(existingEntityTwo, new[] {unapplicableComponent}));
 
             Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(1));
             Assert.That(cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id], Is.EqualTo(existingEntityTwo));
@@ -187,7 +187,7 @@ namespace EcsRx.Tests
             var dummyEventToSeedMock = new ComponentsAddedEvent(new Entity(Guid.NewGuid(), mockEventSystem), new[]{new TestComponentOne()});
             var underlyingEvent = new ReactiveProperty<ComponentsAddedEvent>(dummyEventToSeedMock);
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(underlyingEvent);
-            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
 
@@ -223,7 +223,7 @@ namespace EcsRx.Tests
             
             var underlyingEvent = new Subject<EntityAddedEvent>();
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
-            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
             mockEventSystem.Receive<EntityAddedEvent>().Returns(underlyingEvent);
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
             
@@ -261,7 +261,7 @@ namespace EcsRx.Tests
             
             var underlyingEvent = new Subject<EntityRemovedEvent>();
             mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
-            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(underlyingEvent);
             

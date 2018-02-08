@@ -47,6 +47,12 @@ namespace EcsRx.Examples.HealthExample
                 entity.AddComponents(_availableComponents.ToArray());
             }
             
+            for (var i = 0; i < amount; i++)
+            {
+                var entity = defaultPool.CreateEntity();
+                entity.RemoveComponents(_availableComponents.ToArray());
+            }
+            
             var endTime = DateTime.Now;
             return endTime - startTime;
         }

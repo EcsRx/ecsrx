@@ -13,6 +13,7 @@ namespace EcsRx.Entities
         T AddComponent<T>() where T : class, IComponent, new(); 
         void RemoveComponent(IComponent component);
         void RemoveComponent<T>() where T : class, IComponent;
+        void RemoveComponents(params IComponent[] components);
         void RemoveAllComponents();
         T GetComponent<T>() where T : class, IComponent;
         IComponent GetComponent(Type componentType);

@@ -58,7 +58,7 @@ namespace EcsRx.Tests
             entity.AddComponent(dummyComponent);
             entity.RemoveComponent(dummyComponent);
 
-            mockEventSystem.Received().Publish(Arg.Is<ComponentRemovedEvent>(x => x.Entity == entity && x.Component == dummyComponent));
+            mockEventSystem.Received().Publish(Arg.Is<ComponentsRemovedEvent>(x => x.Entity == entity && x.Components[0] == dummyComponent));
         }
 
         [Test]
@@ -143,9 +143,7 @@ namespace EcsRx.Tests
 
             entity.Dispose();
 
-            mockEventSystem.Received().Publish(Arg.Is<ComponentRemovedEvent>(x => x.Entity == entity && x.Component == testComponentOne));
-            mockEventSystem.Received().Publish(Arg.Is<ComponentRemovedEvent>(x => x.Entity == entity && x.Component == testComponentTwo));
-            mockEventSystem.Received().Publish(Arg.Is<ComponentRemovedEvent>(x => x.Entity == entity && x.Component == testComponentThree));
+            mockEventSystem.Received().Publish(Arg.Is<ComponentsRemovedEvent>(x => x.Entity == entity && x.Components.Length == 3));
 
             Assert.That(entity.Components, Is.Empty);
         }

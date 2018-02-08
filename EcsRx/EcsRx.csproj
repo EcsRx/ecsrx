@@ -101,8 +101,6 @@
     <Compile Include="Groups\IGroup.cs" />
     <Compile Include="Groups\IHasPredicate.cs" />
     <Compile Include="Groups\ITypeGroup.cs" />
-    <Compile Include="Groups\Watchers\DefaultGroupWatcher.cs" />
-    <Compile Include="Groups\Watchers\IGroupWatcher.cs" />
     <Compile Include="Reactive\IMessageBroker.cs" />
     <Compile Include="Reactive\MessageBroker.cs" />
     <Compile Include="Reactive\ReactiveCollection.cs" />

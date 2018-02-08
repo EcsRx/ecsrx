@@ -6,6 +6,8 @@ using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading;
 using EcsRx.Groups.Accessors;
 using EcsRx.Reactive;
 using EcsRx.Tests.Components;
@@ -198,6 +200,143 @@ namespace EcsRx.Tests
 
             Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(1));
             Assert.That(cacheableGroupAccessor.CachedEntities[existingEntityOne.Id], Is.EqualTo(existingEntityOne));
+        }
+        
+        [Test]
+        public void should_correctly_notify_when_entity_added()
+        {
+            var componentTypes = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
+            var mockEventSystem = Substitute.For<IEventSystem>();
+            var mockPool = Substitute.For<IPool>();
+            var accessorToken = new ObservableGroupToken(componentTypes, "default");
+            
+            var fakeEntity1 = new Entity(Guid.Empty, mockEventSystem);
+            fakeEntity1.AddComponent<TestComponentOne>();
+            fakeEntity1.AddComponent<TestComponentTwo>();
+
+            var fakeEntity2 = new Entity(Guid.Empty, mockEventSystem);
+            fakeEntity2.AddComponent<TestComponentOne>();
+            fakeEntity2.AddComponent<TestComponentThree>();
+
+            var timesCalled = 0;
+            mockPool.Name.Returns("default");
+            
+            var underlyingEvent = new Subject<EntityAddedEvent>();
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
+            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<EntityAddedEvent>().Returns(underlyingEvent);
+            mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
+            
+            var observableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[0]);
+            observableGroup.OnEntityAdded.Subscribe(x =>
+            {
+                Assert.That(x, Is.EqualTo(fakeEntity1));
+                timesCalled++;
+            });
+            
+            underlyingEvent.OnNext(new EntityAddedEvent(fakeEntity1, mockPool));
+            underlyingEvent.OnNext(new EntityAddedEvent(fakeEntity2, mockPool));
+
+            Assert.That(timesCalled, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void should_correctly_notify_when_matching_entity_removed()
+        {
+            var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
+            var mockEventSystem = Substitute.For<IEventSystem>();
+            var mockPool = Substitute.For<IPool>();
+            var accessorToken = new ObservableGroupToken(componentTypes, "default");
+
+            var fakeEntity1 = new Entity(Guid.Empty, mockEventSystem);
+            fakeEntity1.AddComponent<TestComponentOne>();
+            fakeEntity1.AddComponent<TestComponentTwo>();
+
+            var fakeEntity2 = new Entity(Guid.Empty, mockEventSystem);
+            fakeEntity2.AddComponent<TestComponentOne>();
+            fakeEntity2.AddComponent<TestComponentThree>();
+
+            var timesCalled = 0;
+            mockPool.Name.Returns("default");
+            
+            var underlyingEvent = new Subject<EntityRemovedEvent>();
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
+            mockEventSystem.Receive<ComponentRemovedEvent>().Returns(Observable.Empty<ComponentRemovedEvent>());
+            mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
+            mockEventSystem.Receive<EntityRemovedEvent>().Returns(underlyingEvent);
+            
+            var observableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[]{ fakeEntity1 });
+            observableGroup.OnEntityRemoved.Subscribe(x =>
+            {
+                Assert.That(x, Is.EqualTo(fakeEntity1));
+                timesCalled++;
+            });
+
+            underlyingEvent.OnNext(new EntityRemovedEvent(fakeEntity1, mockPool));
+            underlyingEvent.OnNext(new EntityRemovedEvent(fakeEntity2, mockPool));
+
+            Assert.That(timesCalled, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void should_correctly_notify_when_matching_component_added()
+        {
+            var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
+            var fakeEventSystem = new EventSystem(new MessageBroker());
+            var accessorToken = new ObservableGroupToken(componentTypes, "default");
+
+            var fakeEntity1 = new Entity(Guid.Empty, fakeEventSystem);
+            fakeEntity1.AddComponent<TestComponentOne>();
+
+            var fakeEntity2 = new Entity(Guid.Empty, fakeEventSystem);
+            fakeEntity2.AddComponent<TestComponentOne>();
+
+            var timesCalled = 0;
+            
+            var observableGroup = new ObservableGroup(fakeEventSystem, accessorToken, new IEntity[0]);
+            observableGroup.OnEntityAdded.Subscribe(x =>
+            {
+                Assert.That(x, Is.EqualTo(fakeEntity1));
+                timesCalled++;
+            });
+            
+            fakeEntity1.AddComponent<TestComponentTwo>();
+            fakeEntity1.AddComponent<TestComponentThree>();
+            fakeEntity2.AddComponent<TestComponentThree>();
+
+            Assert.That(timesCalled, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void should_correctly_notify_when_matching_component_removed()
+        {
+            var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
+            var fakeEventSystem = new EventSystem(new MessageBroker());
+            var accessorToken = new ObservableGroupToken(componentTypes, "default");
+
+            var fakeEntity1 = new Entity(Guid.Empty, fakeEventSystem);
+            fakeEntity1.AddComponent<TestComponentOne>();
+            fakeEntity1.AddComponent<TestComponentTwo>();
+            fakeEntity1.AddComponent<TestComponentThree>();
+
+            var fakeEntity2 = new Entity(Guid.Empty, fakeEventSystem);
+            fakeEntity2.AddComponent<TestComponentOne>();
+            fakeEntity2.AddComponent<TestComponentThree>();
+
+            var timesCalled = 0;
+            
+            var observableGroup = new ObservableGroup(fakeEventSystem, accessorToken, new IEntity[]{fakeEntity1});
+            observableGroup.OnEntityRemoved.Subscribe(x =>
+            {
+                Assert.That(x, Is.EqualTo(fakeEntity1));
+                timesCalled++;
+            });
+            
+            fakeEntity1.RemoveComponent<TestComponentThree>();
+            fakeEntity1.RemoveComponent<TestComponentTwo>();
+            fakeEntity2.RemoveComponent<TestComponentThree>();
+
+            Assert.That(timesCalled, Is.EqualTo(1));
         }
     }
 }

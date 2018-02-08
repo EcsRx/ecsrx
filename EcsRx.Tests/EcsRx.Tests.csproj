@@ -54,7 +54,6 @@
     <Compile Include="Components\TestComponentOne.cs" />
     <Compile Include="Components\TestComponentThree.cs" />
     <Compile Include="Components\TestComponentTwo.cs" />
-    <Compile Include="DefaultGroupWatcherTests.cs" />
     <Compile Include="Framework\CacheGroupAccessorTests.cs" />
     <Compile Include="Framework\EntityTests.cs" />
     <Compile Include="Framework\IEnumerableExtensionsTests.cs" />

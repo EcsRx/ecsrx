@@ -50,13 +50,13 @@ namespace EcsRx.Groups.Accessors
                 .Subscribe(OnEntityComponentAdded)
                 .AddTo(Subscriptions);
 
-            EventSystem.Receive<ComponentRemovedEvent>()
+            EventSystem.Receive<ComponentsRemovedEvent>()
                 .Where(x => CachedEntities.ContainsKey(x.Entity.Id))
                 .Subscribe(OnEntityComponentRemoved)
                 .AddTo(Subscriptions);
         }
 
-        public void OnEntityComponentRemoved(ComponentRemovedEvent args)
+        public void OnEntityComponentRemoved(ComponentsRemovedEvent args)
         {
             if (args.Entity.HasComponents(Token.ComponentTypes)) { return; }
             

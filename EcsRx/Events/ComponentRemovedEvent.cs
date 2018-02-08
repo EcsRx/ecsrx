@@ -3,15 +3,15 @@ using EcsRx.Entities;
 
 namespace EcsRx.Events
 {
-    public class ComponentRemovedEvent
+    public class ComponentsRemovedEvent
     {
-        public IEntity Entity { get; private set; }
-        public IComponent Component { get; private set; }
+        public IEntity Entity { get; }
+        public IComponent[] Components { get; }
 
-        public ComponentRemovedEvent(IEntity entity, IComponent component)
+        public ComponentsRemovedEvent(IEntity entity, IComponent[] components)
         {
             Entity = entity;
-            Component = component;
+            Components = components;
         }
     }
 }

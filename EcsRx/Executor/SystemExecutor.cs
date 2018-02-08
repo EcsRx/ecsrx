@@ -44,7 +44,7 @@ namespace EcsRx.Executor
             var addEntitySubscription = EventSystem.Receive<EntityAddedEvent>().Subscribe(OnEntityAddedToPool);
             var removeEntitySubscription = EventSystem.Receive<EntityRemovedEvent>().Subscribe(OnEntityRemovedFromPool);
             var addComponentSubscription = EventSystem.Receive<ComponentsAddedEvent>().Subscribe(OnEntityComponentAdded);
-            var removeComponentSubscription = EventSystem.Receive<ComponentRemovedEvent>().Subscribe(OnEntityComponentRemoved);
+            var removeComponentSubscription = EventSystem.Receive<ComponentsRemovedEvent>().Subscribe(OnEntityComponentRemoved);
             
             _systems = new List<ISystem>();
             _systemSubscriptions = new Dictionary<ISystem, IList<SubscriptionToken>>();
@@ -55,13 +55,13 @@ namespace EcsRx.Executor
 
         }
 
-        public void OnEntityComponentRemoved(ComponentRemovedEvent args)
+        public void OnEntityComponentRemoved(ComponentsRemovedEvent args)
         {
             var originalComponents = args.Entity.Components.ToList();
-            originalComponents.Add(args.Component);
+            originalComponents.AddRange(args.Components);
 
             var applicableSystems = _systems.GetApplicableSystems(originalComponents);
-            var effectedSystems = applicableSystems.Where(x => x.TargetGroup.MatchesComponents.Contains(args.Component.GetType()));
+            var effectedSystems = applicableSystems.Where(x => args.Components.Any(y => x.TargetGroup.MatchesComponents.Contains(y.GetType())));
 
             foreach (var effectedSystem in effectedSystems)
             {

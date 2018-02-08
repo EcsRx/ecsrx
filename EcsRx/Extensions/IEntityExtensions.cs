@@ -44,11 +44,5 @@ namespace EcsRx.Extensions
             var matchingComponents = entity.Components.Where(predicate).ToArray();
             matchingComponents.ForEachRun(entity.RemoveComponent);
         }
-
-        public static void RemoveComponents(this IEntity entity, params IComponent[] components)
-        { components.ForEachRun(entity.RemoveComponent); }
-
-        public static void RemoveComponents(this IEntity entity, IEnumerable<IComponent> components)
-        { components.ForEachRun(entity.RemoveComponent); }
     }
 }

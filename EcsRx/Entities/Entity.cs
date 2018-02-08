@@ -51,7 +51,7 @@ namespace EcsRx.Entities
             {  disposable.Dispose(); }
 
             _components.Remove(component.GetType());
-            EventSystem.Publish(new ComponentRemovedEvent(this, component));
+            EventSystem.Publish(new ComponentsRemovedEvent(this, new []{component}));
         }
 
         public void RemoveComponent<T>() where T : class, IComponent
@@ -62,10 +62,27 @@ namespace EcsRx.Entities
             RemoveComponent(component);
         }
 
+        public void RemoveComponents(params IComponent[] components)
+        {
+            for (var i = components.Length - 1; i >= 0; i--)
+            {
+                if(!_components.ContainsKey(components[i].GetType())) { continue; }
+
+                var disposable = components[i] as IDisposable;
+                if (disposable != null)
+                {  disposable.Dispose(); }
+
+                _components.Remove(components[i].GetType());
+            }
+            
+            EventSystem.Publish(new ComponentsRemovedEvent(this, components));
+        }
+
+
         public void RemoveAllComponents()
         {
             var components = Components.ToArray();
-            components.ForEachRun(RemoveComponent);
+            RemoveComponents(components);
         }
 
         public bool HasComponent<T>() where T : class, IComponent
@@ -75,8 +92,6 @@ namespace EcsRx.Entities
         {
             if(_components.Count == 0)
             { return false; }
-
-            //return componentTypes.All(x => _components.ContainsKey(x));
             
             for (var index = componentTypes.Length - 1; index >= 0; index--)
             {

@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using EcsRx.Attributes;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
@@ -12,7 +13,8 @@ using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
 {
-    public class ReactToEntitySystemHandler : IConventionalSystemHandler<IReactToEntitySystem>
+    [Priority(3)]
+    public class ReactToEntitySystemHandler : IConventionalSystemHandler
     {
         private readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _systemSubscriptions;
         private readonly IDictionary<ISystem, IDisposable> _subscriptions;
@@ -29,17 +31,19 @@ namespace EcsRx.Executor.Handlers
         public bool CanHandleSystem(ISystem system)
         { return system is IReactToEntitySystem; }
 
-        public void SetupSystem(IReactToEntitySystem system)
+        public void SetupSystem(ISystem system)
         {
             var accessor = PoolManager.CreateObservableGroup(system.TargetGroup);            
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _subscriptions.Add(system, entityChangeSubscriptions);
+
+            var castSystem = (IReactToEntitySystem) system;
             
             accessor.OnEntityAdded
                 .Subscribe(x =>
                 {
-                    var entitySubscription = ProcessEntity(system, x);
+                    var entitySubscription = ProcessEntity(castSystem, x);
                     entitySubscriptions.Add(x.Id, entitySubscription);
                 })
                 .AddTo(entityChangeSubscriptions);
@@ -53,14 +57,14 @@ namespace EcsRx.Executor.Handlers
 
             foreach (var entity in accessor.Entities)
             {
-                var entitySubscription = ProcessEntity(system, entity);
+                var entitySubscription = ProcessEntity(castSystem, entity);
                 entitySubscriptions.Add(entity.Id, entitySubscription);
             }
             
             _systemSubscriptions.Add(system, entitySubscriptions);
         }
 
-        public void DestroySystem(IReactToEntitySystem system)
+        public void DestroySystem(ISystem system)
         {
             _subscriptions.RemoveAndDispose(system);
             

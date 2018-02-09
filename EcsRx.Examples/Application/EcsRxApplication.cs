@@ -1,10 +1,12 @@
-﻿using EcsRx.Entities;
+﻿using System.Collections.Generic;
+using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Accessors;
 using EcsRx.Pools;
 using EcsRx.Reactive;
+using EcsRx.Systems;
 
 namespace EcsRx.Examples.Application
 {
@@ -34,6 +36,13 @@ namespace EcsRx.Examples.Application
             var reactsToDataHandler = new ReactToDataSystemHandler(PoolManager);
             var manualSystemHandler = new ManualSystemHandler(PoolManager);
             var setupHandler = new SetupSystemHandler(PoolManager);
+
+            var conventionalSystems = new List<IConventionalSystemHandler<ISystem>>
+            {
+                setupHandler,
+                
+            }
+            
             SystemExecutor = new SystemExecutor(PoolManager, EventSystem, reactsToEntityHandler,
                 reactsToGroupHandler, setupHandler, reactsToDataHandler, manualSystemHandler);
         }

@@ -42,10 +42,9 @@ namespace EcsRx.Extensions
             return systems.Where(x => x.TargetGroup.MatchesComponents.All(y => componentTypes.Contains(y)));
         }
 
-        public static IEnumerable<T> OrderByPriority<T>(this IEnumerable<T> systems)
-            where T : ISystem
+        public static IEnumerable<T> OrderByPriority<T>(this IEnumerable<T> listToPrioritize)
         {
-            return systems.OrderBy(x =>
+            return listToPrioritize.OrderBy(x =>
             {
                 var finalOrder = 0;
                 var priorityAttributes = x.GetType().GetCustomAttributes(typeof (PriorityAttribute), true);

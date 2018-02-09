@@ -11,7 +11,7 @@ namespace EcsRx.Executor.Handlers
 {
     public class ReactToDataSystemHandler : IReactToDataSystemHandler
     {
-        public IPoolManager PoolManager { get; private set; }
+        public IPoolManager PoolManager { get; }
 
         public ReactToDataSystemHandler(IPoolManager poolManager)
         {
@@ -60,6 +60,10 @@ namespace EcsRx.Executor.Handlers
                     });
 
             return new SubscriptionToken(entity, subscription);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

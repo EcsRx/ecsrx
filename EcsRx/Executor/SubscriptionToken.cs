@@ -4,8 +4,8 @@ namespace EcsRx.Executor
 {
     public class SubscriptionToken
     {
-        public object AssociatedObject { get; private set; }
-        public IDisposable Disposable { get; private set; }
+        public object AssociatedObject { get; }
+        public IDisposable Disposable { get; }
 
         public SubscriptionToken(object associatedObject, IDisposable disposable)
         {

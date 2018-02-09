@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Timers;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
@@ -8,49 +12,66 @@ using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
 {
-    public class SetupSystemHandler : ISetupSystemHandler
+    public class SetupSystemHandler : IConventionalSystemHandler<ISetupSystem>
     {
-        public IPoolManager PoolManager { get; private set; }
+        public IPoolManager PoolManager { get; }
 
+        private readonly IDictionary<ISystem, IDisposable> _subscriptions;
+        
         public SetupSystemHandler(IPoolManager poolManager)
         {
             PoolManager = poolManager;
+            _subscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
-        public IEnumerable<SubscriptionToken> Setup(ISetupSystem system)
+        public bool CanHandleSystem(ISystem system)
+        { return system is ISetupSystem; }
+
+        public void SetupSystem(ISetupSystem system)
         {
-            var subscriptions = new List<SubscriptionToken>();
-            var entities = PoolManager.GetEntitiesFor(system.TargetGroup);
-            entities.ForEachRun(x =>
-            {
-                var possibleSubscription = ProcessEntity(system, x);
-                if(possibleSubscription != null) { subscriptions.Add(possibleSubscription); }
-            });
+            var entitySubscriptions = new Dictionary<Guid, IDisposable>();
+            var entityChangeSubscriptions = new CompositeDisposable();
+            _subscriptions.Add(system, entityChangeSubscriptions);
+            
+            var accessor = PoolManager.CreateObservableGroup(system.TargetGroup);
 
-            return subscriptions;
+            accessor.OnEntityAdded
+                .Subscribe(x => ProcessEntity(system, x))
+                .AddTo(entityChangeSubscriptions);
+            
+            accessor.OnEntityRemoved
+                .Subscribe(x =>
+                {
+                    entitySubscriptions[x.Id].Dispose();
+                    entitySubscriptions.Remove(x.Id);
+                })
+                .AddTo(entityChangeSubscriptions);
+            
+            accessor.Entities.ForEachRun(x => ProcessEntity(system, x));            
         }
 
-        public SubscriptionToken ProcessEntity(ISetupSystem system, IEntity entity)
+        public void DestroySystem(ISetupSystem system)
+        {
+            _subscriptions.RemoveAndDispose(system);
+        }
+
+        public void ProcessEntity(ISetupSystem system, IEntity entity)
         {
             var hasEntityPredicate = system.TargetGroup is IHasPredicate;
+            
             if (!hasEntityPredicate)
-            {
-                system.Setup(entity);
-                return null;
-            }
+            { system.Setup(entity); }
 
             var groupPredicate = system.TargetGroup as IHasPredicate;
-            if (groupPredicate.CanProcessEntity(entity))
-            {
-                system.Setup(entity);
-                return null;
-            }
-
-            var subscription = entity.WaitForPredicateMet(groupPredicate.CanProcessEntity)
+            
+            entity.WaitForPredicateMet(groupPredicate.CanProcessEntity)
+                .FirstAsync()
                 .Subscribe(system.Setup);
+        }
 
-            var subscriptionToken = new SubscriptionToken(entity, subscription);
-            return subscriptionToken;
+        public void Dispose()
+        {
+            _subscriptions.DisposeAll();
         }
     }
 }

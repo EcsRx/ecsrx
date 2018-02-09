@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using EcsRx.Entities;
 using EcsRx.Pools;
@@ -5,7 +6,7 @@ using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
 {
-    public interface IReactToDataSystemHandler
+    public interface IReactToDataSystemHandler : IDisposable
     {
         IPoolManager PoolManager { get; }
         IEnumerable<SubscriptionToken> SetupWithoutType(ISystem system);

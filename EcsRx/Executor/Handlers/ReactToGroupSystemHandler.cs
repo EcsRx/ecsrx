@@ -2,45 +2,61 @@ using EcsRx.Groups;
 using EcsRx.Pools;
 using EcsRx.Systems;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
+using EcsRx.Extensions;
 
 namespace EcsRx.Executor.Handlers
 {
-    public class ReactToGroupSystemHandler : IReactToGroupSystemHandler
+    public class ReactToGroupSystemHandler : IConventionalSystemHandler<IReactToGroupSystem>
     {
-        public IPoolManager PoolManager { get; private set; }
-
+        public IPoolManager PoolManager { get; }
+        
+        private readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
+        
         public ReactToGroupSystemHandler(IPoolManager poolManager)
         {
             PoolManager = poolManager;
+            _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
-        public SubscriptionToken Setup(IReactToGroupSystem system)
+        public bool CanHandleSystem(ISystem system)
+        { return system is IReactToGroupSystem; }
+
+        public void SetupSystem(IReactToGroupSystem system)
         {
-            var hasEntityPredicate = system.TargetGroup is IHasPredicate;
             var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
-            var subscription = system.ReactToGroup(groupAccessor)
-                .Subscribe(accessor =>
+            var hasEntityPredicate = system.TargetGroup is IHasPredicate;
+            var reactObservable = system.ReactToGroup(groupAccessor);
+
+            if (!hasEntityPredicate)
+            {
+                var subscription = reactObservable.Subscribe(x => x.Entities.ForEachRun(system.Execute));
+                _systemSubscriptions.Add(system, subscription);
+            }
+            else
+            {
+                var groupPredicate = system.TargetGroup as IHasPredicate;
+                var subscription = reactObservable.Subscribe(x =>
                 {
-                    var entities = accessor.Entities.ToList();
-                    var entityCount = entities.Count - 1;
-                    for (var i = entityCount; i >= 0; i--)
-                    {
-                        if (hasEntityPredicate)
-                        {
-                            var groupPredicate = system.TargetGroup as IHasPredicate;
-                            if (groupPredicate.CanProcessEntity(entities[i]))
-                            {
-                                system.Execute(entities[i]);
-                            }
-                            continue;
-                        }
-
-                        system.Execute(entities[i]);
-                    }
+                    x.Entities.Where(groupPredicate.CanProcessEntity)
+                        .ForEachRun(system.Execute);
                 });
+                _systemSubscriptions.Add(system, subscription);
+            }   
+        }
 
-            return new SubscriptionToken(null, subscription);
+        public void DestroySystem(IReactToGroupSystem system)
+        {
+            _systemSubscriptions[system].Dispose();
+            _systemSubscriptions.Remove(system);
+        }
+
+        public void Dispose()
+        {
+            _systemSubscriptions.Values.DisposeAll();
+            _systemSubscriptions.Clear();
         }
     }
 }

@@ -61,11 +61,8 @@
     <Compile Include="Events\PoolAddedEvent.cs" />
     <Compile Include="Events\PoolRemovedEvent.cs" />
     <Compile Include="Exceptions\InvalidEntityException.cs" />
-    <Compile Include="Executor\Handlers\IManualSystemHandler.cs" />
+    <Compile Include="Executor\Handlers\IConventionalSystemHandler.cs" />
     <Compile Include="Executor\Handlers\IReactToDataSystemHandler.cs" />
-    <Compile Include="Executor\Handlers\IReactToEntitySystemHandler.cs" />
-    <Compile Include="Executor\Handlers\IReactToGroupSystemHandler.cs" />
-    <Compile Include="Executor\Handlers\ISetupSystemHandler.cs" />
     <Compile Include="Executor\Handlers\ManualSystemHandler.cs" />
     <Compile Include="Executor\Handlers\ReactToDataSystemHandler.cs" />
     <Compile Include="Executor\Handlers\ReactToEntitySystemHandler.cs" />

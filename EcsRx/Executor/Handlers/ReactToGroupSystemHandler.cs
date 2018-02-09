@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
+using EcsRx.Attributes;
 using EcsRx.Extensions;
 
 namespace EcsRx.Executor.Handlers
 {
-    public class ReactToGroupSystemHandler : IConventionalSystemHandler<IReactToGroupSystem>
+    [Priority(2)]
+    public class ReactToGroupSystemHandler : IConventionalSystemHandler
     {
         public IPoolManager PoolManager { get; }
         
@@ -24,15 +26,16 @@ namespace EcsRx.Executor.Handlers
         public bool CanHandleSystem(ISystem system)
         { return system is IReactToGroupSystem; }
 
-        public void SetupSystem(IReactToGroupSystem system)
+        public void SetupSystem(ISystem system)
         {
             var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
             var hasEntityPredicate = system.TargetGroup is IHasPredicate;
-            var reactObservable = system.ReactToGroup(groupAccessor);
+            var castSystem = (IReactToGroupSystem)system;
+            var reactObservable = castSystem.ReactToGroup(groupAccessor);
 
             if (!hasEntityPredicate)
             {
-                var noPredicateSub = reactObservable.Subscribe(x => x.Entities.ForEachRun(system.Execute));
+                var noPredicateSub = reactObservable.Subscribe(x => x.Entities.ForEachRun(castSystem.Execute));
                 _systemSubscriptions.Add(system, noPredicateSub);
                 return;
             }
@@ -41,12 +44,12 @@ namespace EcsRx.Executor.Handlers
             var subscription = reactObservable.Subscribe(x =>
             {
                 x.Entities.Where(groupPredicate.CanProcessEntity)
-                    .ForEachRun(system.Execute);
+                    .ForEachRun(castSystem.Execute);
             });
             _systemSubscriptions.Add(system, subscription);
         }
 
-        public void DestroySystem(IReactToGroupSystem system)
+        public void DestroySystem(ISystem system)
         { _systemSubscriptions.RemoveAndDispose(system); }
 
         public void Dispose()

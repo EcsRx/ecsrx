@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
+using EcsRx.Attributes;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
@@ -12,11 +13,12 @@ using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
 {
-    public class ReactToDataSystemHandler : IConventionalSystemHandler<ISystem>
+    [Priority(4)]
+    public class ReactToDataSystemHandler : IConventionalSystemHandler
     {
-        private IDictionary<ISystem, IDisposable> _subscriptions;
-        private IDictionary<ISystem, IDictionary<Guid, IDisposable>> _systemSubscriptions;
-        private MethodInfo _processEntityMethod;
+        private readonly IDictionary<ISystem, IDisposable> _subscriptions;
+        private readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _systemSubscriptions;
+        private readonly MethodInfo _processEntityMethod;
 
         public IPoolManager PoolManager { get; }
         

@@ -1,9 +1,11 @@
+using EcsRx.Attributes;
 using EcsRx.Pools;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
 {
-    public class ManualSystemHandler : IConventionalSystemHandler<IManualSystem>
+    [Priority(5)]
+    public class ManualSystemHandler : IConventionalSystemHandler
     {
         public IPoolManager PoolManager { get; }
         
@@ -15,20 +17,21 @@ namespace EcsRx.Executor.Handlers
         public bool CanHandleSystem(ISystem system)
         { return system is IManualSystem; }
 
-        public void SetupSystem(IManualSystem system)
+        public void SetupSystem(ISystem system)
         {
             var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
-            system.StartSystem(groupAccessor);
+            var castSystem = (IManualSystem)system;
+            castSystem.StartSystem(groupAccessor);
         }
 
-        public void DestroySystem(IManualSystem system)
+        public void DestroySystem(ISystem system)
         {
+            var castSystem = (IManualSystem)system;
             var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
-            system.StopSystem(groupAccessor);
+            castSystem.StopSystem(groupAccessor);
         }
 
         public void Dispose()
-        {
-        }
+        {}
     }
 }

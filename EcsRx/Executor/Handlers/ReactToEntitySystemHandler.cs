@@ -31,20 +31,23 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(IReactToEntitySystem system)
         {
-            var accessor = PoolManager.CreateObservableGroup(system.TargetGroup);
+            var accessor = PoolManager.CreateObservableGroup(system.TargetGroup);            
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _subscriptions.Add(system, entityChangeSubscriptions);
             
             accessor.OnEntityAdded
-                .Subscribe(x => ProcessEntity(system, x))
+                .Subscribe(x =>
+                {
+                    var entitySubscription = ProcessEntity(system, x);
+                    entitySubscriptions.Add(x.Id, entitySubscription);
+                })
                 .AddTo(entityChangeSubscriptions);
             
             accessor.OnEntityRemoved
                 .Subscribe(x =>
                 {
-                    entitySubscriptions[x.Id].Dispose();
-                    entitySubscriptions.Remove(x.Id);
+                    entitySubscriptions.RemoveAndDispose(x.Id);
                 })
                 .AddTo(entityChangeSubscriptions);
 

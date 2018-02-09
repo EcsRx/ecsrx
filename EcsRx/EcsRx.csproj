@@ -62,7 +62,6 @@
     <Compile Include="Events\PoolRemovedEvent.cs" />
     <Compile Include="Exceptions\InvalidEntityException.cs" />
     <Compile Include="Executor\Handlers\IConventionalSystemHandler.cs" />
-    <Compile Include="Executor\Handlers\IReactToDataSystemHandler.cs" />
     <Compile Include="Executor\Handlers\ManualSystemHandler.cs" />
     <Compile Include="Executor\Handlers\ReactToDataSystemHandler.cs" />
     <Compile Include="Executor\Handlers\ReactToEntitySystemHandler.cs" />

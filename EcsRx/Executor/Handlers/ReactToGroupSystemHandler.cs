@@ -32,26 +32,22 @@ namespace EcsRx.Executor.Handlers
 
             if (!hasEntityPredicate)
             {
-                var subscription = reactObservable.Subscribe(x => x.Entities.ForEachRun(system.Execute));
-                _systemSubscriptions.Add(system, subscription);
+                var noPredicateSub = reactObservable.Subscribe(x => x.Entities.ForEachRun(system.Execute));
+                _systemSubscriptions.Add(system, noPredicateSub);
+                return;
             }
-            else
+
+            var groupPredicate = system.TargetGroup as IHasPredicate;
+            var subscription = reactObservable.Subscribe(x =>
             {
-                var groupPredicate = system.TargetGroup as IHasPredicate;
-                var subscription = reactObservable.Subscribe(x =>
-                {
-                    x.Entities.Where(groupPredicate.CanProcessEntity)
-                        .ForEachRun(system.Execute);
-                });
-                _systemSubscriptions.Add(system, subscription);
-            }   
+                x.Entities.Where(groupPredicate.CanProcessEntity)
+                    .ForEachRun(system.Execute);
+            });
+            _systemSubscriptions.Add(system, subscription);
         }
 
         public void DestroySystem(IReactToGroupSystem system)
-        {
-            _systemSubscriptions[system].Dispose();
-            _systemSubscriptions.Remove(system);
-        }
+        { _systemSubscriptions.RemoveAndDispose(system); }
 
         public void Dispose()
         {

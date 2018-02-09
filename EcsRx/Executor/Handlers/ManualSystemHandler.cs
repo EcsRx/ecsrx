@@ -3,25 +3,32 @@ using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
 {
-    public class ManualSystemHandler : IManualSystemHandler
+    public class ManualSystemHandler : IConventionalSystemHandler<IManualSystem>
     {
-        public IPoolManager PoolManager { get; private set; }
-
+        public IPoolManager PoolManager { get; }
+        
         public ManualSystemHandler(IPoolManager poolManager)
         {
             PoolManager = poolManager;
         }
 
-        public void Start(IManualSystem system)
+        public bool CanHandleSystem(ISystem system)
+        { return system is IManualSystem; }
+
+        public void SetupSystem(IManualSystem system)
         {
             var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
             system.StartSystem(groupAccessor);
         }
 
-        public void Stop(IManualSystem system)
+        public void DestroySystem(IManualSystem system)
         {
             var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
             system.StopSystem(groupAccessor);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

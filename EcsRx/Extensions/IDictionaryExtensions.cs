@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Pools;
@@ -14,6 +15,12 @@ namespace EcsRx.Extensions
                 if(entity.MatchesGroup(group))
                 { groupAccessors[group].Add(entity); }
             }
+        }
+        
+        public static void RemoveAndDispose<T>(this IDictionary<T, IDisposable> disposables, T key)
+        {
+            disposables[key].Dispose();
+            disposables.Remove(key);
         }
     }
 }

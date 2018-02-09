@@ -11,14 +11,14 @@ namespace EcsRx.Groups.Accessors
 {
     public class ObservableGroup : IObservableGroup, IDisposable
     {
-        public readonly IDictionary<Guid, IEntity> CachedEntities;
+        public readonly Dictionary<Guid, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
         
         public Subject<IEntity> OnEntityAdded { get; }
         public Subject<IEntity> OnEntityRemoved { get; }
 
         public ObservableGroupToken Token { get; }
-        public IEnumerable<IEntity> Entities => CachedEntities.Values;
+        public IReadOnlyCollection<IEntity> Entities => CachedEntities.Values;
         public IEventSystem EventSystem { get; }
 
         public ObservableGroup(IEventSystem eventSystem, ObservableGroupToken token, IEnumerable<IEntity> initialEntities)

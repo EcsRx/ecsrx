@@ -16,16 +16,15 @@ namespace EcsRx.Executor.Handlers
     [Priority(3)]
     public class ReactToEntitySystemHandler : IConventionalSystemHandler
     {
-        private readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _systemSubscriptions;
-        private readonly IDictionary<ISystem, IDisposable> _subscriptions;
-        
-        public IPoolManager PoolManager { get; }
+        public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
+        public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
+        public readonly IPoolManager _poolManager;
         
         public ReactToEntitySystemHandler(IPoolManager poolManager)
         {
-            PoolManager = poolManager;
-            _subscriptions = new Dictionary<ISystem, IDisposable>();
-            _systemSubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
+            _poolManager = poolManager;
+            _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
+            _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
         }
 
         public bool CanHandleSystem(ISystem system)
@@ -33,10 +32,10 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var accessor = PoolManager.CreateObservableGroup(system.TargetGroup);            
+            var accessor = _poolManager.CreateObservableGroup(system.TargetGroup);            
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
-            _subscriptions.Add(system, entityChangeSubscriptions);
+            _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (IReactToEntitySystem) system;
             
@@ -61,17 +60,17 @@ namespace EcsRx.Executor.Handlers
                 entitySubscriptions.Add(entity.Id, entitySubscription);
             }
             
-            _systemSubscriptions.Add(system, entitySubscriptions);
+            _entitySubscriptions.Add(system, entitySubscriptions);
         }
 
         public void DestroySystem(ISystem system)
         {
-            _subscriptions.RemoveAndDispose(system);
+            _systemSubscriptions.RemoveAndDispose(system);
             
-            var entitySubscriptions = _systemSubscriptions[system];
+            var entitySubscriptions = _entitySubscriptions[system];
             entitySubscriptions.Values.DisposeAll();
             entitySubscriptions.Clear();
-            _systemSubscriptions.Remove(system);
+            _entitySubscriptions.Remove(system);
         }
         
         public IDisposable ProcessEntity(IReactToEntitySystem system, IEntity entity)
@@ -90,13 +89,13 @@ namespace EcsRx.Executor.Handlers
 
         public void Dispose()
         {
-            _subscriptions.DisposeAll();
-            foreach (var entitySubscriptions in _systemSubscriptions.Values)
+            _systemSubscriptions.DisposeAll();
+            foreach (var entitySubscriptions in _entitySubscriptions.Values)
             {
                 entitySubscriptions.Values.DisposeAll();
                 entitySubscriptions.Clear();
             }
-            _systemSubscriptions.Clear();
+            _entitySubscriptions.Clear();
         }
     }
 }

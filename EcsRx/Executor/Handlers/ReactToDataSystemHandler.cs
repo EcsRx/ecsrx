@@ -16,17 +16,17 @@ namespace EcsRx.Executor.Handlers
     [Priority(4)]
     public class ReactToDataSystemHandler : IConventionalSystemHandler
     {
-        private readonly IDictionary<ISystem, IDisposable> _subscriptions;
-        private readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _systemSubscriptions;
-        private readonly MethodInfo _processEntityMethod;
+        public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
+        public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
+        public readonly IPoolManager _poolManager;
 
-        public IPoolManager PoolManager { get; }
+        private readonly MethodInfo _processEntityMethod;
         
         public ReactToDataSystemHandler(IPoolManager poolManager)
         {
-            PoolManager = poolManager;
-            _subscriptions = new Dictionary<ISystem, IDisposable>();
-            _systemSubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
+            _poolManager = poolManager;
+            _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
+            _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
             _processEntityMethod = GetType().GetMethod("ProcessEntity");
         }
 
@@ -60,12 +60,12 @@ namespace EcsRx.Executor.Handlers
             var processEntityFunction = CreateEntityProcessorFunction(system);
 
             var entityChangeSubscriptions = new CompositeDisposable();
-            _subscriptions.Add(system, entityChangeSubscriptions);
+            _systemSubscriptions.Add(system, entityChangeSubscriptions);
             
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
-            _systemSubscriptions.Add(system, entitySubscriptions);
+            _entitySubscriptions.Add(system, entitySubscriptions);
             
-            var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
+            var groupAccessor = _poolManager.CreateObservableGroup(system.TargetGroup);
 
             groupAccessor.OnEntityAdded
                 .Subscribe(x =>
@@ -92,23 +92,23 @@ namespace EcsRx.Executor.Handlers
 
         public void DestroySystem(ISystem system)
         {
-            _subscriptions.RemoveAndDispose(system);
+            _systemSubscriptions.RemoveAndDispose(system);
             
-            var entitySubscriptions = _systemSubscriptions[system];
+            var entitySubscriptions = _entitySubscriptions[system];
             entitySubscriptions.Values.DisposeAll();
             entitySubscriptions.Clear();
-            _systemSubscriptions.Remove(system);
+            _entitySubscriptions.Remove(system);
         }
         
         public void Dispose()
         {
-            _subscriptions.DisposeAll();
-            foreach (var entitySubscriptions in _systemSubscriptions.Values)
+            _systemSubscriptions.DisposeAll();
+            foreach (var entitySubscriptions in _entitySubscriptions.Values)
             {
                 entitySubscriptions.Values.DisposeAll();
                 entitySubscriptions.Clear();
             }
-            _systemSubscriptions.Clear();
+            _entitySubscriptions.Clear();
         }
     }
 }

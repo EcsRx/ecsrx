@@ -1,4 +1,5 @@
-﻿using EcsRx.Entities;
+﻿using System.Collections.Generic;
+using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
@@ -14,6 +15,7 @@ namespace EcsRx.Tests
     [TestFixture]
     public class SanityTests
     {
+        
         private SystemExecutor CreateExecutor()
         {
             var messageBroker = new EventSystem(new MessageBroker());
@@ -21,13 +23,23 @@ namespace EcsRx.Tests
             var poolFactory = new DefaultPoolFactory(entityFactory, messageBroker);
             var groupAccessorFactory = new DefaultObservableObservableGroupFactory(messageBroker);
             var poolManager = new PoolManager(messageBroker, poolFactory, groupAccessorFactory);
+            
             var reactsToEntityHandler = new ReactToEntitySystemHandler(poolManager);
             var reactsToGroupHandler = new ReactToGroupSystemHandler(poolManager);
             var reactsToDataHandler = new ReactToDataSystemHandler(poolManager);
             var manualSystemHandler = new ManualSystemHandler(poolManager);
             var setupHandler = new SetupSystemHandler(poolManager);
-            return new SystemExecutor(poolManager, messageBroker, reactsToEntityHandler, 
-                reactsToGroupHandler, setupHandler, reactsToDataHandler, manualSystemHandler);
+
+            var conventionalSystems = new List<IConventionalSystemHandler>
+            {
+                setupHandler,
+                reactsToEntityHandler,
+                reactsToGroupHandler,
+                reactsToDataHandler,
+                manualSystemHandler
+            };
+            
+            return new SystemExecutor(poolManager, messageBroker, conventionalSystems);
         }
 
         [Test]

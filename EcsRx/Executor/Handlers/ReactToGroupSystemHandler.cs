@@ -13,13 +13,12 @@ namespace EcsRx.Executor.Handlers
     [Priority(2)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler
     {
-        public IPoolManager PoolManager { get; }
-        
-        private readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
+        public readonly IPoolManager _poolManager;       
+        public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
         public ReactToGroupSystemHandler(IPoolManager poolManager)
         {
-            PoolManager = poolManager;
+            _poolManager = poolManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
@@ -28,7 +27,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var groupAccessor = PoolManager.CreateObservableGroup(system.TargetGroup);
+            var groupAccessor = _poolManager.CreateObservableGroup(system.TargetGroup);
             var hasEntityPredicate = system.TargetGroup is IHasPredicate;
             var castSystem = (IReactToGroupSystem)system;
             var reactObservable = castSystem.ReactToGroup(groupAccessor);

@@ -30,21 +30,22 @@ namespace EcsRx.Examples.Application
             var groupAccessorFactory = new DefaultObservableObservableGroupFactory(EventSystem);
             PoolManager = new PoolManager(EventSystem, poolFactory, groupAccessorFactory);
 
-
             var reactsToEntityHandler = new ReactToEntitySystemHandler(PoolManager);
             var reactsToGroupHandler = new ReactToGroupSystemHandler(PoolManager);
             var reactsToDataHandler = new ReactToDataSystemHandler(PoolManager);
             var manualSystemHandler = new ManualSystemHandler(PoolManager);
             var setupHandler = new SetupSystemHandler(PoolManager);
 
-            var conventionalSystems = new List<IConventionalSystemHandler<ISystem>>
+            var conventionalSystems = new List<IConventionalSystemHandler>
             {
                 setupHandler,
-                
-            }
+                reactsToEntityHandler,
+                reactsToGroupHandler,
+                reactsToDataHandler,
+                manualSystemHandler
+            };
             
-            SystemExecutor = new SystemExecutor(PoolManager, EventSystem, reactsToEntityHandler,
-                reactsToGroupHandler, setupHandler, reactsToDataHandler, manualSystemHandler);
+            SystemExecutor = new SystemExecutor(PoolManager, EventSystem, conventionalSystems);
         }
 
         public abstract void StartApplication();

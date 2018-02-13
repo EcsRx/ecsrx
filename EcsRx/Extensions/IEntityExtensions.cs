@@ -13,7 +13,7 @@ namespace EcsRx.Extensions
     {
         public static IObservable<IEntity> WaitForPredicateMet(this IEntity entity, Predicate<IEntity> predicate)
         {
-            return Observable.Timer(TimeSpan.FromSeconds(1))
+            return Observable.Interval(TimeSpan.FromSeconds(1))
                 .Where(x => predicate(entity))
                 .Select(x => entity);
         }

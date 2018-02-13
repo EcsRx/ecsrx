@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx", "EcsRx\EcsRx.csproj", "{5F5B6094-C56A-47E9-A835-127D0FFBF4C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Tests", "EcsRx.Tests\EcsRx.Tests.csproj", "{29DFE311-79C1-460F-8698-0C4537CBAB8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Examples", "EcsRx.Examples\EcsRx.Examples.csproj", "{2F108594-BA59-47E0-8198-0E758BB04CDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F5B6094-C56A-47E9-A835-127D0FFBF4C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F5B6094-C56A-47E9-A835-127D0FFBF4C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F5B6094-C56A-47E9-A835-127D0FFBF4C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F5B6094-C56A-47E9-A835-127D0FFBF4C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29DFE311-79C1-460F-8698-0C4537CBAB8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29DFE311-79C1-460F-8698-0C4537CBAB8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29DFE311-79C1-460F-8698-0C4537CBAB8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29DFE311-79C1-460F-8698-0C4537CBAB8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F108594-BA59-47E0-8198-0E758BB04CDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F108594-BA59-47E0-8198-0E758BB04CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F108594-BA59-47E0-8198-0E758BB04CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F108594-BA59-47E0-8198-0E758BB04CDE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

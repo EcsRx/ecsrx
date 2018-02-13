@@ -16,14 +16,15 @@ namespace EcsRx.Executor.Handlers
     [Priority(1)]
     public class SetupSystemHandler : IConventionalSystemHandler
     {
-        public IPoolManager PoolManager { get; }
-
-        private readonly IDictionary<ISystem, IDisposable> _subscriptions;
+        public readonly IPoolManager _poolManager;
+        public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
+        public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
         public SetupSystemHandler(IPoolManager poolManager)
         {
-            PoolManager = poolManager;
-            _subscriptions = new Dictionary<ISystem, IDisposable>();
+            _poolManager = poolManager;
+            _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
+            _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
         }
 
         public bool CanHandleSystem(ISystem system)
@@ -32,49 +33,73 @@ namespace EcsRx.Executor.Handlers
         public void SetupSystem(ISystem system)
         {
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
+            _entitySubscriptions.Add(system, entitySubscriptions);
             var entityChangeSubscriptions = new CompositeDisposable();
-            _subscriptions.Add(system, entityChangeSubscriptions);
+            _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ISetupSystem) system;
-            var accessor = PoolManager.CreateObservableGroup(system.TargetGroup);
+            var accessor = _poolManager.CreateObservableGroup(system.TargetGroup);
 
             accessor.OnEntityAdded
-                .Subscribe(x => ProcessEntity(castSystem, x))
+                .Subscribe(x =>
+                {
+                    var possibleSubscription = ProcessEntity(castSystem, x);
+                    if(possibleSubscription != null) 
+                    { entitySubscriptions.Add(x.Id, possibleSubscription); }
+                })
                 .AddTo(entityChangeSubscriptions);
             
             accessor.OnEntityRemoved
                 .Subscribe(x =>
                 {
-                    entitySubscriptions[x.Id].Dispose();
-                    entitySubscriptions.Remove(x.Id);
+                    if (entitySubscriptions.ContainsKey(x.Id))
+                    { entitySubscriptions.RemoveAndDispose(x.Id); }
                 })
                 .AddTo(entityChangeSubscriptions);
             
-            accessor.Entities.ForEachRun(x => ProcessEntity(castSystem, x));            
+            accessor.Entities.ForEachRun(x =>
+            {
+                var possibleSubscription = ProcessEntity(castSystem, x);
+                if(possibleSubscription != null) 
+                { entitySubscriptions.Add(x.Id, possibleSubscription); }
+            });            
         }
 
         public void DestroySystem(ISystem system)
         {
-            _subscriptions.RemoveAndDispose(system);
+            _systemSubscriptions.RemoveAndDispose(system);
         }
 
-        public void ProcessEntity(ISetupSystem system, IEntity entity)
+        public IDisposable ProcessEntity(ISetupSystem system, IEntity entity)
         {
             var hasEntityPredicate = system.TargetGroup is IHasPredicate;
-            
+
             if (!hasEntityPredicate)
-            { system.Setup(entity); }
+            {
+                system.Setup(entity);
+                return null;
+            }
 
             var groupPredicate = system.TargetGroup as IHasPredicate;
+
+            if (groupPredicate.CanProcessEntity(entity))
+            {
+                system.Setup(entity);
+                return null;
+            }
             
-            entity.WaitForPredicateMet(groupPredicate.CanProcessEntity)
+            return entity.WaitForPredicateMet(groupPredicate.CanProcessEntity)
                 .FirstAsync()
-                .Subscribe(system.Setup);
+                .Subscribe(x =>
+                {
+                    _entitySubscriptions[system].Remove(x.Id);
+                    system.Setup(x);
+                });
         }
 
         public void Dispose()
         {
-            _subscriptions.DisposeAll();
+            _systemSubscriptions.DisposeAll();
         }
     }
 }

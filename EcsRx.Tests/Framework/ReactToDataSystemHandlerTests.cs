@@ -1,16 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Entities;
-using EcsRx.Events;
-using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
-using EcsRx.Groups.Accessors;
 using EcsRx.Groups;
+using EcsRx.Groups.Accessors;
 using EcsRx.Pools;
-using EcsRx.Reactive;
 using EcsRx.Systems;
 using EcsRx.Tests.Components;
 using NSubstitute;
@@ -19,19 +14,21 @@ using NUnit.Framework;
 namespace EcsRx.Tests
 {
     [TestFixture]
-    public class ReactToEntitySystemHandlerTests
+    public class ReactToDataSystemHandlerTests
     {
         [Test]
         public void should_correctly_handle_systems()
         {
             var mockPoolManager = Substitute.For<IPoolManager>();
-            var reactToEntitySystemHandler = new ReactToEntitySystemHandler(mockPoolManager);
+            var reactToEntitySystemHandler = new ReactToDataSystemHandler(mockPoolManager);
             
-            var fakeMatchingSystem = Substitute.For<IReactToEntitySystem>();
-            var fakeNonMatchingSystem1 = Substitute.For<ISetupSystem>();
+            var fakeMatchingSystem1 = Substitute.For<IReactToDataSystem<int>>();
+            var fakeMatchingSystem2 = Substitute.For<IReactToDataSystem<DateTime>>();
+            var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
             var fakeNonMatchingSystem2 = Substitute.For<ISystem>();
             
-            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem));
+            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem1));
+            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem2));
             Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem1), Is.False);
             Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem2), Is.False);
         }
@@ -58,21 +55,21 @@ namespace EcsRx.Tests
             var fakeGroup = new Group();
             mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
-            var firstEntitySubject = new Subject<IEntity>();
-            var secondEntitySubject = new Subject<IEntity>();
-            var mockSystem = Substitute.For<IReactToEntitySystem>();
+            var firstEntitySubject = new Subject<int>();
+            var secondEntitySubject = new Subject<int>();
+            var mockSystem = Substitute.For<IReactToDataSystem<int>>();
             mockSystem.TargetGroup.Returns(fakeGroup);
-            mockSystem.ReactToEntity(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
-            mockSystem.ReactToEntity(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
+            mockSystem.ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
+            mockSystem.ReactToData(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
-            var systemHandler = new ReactToEntitySystemHandler(mockPoolManager);
+            var systemHandler = new ReactToDataSystemHandler(mockPoolManager);
             systemHandler.SetupSystem(mockSystem);
             
-            firstEntitySubject.OnNext(fakeEntity1);
-            secondEntitySubject.OnNext(fakeEntity2);
+            firstEntitySubject.OnNext(1);
+            secondEntitySubject.OnNext(2);
             
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1));
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1), Arg.Is(1));
+            mockSystem.Received(1).Execute(Arg.Is(fakeEntity2), Arg.Is(2));
             
             Assert.That(systemHandler._systemSubscriptions.Count, Is.EqualTo(1));
             Assert.That(systemHandler._systemSubscriptions[mockSystem], Is.Not.Null);
@@ -107,31 +104,31 @@ namespace EcsRx.Tests
             var fakeGroup = new Group();
             mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
-            var firstEntitySubject = new Subject<IEntity>();
-            var secondEntitySubject = new Subject<IEntity>();
-            var mockSystem = Substitute.For<IReactToEntitySystem>();
+            var firstEntitySubject = new Subject<int>();
+            var secondEntitySubject = new Subject<int>();
+            var mockSystem = Substitute.For<IReactToDataSystem<int>>();
             mockSystem.TargetGroup.Returns(fakeGroup);
-            mockSystem.ReactToEntity(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
-            mockSystem.ReactToEntity(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
+            mockSystem.ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
+            mockSystem.ReactToData(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
-            var systemHandler = new ReactToEntitySystemHandler(mockPoolManager);
+            var systemHandler = new ReactToDataSystemHandler(mockPoolManager);
             systemHandler.SetupSystem(mockSystem);
 
             Assert.That(systemHandler._entitySubscriptions.Count, Is.EqualTo(1));
             Assert.That(systemHandler._entitySubscriptions[mockSystem].Count, Is.Zero);
             
-            mockSystem.Received(0).ReactToEntity(Arg.Any<IEntity>());
+            mockSystem.Received(0).ReactToData(Arg.Any<IEntity>());
             addedSubject.OnNext(fakeEntity1);
             addedSubject.OnNext(fakeEntity2);
 
-            mockSystem.Received(1).ReactToEntity(Arg.Is(fakeEntity1));
-            mockSystem.Received(1).ReactToEntity(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).ReactToData(Arg.Is(fakeEntity1));
+            mockSystem.Received(1).ReactToData(Arg.Is(fakeEntity2));
             
-            firstEntitySubject.OnNext(fakeEntity1);
-            secondEntitySubject.OnNext(fakeEntity2);
+            firstEntitySubject.OnNext(1);
+            secondEntitySubject.OnNext(2);
             
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1));
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1), Arg.Is(1));
+            mockSystem.Received(1).Execute(Arg.Is(fakeEntity2), Arg.Is(2));
             
             Assert.That(systemHandler._systemSubscriptions.Count, Is.EqualTo(1));
             Assert.That(systemHandler._systemSubscriptions[mockSystem], Is.Not.Null);
@@ -167,14 +164,14 @@ namespace EcsRx.Tests
             var fakeGroup = new Group();
             mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
-            var firstEntitySubject = new Subject<IEntity>();
-            var secondEntitySubject = new Subject<IEntity>();
-            var mockSystem = Substitute.For<IReactToEntitySystem>();
+            var firstEntitySubject = new Subject<int>();
+            var secondEntitySubject = new Subject<int>();
+            var mockSystem = Substitute.For<IReactToDataSystem<int>>();
             mockSystem.TargetGroup.Returns(fakeGroup);
-            mockSystem.ReactToEntity(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
-            mockSystem.ReactToEntity(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
+            mockSystem.ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
+            mockSystem.ReactToData(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
-            var systemHandler = new ReactToEntitySystemHandler(mockPoolManager);
+            var systemHandler = new ReactToDataSystemHandler(mockPoolManager);
             systemHandler.SetupSystem(mockSystem);
             
             Assert.That(systemHandler._entitySubscriptions.Count, Is.EqualTo(1));
@@ -213,21 +210,21 @@ namespace EcsRx.Tests
             var fakeGroup = new Group(x => x.Id == guid1);
             mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
-            var firstEntitySubject = new Subject<IEntity>();
-            var secondEntitySubject = new Subject<IEntity>();
-            var mockSystem = Substitute.For<IReactToEntitySystem>();
+            var firstEntitySubject = new Subject<int>();
+            var secondEntitySubject = new Subject<int>();
+            var mockSystem = Substitute.For<IReactToDataSystem<int>>();
             mockSystem.TargetGroup.Returns(fakeGroup);
-            mockSystem.ReactToEntity(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
-            mockSystem.ReactToEntity(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
+            mockSystem.ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
+            mockSystem.ReactToData(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
-            var systemHandler = new ReactToEntitySystemHandler(mockPoolManager);
+            var systemHandler = new ReactToDataSystemHandler(mockPoolManager);
             systemHandler.SetupSystem(mockSystem);
             
-            firstEntitySubject.OnNext(fakeEntity1);
-            secondEntitySubject.OnNext(fakeEntity2);
+            firstEntitySubject.OnNext(1);
+            secondEntitySubject.OnNext(2);
             
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1));
-            mockSystem.Received(0).Execute(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1), Arg.Is(1));
+            mockSystem.Received(0).Execute(Arg.Is(fakeEntity2), Arg.Is(2));
             
             Assert.That(systemHandler._systemSubscriptions.Count, Is.EqualTo(1));
             Assert.That(systemHandler._systemSubscriptions[mockSystem], Is.Not.Null);
@@ -246,10 +243,10 @@ namespace EcsRx.Tests
             var guid2 = Guid.NewGuid();
             
             var mockPoolManager = Substitute.For<IPoolManager>();
-            var mockSystem = Substitute.For<IReactToGroupSystem>();
+            var mockSystem = Substitute.For<IReactToDataSystem<int>>();
             var mockSystemDisposable = Substitute.For<IDisposable>();
             
-            var systemHandler = new ReactToEntitySystemHandler(mockPoolManager);
+            var systemHandler = new ReactToDataSystemHandler(mockPoolManager);
             systemHandler._systemSubscriptions.Add(mockSystem, mockSystemDisposable);
             
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();

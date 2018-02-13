@@ -59,6 +59,7 @@
     <Compile Include="Framework\IEnumerableExtensionsTests.cs" />
     <Compile Include="Framework\ISystemExtensionTests.cs" />
     <Compile Include="Framework\PoolTests.cs" />
+    <Compile Include="Framework\ReactToDataSystemHandlerTests.cs" />
     <Compile Include="Framework\ReactToEntitySystemHandlerTests.cs" />
     <Compile Include="Framework\ReactToGroupSystemHandlerTests.cs" />
     <Compile Include="Framework\SanityTests.cs" />

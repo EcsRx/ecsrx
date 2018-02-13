@@ -21,11 +21,11 @@ namespace EcsRx.Executor
         public IPoolManager PoolManager { get; }
         public IEnumerable<ISystem> Systems => _systems;
 
-        public SystemExecutor(IPoolManager poolManager, IEventSystem eventSystem, IEnumerable<IConventionalSystemHandler> conventionalSystemHandlers, IEnumerable<IConventionalSystemHandler> conventionalSystemHandlers1)
+        public SystemExecutor(IPoolManager poolManager, IEventSystem eventSystem, IEnumerable<IConventionalSystemHandler> conventionalSystemHandlers)
         {
             PoolManager = poolManager;
             EventSystem = eventSystem;
-            _conventionalSystemHandlers = conventionalSystemHandlers1;
+            _conventionalSystemHandlers = conventionalSystemHandlers;
 
             _systems = new List<ISystem>();
         }

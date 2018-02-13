@@ -5,6 +5,10 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
+/*
+ *    This code was taken from UniRx project by neuecc
+ *    https://github.com/neuecc/UniRx
+ */
 namespace EcsRx.Reactive
 {
     public struct CollectionAddEvent<T> : IEquatable<CollectionAddEvent<T>>

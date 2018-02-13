@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
+/*
+ *    This code was taken from UniRx project by neuecc
+ *    https://github.com/neuecc/UniRx
+ */
 namespace EcsRx.Reactive
 {
     public class MessageBroker : IMessageBroker, IDisposable

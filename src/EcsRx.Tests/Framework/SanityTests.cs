@@ -14,15 +14,17 @@ namespace EcsRx.Tests
 {
     public class SanityTests
     {
-        
-        private SystemExecutor CreateExecutor()
+        private IPoolManager CreatePoolManager()
         {
             var messageBroker = new EventSystem(new MessageBroker());
             var entityFactory = new DefaultEntityFactory(messageBroker);
             var poolFactory = new DefaultPoolFactory(entityFactory, messageBroker);
             var groupAccessorFactory = new DefaultObservableObservableGroupFactory(messageBroker);
-            var poolManager = new PoolManager(messageBroker, poolFactory, groupAccessorFactory);
-            
+            return new PoolManager(messageBroker, poolFactory, groupAccessorFactory);
+        }
+        
+        private SystemExecutor CreateExecutor(IPoolManager poolManager)
+        {
             var reactsToEntityHandler = new ReactToEntitySystemHandler(poolManager);
             var reactsToGroupHandler = new ReactToGroupSystemHandler(poolManager);
             var reactsToDataHandler = new ReactToDataSystemHandler(poolManager);
@@ -38,23 +40,24 @@ namespace EcsRx.Tests
                 manualSystemHandler
             };
             
-            return new SystemExecutor(poolManager, messageBroker, conventionalSystems);
+            return new SystemExecutor(conventionalSystems);
         }
 
         [Fact]
         public void should_execute_setup_for_matching_entities()
         {
-            var executor = CreateExecutor();
+            var poolManager = CreatePoolManager();
+            var executor = CreateExecutor(poolManager);
             executor.AddSystem(new TestSetupSystem());
 
-            var defaultPool = executor.PoolManager.GetPool();
+            var defaultPool = poolManager.GetPool();
             var entityOne = defaultPool.CreateEntity();
             var entityTwo = defaultPool.CreateEntity();
 
             entityOne.AddComponent(new TestComponentOne());
             entityTwo.AddComponent(new TestComponentTwo());
 
-            Assert.Equal( "woop", entityOne.GetComponent<TestComponentOne>().Data);
+            Assert.Equal("woop", entityOne.GetComponent<TestComponentOne>().Data);
             Assert.Null(entityTwo.GetComponent<TestComponentTwo>().Data);
         }
     }

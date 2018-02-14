@@ -6,7 +6,6 @@ namespace EcsRx.Executor
 {
     public interface ISystemExecutor
     {
-        IPoolManager PoolManager { get; }
         IEnumerable<ISystem> Systems { get; }
 
         void RemoveSystem(ISystem system);

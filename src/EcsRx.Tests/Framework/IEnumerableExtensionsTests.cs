@@ -7,14 +7,13 @@ using EcsRx.Systems;
 using EcsRx.Tests.Components;
 using EcsRx.Tests.Systems;
 using NSubstitute;
-using NUnit.Framework;
+using Xunit;
 
 namespace EcsRx.Tests
 {
-    [TestFixture]
     public class IEnumerableExtensionsTests
     {
-        [Test]
+        [Fact]
         public void should_correctly_order_priorities()
         {
             var defaultPrioritySystem = new DefaultPrioritySystem();
@@ -33,15 +32,15 @@ namespace EcsRx.Tests
             };
 
             var orderedList = systemList.OrderByPriority().ToList();
-            Assert.That(orderedList, Has.Count.EqualTo(5));
-            Assert.That(orderedList[0], Is.EqualTo(highPrioritySystem));
-            Assert.That(orderedList[1], Is.EqualTo(higherThanDefaultPrioritySystem));
-            Assert.That(orderedList[2], Is.EqualTo(defaultPrioritySystem));
-            Assert.That(orderedList[3], Is.EqualTo(lowerThanDefaultPrioritySystem));
-            Assert.That(orderedList[4], Is.EqualTo(lowPrioritySystem));
+            Assert.Equal(5, orderedList.Count);
+            Assert.Equal(highPrioritySystem, orderedList[0]);
+            Assert.Equal(higherThanDefaultPrioritySystem, orderedList[1]);
+            Assert.Equal(defaultPrioritySystem, orderedList[2]);
+            Assert.Equal(lowerThanDefaultPrioritySystem, orderedList[3]);
+            Assert.Equal(lowPrioritySystem, orderedList[4]);
         }
 
-        [Test]
+        [Fact]
         public void should_correctly_get_applicable_systems()
         {
             var requiredComponents = new IComponent[] { new TestComponentOne(), new TestComponentTwo() };
@@ -69,8 +68,8 @@ namespace EcsRx.Tests
             
             var applicableSystems = systemList.GetApplicableSystems(requiredComponents);
 
-            Assert.That(applicableSystems.Count(), Is.EqualTo(1));
-            Assert.That(applicableSystems.Contains(applicableSystem1));
+            Assert.Equal(1, applicableSystems.Count());
+            Assert.Contains(applicableSystem1, applicableSystems);
         }
     }
 }

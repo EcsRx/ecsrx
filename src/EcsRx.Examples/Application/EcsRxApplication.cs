@@ -35,10 +35,12 @@ namespace EcsRx.Examples.Application
             var reactsToDataHandler = new ReactToDataSystemHandler(PoolManager);
             var manualSystemHandler = new ManualSystemHandler(PoolManager);
             var setupHandler = new SetupSystemHandler(PoolManager);
+            var teardownHandler = new TeardownSystemHandler(PoolManager);
 
             var conventionalSystems = new List<IConventionalSystemHandler>
             {
                 setupHandler,
+                teardownHandler,
                 reactsToEntityHandler,
                 reactsToGroupHandler,
                 reactsToDataHandler,

@@ -6,8 +6,6 @@ namespace EcsRx.Examples
 {
     class Program
     {
-        private static bool _quit;
-
         static void Main(string[] args)
         {
             var application = new GroupPerformanceApplication();

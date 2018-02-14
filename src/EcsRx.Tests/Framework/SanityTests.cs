@@ -8,11 +8,10 @@ using EcsRx.Pools;
 using EcsRx.Reactive;
 using EcsRx.Tests.Components;
 using EcsRx.Tests.Systems;
-using NUnit.Framework;
+using Xunit;
 
 namespace EcsRx.Tests
 {
-    [TestFixture]
     public class SanityTests
     {
         
@@ -42,7 +41,7 @@ namespace EcsRx.Tests
             return new SystemExecutor(poolManager, messageBroker, conventionalSystems);
         }
 
-        [Test]
+        [Fact]
         public void should_execute_setup_for_matching_entities()
         {
             var executor = CreateExecutor();
@@ -55,8 +54,8 @@ namespace EcsRx.Tests
             entityOne.AddComponent(new TestComponentOne());
             entityTwo.AddComponent(new TestComponentTwo());
 
-            Assert.That(entityOne.GetComponent<TestComponentOne>().Data, Is.EqualTo("woop"));
-            Assert.That(entityTwo.GetComponent<TestComponentTwo>().Data, Is.Null);
+            Assert.Equal( "woop", entityOne.GetComponent<TestComponentOne>().Data);
+            Assert.Null(entityTwo.GetComponent<TestComponentTwo>().Data);
         }
     }
 }

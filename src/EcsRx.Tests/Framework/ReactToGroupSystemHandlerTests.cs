@@ -8,14 +8,13 @@ using EcsRx.Groups.Accessors;
 using EcsRx.Pools;
 using EcsRx.Systems;
 using NSubstitute;
-using NUnit.Framework;
+using Xunit;
 
 namespace EcsRx.Tests
 {
-    [TestFixture]
     public class ReactToGroupSystemHandlerTests
     {
-        [Test]
+        [Fact]
         public void should_correctly_handle_systems()
         {
             var mockPoolManager = Substitute.For<IPoolManager>();
@@ -25,12 +24,12 @@ namespace EcsRx.Tests
             var fakeNonMatchingSystem1 = Substitute.For<ISetupSystem>();
             var fakeNonMatchingSystem2 = Substitute.For<ISystem>();
             
-            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem));
-            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem1), Is.False);
-            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem2), Is.False);
+            Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem));
+            Assert.False(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem1));
+            Assert.False(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem2));
         }
         
-        [Test]
+        [Fact]
         public void should_execute_system_without_predicate()
         {
             var fakeEntities = new[]
@@ -58,11 +57,11 @@ namespace EcsRx.Tests
             observableSubject.OnNext(mockObservableGroup);
             
             mockSystem.ReceivedWithAnyArgs(2).Execute(Arg.Any<IEntity>());
-            Assert.That(systemHandler._systemSubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._systemSubscriptions[mockSystem], Is.Not.Null);
+            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
+            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }
         
-        [Test]
+        [Fact]
         public void should_only_execute_system_when_predicate_met()
         {
             var entityToMatch = Substitute.For<IEntity>();
@@ -95,11 +94,11 @@ namespace EcsRx.Tests
             observableSubject.OnNext(mockObservableGroup);
             
             mockSystem.ReceivedWithAnyArgs(1).Execute(Arg.Is(entityToMatch));
-            Assert.That(systemHandler._systemSubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._systemSubscriptions[mockSystem], Is.Not.Null);
+            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
+            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }
         
-        [Test]
+        [Fact]
         public void should_destroy_and_dispose_system()
         {
             var mockPoolManager = Substitute.For<IPoolManager>();
@@ -111,7 +110,7 @@ namespace EcsRx.Tests
             systemHandler.DestroySystem(mockSystem);
             
             mockDisposable.Received(1).Dispose();
-            Assert.That(systemHandler._systemSubscriptions.Count, Is.Zero);
+            Assert.Equal(0, systemHandler._systemSubscriptions.Count);
         }
     }
 }

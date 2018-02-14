@@ -1,27 +1,26 @@
 ﻿using EcsRx.Extensions;
 using EcsRx.Systems;
 using NSubstitute;
-using NUnit.Framework;
+using Xunit;
 
 namespace EcsRx.Tests
 {
-    [TestFixture]
     public class ISystemExtensionTests
     {
-        [Test]
+        [Fact]
         public void should_identify_if_system_is_reactive_data_system()
         {
             var fakeSystem = Substitute.For<IReactToDataSystem<int>>();
-            Assert.IsTrue(fakeSystem.IsReactiveDataSystem());
+            Assert.True(fakeSystem.IsReactiveDataSystem());
         }
 
-        [Test]
+        [Fact]
         public void should_get_interface_generic_type_from_reactive_data_system()
         {
             var fakeSystem = Substitute.For<IReactToDataSystem<int>>();
             var genericType = fakeSystem.GetGenericDataType();
             var typesMatch = genericType == typeof(int);
-            Assert.That(typesMatch);
+            Assert.True(typesMatch);
         }
     }
 }

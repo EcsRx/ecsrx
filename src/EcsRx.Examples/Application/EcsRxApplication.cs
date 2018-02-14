@@ -47,7 +47,7 @@ namespace EcsRx.Examples.Application
                 manualSystemHandler
             };
             
-            SystemExecutor = new SystemExecutor(PoolManager, EventSystem, conventionalSystems);
+            SystemExecutor = new SystemExecutor(conventionalSystems);
         }
 
         public abstract void StartApplication();

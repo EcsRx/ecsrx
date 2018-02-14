@@ -1,7 +1,5 @@
 using System;
 using System.Reactive.Subjects;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using EcsRx.Entities;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
@@ -60,6 +58,54 @@ namespace EcsRx.Tests
             mockSystem.Received(1).Teardown(Arg.Is(fakeEntity1));
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
+        }
+    }
+    
+    public class ManualSystemHandlerTests
+    {
+        [Fact]
+        public void should_correctly_handle_systems()
+        {
+            var mockPoolManager = Substitute.For<IPoolManager>();
+            var teardownSystemHandler = new ManualSystemHandler(mockPoolManager);
+            
+            var fakeMatchingSystem = Substitute.For<IManualSystem>();
+            var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
+            var fakeNonMatchingSystem2 = Substitute.For<ISystem>();
+            
+            Assert.True(teardownSystemHandler.CanHandleSystem(fakeMatchingSystem));
+            Assert.False(teardownSystemHandler.CanHandleSystem(fakeNonMatchingSystem1));
+            Assert.False(teardownSystemHandler.CanHandleSystem(fakeNonMatchingSystem2));
+        }
+        
+        [Fact]
+        public void should_start_system_when_added_to_handler()
+        {
+            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            var mockPoolManager = Substitute.For<IPoolManager>();
+
+            mockPoolManager.CreateObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
+            var mockSystem = Substitute.For<IManualSystem>();
+
+            var systemHandler = new ManualSystemHandler(mockPoolManager);
+            systemHandler.SetupSystem(mockSystem);
+            
+            mockSystem.Received(1).StartSystem(Arg.Is(mockObservableGroup));
+        }
+        
+        [Fact]
+        public void should_stop_system_when_added_to_handler()
+        {
+            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            var mockPoolManager = Substitute.For<IPoolManager>();
+
+            mockPoolManager.CreateObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
+            var mockSystem = Substitute.For<IManualSystem>();
+
+            var systemHandler = new ManualSystemHandler(mockPoolManager);
+            systemHandler.DestroySystem(mockSystem);
+            
+            mockSystem.Received(1).StopSystem(Arg.Is(mockObservableGroup));
         }
     }
 }

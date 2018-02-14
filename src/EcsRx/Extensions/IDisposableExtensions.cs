@@ -8,9 +8,6 @@ namespace EcsRx.Extensions
     {
         public static void DisposeAll(this IEnumerable<IDisposable> disposables)
         { disposables.ForEachRun(x => x.Dispose()); }
-
-        public static void DisposeAll(this IEnumerable<SubscriptionToken> disposables)
-        { disposables.ForEachRun(x => x.Disposable.Dispose()); }
         
         public static void DisposeAll<T>(this IDictionary<T, IDisposable> disposables)
         { disposables.Values.ForEachRun(x => x.Dispose()); }

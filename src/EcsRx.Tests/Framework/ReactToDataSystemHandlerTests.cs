@@ -9,14 +9,13 @@ using EcsRx.Pools;
 using EcsRx.Systems;
 using EcsRx.Tests.Components;
 using NSubstitute;
-using NUnit.Framework;
+using Xunit;
 
 namespace EcsRx.Tests
 {
-    [TestFixture]
     public class ReactToDataSystemHandlerTests
     {
-        [Test]
+        [Fact]
         public void should_correctly_handle_systems()
         {
             var mockPoolManager = Substitute.For<IPoolManager>();
@@ -27,13 +26,13 @@ namespace EcsRx.Tests
             var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
             var fakeNonMatchingSystem2 = Substitute.For<ISystem>();
             
-            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem1));
-            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem2));
-            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem1), Is.False);
-            Assert.That(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem2), Is.False);
+            Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem1));
+            Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem2));
+            Assert.False(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem1));
+            Assert.False(reactToEntitySystemHandler.CanHandleSystem(fakeNonMatchingSystem2));
         }
         
-        [Test]
+        [Fact]
         public void should_execute_system_without_predicate()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
@@ -71,17 +70,17 @@ namespace EcsRx.Tests
             mockSystem.Received(1).Execute(Arg.Is(fakeEntity1), Arg.Is(1));
             mockSystem.Received(1).Execute(Arg.Is(fakeEntity2), Arg.Is(2));
             
-            Assert.That(systemHandler._systemSubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._systemSubscriptions[mockSystem], Is.Not.Null);
+            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
+            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             
-            Assert.That(systemHandler._entitySubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Count, Is.EqualTo(2));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
-            CollectionAssert.AllItemsAreNotNull(systemHandler._entitySubscriptions[mockSystem].Values);
+            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
+            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
-        [Test]
+        [Fact]
         public void should_execute_system_when_entity_added_to_group()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
@@ -114,8 +113,8 @@ namespace EcsRx.Tests
             var systemHandler = new ReactToDataSystemHandler(mockPoolManager);
             systemHandler.SetupSystem(mockSystem);
 
-            Assert.That(systemHandler._entitySubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Count, Is.Zero);
+            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
+            Assert.Equal(0, systemHandler._entitySubscriptions[mockSystem].Count);
             
             mockSystem.Received(0).ReactToData(Arg.Any<IEntity>());
             addedSubject.OnNext(fakeEntity1);
@@ -130,17 +129,17 @@ namespace EcsRx.Tests
             mockSystem.Received(1).Execute(Arg.Is(fakeEntity1), Arg.Is(1));
             mockSystem.Received(1).Execute(Arg.Is(fakeEntity2), Arg.Is(2));
             
-            Assert.That(systemHandler._systemSubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._systemSubscriptions[mockSystem], Is.Not.Null);
+            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
+            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             
-            Assert.That(systemHandler._entitySubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Count, Is.EqualTo(2));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
-            CollectionAssert.AllItemsAreNotNull(systemHandler._entitySubscriptions[mockSystem].Values);
+            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
+            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
-        [Test]
+        [Fact]
         public void should_dispose_entity_subscriptions_when_removed_from_group()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
@@ -174,21 +173,21 @@ namespace EcsRx.Tests
             var systemHandler = new ReactToDataSystemHandler(mockPoolManager);
             systemHandler.SetupSystem(mockSystem);
             
-            Assert.That(systemHandler._entitySubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Count, Is.EqualTo(2));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
-            CollectionAssert.AllItemsAreNotNull(systemHandler._entitySubscriptions[mockSystem].Values);
+            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
+            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
 
             removedSubject.OnNext(fakeEntity1);
             
-            Assert.That(systemHandler._entitySubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Count, Is.EqualTo(1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
-            CollectionAssert.AllItemsAreNotNull(systemHandler._entitySubscriptions[mockSystem].Values);
+            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
+            Assert.Equal(1, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
-        [Test]
+        [Fact]
         public void should_only_execute_system_when_predicate_met()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
@@ -226,17 +225,17 @@ namespace EcsRx.Tests
             mockSystem.Received(1).Execute(Arg.Is(fakeEntity1), Arg.Is(1));
             mockSystem.Received(0).Execute(Arg.Is(fakeEntity2), Arg.Is(2));
             
-            Assert.That(systemHandler._systemSubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._systemSubscriptions[mockSystem], Is.Not.Null);
+            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
+            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             
-            Assert.That(systemHandler._entitySubscriptions.Count, Is.EqualTo(1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Count, Is.EqualTo(2));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
-            Assert.That(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
-            CollectionAssert.AllItemsAreNotNull(systemHandler._entitySubscriptions[mockSystem].Values);
+            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
+            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
-        [Test]
+        [Fact]
         public void should_destroy_and_dispose_system()
         {
             var guid1 = Guid.NewGuid();
@@ -259,11 +258,11 @@ namespace EcsRx.Tests
             systemHandler.DestroySystem(mockSystem);
             
             mockSystemDisposable.Received(1).Dispose();
-            Assert.That(systemHandler._systemSubscriptions.Count, Is.Zero);
+            Assert.Equal(0, systemHandler._systemSubscriptions.Count);
             
             mockEntityDisposable1.Received(1).Dispose();
             mockEntityDisposable2.Received(1).Dispose();
-            Assert.That(systemHandler._entitySubscriptions.Count, Is.Zero);
+            Assert.Equal(0, systemHandler._entitySubscriptions.Count);
         }
     }
 }

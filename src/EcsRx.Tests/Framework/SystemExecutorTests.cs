@@ -9,11 +9,9 @@ using EcsRx.Pools;
 using EcsRx.Systems;
 using EcsRx.Tests.Components;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace EcsRx.Tests
 {
-    [TestFixture]
     public class SystemExecutorTests
     {
         /*

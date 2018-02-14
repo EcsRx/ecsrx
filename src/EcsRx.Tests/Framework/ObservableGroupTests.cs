@@ -3,7 +3,6 @@ using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Pools;
 using NSubstitute;
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -13,13 +12,13 @@ using EcsRx.Reactive;
 using EcsRx.Tests.Components;
 using NSubstitute.Extensions;
 using NSubstitute.ReturnsExtensions;
+using Xunit;
 
 namespace EcsRx.Tests
 {
-    [TestFixture]
-    public class CacheableGroupAccessorTests
+    public class ObservableGroupTests
     {
-        [Test]
+        [Fact]
         public void should_include_entity_snapshot_on_creation()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -39,15 +38,15 @@ namespace EcsRx.Tests
 
             var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, dummyEntitySnapshot);
 
-            Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(3));
-            Assert.That(cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[0].Id], Is.EqualTo(dummyEntitySnapshot[0]));
-            Assert.That(cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[1].Id], Is.EqualTo(dummyEntitySnapshot[1]));
-            Assert.That(cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[2].Id], Is.EqualTo(dummyEntitySnapshot[2]));
+            Assert.Equal(3, cacheableGroupAccessor.CachedEntities.Count);
+            Assert.Equal(dummyEntitySnapshot[0], cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[0].Id]);
+            Assert.Equal(dummyEntitySnapshot[1], cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[1].Id]);
+            Assert.Equal(dummyEntitySnapshot[2], cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[2].Id]);
 
             cacheableGroupAccessor.Dispose();
         }
 
-        [Test]
+        [Fact]
         public void should_only_cache_applicable_entity_when_applicable_entity_added()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -72,11 +71,11 @@ namespace EcsRx.Tests
             var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
             
-            Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(1));
-            Assert.That(cacheableGroupAccessor.CachedEntities[applicableEntity.Id], Is.EqualTo(applicableEntity));
+            Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
+            Assert.Equal(applicableEntity, cacheableGroupAccessor.CachedEntities[applicableEntity.Id]);
         }
 
-        [Test]
+        [Fact]
         public void should_not_cache_applicable_entity_when_added_to_different_pool()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -101,10 +100,10 @@ namespace EcsRx.Tests
             var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
 
-            Assert.That(cacheableGroupAccessor.CachedEntities, Is.Empty);
+            Assert.Empty(cacheableGroupAccessor.CachedEntities);
         }
 
-        [Test]
+        [Fact]
         public void should_only_remove_applicable_entity_when_entity_removed()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -131,11 +130,11 @@ namespace EcsRx.Tests
             var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
             underlyingEvent.SetValueAndForceNotify(new EntityRemovedEvent(existingEntityOne, mockPool));
 
-            Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(1));
-            Assert.That(cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id], Is.EqualTo(existingEntityTwo));
+            Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
+            Assert.Equal(existingEntityTwo, cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id]);
         }
 
-        [Test]
+        [Fact]
         public void should_only_remove_entity_when_components_no_longer_match_group()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -166,11 +165,11 @@ namespace EcsRx.Tests
             existingEntityTwo.RemoveComponent(unapplicableComponent);
             underlyingEvent.SetValueAndForceNotify(new ComponentsRemovedEvent(existingEntityTwo, new[] {unapplicableComponent}));
 
-            Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(1));
-            Assert.That(cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id], Is.EqualTo(existingEntityTwo));
+            Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
+            Assert.Equal(existingEntityTwo, cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id]);
         }
 
-        [Test]
+        [Fact]
         public void should_only_add_entity_when_components_match_group()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -198,11 +197,11 @@ namespace EcsRx.Tests
             existingEntityTwo.AddComponent(unapplicableComponent);
             underlyingEvent.SetValueAndForceNotify(new ComponentsAddedEvent(existingEntityTwo, new[]{unapplicableComponent}));
 
-            Assert.That(cacheableGroupAccessor.CachedEntities, Has.Count.EqualTo(1));
-            Assert.That(cacheableGroupAccessor.CachedEntities[existingEntityOne.Id], Is.EqualTo(existingEntityOne));
+            Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
+            Assert.Equal(existingEntityOne, cacheableGroupAccessor.CachedEntities[existingEntityOne.Id]);
         }
         
-        [Test]
+        [Fact]
         public void should_correctly_notify_when_entity_added()
         {
             var componentTypes = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
@@ -230,17 +229,17 @@ namespace EcsRx.Tests
             var observableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[0]);
             observableGroup.OnEntityAdded.Subscribe(x =>
             {
-                Assert.That(x, Is.EqualTo(fakeEntity1));
+                Assert.Equal(fakeEntity1, x);
                 timesCalled++;
             });
             
             underlyingEvent.OnNext(new EntityAddedEvent(fakeEntity1, mockPool));
             underlyingEvent.OnNext(new EntityAddedEvent(fakeEntity2, mockPool));
 
-            Assert.That(timesCalled, Is.EqualTo(1));
+            Assert.Equal(1, timesCalled);
         }
 
-        [Test]
+        [Fact]
         public void should_correctly_notify_when_matching_entity_removed()
         {
             var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
@@ -268,17 +267,17 @@ namespace EcsRx.Tests
             var observableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[]{ fakeEntity1 });
             observableGroup.OnEntityRemoved.Subscribe(x =>
             {
-                Assert.That(x, Is.EqualTo(fakeEntity1));
+                Assert.Equal(fakeEntity1, x);
                 timesCalled++;
             });
 
             underlyingEvent.OnNext(new EntityRemovedEvent(fakeEntity1, mockPool));
             underlyingEvent.OnNext(new EntityRemovedEvent(fakeEntity2, mockPool));
 
-            Assert.That(timesCalled, Is.EqualTo(1));
+            Assert.Equal(1, timesCalled);
         }
 
-        [Test]
+        [Fact]
         public void should_correctly_notify_when_matching_component_added()
         {
             var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
@@ -296,7 +295,7 @@ namespace EcsRx.Tests
             var observableGroup = new ObservableGroup(fakeEventSystem, accessorToken, new IEntity[0]);
             observableGroup.OnEntityAdded.Subscribe(x =>
             {
-                Assert.That(x, Is.EqualTo(fakeEntity1));
+                Assert.Equal(fakeEntity1, x);
                 timesCalled++;
             });
             
@@ -304,10 +303,10 @@ namespace EcsRx.Tests
             fakeEntity1.AddComponent<TestComponentThree>();
             fakeEntity2.AddComponent<TestComponentThree>();
 
-            Assert.That(timesCalled, Is.EqualTo(1));
+            Assert.Equal(1, timesCalled);
         }
 
-        [Test]
+        [Fact]
         public void should_correctly_notify_when_matching_component_removed()
         {
             var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
@@ -328,7 +327,7 @@ namespace EcsRx.Tests
             var observableGroup = new ObservableGroup(fakeEventSystem, accessorToken, new IEntity[]{fakeEntity1});
             observableGroup.OnEntityRemoved.Subscribe(x =>
             {
-                Assert.That(x, Is.EqualTo(fakeEntity1));
+                Assert.Equal(fakeEntity1, x);
                 timesCalled++;
             });
             
@@ -336,7 +335,7 @@ namespace EcsRx.Tests
             fakeEntity1.RemoveComponent<TestComponentTwo>();
             fakeEntity2.RemoveComponent<TestComponentThree>();
 
-            Assert.That(timesCalled, Is.EqualTo(1));
+            Assert.Equal(1, timesCalled);
         }
     }
 }

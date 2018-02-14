@@ -4,14 +4,13 @@ using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Pools;
 using NSubstitute;
-using NUnit.Framework;
+using Xunit;
 
 namespace EcsRx.Tests
 {
-    [TestFixture]
     public class PoolTests
     {
-        [Test]
+        [Fact]
         public void should_create_new_entity()
         {
             var expectedId = Guid.NewGuid();
@@ -22,12 +21,12 @@ namespace EcsRx.Tests
             var pool = new Pool("", mockEntityFactory, mockEventSystem);
             var entity = pool.CreateEntity();
 
-            Assert.That(entity.Id, Is.EqualTo(expectedId));
-            Assert.That(entity.Components, Is.Not.Null);
-            Assert.That(entity.Components, Is.Empty);
+            Assert.Equal(expectedId, entity.Id);
+            Assert.NotNull(entity.Components);
+            Assert.Empty(entity.Components);
         }
 
-        [Test]
+        [Fact]
         public void should_raise_event_when_creating_entity()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -40,7 +39,7 @@ namespace EcsRx.Tests
             mockEventSystem.Received().Publish(Arg.Is<EntityAddedEvent>(x => x.Entity == entity && x.Pool == pool));
         }
 
-        [Test]
+        [Fact]
         public void should_add_created_entity_into_the_pool()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -50,11 +49,11 @@ namespace EcsRx.Tests
             var pool = new Pool("", mockEntityFactory, mockEventSystem);
             var entity = pool.CreateEntity();
 
-            Assert.That(pool.Entities.Count(), Is.EqualTo(1));
-            Assert.That(pool.Entities.First(), Is.EqualTo(entity));
+            Assert.Equal(1, pool.Entities.Count());
+            Assert.Equal(entity, pool.Entities.First());
         }
 
-        [Test]
+        [Fact]
         public void should_raise_events_and_remove_components_when_removing_entity()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -67,10 +66,10 @@ namespace EcsRx.Tests
             
             mockEventSystem.Received().Publish(Arg.Is<EntityRemovedEvent>(x => x.Entity == entity && x.Pool == pool));
 
-            Assert.That(entity.Components, Is.Empty);
+            Assert.Empty(entity.Components);
         }
 
-        [Test]
+        [Fact]
         public void should_remove_created_entity_from_the_pool()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
@@ -81,7 +80,7 @@ namespace EcsRx.Tests
             var entity = pool.CreateEntity();
             pool.RemoveEntity(entity);
 
-            Assert.That(pool.Entities, Is.Empty);
+            Assert.Empty(pool.Entities);
         }
     }
 }

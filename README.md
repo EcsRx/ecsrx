@@ -34,6 +34,59 @@ It is advised to look at the examples, which show the [bare bones required setup
 
 If you are using unity it is recommended you just ignore everything here and use the instructions on the [ecsrx.unity repository](ttps://github.com/grofit/ecsrx.unity).
 
+### Simple components
+
+```csharp
+public class HealthComponent : IComponent
+{
+    public int CurrentHealth { get; set; }
+    public int MaxHealth { get; set; }
+}
+```
+
+You implement the `IComponent` interface which marks the class as a component, and you can optionally implement `IDisposable` if you want to dispose stuff like so:
+
+```csharp
+public class HealthComponent : IComponent, IDisposable
+{
+    public ReactiveProperty<int> CurrentHealth { get; set; }
+    public int MaxHealth { get; set; }
+    
+    public HealthComponent() 
+    { CurrentHealth = new ReactiveProperty<int>(); }
+    
+    public void Dispose() 
+    { CurrentHealth.Dispose; }
+}
+```
+
+Any component which is marked with `IDisposable` will be auto disposed of by entities.
+
+### Simple systems
+
+```csharp
+public class CheckForDeathSystem : IReactToEntitySystem
+{
+    public IGroup TargetGroup => new Group(typeof(HealthComponent)); // Get any entities with health component
+
+    public IObservable<IEntity> ReactToEntity(IEntity entity) // Explain when you want to execute
+    {
+        var healthComponent = entity.GetComponent<HealthComponent>();
+        return healthComponent.CurrentHealth.Where(x => x <= 0).Select(x => entity);
+    }
+    
+    public void Execute(IEntity entity) // Logic run whenever the above reaction occurs
+    {
+        entity.RemoveComponent<HealthComponent>();
+        entity.AddComponent<IsDeadComponent>();
+    }
+}
+``` 
+
+Systems are conventional, so there are many built in types like `IReactToEntitySystem`, `IReactToGroupSystem`, `IManualSystem` and many others, but you can read about them in the [docs/systems](docs/systems.md), you can add your own conventional systems by extending `ISystem` and systems are handled for you by the `ISystemExecutor`.
+
+Check the examples for more use cases, and the unity flavour of ecsrx which has more examples and demo projects, and drop into the gitter channel to ask any questions.
+
 ## Running Examples
 
 If you want to run the examples then just clone it and open examples project in the `src` folder, then run the examples, I will try to add to as the library matures.
@@ -42,7 +95,7 @@ There are also a suite of tests which are being expanded as the project grows, i
 
 ## Docs
 
-See the docs folder for more information. (This will grow)
+See the [docs folder](docs) for more information. (This will grow)
 
 [build-status-image]: https://travis-ci.org/grofit/ecsrx.svg
 [build-status-url]: https://travis-ci.org/grofit/ecsrx

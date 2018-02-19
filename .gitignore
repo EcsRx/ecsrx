@@ -4,3 +4,4 @@ packages/
 .idea/
 *.user
 *.suo
+*.nupkg

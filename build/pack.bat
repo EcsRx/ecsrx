@@ -1,0 +1,1 @@
+nuget pack ../src/ecsrx/package.nuspec

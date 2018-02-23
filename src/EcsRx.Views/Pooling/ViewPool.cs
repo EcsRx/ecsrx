@@ -17,15 +17,14 @@ namespace EcsRx.Views.Pooling
             IncrementSize = incrementSize;
             ViewHandler = viewHandler;
         }
-
-        protected abstract void SetActiveState(object view, bool isActive);
         
         public void PreAllocate(int allocationCount)
         {
             for (var i = 0; i < allocationCount; i++)
             {
-                var newInstance = ViewHandler.SetupView();
-                SetActiveState(newInstance, false);
+                var newInstance = ViewHandler.CreateView();
+                ViewHandler.SetActiveState(newInstance, false);
+                
                 var objectContainer = new ViewObjectContainer(newInstance);
                 _pooledObjects.Add(objectContainer);
             }
@@ -35,12 +34,13 @@ namespace EcsRx.Views.Pooling
         {
             _pooledObjects.Where(x => !x.IsInUse)
                 .Take(dellocationCount)
-                .ToArray()
-                .ForEachRun(x =>
-                {
-                    _pooledObjects.Remove(x);
-                    DestroyView(x.ViewObject);
-                });
+                .ForEachRun(OnDeallocateView);
+        }
+
+        private void OnDeallocateView(ViewObjectContainer x)
+        {
+            _pooledObjects.Remove(x);
+            ViewHandler.DestroyView(x.ViewObject);
         }
 
         public object AllocateInstance()
@@ -63,7 +63,7 @@ namespace EcsRx.Views.Pooling
 
             container.IsInUse = false;
             var viewObject = container.ViewObject;
-            SetActiveState(viewObject, false);
+            ViewHandler.SetActiveState(viewObject, false);
         }
 
         public void EmptyPool()

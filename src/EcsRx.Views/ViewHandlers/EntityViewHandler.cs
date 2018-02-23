@@ -9,46 +9,44 @@ using EcsRx.Views.Components;
 
 namespace EcsRx.Views.ViewHandlers
 {
-    public abstract class ViewHandler : IViewHandler, IDisposable
+    public abstract class EntityViewHandler : IEntityViewHandler, IDisposable
     {
         public IPoolManager PoolManager { get; }
         public IEventSystem EventSystem { get; }
-        public Func<IEntity, object> ViewResolver { get; }
-
+        public IViewHandler ViewHandler { get; }
+        
         private readonly IDisposable _destructionSubscription;
         private readonly IDictionary<Guid, object> _viewCache = new Dictionary<Guid, object>();
 
-        protected ViewHandler(IPoolManager poolManager, IEventSystem eventSystem, Func<IEntity, object> viewResolver)
+        protected EntityViewHandler(IPoolManager poolManager, IEventSystem eventSystem, IViewHandler viewHandler)
         {
             PoolManager = poolManager;
             EventSystem = eventSystem;
-            ViewResolver = viewResolver;
+            ViewHandler = viewHandler;
 
             _destructionSubscription = EventSystem.Receive<ComponentsRemovedEvent>()
                 .Where(x => _viewCache.ContainsKey(x.Entity.Id))
                 .Where(x => x.Components.Any(y => y is ViewComponent))
-                .Subscribe(OnComponentRemoved);
+                .Subscribe(OnViewRemoved);
         }
 
-        private void OnComponentRemoved(ComponentsRemovedEvent x)
+        protected virtual void OnViewRemoved(ComponentsRemovedEvent x)
         {
             var view = _viewCache[x.Entity.Id];
             _viewCache.Remove(x.Entity.Id);
-            DestroyView(view);
+            ViewHandler.DestroyView(view);
         }
 
-        public abstract void DestroyView(object view);
-        public abstract void OnViewCreated(IEntity entity, object view);
+        protected abstract void OnViewCreated(IEntity entity, object view);
         
         public void SetupView(IEntity entity)
         {
             var viewComponent = entity.GetComponent<ViewComponent>();
             if (viewComponent.View != null) { return; }
 
-            var viewObject = ViewResolver(entity);
-            viewComponent.View = viewObject;          
+            viewComponent.View = ViewHandler.CreateView();          
             
-            OnViewCreated(entity, ViewResolver);
+            OnViewCreated(entity, viewComponent);
         }
 
         public void Dispose()

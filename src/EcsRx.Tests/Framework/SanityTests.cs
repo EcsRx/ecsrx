@@ -6,7 +6,7 @@ using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Accessors;
 using EcsRx.Pools;
 using EcsRx.Reactive;
-using EcsRx.Tests.Components;
+using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using Xunit;
 

@@ -4,7 +4,7 @@ using EcsRx.Components;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
-using EcsRx.Tests.Components;
+using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using NSubstitute;
 using Xunit;

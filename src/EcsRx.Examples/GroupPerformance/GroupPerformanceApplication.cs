@@ -10,15 +10,18 @@ using EcsRx.Groups;
 
 namespace EcsRx.Examples.HealthExample
 {
-    public class GroupPerformanceApplication : EcsRxApplication
+    public class GroupPerformanceApplication : EcsRxConsoleApplication
     {
-        private IEnumerable<IComponent> _availableComponents;
-        private RandomGroupFactory _groupFactory = new RandomGroupFactory();
+        private IComponent[] _availableComponents;
+        private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         private readonly Random _random = new Random();
 
-        public override void StartApplication()
+        protected override void ApplicationStarted()
         {
-            _availableComponents = _groupFactory.GetComponentTypes.Select(x => Activator.CreateInstance(x) as IComponent).ToList();
+            _availableComponents = _groupFactory.GetComponentTypes
+                .Select(x => Activator.CreateInstance(x) as IComponent)
+                .ToArray();
+            
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
             { PoolManager.CreateObservableGroup(group); }
@@ -44,8 +47,8 @@ namespace EcsRx.Examples.HealthExample
             for (var i = 0; i < amount; i++)
             {
                 var entity = defaultPool.CreateEntity();
-                entity.AddComponents(_availableComponents.ToArray());
-                entity.RemoveComponents(_availableComponents.ToArray());
+                entity.AddComponents(_availableComponents);
+                entity.RemoveComponents(_availableComponents);
             }
             
             var endTime = DateTime.Now;

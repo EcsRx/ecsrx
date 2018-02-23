@@ -1,6 +1,6 @@
 ﻿using EcsRx.Components;
 
-namespace EcsRx.Tests.Components
+namespace EcsRx.Tests.Models
 {
     public class TestComponentOne : IComponent
     {

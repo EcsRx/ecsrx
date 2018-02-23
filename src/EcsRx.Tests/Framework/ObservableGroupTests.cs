@@ -9,7 +9,7 @@ using System.Reactive.Subjects;
 using System.Threading;
 using EcsRx.Groups.Accessors;
 using EcsRx.Reactive;
-using EcsRx.Tests.Components;
+using EcsRx.Tests.Models;
 using NSubstitute.Extensions;
 using NSubstitute.ReturnsExtensions;
 using Xunit;

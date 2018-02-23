@@ -5,13 +5,18 @@ using EcsRx.Examples.HelloWorldExample.Systems;
 
 namespace EcsRx.Examples.HelloWorldExample
 {
-    public class HelloWorldExampleApplication : EcsRxApplication
+    public class HelloWorldExampleApplication : EcsRxConsoleApplication
     {
-        private bool _quit = false;
+        private bool _quit;
 
-        public override void StartApplication()
+        protected override void ApplicationStarting()
         {
-            SystemExecutor.AddSystem(new TalkingSystem());
+            RegisterSystem<TalkingSystem>();
+        }
+
+        protected override void ApplicationStarted()
+        {
+            RegisterAllBoundSystems();
 
             var defaultPool = PoolManager.GetPool();
             var entity = defaultPool.CreateEntity();

@@ -1,8 +1,8 @@
 ﻿using EcsRx.Components;
 
-namespace EcsRx.Tests.Components
+namespace EcsRx.Tests.Models
 {
-    public class TestComponentThree : IComponent
+    public class TestComponentTwo : IComponent
     {
         public string Data { get; set; }
     }

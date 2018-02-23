@@ -7,6 +7,12 @@ namespace EcsRx.Infrastructure.Dependencies
         public bool AsSingleton { get; set; }  
         public string WithName { get; set; }
         public object BindInstance { get; set; }
-        public IDictionary<string, object> WithConstructorArgs { get; set; }
+        public IDictionary<string, object> WithConstructorArgs { get; }
+
+        public BindingConfiguration()
+        {
+            AsSingleton = true;       
+            WithConstructorArgs = new Dictionary<string, object>();
+        }
     }
 }

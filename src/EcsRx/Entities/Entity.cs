@@ -46,8 +46,7 @@ namespace EcsRx.Entities
         {
             if(!_components.ContainsKey(component.GetType())) { return; }
 
-            var disposable = component as IDisposable;
-            if (disposable != null)
+            if (component is IDisposable disposable)
             {  disposable.Dispose(); }
 
             _components.Remove(component.GetType());
@@ -68,9 +67,8 @@ namespace EcsRx.Entities
             {
                 if(!_components.ContainsKey(components[i].GetType())) { continue; }
 
-                var disposable = components[i] as IDisposable;
-                if (disposable != null)
-                {  disposable.Dispose(); }
+                if (components[i] is IDisposable disposable)
+                { disposable.Dispose(); }
 
                 _components.Remove(components[i].GetType());
             }
@@ -109,10 +107,10 @@ namespace EcsRx.Entities
         }
 
         public IComponent GetComponent(Type componentType)
-        {
-            IComponent component;
-            return _components.TryGetValue(componentType, out component) ? component : null;
-        }
+        { return _components.TryGetValue(componentType, out var component) ? component : null; }
+
+        public override int GetHashCode()
+        { return Id.GetHashCode(); }
 
         public void Dispose()
         { RemoveAllComponents(); }

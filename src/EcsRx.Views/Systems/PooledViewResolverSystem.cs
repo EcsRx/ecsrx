@@ -1,63 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
-using EcsRx.Entities;
-using EcsRx.Events;
-using EcsRx.Extensions;
+﻿using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Pools;
 using EcsRx.Systems;
 using EcsRx.Views.Components;
+using EcsRx.Views.Pooling;
+using EcsRx.Views.ViewHandlers;
 
 namespace EcsRx.Views.Systems
 {
-    public abstract class PooledViewResolverSystem : ISetupSystem, IDisposable
+    public abstract class PooledViewResolverSystem : ISetupSystem
     {
-        public IPoolManager PoolManager { get; }
-        public IEventSystem EventSystem { get; }
-
-        private readonly IDictionary<Guid, object> _viewCache;
-        private readonly IDisposable _entitySubscription;
+        public IEntityViewHandler EntityViewHandler { get; }
+        public IViewPool ViewPool { get; }
 
         public virtual IGroup TargetGroup => new Group(typeof(ViewComponent));
 
-        protected PooledViewResolverSystem(IPoolManager poolManager, IEventSystem eventSystem)
+        protected PooledViewResolverSystem(IEntityViewHandler entityViewHandler, IViewPool viewPool)
         {
-            PoolManager = poolManager;
-            EventSystem = eventSystem;
-
-            _viewCache = new Dictionary<Guid, object>();
-
-            _entitySubscription = EventSystem
-                .Receive<ComponentsRemovedEvent>()
-                .Where(x => x.Component is ViewComponent && _viewCache.ContainsKey(x.Entity.Id))
-                .Subscribe(x =>
-                {
-                    var view = _viewCache[x.Entity.Id];
-                    RecycleView(view);
-                    _viewCache.Remove(x.Entity.Id);
-                });
-
-            PrefabTemplate = ResolvePrefabTemplate();
+            EntityViewHandler = entityViewHandler;
+            ViewPool = viewPool;
         }
 
-        protected abstract object ResolvePrefabTemplate();
-        protected abstract void RecycleView(object viewToRecycle);
-        protected abstract object AllocateView(IEntity entity, IPool pool);
+        protected abstract void OnViewRecycled(object view);
+        protected abstract void OnViewAllocated(object view);
 
-        public virtual void Setup(IEntity entity)
+        protected virtual void RecycleView(object viewToRecycle)
         {
-            var viewComponent = entity.GetComponent<ViewComponent>();
-            if (viewComponent.View != null) { return; }
-
-            var containingPool = PoolManager.GetContainingPoolFor(entity);
-            var viewObject = AllocateView(entity, containingPool);
-            viewComponent.View = viewObject;
-
-            _viewCache.Add(entity.Id, viewObject);
+            ViewPool.ReleaseInstance(viewToRecycle);
+            OnViewRecycled(viewToRecycle);
         }
 
-        public void Dispose()
-        { _entitySubscription.Dispose(); }
+        protected virtual object AllocateView(IEntity entity)
+        {
+            var viewToAllocate = ViewPool.AllocateInstance();
+            OnViewAllocated(viewToAllocate);
+            return viewToAllocate;
+        }
+
+        public void Setup(IEntity entity)
+        { AllocateView(entity); }
     }
 }

@@ -7,7 +7,6 @@ using EcsRx.Groups;
 using EcsRx.Groups.Accessors;
 using EcsRx.Pools;
 using EcsRx.Systems;
-using EcsRx.Tests.Components;
 using NSubstitute;
 using Xunit;
 

@@ -1,18 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Entities;
-using EcsRx.Events;
-using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Accessors;
 using EcsRx.Groups;
 using EcsRx.Pools;
-using EcsRx.Reactive;
 using EcsRx.Systems;
-using EcsRx.Tests.Components;
 using NSubstitute;
 using Xunit;
 

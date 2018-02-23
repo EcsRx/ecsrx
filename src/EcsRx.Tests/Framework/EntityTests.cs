@@ -3,7 +3,7 @@ using System.Linq;
 using EcsRx.Components;
 using EcsRx.Entities;
 using EcsRx.Events;
-using EcsRx.Tests.Components;
+using EcsRx.Tests.Models;
 using NSubstitute;
 using Xunit;
 

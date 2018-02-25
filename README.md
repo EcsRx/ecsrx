@@ -97,7 +97,7 @@ There are also a suite of tests which are being expanded as the project grows, i
 
 See the [docs folder](docs) for more information. (This will grow)
 
-[build-status-image]: https://travis-ci.org/grofit/ecsrx.svg
-[build-status-url]: https://travis-ci.org/grofit/ecsrx
+[build-status-image]: https://travis-ci.org/EcsRx/ecsrx.svg
+[build-status-url]: https://travis-ci.org/EcsRx/ecsrx
 [gitter-image]: https://badges.gitter.im/grofit/ecsrx.svg
 [gitter-url]: https://gitter.im/grofit/ecsrx

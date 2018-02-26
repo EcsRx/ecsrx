@@ -5,14 +5,14 @@ using EcsRx.Views.ViewHandlers;
 
 namespace EcsRx.Views.Pooling
 {
-    public abstract class ViewPool : IViewPool
+    public class ViewPool : IViewPool
     {
-        private readonly IList<ViewObjectContainer> _pooledObjects = new List<ViewObjectContainer>();
+        public readonly IList<ViewObjectContainer> _pooledObjects = new List<ViewObjectContainer>();
         
         public int IncrementSize { get; }
         public IViewHandler ViewHandler { get; }
-        
-        protected ViewPool(int incrementSize, IViewHandler viewHandler)
+
+        public ViewPool(int incrementSize, IViewHandler viewHandler)
         {
             IncrementSize = incrementSize;
             ViewHandler = viewHandler;
@@ -34,6 +34,7 @@ namespace EcsRx.Views.Pooling
         {
             _pooledObjects.Where(x => !x.IsInUse)
                 .Take(dellocationCount)
+                .ToArray()
                 .ForEachRun(OnDeallocateView);
         }
 
@@ -53,6 +54,7 @@ namespace EcsRx.Views.Pooling
             }
 
             availableViewObject.IsInUse = true;
+            ViewHandler.SetActiveState(availableViewObject, true);
             return availableViewObject.ViewObject;
         }
         
@@ -67,6 +69,11 @@ namespace EcsRx.Views.Pooling
         }
 
         public void EmptyPool()
-        { _pooledObjects.Clear(); }
+        {
+            _pooledObjects.ToArray()
+                .ForEachRun(OnDeallocateView);
+
+            _pooledObjects.Clear();
+        }
     }
 }

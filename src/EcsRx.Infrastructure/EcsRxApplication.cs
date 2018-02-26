@@ -8,6 +8,7 @@ using EcsRx.Infrastructure.Modules;
 using EcsRx.Infrastructure.Plugins;
 using EcsRx.Pools;
 using EcsRx.Systems;
+using EcsRx.Views.Systems;
 
 namespace EcsRx.Infrastructure
 {
@@ -63,8 +64,8 @@ namespace EcsRx.Infrastructure
             var allSystems = DependencyContainer.ResolveAll<ISystem>();
 
             var orderedSystems = allSystems
-                //.OrderByDescending(x => x is ViewResolverSystem)
-                .OrderByDescending(x => x is ISetupSystem);
+                .OrderByDescending(x => x is ViewResolverSystem)
+                .ThenByDescending(x => x is ISetupSystem);
             
             orderedSystems.ForEachRun(SystemExecutor.AddSystem);
         }

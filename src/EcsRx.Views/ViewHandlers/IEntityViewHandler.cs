@@ -1,7 +1,4 @@
-﻿using System;
-using EcsRx.Entities;
-using EcsRx.Events;
-using EcsRx.Pools;
+﻿using EcsRx.Entities;
 
 namespace EcsRx.Views.ViewHandlers
 {

@@ -13,16 +13,16 @@ namespace EcsRx.Views.ViewHandlers
     {
         public IPoolManager PoolManager { get; }
         public IEventSystem EventSystem { get; }
-        public IViewHandler ViewHandler { get; }
+
+        public abstract IViewHandler ViewHandler { get; }
         
         private readonly IDisposable _destructionSubscription;
         private readonly IDictionary<Guid, object> _viewCache = new Dictionary<Guid, object>();
 
-        protected EntityViewHandler(IPoolManager poolManager, IEventSystem eventSystem, IViewHandler viewHandler)
+        protected EntityViewHandler(IPoolManager poolManager, IEventSystem eventSystem)
         {
             PoolManager = poolManager;
             EventSystem = eventSystem;
-            ViewHandler = viewHandler;
 
             _destructionSubscription = EventSystem.Receive<ComponentsRemovedEvent>()
                 .Where(x => _viewCache.ContainsKey(x.Entity.Id))
@@ -37,7 +37,7 @@ namespace EcsRx.Views.ViewHandlers
             ViewHandler.DestroyView(view);
         }
 
-        protected abstract void OnViewCreated(IEntity entity, object view);
+        protected abstract void OnViewCreated(IEntity entity, ViewComponent view);
         
         public void SetupView(IEntity entity)
         {

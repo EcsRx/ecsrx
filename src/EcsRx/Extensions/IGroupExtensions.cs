@@ -15,14 +15,21 @@ namespace EcsRx.Extensions
             return new Group(componentTypes.ToArray());
         }
         
-        public static bool ContainsAllComponents(this IGroup group, IComponent[] components)
+        public static bool ContainsAll(this IGroup group, IComponent[] components)
         {
+            var castComponents = components.Select(x => x.GetType()).ToArray();
             for (var i = components.Length - 1; i >= 0; i--)
             {
-                if (!group.MatchesComponents.Contains(components[i].GetType()))
+                if (!group.MatchesComponents.Contains(castComponents[i]))
                 { return false; }
             }
             return true;
+        }
+
+        public static bool ContainsAny(this IGroup group, IComponent[] components)
+        {
+            var castComponents = components.Select(x => x.GetType()).ToArray();
+            return group.MatchesComponents.Any(x => castComponents.Contains(x));
         }
     }
 }

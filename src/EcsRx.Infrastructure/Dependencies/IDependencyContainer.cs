@@ -20,6 +20,8 @@ namespace EcsRx.Infrastructure.Dependencies
         object NativeContainer { get; }
         
         void Bind<TFrom, TTo>(BindingConfiguration configuration = null) where TTo : TFrom;
+        void Bind<T>(BindingConfiguration configuration = null);
+
         T Resolve<T>(string name = null);
         IEnumerable<T> ResolveAll<T>();
 

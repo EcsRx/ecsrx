@@ -63,6 +63,9 @@ namespace EcsRx.Examples.Dependencies
             { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
         }
 
+        public void Bind<T>(BindingConfiguration configuration = null)
+        { Bind<T,T>(configuration); }
+
         public T Resolve<T>(string name = null)
         {
             if(string.IsNullOrEmpty(name))

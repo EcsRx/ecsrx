@@ -39,7 +39,7 @@ namespace EcsRx.Views.Systems
             ViewHandler.DestroyView(view);
         }
 
-        protected abstract void OnViewCreated(IEntity entity, ViewComponent view);
+        protected abstract void OnViewCreated(IEntity entity, ViewComponent viewComponent);
 
         public void Dispose()
         { _destructionSubscription.Dispose(); }

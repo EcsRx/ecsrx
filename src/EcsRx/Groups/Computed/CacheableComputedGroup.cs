@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Reactive;
 using EcsRx.Groups.Accessors;
 
-namespace EcsRx.Groups.Filtration
+namespace EcsRx.Groups.Computed
 {
     public abstract class CacheableComputedGroup<T> : IComputedGroup<T>, IDisposable
     {
@@ -11,7 +10,7 @@ namespace EcsRx.Groups.Filtration
         private bool _needsUpdate = true;
 
         protected IEnumerable<T> FilteredCache { get; set; }
-        protected abstract IObservable<Unit> TriggerOnChange();
+        protected abstract IObservable<bool> TriggerOnChange();
         protected abstract IEnumerable<T> FilterQuery();
 
         public IObservableGroup ObservableGroup { get; }

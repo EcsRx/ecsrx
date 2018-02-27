@@ -11,6 +11,6 @@ namespace EcsRx.Infrastructure.Plugins
         Version Version { get; }
 
         void SetupDependencies(IDependencyContainer container);
-        IEnumerable<ISystem> GetSystemForRegistration(IDependencyContainer container);
+        IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EcsRx.Groups.Accessors;
 
-namespace EcsRx.Groups.Filtration
+namespace EcsRx.Groups.Computed
 {
     public interface IComputedGroup
     {

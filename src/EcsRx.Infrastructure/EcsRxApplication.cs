@@ -52,7 +52,7 @@ namespace EcsRx.Infrastructure
 
         protected virtual void SetupAllPluginSystems()
         {
-            Plugins.SelectMany(x => x.GetSystemForRegistration(DependencyContainer))
+            Plugins.SelectMany(x => x.GetSystemsForRegistration(DependencyContainer))
                 .ForEachRun(x => SystemExecutor.AddSystem(x));
         }
 

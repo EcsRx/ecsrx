@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EcsRx.Examples.GroupPerformance.Components;
-using EcsRx.Examples.GroupPerformance.Extensions;
 using EcsRx.Groups;
+using EcsRx.PerformanceTests.Components;
+using EcsRx.PerformanceTests.Extensions;
 
-namespace EcsRx.Examples.GroupPerformance.Helper
+namespace EcsRx.PerformanceTests.Helper
 {
     public class RandomGroupFactory
     {
@@ -61,11 +61,6 @@ namespace EcsRx.Examples.GroupPerformance.Helper
                     yield return new Group(_componentTypes.Skip(j-i).Take(j).ToArray());
                 }
             }
-            /*
-            foreach (var component in _componenTypes)
-            {
-                yield return new Group(component);
-            }*/
         }
     }
 }

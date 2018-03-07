@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EcsRx.Examples.GroupPerformance.Extensions
+namespace EcsRx.PerformanceTests.Extensions
 {
     public static class IEnumerableExtensions
     {

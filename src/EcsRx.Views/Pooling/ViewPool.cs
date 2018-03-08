@@ -54,7 +54,7 @@ namespace EcsRx.Views.Pooling
             }
 
             availableViewObject.IsInUse = true;
-            ViewHandler.SetActiveState(availableViewObject, true);
+            ViewHandler.SetActiveState(availableViewObject.ViewObject, true);
             return availableViewObject.ViewObject;
         }
         

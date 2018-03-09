@@ -7,10 +7,16 @@ namespace EcsRx.Extensions
     public static class IDisposableExtensions
     {
         public static void DisposeAll(this IEnumerable<IDisposable> disposables)
-        { disposables.ForEachRun(x => x.Dispose()); }
-        
+        {
+            foreach(var disposable in disposables)
+            { disposable.Dispose(); }
+        }
+
         public static void DisposeAll<T>(this IDictionary<T, IDisposable> disposables)
-        { disposables.Values.ForEachRun(x => x.Dispose()); }
+        {
+            foreach(var disposable in disposables.Values)
+            { disposable.Dispose(); }
+        }
         
         public static IDisposable AddTo(this IDisposable currentDisposable, ICollection<IDisposable> disposables)
         {

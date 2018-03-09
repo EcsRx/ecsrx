@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using EcsRx.Entities;
-using EcsRx.Pools;
 
-namespace EcsRx.Groups.Accessors
+namespace EcsRx.Groups.Observable
 {
     public class ObservableGroupConfiguration
     {

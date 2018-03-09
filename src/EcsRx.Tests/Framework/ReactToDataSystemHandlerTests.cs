@@ -4,13 +4,13 @@ using System.Reactive.Subjects;
 using EcsRx.Entities;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
-using EcsRx.Groups.Accessors;
+using EcsRx.Groups.Observable;
 using EcsRx.Pools;
 using EcsRx.Systems;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class ReactToDataSystemHandlerTests
     {

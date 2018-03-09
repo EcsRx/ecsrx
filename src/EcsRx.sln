@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DDDDD3FE-5FB1-465B-9A8E-F77047B23A6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.PerformanceTests", "EcsRx.PerformanceTests\EcsRx.PerformanceTests.csproj", "{7B58A7B7-0A94-4E9E-B15C-2A9EBAC261D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcsRx.PerformanceTests", "EcsRx.PerformanceTests\EcsRx.PerformanceTests.csproj", "{7B58A7B7-0A94-4E9E-B15C-2A9EBAC261D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Reactive", "EcsRx.Reactive\EcsRx.Reactive.csproj", "{57324D05-1FFD-4F2E-89FE-9B84000A562C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{7B58A7B7-0A94-4E9E-B15C-2A9EBAC261D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B58A7B7-0A94-4E9E-B15C-2A9EBAC261D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B58A7B7-0A94-4E9E-B15C-2A9EBAC261D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57324D05-1FFD-4F2E-89FE-9B84000A562C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57324D05-1FFD-4F2E-89FE-9B84000A562C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57324D05-1FFD-4F2E-89FE-9B84000A562C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57324D05-1FFD-4F2E-89FE-9B84000A562C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{AD7EB200-BF3C-433B-96D2-D114DBE5B1E2} = {1B6A21E2-A539-42B6-9234-6687CD36C2A0}
 		{A0A8F9BB-29E6-4D5F-9E6F-07347EA82CDC} = {1B6A21E2-A539-42B6-9234-6687CD36C2A0}
 		{7B58A7B7-0A94-4E9E-B15C-2A9EBAC261D1} = {DDDDD3FE-5FB1-465B-9A8E-F77047B23A6E}
+		{57324D05-1FFD-4F2E-89FE-9B84000A562C} = {1B6A21E2-A539-42B6-9234-6687CD36C2A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9292D27-B07F-42D9-94D7-38263CA662DB}

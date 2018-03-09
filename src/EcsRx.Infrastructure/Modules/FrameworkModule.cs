@@ -2,7 +2,7 @@
 using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
-using EcsRx.Groups.Accessors;
+using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Pools;
 using EcsRx.Reactive;

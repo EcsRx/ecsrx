@@ -38,7 +38,6 @@ namespace EcsRx.Entities
             EventSystem.Publish(new ComponentsAddedEvent(this, components));
         }
         
-
         public T AddComponent<T>() where T : class, IComponent, new()
         { return (T)AddComponent(new T()); }
 

@@ -23,20 +23,24 @@ namespace EcsRx.Executor
        
         public void RemoveSystem(ISystem system)
         {
-            _conventionalSystemHandlers
+            var applicableHandlers = _conventionalSystemHandlers
                 .Where(x => x.CanHandleSystem(system))
-                .OrderByPriority()
-                .ForEachRun(x => x.DestroySystem(system));
+                .OrderByPriority();
+
+            foreach(var handler in applicableHandlers)
+            { handler.DestroySystem(system); }
             
             _systems.Remove(system);
         }
 
         public void AddSystem(ISystem system)
         {
-            _conventionalSystemHandlers
+            var applicableHandlers = _conventionalSystemHandlers
                 .Where(x => x.CanHandleSystem(system))
-                .OrderByPriority()
-                .ForEachRun(x => x.SetupSystem(system));
+                .OrderByPriority();
+
+            foreach(var handler in applicableHandlers)
+            { handler.SetupSystem(system); }
 
             _systems.Add(system);
         }

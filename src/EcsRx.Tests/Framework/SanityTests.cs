@@ -3,14 +3,14 @@ using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
-using EcsRx.Groups.Accessors;
+using EcsRx.Groups.Observable;
 using EcsRx.Pools;
 using EcsRx.Reactive;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class SanityTests
     {

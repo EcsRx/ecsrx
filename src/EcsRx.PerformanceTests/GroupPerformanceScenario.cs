@@ -8,7 +8,7 @@ using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Groups.Accessors;
+using EcsRx.Groups.Observable;
 using EcsRx.PerformanceTests.Helper;
 using EcsRx.Pools;
 using EcsRx.Reactive;
@@ -41,13 +41,6 @@ namespace EcsRx.PerformanceTests
             var groupAccessorFactory = new DefaultObservableObservableGroupFactory(_eventSystem);
             _poolManager = new PoolManager(_eventSystem, poolFactory, groupAccessorFactory);
             
-            var reactsToEntityHandler = new ReactToEntitySystemHandler(_poolManager);
-            var reactsToGroupHandler = new ReactToGroupSystemHandler(_poolManager);
-            var reactsToDataHandler = new ReactToDataSystemHandler(_poolManager);
-            var manualSystemHandler = new ManualSystemHandler(_poolManager);
-            var setupHandler = new SetupSystemHandler(_poolManager);
-            _systemExecutor = new SystemExecutor(new IConventionalSystemHandler[]{ reactsToEntityHandler, reactsToGroupHandler, setupHandler, reactsToDataHandler, manualSystemHandler });
-
             _availableComponents = _groupFactory.GetComponentTypes
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
@@ -68,7 +61,7 @@ namespace EcsRx.PerformanceTests
         }
 
         [Benchmark]
-        public void ProcessGroups()
+        public void CreateEntitiesWithComponentsThenRemoveThemAll()
         {
             for (var i = 0; i < Iterations; i++)
             {

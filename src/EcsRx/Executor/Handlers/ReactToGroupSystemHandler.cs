@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using EcsRx.Attributes;
+using EcsRx.Entities;
 using EcsRx.Extensions;
 
 namespace EcsRx.Executor.Handlers
@@ -34,18 +35,20 @@ namespace EcsRx.Executor.Handlers
 
             if (!hasEntityPredicate)
             {
-                var noPredicateSub = reactObservable.Subscribe(x => x.Entities.ForEachRun(castSystem.Execute));
+                var noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Entities, castSystem));
                 _systemSubscriptions.Add(system, noPredicateSub);
                 return;
             }
 
             var groupPredicate = system.TargetGroup as IHasPredicate;
-            var subscription = reactObservable.Subscribe(x =>
-            {
-                x.Entities.Where(groupPredicate.CanProcessEntity)
-                    .ForEachRun(castSystem.Execute);
-            });
+            var subscription = reactObservable.Subscribe(x => ExecuteForGroup(x.Entities.Where(groupPredicate.CanProcessEntity), castSystem));
             _systemSubscriptions.Add(system, subscription);
+        }
+
+        private static void ExecuteForGroup(IEnumerable<IEntity> entities, IReactToGroupSystem castSystem)
+        {
+            foreach(var entity in entities)
+            { castSystem.Execute(entity); }
         }
 
         public void DestroySystem(ISystem system)

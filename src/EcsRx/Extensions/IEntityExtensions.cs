@@ -29,20 +29,18 @@ namespace EcsRx.Extensions
 
         public static IEntity ApplyBlueprints(this IEntity entity, params IBlueprint[] blueprints)
         {
-            blueprints.ForEachRun(x => x.Apply(entity));
+            for (var i = 0; i < blueprints.Length; i++)
+            { blueprints[i].Apply(entity); }
+
             return entity;
         }
 
         public static IEntity ApplyBlueprints(this IEntity entity, IEnumerable<IBlueprint> blueprints)
         {
-            blueprints.ForEachRun(x => x.Apply(entity));
-            return entity;
-        }
+            foreach (var blueprint in blueprints)
+            { blueprint.Apply(entity); }
 
-        public static void RemoveComponents(this IEntity entity, Func<IComponent, bool> predicate)
-        {
-            var matchingComponents = entity.Components.Where(predicate).ToArray();
-            matchingComponents.ForEachRun(entity.RemoveComponent);
+            return entity;
         }
     }
 }

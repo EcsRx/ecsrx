@@ -33,9 +33,15 @@ namespace EcsRx.Extensions
         }
 
         public static void RemoveEntities(this IPoolManager poolManager, params IEntity[] entities)
-        { entities.ForEachRun(x => RemoveEntity(poolManager, x)); }
+        {
+            for (var i = 0; i < entities.Length; i++)
+            { RemoveEntity(poolManager, entities[i]); }
+        }
 
         public static void RemoveEntities(this IPoolManager poolManager, IEnumerable<IEntity> entities)
-        { entities.ForEachRun(x => RemoveEntity(poolManager, x)); }
+        {
+            foreach(var entity in entities)
+            { RemoveEntity(poolManager, entity);}
+        }
     }
 }

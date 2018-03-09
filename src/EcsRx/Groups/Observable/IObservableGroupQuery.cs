@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EcsRx.Entities;
 
-namespace EcsRx.Groups.Accessors
+namespace EcsRx.Groups.Observable
 {
     public interface IObservableGroupQuery
     {

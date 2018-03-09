@@ -1,20 +1,17 @@
 ﻿using System;
-using EcsRx.Entities;
-using EcsRx.Events;
-using EcsRx.Pools;
-using NSubstitute;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
-using EcsRx.Groups.Accessors;
+using EcsRx.Entities;
+using EcsRx.Events;
+using EcsRx.Groups.Observable;
+using EcsRx.Pools;
 using EcsRx.Reactive;
 using EcsRx.Tests.Models;
-using NSubstitute.Extensions;
-using NSubstitute.ReturnsExtensions;
+using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class ObservableGroupTests
     {
@@ -72,7 +69,7 @@ namespace EcsRx.Tests
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockPool));
             
             Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal(applicableEntity, cacheableGroupAccessor.CachedEntities[applicableEntity.Id]);
+            Assert.Equal<IEntity>(applicableEntity, cacheableGroupAccessor.CachedEntities[applicableEntity.Id]);
         }
 
         [Fact]
@@ -131,7 +128,7 @@ namespace EcsRx.Tests
             underlyingEvent.SetValueAndForceNotify(new EntityRemovedEvent(existingEntityOne, mockPool));
 
             Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal(existingEntityTwo, cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id]);
+            Assert.Equal<IEntity>(existingEntityTwo, cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id]);
         }
 
         [Fact]
@@ -166,7 +163,7 @@ namespace EcsRx.Tests
             underlyingEvent.SetValueAndForceNotify(new ComponentsRemovedEvent(existingEntityTwo, new[] {unapplicableComponent}));
 
             Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal(existingEntityTwo, cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id]);
+            Assert.Equal<IEntity>(existingEntityTwo, cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id]);
         }
 
         [Fact]
@@ -198,7 +195,7 @@ namespace EcsRx.Tests
             underlyingEvent.SetValueAndForceNotify(new ComponentsAddedEvent(existingEntityTwo, new[]{unapplicableComponent}));
 
             Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal(existingEntityOne, cacheableGroupAccessor.CachedEntities[existingEntityOne.Id]);
+            Assert.Equal<IEntity>(existingEntityOne, cacheableGroupAccessor.CachedEntities[existingEntityOne.Id]);
         }
         
         [Fact]
@@ -227,9 +224,9 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
             
             var observableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[0]);
-            observableGroup.OnEntityAdded.Subscribe(x =>
+            ObservableExtensions.Subscribe<IEntity>(observableGroup.OnEntityAdded, x =>
             {
-                Assert.Equal(fakeEntity1, x);
+                Assert.Equal<IEntity>(fakeEntity1, x);
                 timesCalled++;
             });
             
@@ -265,9 +262,9 @@ namespace EcsRx.Tests
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(underlyingEvent);
             
             var observableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[]{ fakeEntity1 });
-            observableGroup.OnEntityRemoved.Subscribe(x =>
+            ObservableExtensions.Subscribe<IEntity>(observableGroup.OnEntityRemoved, x =>
             {
-                Assert.Equal(fakeEntity1, x);
+                Assert.Equal<IEntity>(fakeEntity1, x);
                 timesCalled++;
             });
 
@@ -293,9 +290,9 @@ namespace EcsRx.Tests
             var timesCalled = 0;
             
             var observableGroup = new ObservableGroup(fakeEventSystem, accessorToken, new IEntity[0]);
-            observableGroup.OnEntityAdded.Subscribe(x =>
+            ObservableExtensions.Subscribe<IEntity>(observableGroup.OnEntityAdded, x =>
             {
-                Assert.Equal(fakeEntity1, x);
+                Assert.Equal<IEntity>(fakeEntity1, x);
                 timesCalled++;
             });
             
@@ -325,9 +322,9 @@ namespace EcsRx.Tests
             var timesCalled = 0;
             
             var observableGroup = new ObservableGroup(fakeEventSystem, accessorToken, new IEntity[]{fakeEntity1});
-            observableGroup.OnEntityRemoved.Subscribe(x =>
+            ObservableExtensions.Subscribe<IEntity>(observableGroup.OnEntityRemoved, x =>
             {
-                Assert.Equal(fakeEntity1, x);
+                Assert.Equal<IEntity>(fakeEntity1, x);
                 timesCalled++;
             });
             

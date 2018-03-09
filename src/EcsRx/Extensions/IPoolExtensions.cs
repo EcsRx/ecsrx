@@ -13,35 +13,49 @@ namespace EcsRx.Extensions
         public static void RemoveEntitiesContaining<T>(this IPool pool)
             where T : class, IComponent
         {
-            pool.Entities.Where(entity => entity.HasComponent<T>())
-                .ToArray()
-                .ForEachRun(pool.RemoveEntity);
+            var entities = pool.Entities
+                .Where(entity => entity.HasComponent<T>())
+                .ToArray();
+            
+            for(var i=0;i<entities.Length;i++)
+            { pool.RemoveEntity(entities[i]); }
         }
 
         public static void RemoveEntitiesContaining(this IPool pool, params Type[] components)
         {
-            pool.Entities.Where(entity => components.Any(x => entity.HasComponents(x)))
-                .ToArray()
-                .ForEachRun(pool.RemoveEntity);
+            var entities = pool.Entities
+                .Where(entity => components.Any(x => entity.HasComponents(x)))
+                .ToArray();
+
+            for (var i = 0; i < entities.Length; i++)
+            { pool.RemoveEntity(entities[i]); }
         }
 
         public static void RemoveAllEntities(this IPool pool)
         {
-            var allEntities = pool.Entities.ToArray();
-            allEntities.ForEachRun(pool.RemoveEntity);
+            var entities = pool.Entities.ToArray();
+            for (var i = 0; i < entities.Length; i++)
+            { pool.RemoveEntity(entities[i]); }
         }
 
         public static void RemoveEntities(this IPool pool, Func<IEntity, bool> predicate)
         {
-            var applicableEntities = pool.Entities.Where(predicate).ToArray();
-            applicableEntities.ForEachRun(pool.RemoveEntity);
+            var entities = pool.Entities.Where(predicate).ToArray();
+            for (var i = 0; i < entities.Length; i++)
+            { pool.RemoveEntity(entities[i]); }
         }
 
         public static void RemoveEntities(this IPool pool, params IEntity[] entities)
-        { entities.ForEachRun(pool.RemoveEntity); }
+        {
+            for (var i = 0; i < entities.Length; i++)
+            { pool.RemoveEntity(entities[i]); }
+        }
 
         public static void RemoveEntities(this IPool pool, IEnumerable<IEntity> entities)
-        { entities.ForEachRun(pool.RemoveEntity); }
+        {
+            foreach (var entity in entities)
+            { pool.RemoveEntity(entity); }
+        }
 
         public static IEnumerable<IEntity> Query(this IPool pool, IPoolQuery query)
         { return query.Execute(pool.Entities); }

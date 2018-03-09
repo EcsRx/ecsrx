@@ -1,7 +1,7 @@
 ﻿using System;
 using EcsRx.Events;
-using EcsRx.Groups.Accessors;
 using EcsRx.Groups;
+using EcsRx.Groups.Observable;
 
 namespace EcsRx.Systems.Custom
 {

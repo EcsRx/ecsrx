@@ -56,13 +56,13 @@ namespace EcsRx.Executor.Handlers
                     { entitySubscriptions.RemoveAndDispose(x.Id); }
                 })
                 .AddTo(entityChangeSubscriptions);
-            
-            accessor.Entities.ForEachRun(x =>
+
+            foreach (var entity in accessor.Entities)
             {
-                var possibleSubscription = ProcessEntity(castSystem, x);
-                if(possibleSubscription != null) 
-                { entitySubscriptions.Add(x.Id, possibleSubscription); }
-            });            
+                var possibleSubscription = ProcessEntity(castSystem, entity);
+                if (possibleSubscription != null)
+                { entitySubscriptions.Add(entity.Id, possibleSubscription); }
+            }         
         }
 
         public void DestroySystem(ISystem system)

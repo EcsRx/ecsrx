@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using EcsRx.Groups.Accessors;
+using EcsRx.Groups.Observable;
 
 namespace EcsRx.Groups.Computed
 {

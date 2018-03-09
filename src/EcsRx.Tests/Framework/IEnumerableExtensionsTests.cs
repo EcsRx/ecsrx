@@ -9,7 +9,7 @@ using EcsRx.Tests.Systems;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class IEnumerableExtensionsTests
     {

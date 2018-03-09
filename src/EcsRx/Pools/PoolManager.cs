@@ -4,8 +4,8 @@ using System.Linq;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
-using EcsRx.Groups.Accessors;
 using EcsRx.Groups;
+using EcsRx.Groups.Observable;
 
 namespace EcsRx.Pools
 {
@@ -86,13 +86,8 @@ namespace EcsRx.Pools
 
         public void Dispose()
         {
-            _groupAccessors.Values.ForEachRun(x =>
-            {
-                if (x is IDisposable)
-                {
-                    (x as IDisposable).Dispose();
-                }
-            });
+            foreach (var accessor in _groupAccessors.Values)
+            { (accessor as IDisposable)?.Dispose(); }
         }
     }
 }

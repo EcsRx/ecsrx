@@ -6,7 +6,7 @@ using EcsRx.Pools;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class PoolTests
     {

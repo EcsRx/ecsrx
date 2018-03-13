@@ -24,7 +24,7 @@ namespace EcsRx.Examples.HealthExample
         {
             RegisterAllBoundSystems();
             
-            var defaultPool = PoolManager.GetPool();
+            var defaultPool = EntityCollectionManager.GetCollection();
             _enemy = defaultPool.CreateEntity(new EnemyBlueprint(100));
 
             HandleInput();

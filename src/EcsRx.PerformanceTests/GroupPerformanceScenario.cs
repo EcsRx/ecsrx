@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
+using EcsRx.Collections;
 using EcsRx.Components;
 using EcsRx.Entities;
 using EcsRx.Events;
@@ -10,7 +11,6 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.PerformanceTests.Helper;
-using EcsRx.Pools;
 using EcsRx.Reactive;
 
 namespace EcsRx.PerformanceTests
@@ -26,10 +26,10 @@ namespace EcsRx.PerformanceTests
         private readonly Random _random = new Random();
 
         private IEventSystem _eventSystem;
-        private IPoolManager _poolManager;
+        private IEntityCollectionManager _entityCollectionManager;
         private ISystemExecutor _systemExecutor;
         private IGroup[] _testGroups;
-        private IPool _defaultPool;
+        private IEntityCollection _defaultEntityCollection;
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -37,9 +37,9 @@ namespace EcsRx.PerformanceTests
             _eventSystem = new EventSystem(new MessageBroker());
             
             var entityFactory = new DefaultEntityFactory(_eventSystem);
-            var poolFactory = new DefaultPoolFactory(entityFactory, _eventSystem);
+            var poolFactory = new DefaultEntityCollectionFactory(entityFactory, _eventSystem);
             var groupAccessorFactory = new DefaultObservableObservableGroupFactory(_eventSystem);
-            _poolManager = new PoolManager(_eventSystem, poolFactory, groupAccessorFactory);
+            _entityCollectionManager = new EntityCollectionManager(_eventSystem, poolFactory, groupAccessorFactory);
             
             _availableComponents = _groupFactory.GetComponentTypes
                 .Select(x => Activator.CreateInstance(x) as IComponent)
@@ -48,15 +48,15 @@ namespace EcsRx.PerformanceTests
             _testGroups = _groupFactory.CreateTestGroups().ToArray();
 
             foreach (var group in _testGroups)
-            { _poolManager.CreateObservableGroup(group); }
+            { _entityCollectionManager.CreateObservableGroup(group); }
 
-            _defaultPool = _poolManager.GetPool();
+            _defaultEntityCollection = _entityCollectionManager.GetCollection();
         }
 
         [IterationSetup]
         public void IterationSetup()
         {
-            foreach (var pool in _poolManager.Pools)
+            foreach (var pool in _entityCollectionManager.Pools)
             { pool.RemoveAllEntities(); }
         }
 
@@ -65,7 +65,7 @@ namespace EcsRx.PerformanceTests
         {
             for (var i = 0; i < Iterations; i++)
             {
-                var entity = _defaultPool.CreateEntity();
+                var entity = _defaultEntityCollection.CreateEntity();
                 entity.AddComponents(_availableComponents);
                 entity.RemoveComponents(_availableComponents);
             }

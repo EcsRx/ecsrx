@@ -5,10 +5,10 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
 using EcsRx.Attributes;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Pools;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -18,13 +18,13 @@ namespace EcsRx.Executor.Handlers
     {
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
-        public readonly IPoolManager _poolManager;
+        public readonly IEntityCollectionManager EntityCollectionManager;
 
         private readonly MethodInfo _processEntityMethod;
         
-        public ReactToDataSystemHandler(IPoolManager poolManager)
+        public ReactToDataSystemHandler(IEntityCollectionManager entityCollectionManager)
         {
-            _poolManager = poolManager;
+            EntityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
             _processEntityMethod = GetType().GetMethod("ProcessEntity");
@@ -65,7 +65,7 @@ namespace EcsRx.Executor.Handlers
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
             
-            var groupAccessor = _poolManager.CreateObservableGroup(system.TargetGroup);
+            var groupAccessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
 
             groupAccessor.OnEntityAdded
                 .Subscribe(x =>

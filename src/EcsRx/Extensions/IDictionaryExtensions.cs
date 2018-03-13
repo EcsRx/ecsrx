@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using EcsRx.Entities;
 using EcsRx.Groups;
-using EcsRx.Pools;
 
 namespace EcsRx.Extensions
 {

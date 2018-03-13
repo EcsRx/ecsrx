@@ -1,15 +1,15 @@
-﻿using EcsRx.Entities;
-using EcsRx.Pools;
+﻿using EcsRx.Collections;
+using EcsRx.Entities;
 
 namespace EcsRx.Events
 {
     public class PoolAddedEvent
     {
-        public IPool Pool { get; private set; }
+        public IEntityCollection EntityCollection { get; private set; }
 
-        public PoolAddedEvent(IPool pool)
+        public PoolAddedEvent(IEntityCollection entityCollection)
         {
-            Pool = pool;
+            EntityCollection = entityCollection;
         }
     }
 }

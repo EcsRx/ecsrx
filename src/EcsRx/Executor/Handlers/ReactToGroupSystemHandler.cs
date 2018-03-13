@@ -1,11 +1,11 @@
 using EcsRx.Groups;
-using EcsRx.Pools;
 using EcsRx.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using EcsRx.Attributes;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 
@@ -14,12 +14,12 @@ namespace EcsRx.Executor.Handlers
     [Priority(2)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IPoolManager _poolManager;       
+        public readonly IEntityCollectionManager EntityCollectionManager;       
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
-        public ReactToGroupSystemHandler(IPoolManager poolManager)
+        public ReactToGroupSystemHandler(IEntityCollectionManager entityCollectionManager)
         {
-            _poolManager = poolManager;
+            EntityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
@@ -28,7 +28,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var groupAccessor = _poolManager.CreateObservableGroup(system.TargetGroup);
+            var groupAccessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
             var hasEntityPredicate = system.TargetGroup is IHasPredicate;
             var castSystem = (IReactToGroupSystem)system;
             var reactObservable = castSystem.ReactToGroup(groupAccessor);

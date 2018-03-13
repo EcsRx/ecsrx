@@ -14,8 +14,8 @@ namespace EcsRx.Reactive
 {
     public struct DictionaryAddEvent<TKey, TValue> : IEquatable<DictionaryAddEvent<TKey, TValue>>
     {
-        public TKey Key { get; private set; }
-        public TValue Value { get; private set; }
+        public TKey Key { get; }
+        public TValue Value { get; }
 
         public DictionaryAddEvent(TKey key, TValue value)
             : this()
@@ -42,8 +42,8 @@ namespace EcsRx.Reactive
 
     public struct DictionaryRemoveEvent<TKey, TValue> : IEquatable<DictionaryRemoveEvent<TKey, TValue>>
     {
-        public TKey Key { get; private set; }
-        public TValue Value { get; private set; }
+        public TKey Key { get; }
+        public TValue Value { get; }
 
         public DictionaryRemoveEvent(TKey key, TValue value)
             : this()
@@ -70,9 +70,9 @@ namespace EcsRx.Reactive
 
     public struct DictionaryReplaceEvent<TKey, TValue> : IEquatable<DictionaryReplaceEvent<TKey, TValue>>
     {
-        public TKey Key { get; private set; }
-        public TValue OldValue { get; private set; }
-        public TValue NewValue { get; private set; }
+        public TKey Key { get; }
+        public TValue OldValue { get; }
+        public TValue NewValue { get; }
 
         public DictionaryReplaceEvent(TKey key, TValue oldValue, TValue newValue)
             : this()
@@ -170,29 +170,9 @@ namespace EcsRx.Reactive
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                return inner.Count;
-            }
-        }
-
-        public Dictionary<TKey, TValue>.KeyCollection Keys
-        {
-            get
-            {
-                return inner.Keys;
-            }
-        }
-
-        public Dictionary<TKey, TValue>.ValueCollection Values
-        {
-            get
-            {
-                return inner.Values;
-            }
-        }
+        public int Count => inner.Count;
+        public Dictionary<TKey, TValue>.KeyCollection Keys => inner.Keys;
+        public Dictionary<TKey, TValue>.ValueCollection Values => inner.Values;
 
         public void Add(TKey key, TValue value)
         {

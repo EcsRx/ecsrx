@@ -1,22 +1,22 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using EcsRx.Blueprints;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Exceptions;
 
-namespace EcsRx.Pools
+namespace EcsRx.Collections
 {
-    public class Pool : IPool
+    public class EntityCollection : IEntityCollection
     {
         private readonly IDictionary<Guid, IEntity> _entities;
 
         public string Name { get; }
-        public IEnumerable<IEntity> Entities => _entities.Values;
         public IEventSystem EventSystem { get; }
         public IEntityFactory EntityFactory { get; }
 
-        public Pool(string name, IEntityFactory entityFactory, IEventSystem eventSystem)
+        public EntityCollection(string name, IEntityFactory entityFactory, IEventSystem eventSystem)
         {
             _entities = new Dictionary<Guid, IEntity>();
             Name = name;
@@ -57,5 +57,11 @@ namespace EcsRx.Pools
 
         public bool ContainsEntity(IEntity entity)
         { return _entities.ContainsKey(entity.Id); }
+
+        public IEnumerator<IEntity> GetEnumerator()
+        { return _entities.Values.GetEnumerator(); }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        { return GetEnumerator(); }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using EcsRx.Entities;
 
-namespace EcsRx.Pools
+namespace EcsRx.Collections
 {
-    public interface IPoolQuery
+    public interface IEntityCollectionQuery
     {
         IEnumerable<IEntity> Execute(IEnumerable<IEntity> entityList);
     }

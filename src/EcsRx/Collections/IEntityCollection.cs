@@ -2,13 +2,12 @@
 using EcsRx.Blueprints;
 using EcsRx.Entities;
 
-namespace EcsRx.Pools
+namespace EcsRx.Collections
 {
-    public interface IPool
+    public interface IEntityCollection : IEnumerable<IEntity>
     {
         string Name { get; }
-
-        IEnumerable<IEntity> Entities { get; }
+        
         IEntity CreateEntity(IBlueprint blueprint = null);
         void AddEntity(IEntity entity);
         bool ContainsEntity(IEntity entity);

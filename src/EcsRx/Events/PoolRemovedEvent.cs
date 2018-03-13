@@ -1,14 +1,14 @@
-﻿using EcsRx.Pools;
+﻿using EcsRx.Collections;
 
 namespace EcsRx.Events
 {
     public class PoolRemovedEvent
     {
-        public IPool Pool { get; private set; }
+        public IEntityCollection EntityCollection { get; private set; }
 
-        public PoolRemovedEvent(IPool pool)
+        public PoolRemovedEvent(IEntityCollection entityCollection)
         {
-            Pool = pool;
+            EntityCollection = entityCollection;
         }
     }
 }

@@ -13,8 +13,8 @@ namespace EcsRx.Reactive
 {
     public struct CollectionAddEvent<T> : IEquatable<CollectionAddEvent<T>>
     {
-        public int Index { get; private set; }
-        public T Value { get; private set; }
+        public int Index { get; }
+        public T Value { get; }
 
         public CollectionAddEvent(int index, T value)
             :this()
@@ -41,8 +41,8 @@ namespace EcsRx.Reactive
 
     public struct CollectionRemoveEvent<T> : IEquatable<CollectionRemoveEvent<T>>
     {
-        public int Index { get; private set; }
-        public T Value { get; private set; }
+        public int Index { get; }
+        public T Value { get; }
 
         public CollectionRemoveEvent(int index, T value)
             : this()
@@ -69,9 +69,9 @@ namespace EcsRx.Reactive
 
     public struct CollectionMoveEvent<T> : IEquatable<CollectionMoveEvent<T>>
     {
-        public int OldIndex { get; private set; }
-        public int NewIndex { get; private set; }
-        public T Value { get; private set; }
+        public int OldIndex { get; }
+        public int NewIndex { get; }
+        public T Value { get; }
 
         public CollectionMoveEvent(int oldIndex, int newIndex, T value)
             : this()
@@ -99,9 +99,9 @@ namespace EcsRx.Reactive
 
     public struct CollectionReplaceEvent<T> : IEquatable<CollectionReplaceEvent<T>>
     {
-        public int Index { get; private set; }
-        public T OldValue { get; private set; }
-        public T NewValue { get; private set; }
+        public int Index { get; }
+        public T OldValue { get; }
+        public T NewValue { get; }
 
         public CollectionReplaceEvent(int index, T oldValue, T newValue)
             : this()

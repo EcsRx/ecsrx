@@ -1,10 +1,10 @@
-﻿using EcsRx.Entities;
+﻿using EcsRx.Collections;
+using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Pools;
 using EcsRx.Reactive;
 
 namespace EcsRx.Infrastructure.Modules
@@ -16,9 +16,9 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IMessageBroker, MessageBroker>();
             container.Bind<IEventSystem, EventSystem>();
             container.Bind<IEntityFactory, DefaultEntityFactory>();
-            container.Bind<IPoolFactory, DefaultPoolFactory>();
+            container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
-            container.Bind<IPoolManager, PoolManager>();
+            container.Bind<IEntityCollectionManager, EntityCollectionManager>();
             container.Bind<IConventionalSystemHandler, ReactToEntitySystemHandler>();
             container.Bind<IConventionalSystemHandler, ReactToGroupSystemHandler>();
             container.Bind<IConventionalSystemHandler, ReactToDataSystemHandler>();

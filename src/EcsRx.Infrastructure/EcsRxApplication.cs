@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Collections;
 using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Modules;
 using EcsRx.Infrastructure.Plugins;
-using EcsRx.Pools;
 using EcsRx.Systems;
 using EcsRx.Views.Systems;
 
@@ -16,7 +16,7 @@ namespace EcsRx.Infrastructure
     {
         public ISystemExecutor SystemExecutor { get; private set; }
         public IEventSystem EventSystem { get; private set; }
-        public IPoolManager PoolManager { get; private set; }
+        public IEntityCollectionManager EntityCollectionManager { get; private set; }
         public List<IEcsRxPlugin> Plugins { get; }
 
         protected abstract IDependencyContainer DependencyContainer { get; }
@@ -41,7 +41,7 @@ namespace EcsRx.Infrastructure
 
             SystemExecutor = DependencyContainer.Resolve<ISystemExecutor>();
             EventSystem = DependencyContainer.Resolve<IEventSystem>();
-            PoolManager = DependencyContainer.Resolve<IPoolManager>();
+            EntityCollectionManager = DependencyContainer.Resolve<IEntityCollectionManager>();
         }
 
         protected virtual void ApplicationStarting() { }

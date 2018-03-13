@@ -5,10 +5,10 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Timers;
 using EcsRx.Attributes;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Pools;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -16,12 +16,12 @@ namespace EcsRx.Executor.Handlers
     [Priority(1)]
     public class TeardownSystemHandler : IConventionalSystemHandler
     {
-        public readonly IPoolManager _poolManager;
+        public readonly IEntityCollectionManager EntityCollectionManager;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
-        public TeardownSystemHandler(IPoolManager poolManager)
+        public TeardownSystemHandler(IEntityCollectionManager entityCollectionManager)
         {
-            _poolManager = poolManager;
+            EntityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
@@ -34,7 +34,7 @@ namespace EcsRx.Executor.Handlers
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ITeardownSystem) system;
-            var accessor = _poolManager.CreateObservableGroup(system.TargetGroup);
+            var accessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
             
             accessor.OnEntityRemoved
                 .Subscribe(castSystem.Teardown)

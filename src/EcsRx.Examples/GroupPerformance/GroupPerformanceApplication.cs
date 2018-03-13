@@ -21,7 +21,7 @@ namespace EcsRx.Examples.GroupPerformance
             
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
-            { PoolManager.CreateObservableGroup(group); }
+            { EntityCollectionManager.CreateObservableGroup(group); }
 
             var firstRun = ProcesEntities(10000);
             var secondRun = ProcesEntities(10000);
@@ -37,8 +37,8 @@ namespace EcsRx.Examples.GroupPerformance
 
         private TimeSpan ProcesEntities(int amount)
         {
-            var defaultPool = PoolManager.GetPool();
-            PoolManager.Pools.ForEachRun(x => x.RemoveAllEntities());
+            var defaultPool = EntityCollectionManager.GetCollection();
+            EntityCollectionManager.Pools.ForEachRun(x => x.RemoveAllEntities());
             var startTime = DateTime.Now;
 
             for (var i = 0; i < amount; i++)

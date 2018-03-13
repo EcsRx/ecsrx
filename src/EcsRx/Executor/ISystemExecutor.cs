@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using EcsRx.Pools;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor

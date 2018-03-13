@@ -82,7 +82,7 @@ namespace EcsRx.Groups.Observable
         {
             if (!string.IsNullOrEmpty(Token.Pool))
             {
-                if(args.Pool.Name != Token.Pool)
+                if(args.EntityCollection.Name != Token.Pool)
                 { return; }
             }
             

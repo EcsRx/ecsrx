@@ -18,7 +18,7 @@ namespace EcsRx.Examples.HelloWorldExample
         {
             RegisterAllBoundSystems();
 
-            var defaultPool = PoolManager.GetPool();
+            var defaultPool = EntityCollectionManager.GetCollection();
             var entity = defaultPool.CreateEntity();
 
             var canTalkComponent = new CanTalkComponent {Message = "Hello world"};

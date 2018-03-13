@@ -7,35 +7,35 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 
-namespace EcsRx.Pools
+namespace EcsRx.Collections
 {
-    public class PoolManager : IPoolManager, IDisposable
+    public class EntityCollectionManager : IEntityCollectionManager, IDisposable
     {
         public const string DefaultPoolName = "default";
         
         private readonly IDictionary<ObservableGroupToken, IObservableGroup> _groupAccessors;
-        private readonly IDictionary<string, IPool> _pools;
+        private readonly IDictionary<string, IEntityCollection> _pools;
 
         public IEventSystem EventSystem { get; }
-        public IEnumerable<IPool> Pools => _pools.Values;
-        public IPoolFactory PoolFactory { get; }
+        public IEnumerable<IEntityCollection> Pools => _pools.Values;
+        public IEntityCollectionFactory EntityCollectionFactory { get; }
         public IObservableGroupFactory ObservableGroupFactory { get; }
 
-        public PoolManager(IEventSystem eventSystem, IPoolFactory poolFactory, IObservableGroupFactory observableGroupFactory)
+        public EntityCollectionManager(IEventSystem eventSystem, IEntityCollectionFactory entityCollectionFactory, IObservableGroupFactory observableGroupFactory)
         {
             EventSystem = eventSystem;
-            PoolFactory = poolFactory;
+            EntityCollectionFactory = entityCollectionFactory;
             ObservableGroupFactory = observableGroupFactory;
 
             _groupAccessors = new Dictionary<ObservableGroupToken, IObservableGroup>();
-            _pools = new Dictionary<string, IPool>();
+            _pools = new Dictionary<string, IEntityCollection>();
 
-            CreatePool(DefaultPoolName);
+            CreateCollection(DefaultPoolName);
         }
         
-        public IPool CreatePool(string name)
+        public IEntityCollection CreateCollection(string name)
         {
-            var pool = PoolFactory.Create(name);
+            var pool = EntityCollectionFactory.Create(name);
             _pools.Add(name, pool);
 
             EventSystem.Publish(new PoolAddedEvent(pool));
@@ -43,10 +43,10 @@ namespace EcsRx.Pools
             return pool;
         }
 
-        public IPool GetPool(string name = null)
+        public IEntityCollection GetCollection(string name = null)
         { return _pools[name ?? DefaultPoolName]; }
 
-        public void RemovePool(string name)
+        public void RemoveCollection(string name)
         {
             if(!_pools.ContainsKey(name)) { return; }
 
@@ -56,23 +56,23 @@ namespace EcsRx.Pools
             EventSystem.Publish(new PoolRemovedEvent(pool));
         }
         
-        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, string poolName = null)
+        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, string collectionName = null)
         {
             if(group is EmptyGroup)
             { return new IEntity[0]; }
 
-            if (poolName != null)
-            { return _pools[poolName].Entities.MatchingGroup(group); }
+            if (collectionName != null)
+            { return _pools[collectionName].MatchingGroup(group); }
 
             return Pools.GetAllEntities().MatchingGroup(group);
         }
 
-        public IObservableGroup CreateObservableGroup(IGroup group, string poolName = null)
+        public IObservableGroup CreateObservableGroup(IGroup group, string collectionName = null)
         {
-            var groupAccessorToken = new ObservableGroupToken(group.MatchesComponents.ToArray(), poolName);
+            var groupAccessorToken = new ObservableGroupToken(group.MatchesComponents.ToArray(), collectionName);
             if (_groupAccessors.ContainsKey(groupAccessorToken)) { return _groupAccessors[groupAccessorToken]; }
 
-            var entityMatches = GetEntitiesFor(group, poolName);
+            var entityMatches = GetEntitiesFor(group, collectionName);
             var groupAccessor = ObservableGroupFactory.Create(new ObservableGroupConfiguration
             {
                 ObservableGroupToken = groupAccessorToken,

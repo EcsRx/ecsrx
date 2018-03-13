@@ -45,20 +45,11 @@ namespace EcsRx.Reactive
         [NonSerialized]
         Exception lastException = null;
 
-        protected virtual IEqualityComparer<T> EqualityComparer
-        {
-            get
-            {
-                return defaultEqualityComparer;
-            }
-        }
+        protected virtual IEqualityComparer<T> EqualityComparer => defaultEqualityComparer;
 
         public T Value
         {
-            get
-            {
-                return value;
-            }
+            get => value;
             set
             {
                 if (!canPublishValueOnSubscribe)
@@ -89,13 +80,7 @@ namespace EcsRx.Reactive
             }
         }
 
-        public bool HasValue
-        {
-            get
-            {
-                return canPublishValueOnSubscribe;
-            }
-        }
+        public bool HasValue => canPublishValueOnSubscribe;
 
         public ReactiveProperty()
             : this(default(T))

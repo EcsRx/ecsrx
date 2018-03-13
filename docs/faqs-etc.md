@@ -20,7 +20,7 @@ If you want to make some performance tests I would love to see them!
 
 ### Why should I use it?
 
-No reason really, if you like the ECS pattern but want to have reactive systems then this may be a good fit, if not then probably not for you.
+No reason really, if you like the ECS pattern but want to have reactive systems then this may be a good fit, it also can potentially be used in any .net application/framework so you could write your main game logic without even touching an engine.
 
 ### Is ECS better than MVVM/MVC/MVP/MGS?
 
@@ -77,3 +77,5 @@ public static IEntityExtensions
 ```
 
 This way if you make every entity have this component you can then easily just have `entity.GetGameObject()` to get the unity world stuffs, making it slightly easier to work with the unity world..
+
+There is even a views extension which is provided which has a barebones implementation for views so it can be built upon for each engine, such as Unity, Godot, Monogame etc.

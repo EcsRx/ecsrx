@@ -1,12 +1,12 @@
 # Groups
 
-To access entities from pools we have the notion of groups (implementations of `IGroup`). As every *system* requires a group to access entities they are quite an important piece of the puzzle.
+To access entities from entity collection we have the notion of groups (implementations of `IGroup`). As every *system* requires a group to access entities they are quite an important piece of the puzzle.
 
 So for example lets say that I wanted the notion of a `Player`, that may actually be expressed as an entity with `IsPlayerControlled`, `IsSceneActor`, `HasStatistics` components. If we were to pretend that `IsPlayerControlled` means that the player controls this entity, the `IsSceneActor` implies that you have a `GameObject` in the scene which does some random stuff, and `HasStatistics` which contains information like Health, Mana, Strength etc. Now if we assume a `Player` group is expressed with those, you could express an `NPC` as an entity with just `IsSceneActor` and `HasStatistics`, so this way you can look at your entities in a high level way but making the best use of your more granular components.
 
 ## How groups work
 
-So groups are pretty simple, they are just POCOs which describe the component types that you wish to match from within the pool of entities. So if you have hundreds of entities all with different components you can use a group as a way of expressing a high level intent for a system. 
+So groups are pretty simple, they are just POCOs which describe the component types that you wish to match from within the collection of entities. So if you have hundreds of entities all with different components you can use a group as a way of expressing a high level intent for a system. 
 
 So *Pools* expose a way to pass a group in and get entities matching that group back, as mentioned the primary matching mechanism is via component but there is also the notion of entity matching, which is more experimental, and you can find out more about these furthe down this page.
 

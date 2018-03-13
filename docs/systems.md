@@ -10,6 +10,8 @@ This is where it gets interesting, so we have multiple flavours of systems depen
 
 All systems have the notion of a `TargetGroup` which describes what entities to target out of the pool, so you don't need to do much other than setup the right groupings and implement the methods for the interfaces.
 
+One other thing worth mentioning is that you can implement many of the interfaces in one class if you wish, so if you want an `ISetupSystem` and an `ITeardownSystem` implemented in the same class, you can do so and it will all just work, so implement as much or as little as you wish for your scenarios.
+
 ### ISetupSystem
 
 This interface implies that you want to setup entities, so it will match all entities via the group and will run a `Setup` method once for each of the entities. This is primarily there for doing one off setup methods on entities, such as instantiating `GameObject` or complex object types.
@@ -39,9 +41,9 @@ It is also worth looking at the groups documentation as there are some features 
 This is like the `IReactToEntitySystem` but rather than reacting to each entity matched, it instead just reacts to something at the group level. The `ReactToGroup` is generally used as a way to process all entities every frame using `Observable.EveryUpdate()` and selecting the group, however you can do many other things such as reacting to events at a group level or some other observable notion, here is a simple example:
 
 ```c#
-public IObservable<GroupAccessor> ReactToGroup(GroupAccessor @group)
+public IObservable<GroupAccessor> ReactToGroup(GroupAccessor group)
 {
-    return Observable.EveryUpdate().Select(x => @group);
+    return Observable.EveryUpdate().Select(x => group);
 }
 ```
 
@@ -79,6 +81,19 @@ will be triggered when the system is removed.
 This is a custom implementation of the IManualSystem which acts as a shorthand way of waiting for an event then
 once it occurs running some logic based purely upon the logic within that event. (However you can override 
 it a bit to provide additional entities outside of the group if needed).
+
+```c#
+public class SomeEventSystem : EventReactionSystem<SomeEvent>
+{
+    public SomeEventSystem(IEventSystem eventSystem) : base(eventSystem)
+    { }
+
+    public override void EventTriggered(SomeEvent eventData)
+    {
+        // Do something with eventData
+    }
+}
+```
 
 ## System Loading Order
 

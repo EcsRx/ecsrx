@@ -11,7 +11,7 @@ namespace EcsRx.Extensions
         public static IEnumerable<IEntity> GetAllEntities(this IEnumerable<IEntityCollection> pools)
         { return pools.SelectMany(x => x); }
 
-        public static IEntityCollection GetContainingPoolFor(this IEntityCollectionManager entityCollectionManager, IEntity entity)
+        public static IEntityCollection GetCollectionFor(this IEntityCollectionManager entityCollectionManager, IEntity entity)
         { return entityCollectionManager.Pools.SingleOrDefault(x => x.ContainsEntity(entity)); }
 
         public static void RemoveEntitiesContaining(this IEntityCollectionManager entityCollectionManager, params Type[] components)
@@ -22,7 +22,7 @@ namespace EcsRx.Extensions
 
         public static void RemoveEntity(this IEntityCollectionManager entityCollectionManager, IEntity entity)
         {
-            var containingPool = entityCollectionManager.GetContainingPoolFor(entity);
+            var containingPool = entityCollectionManager.GetCollectionFor(entity);
             containingPool.RemoveEntity(entity);
         }
 

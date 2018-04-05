@@ -5,10 +5,10 @@ using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using EcsRx.Attributes;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Pools;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -18,11 +18,11 @@ namespace EcsRx.Executor.Handlers
     {
         public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
-        public readonly IPoolManager _poolManager;
+        public readonly IEntityCollectionManager EntityCollectionManager;
         
-        public ReactToEntitySystemHandler(IPoolManager poolManager)
+        public ReactToEntitySystemHandler(IEntityCollectionManager entityCollectionManager)
         {
-            _poolManager = poolManager;
+            EntityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
         }
@@ -32,7 +32,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var accessor = _poolManager.CreateObservableGroup(system.TargetGroup);            
+            var accessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);            
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);

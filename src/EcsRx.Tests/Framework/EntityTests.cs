@@ -3,11 +3,11 @@ using System.Linq;
 using EcsRx.Components;
 using EcsRx.Entities;
 using EcsRx.Events;
-using EcsRx.Tests.Components;
+using EcsRx.Tests.Models;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class EntityTests
     {

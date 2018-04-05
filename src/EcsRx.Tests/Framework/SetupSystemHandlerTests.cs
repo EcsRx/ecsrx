@@ -1,24 +1,24 @@
 using System;
 using System.Reactive.Subjects;
 using System.Threading;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
-using EcsRx.Groups.Accessors;
-using EcsRx.Pools;
+using EcsRx.Groups.Observable;
 using EcsRx.Systems;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class SetupSystemHandlerTests
     {
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var mockPoolManager = Substitute.For<IPoolManager>();
-            var reactToEntitySystemHandler = new SetupSystemHandler(mockPoolManager);
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var reactToEntitySystemHandler = new SetupSystemHandler(mockCollectionManager);
             
             var fakeMatchingSystem = Substitute.For<ISetupSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
@@ -43,16 +43,16 @@ namespace EcsRx.Tests
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             mockObservableGroup.Entities.Returns(fakeEntities);
             
-            var mockPoolManager = Substitute.For<IPoolManager>();
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.MatchesComponents.Returns(new Type[0]);
-            mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.TargetGroup.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockPoolManager);
+            var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
             
             mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
@@ -78,16 +78,16 @@ namespace EcsRx.Tests
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             mockObservableGroup.Entities.Returns(fakeEntities);
             
-            var mockPoolManager = Substitute.For<IPoolManager>();
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.MatchesComponents.Returns(new Type[0]);
-            mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.TargetGroup.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockPoolManager);
+            var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
             
             mockSystem.Received(0).Setup(Arg.Is(fakeEntity1));
@@ -121,16 +121,16 @@ namespace EcsRx.Tests
             mockObservableGroup.OnEntityRemoved.Returns(removingSubject);
             mockObservableGroup.Entities.Returns(fakeEntities);
             
-            var mockPoolManager = Substitute.For<IPoolManager>();
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.MatchesComponents.Returns(new Type[0]);
-            mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.TargetGroup.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockPoolManager);
+            var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
 
             var mockDisposable = Substitute.For<IDisposable>();
@@ -163,15 +163,15 @@ namespace EcsRx.Tests
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             mockObservableGroup.Entities.Returns(fakeEntities);
             
-            var mockPoolManager = Substitute.For<IPoolManager>();
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group(x => x.Id == fakeEntity1.Id);
-            mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.TargetGroup.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockPoolManager);
+            var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
             
             mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
@@ -202,15 +202,15 @@ namespace EcsRx.Tests
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             mockObservableGroup.Entities.Returns(fakeEntities);
             
-            var mockPoolManager = Substitute.For<IPoolManager>();
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group(x => x.Id == fakeEntity1.Id && DateTime.Now >= expectedDate);
-            mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.TargetGroup.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockPoolManager);
+            var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
             
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);

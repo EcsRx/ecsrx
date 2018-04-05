@@ -1,15 +1,15 @@
+using System;
 using System.Collections.Generic;
-using System.Reactive.Subjects;
 using EcsRx.Entities;
 
-namespace EcsRx.Groups.Accessors
+namespace EcsRx.Groups.Observable
 {
     public interface IObservableGroup
     {
         ObservableGroupToken Token { get; }
         IReadOnlyCollection<IEntity> Entities { get; }
         
-        Subject<IEntity> OnEntityAdded { get; }
-        Subject<IEntity> OnEntityRemoved { get; }
+        IObservable<IEntity> OnEntityAdded { get; }
+        IObservable<IEntity> OnEntityRemoved { get; }
     }
 }

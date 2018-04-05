@@ -1,24 +1,23 @@
 using System;
-using System.Reactive.Disposables;
 using System.Reactive.Subjects;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
-using EcsRx.Groups.Accessors;
-using EcsRx.Pools;
+using EcsRx.Groups.Observable;
 using EcsRx.Systems;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class ReactToGroupSystemHandlerTests
     {
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var mockPoolManager = Substitute.For<IPoolManager>();
-            var reactToEntitySystemHandler = new ReactToGroupSystemHandler(mockPoolManager);
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var reactToEntitySystemHandler = new ReactToGroupSystemHandler(mockCollectionManager);
             
             var fakeMatchingSystem = Substitute.For<IReactToGroupSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<ISetupSystem>();
@@ -41,17 +40,17 @@ namespace EcsRx.Tests
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.Entities.Returns(fakeEntities);
             
-            var mockPoolManager = Substitute.For<IPoolManager>();
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group();
-            mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
             mockSystem.TargetGroup.Returns(fakeGroup);
             mockSystem.ReactToGroup(Arg.Is(mockObservableGroup)).Returns(observableSubject);
             
-            var systemHandler = new ReactToGroupSystemHandler(mockPoolManager);
+            var systemHandler = new ReactToGroupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
             
             observableSubject.OnNext(mockObservableGroup);
@@ -78,17 +77,17 @@ namespace EcsRx.Tests
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.Entities.Returns(fakeEntities);
             
-            var mockPoolManager = Substitute.For<IPoolManager>();
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group(x => x.Id == guidToMatch);
-            mockPoolManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
             mockSystem.TargetGroup.Returns(fakeGroup);
             mockSystem.ReactToGroup(Arg.Is(mockObservableGroup)).Returns(observableSubject);
             
-            var systemHandler = new ReactToGroupSystemHandler(mockPoolManager);
+            var systemHandler = new ReactToGroupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
             
             observableSubject.OnNext(mockObservableGroup);
@@ -101,11 +100,11 @@ namespace EcsRx.Tests
         [Fact]
         public void should_destroy_and_dispose_system()
         {
-            var mockPoolManager = Substitute.For<IPoolManager>();
+            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
             var mockDisposable = Substitute.For<IDisposable>();
             
-            var systemHandler = new ReactToGroupSystemHandler(mockPoolManager);
+            var systemHandler = new ReactToGroupSystemHandler(mockCollectionManager);
             systemHandler._systemSubscriptions.Add(mockSystem, mockDisposable);
             systemHandler.DestroySystem(mockSystem);
             

@@ -4,7 +4,7 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
-using EcsRx.Tests.Components;
+using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.Systems
 {

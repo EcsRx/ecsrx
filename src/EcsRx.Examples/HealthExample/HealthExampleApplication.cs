@@ -8,18 +8,23 @@ using EcsRx.Examples.HealthExample.Systems;
 
 namespace EcsRx.Examples.HealthExample
 {
-    public class HealthExampleApplication : EcsRxApplication
+    public class HealthExampleApplication : EcsRxConsoleApplication
     {
-        private bool _quit = false;
+        private bool _quit;
         private IEntity _enemy;
         private readonly Random _random = new Random();
 
-        public override void StartApplication()
+        protected override void ApplicationStarting()
         {
-            SystemExecutor.AddSystem(new TakeDamageSystem(EventSystem));
-            SystemExecutor.AddSystem(new DisplayHealthChangesSystem());
+            RegisterSystem<TakeDamageSystem>();
+            RegisterSystem<DisplayHealthChangesSystem>();
+        }
 
-            var defaultPool = PoolManager.GetPool();
+        protected override void ApplicationStarted()
+        {
+            RegisterAllBoundSystems();
+            
+            var defaultPool = EntityCollectionManager.GetCollection();
             _enemy = defaultPool.CreateEntity(new EnemyBlueprint(100));
 
             HandleInput();

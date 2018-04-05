@@ -4,10 +4,14 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Core" Version="4.0.0-preview00001" />
-    <PackageReference Include="System.Reactive.Linq" Version="4.0.0-preview00001" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj">
+      <Project>{AD7EB200-BF3C-433B-96D2-D114DBE5B1E2}</Project>
+      <Name>EcsRx.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EcsRx.Reactive\EcsRx.Reactive.csproj" />
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
   </ItemGroup>
 </Project>

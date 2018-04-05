@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsRx.Examples.GroupPerformance;
 using EcsRx.Examples.HealthExample;
 using EcsRx.Examples.HelloWorldExample;
 

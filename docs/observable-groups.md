@@ -5,25 +5,25 @@ So now you know what entities are and how you can get hold of them, its worth go
 ## Filtration Flow
 
 ```
-IPoolManager          <-  This contains all pools, which in turn contains ALL entities
+IEntityCollectionManager	<-  This contains all pools, which in turn contains ALL entities
      |
      |
-IObservableGroup      <-  This filters all entities down to only ones which are within the group
-     |                    i.e All entities which contain PlayerComponent
+IObservableGroup      		<-  This filters all entities down to only ones which are within the group
+     |                    		i.e All entities which contain PlayerComponent
      |
-IComputedGroup        <-  This acts as another layer of filtration on an IObservableGroup
-                          i.e Top 5 entities with PlayerComponent sorted by Score
+IComputedGroup        		<-  This acts as another layer of filtration on an IObservableGroup
+                          		i.e Top 5 entities with PlayerComponent sorted by Score
 ```
 
-## IPoolManager
+## IEntityCollectionManager
 
-The pool manager is the root most point where all entity queries should originate from.
+The entity collection manager is the root most point where all entity queries should originate from.
 
-The pool manager also maintains a collection of `IObservableGroup` so if you have 5 systems which all use the same group, there will only actually be 1 instance of the `IObservableGroup` that is shared between them all. 
+The entity collection manager also maintains a collection of `IObservableGroup` so if you have 5 systems which all use the same group, there will only actually be 1 instance of the `IObservableGroup` that is shared between them all. 
 
 ## IObservableGroup
 
-The observable group is created within and maintained by an `IPoolManager` and exposes all entities which match the associated group. It also exposes observables to represent when an entity has been added or removed from the underlying group.
+The observable group is created within and maintained by an `IEntityCollectionManager` and exposes all entities which match the associated group. It also exposes observables to represent when an entity has been added or removed from the underlying group.
 
 Under the hood, the observable group watches entities to see when they are added/removed from pools as well as when their components change. When this occurs it will check to see if it effects the current group and if so it updates it internal list accordingly.
 
@@ -49,4 +49,4 @@ This group filter has caching built in so it will try to keep a pre-evaluted lis
 
 So up to this point we have discussed the general filtration process, however there are some extension methods which let you do more ad-hoc queries on data, these are not cached in any way but allow you to drill down into a subset of data in a pre-defined way, this overlaps a bit with the `IComputedGroup` but lets you query directly at the pool level or accessor level.
 
-Both `IPool` and `IObservableGroup` has a `Query` extension method which takes an `IPoolQuery` or `IObservableGroupQuery` where you can implement your desired query logic. This was added so you could use the pools and group accessors more like repositories and use pre defined queries to access them consistently.
+Both `IEntityCollection` and `IObservableGroup` has a `Query` extension method which takes an `IEntityCollectionQuery` or `IObservableGroupQuery` where you can implement your desired query logic. This was added so you could use the pools and group accessors more like repositories and use pre defined queries to access them consistently.

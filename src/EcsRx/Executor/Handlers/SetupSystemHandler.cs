@@ -5,10 +5,10 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Timers;
 using EcsRx.Attributes;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Pools;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -16,13 +16,13 @@ namespace EcsRx.Executor.Handlers
     [Priority(1)]
     public class SetupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IPoolManager _poolManager;
+        public readonly IEntityCollectionManager EntityCollectionManager;
         public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
-        public SetupSystemHandler(IPoolManager poolManager)
+        public SetupSystemHandler(IEntityCollectionManager entityCollectionManager)
         {
-            _poolManager = poolManager;
+            EntityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
         }
@@ -38,7 +38,7 @@ namespace EcsRx.Executor.Handlers
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ISetupSystem) system;
-            var accessor = _poolManager.CreateObservableGroup(system.TargetGroup);
+            var accessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
 
             accessor.OnEntityAdded
                 .Subscribe(x =>
@@ -56,13 +56,13 @@ namespace EcsRx.Executor.Handlers
                     { entitySubscriptions.RemoveAndDispose(x.Id); }
                 })
                 .AddTo(entityChangeSubscriptions);
-            
-            accessor.Entities.ForEachRun(x =>
+
+            foreach (var entity in accessor.Entities)
             {
-                var possibleSubscription = ProcessEntity(castSystem, x);
-                if(possibleSubscription != null) 
-                { entitySubscriptions.Add(x.Id, possibleSubscription); }
-            });            
+                var possibleSubscription = ProcessEntity(castSystem, entity);
+                if (possibleSubscription != null)
+                { entitySubscriptions.Add(entity.Id, possibleSubscription); }
+            }         
         }
 
         public void DestroySystem(ISystem system)

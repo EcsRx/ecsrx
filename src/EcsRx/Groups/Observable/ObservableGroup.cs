@@ -7,16 +7,19 @@ using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
 
-namespace EcsRx.Groups.Accessors
+namespace EcsRx.Groups.Observable
 {
     public class ObservableGroup : IObservableGroup, IDisposable
     {
         public readonly Dictionary<Guid, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
-        
-        public Subject<IEntity> OnEntityAdded { get; }
-        public Subject<IEntity> OnEntityRemoved { get; }
 
+        public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
+        public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
+
+        private readonly Subject<IEntity> _onEntityAdded;
+        private readonly Subject<IEntity> _onEntityRemoved;
+        
         public ObservableGroupToken Token { get; }
         public IReadOnlyCollection<IEntity> Entities => CachedEntities.Values;
         public IEventSystem EventSystem { get; }
@@ -25,9 +28,9 @@ namespace EcsRx.Groups.Accessors
         {
             Token = token;
             EventSystem = eventSystem;
-            
-            OnEntityAdded = new Subject<IEntity>();
-            OnEntityRemoved = new Subject<IEntity>();
+
+            _onEntityAdded = new Subject<IEntity>();
+            _onEntityRemoved = new Subject<IEntity>();
 
             CachedEntities = initialEntities.ToDictionary(x => x.Id, x => x);
             Subscriptions = new List<IDisposable>();
@@ -61,7 +64,7 @@ namespace EcsRx.Groups.Accessors
             if (args.Entity.HasComponents(Token.ComponentTypes)) { return; }
             
             CachedEntities.Remove(args.Entity.Id);
-            OnEntityRemoved.OnNext(args.Entity);
+            _onEntityRemoved.OnNext(args.Entity);
         }
 
         public void OnEntityComponentAdded(ComponentsAddedEvent args)
@@ -71,7 +74,7 @@ namespace EcsRx.Groups.Accessors
             if (args.Entity.HasComponents(Token.ComponentTypes))
             {
                 CachedEntities.Add(args.Entity.Id, args.Entity);
-                OnEntityAdded.OnNext(args.Entity);
+                _onEntityAdded.OnNext(args.Entity);
             }
         }
 
@@ -79,7 +82,7 @@ namespace EcsRx.Groups.Accessors
         {
             if (!string.IsNullOrEmpty(Token.Pool))
             {
-                if(args.Pool.Name != Token.Pool)
+                if(args.EntityCollection.Name != Token.Pool)
                 { return; }
             }
             
@@ -87,7 +90,7 @@ namespace EcsRx.Groups.Accessors
             if (!args.Entity.HasComponents(Token.ComponentTypes)) { return; }
             
             CachedEntities.Add(args.Entity.Id, args.Entity);
-            OnEntityAdded.OnNext(args.Entity);
+            _onEntityAdded.OnNext(args.Entity);
         }
 
         public void OnEntityRemovedFromPool(EntityRemovedEvent args)
@@ -95,14 +98,14 @@ namespace EcsRx.Groups.Accessors
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
             CachedEntities.Remove(args.Entity.Id); 
-            OnEntityRemoved.OnNext(args.Entity);
+            _onEntityRemoved.OnNext(args.Entity);
         }
 
         public void Dispose()
         {
             Subscriptions.DisposeAll();
-            OnEntityAdded.Dispose();
-            OnEntityRemoved.Dispose();
+            _onEntityAdded.Dispose();
+            _onEntityRemoved.Dispose();
         }
     }
 }

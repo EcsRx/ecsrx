@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using EcsRx.Groups;
 
-namespace EcsRx.Groups.Accessors
+namespace EcsRx.Groups.Observable
 {
     public class ObservableGroupToken
     {

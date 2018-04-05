@@ -1,6 +1,6 @@
 ﻿using EcsRx.Factories;
 
-namespace EcsRx.Groups.Accessors
+namespace EcsRx.Groups.Observable
 {
     public interface IObservableGroupFactory : IFactory<ObservableGroupConfiguration, IObservableGroup>
     {

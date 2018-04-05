@@ -1,35 +1,35 @@
 ﻿using System.Collections.Generic;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
-using EcsRx.Groups.Accessors;
-using EcsRx.Pools;
+using EcsRx.Groups.Observable;
 using EcsRx.Reactive;
-using EcsRx.Tests.Components;
+using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using Xunit;
 
-namespace EcsRx.Tests
+namespace EcsRx.Tests.Framework
 {
     public class SanityTests
     {
-        private IPoolManager CreatePoolManager()
+        private IEntityCollectionManager CreateCollectionManager()
         {
             var messageBroker = new EventSystem(new MessageBroker());
             var entityFactory = new DefaultEntityFactory(messageBroker);
-            var poolFactory = new DefaultPoolFactory(entityFactory, messageBroker);
+            var collectionFactory = new DefaultEntityCollectionFactory(entityFactory, messageBroker);
             var groupAccessorFactory = new DefaultObservableObservableGroupFactory(messageBroker);
-            return new PoolManager(messageBroker, poolFactory, groupAccessorFactory);
+            return new EntityCollectionManager(messageBroker, collectionFactory, groupAccessorFactory);
         }
         
-        private SystemExecutor CreateExecutor(IPoolManager poolManager)
+        private SystemExecutor CreateExecutor(IEntityCollectionManager entityCollectionManager)
         {
-            var reactsToEntityHandler = new ReactToEntitySystemHandler(poolManager);
-            var reactsToGroupHandler = new ReactToGroupSystemHandler(poolManager);
-            var reactsToDataHandler = new ReactToDataSystemHandler(poolManager);
-            var manualSystemHandler = new ManualSystemHandler(poolManager);
-            var setupHandler = new SetupSystemHandler(poolManager);
+            var reactsToEntityHandler = new ReactToEntitySystemHandler(entityCollectionManager);
+            var reactsToGroupHandler = new ReactToGroupSystemHandler(entityCollectionManager);
+            var reactsToDataHandler = new ReactToDataSystemHandler(entityCollectionManager);
+            var manualSystemHandler = new ManualSystemHandler(entityCollectionManager);
+            var setupHandler = new SetupSystemHandler(entityCollectionManager);
 
             var conventionalSystems = new List<IConventionalSystemHandler>
             {
@@ -46,13 +46,13 @@ namespace EcsRx.Tests
         [Fact]
         public void should_execute_setup_for_matching_entities()
         {
-            var poolManager = CreatePoolManager();
-            var executor = CreateExecutor(poolManager);
+            var collectionManager = CreateCollectionManager();
+            var executor = CreateExecutor(collectionManager);
             executor.AddSystem(new TestSetupSystem());
 
-            var defaultPool = poolManager.GetPool();
-            var entityOne = defaultPool.CreateEntity();
-            var entityTwo = defaultPool.CreateEntity();
+            var collection = collectionManager.GetCollection();
+            var entityOne = collection.CreateEntity();
+            var entityTwo = collection.CreateEntity();
 
             entityOne.AddComponent(new TestComponentOne());
             entityTwo.AddComponent(new TestComponentTwo());

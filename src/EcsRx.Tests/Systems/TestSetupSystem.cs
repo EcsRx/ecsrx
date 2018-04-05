@@ -1,7 +1,7 @@
 ﻿using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Systems;
-using EcsRx.Tests.Components;
+using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.Systems
 {

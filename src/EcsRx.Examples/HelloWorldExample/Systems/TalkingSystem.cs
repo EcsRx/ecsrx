@@ -3,7 +3,7 @@ using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Examples.HelloWorldExample.Components;
 using EcsRx.Groups;
-using EcsRx.Groups.Accessors;
+using EcsRx.Groups.Observable;
 using EcsRx.Systems;
 
 namespace EcsRx.Examples.HelloWorldExample.Systems

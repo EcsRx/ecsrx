@@ -1,27 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.GroupPerformance.Helper;
 using EcsRx.Extensions;
-using EcsRx.Groups;
 
-namespace EcsRx.Examples.HealthExample
+namespace EcsRx.Examples.GroupPerformance
 {
-    public class GroupPerformanceApplication : EcsRxApplication
+    public class GroupPerformanceApplication : EcsRxConsoleApplication
     {
-        private IEnumerable<IComponent> _availableComponents;
-        private RandomGroupFactory _groupFactory = new RandomGroupFactory();
+        private IComponent[] _availableComponents;
+        private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         private readonly Random _random = new Random();
 
-        public override void StartApplication()
+        protected override void ApplicationStarted()
         {
-            _availableComponents = _groupFactory.GetComponentTypes.Select(x => Activator.CreateInstance(x) as IComponent).ToList();
+            _availableComponents = _groupFactory.GetComponentTypes
+                .Select(x => Activator.CreateInstance(x) as IComponent)
+                .ToArray();
+            
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
-            { PoolManager.CreateObservableGroup(group); }
+            { EntityCollectionManager.CreateObservableGroup(group); }
 
             var firstRun = ProcesEntities(10000);
             var secondRun = ProcesEntities(10000);
@@ -37,15 +37,15 @@ namespace EcsRx.Examples.HealthExample
 
         private TimeSpan ProcesEntities(int amount)
         {
-            var defaultPool = PoolManager.GetPool();
-            PoolManager.Pools.ForEachRun(x => x.RemoveAllEntities());
+            var defaultPool = EntityCollectionManager.GetCollection();
+            EntityCollectionManager.Pools.ForEachRun(x => x.RemoveAllEntities());
             var startTime = DateTime.Now;
 
             for (var i = 0; i < amount; i++)
             {
                 var entity = defaultPool.CreateEntity();
-                entity.AddComponents(_availableComponents.ToArray());
-                entity.RemoveComponents(_availableComponents.ToArray());
+                entity.AddComponents(_availableComponents);
+                entity.RemoveComponents(_availableComponents);
             }
             
             var endTime = DateTime.Now;

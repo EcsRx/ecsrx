@@ -1,5 +1,4 @@
 ﻿using System;
-using EcsRx.Pools;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers

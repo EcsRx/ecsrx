@@ -48,7 +48,6 @@ namespace EcsRx.Reactive
                     notifiers.Add(typeof(T), notifier);
                 }
             }
-
             return ((IObservable<T>)notifier).AsObservable();
         }
 

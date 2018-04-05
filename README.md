@@ -97,7 +97,7 @@ There are also a suite of tests which are being expanded as the project grows, i
 
 See the [docs folder](docs) for more information. (This will grow)
 
-[build-status-image]: https://travis-ci.org/EcsRx/ecsrx.svg?branch=master
-[build-status-url]: https://travis-ci.org/EcsRx/ecsrx
+[build-status-image]: https://ci.appveyor.com/api/projects/status/55d1256yrra6fmls/branch/master?svg=true
+[build-status-url]: https://ci.appveyor.com/project/grofit/ecsrx/branch/master
 [gitter-image]: https://badges.gitter.im/grofit/ecsrx.svg
 [gitter-url]: https://gitter.im/grofit/ecsrx

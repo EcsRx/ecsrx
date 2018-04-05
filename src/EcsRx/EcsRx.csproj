@@ -1,18 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Properties\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Properties\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Properties\**" />
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="System.Reactive.Core" Version="3.1.1" />
     <PackageReference Include="System.Reactive.Linq" Version="3.1.1" />
   </ItemGroup>
+
 </Project>

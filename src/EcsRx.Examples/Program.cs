@@ -9,8 +9,8 @@ namespace EcsRx.Examples
     {
         static void Main(string[] args)
         {
-            var application = new GroupPerformanceApplication();
-            //var application = new HealthExampleApplication();
+            //var application = new GroupPerformanceApplication();
+            var application = new HealthExampleApplication();
             //var application = new HelloWorldExampleApplication();   // Comment out this and uncomment the other one to run the other example
 
             application.StartApplication();

@@ -85,14 +85,15 @@ namespace EcsRx.Executor.Handlers
                 return null;
             }
 
-            entity.WaitForPredicateMet(groupPredicate.CanProcessEntity)
+            var disposable = entity
+                .WaitForPredicateMet(groupPredicate.CanProcessEntity)
                 .ContinueWith(x =>
                 {
                     _entitySubscriptions[system].Remove(x.Result.Id);
                     system.Setup(x.Result);
                 });
 
-            return Disposable.Empty;
+            return disposable;
         }
 
         public void Dispose()

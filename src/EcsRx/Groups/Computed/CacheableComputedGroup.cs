@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EcsRx.Groups.Observable;
+using EcsRx.Polyfills;
 
 namespace EcsRx.Groups.Computed
 {

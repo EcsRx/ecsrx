@@ -2,6 +2,7 @@
 using EcsRx.Events;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Polyfills;
 
 namespace EcsRx.Systems.Custom
 {

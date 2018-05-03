@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Groups;
+using EcsRx.Polyfills;
 using EcsRx.Systems;
 using EcsRx.Views.Components;
 using EcsRx.Views.ViewHandlers;
@@ -27,9 +27,11 @@ namespace EcsRx.Views.Systems
             EventSystem = eventSystem;
 
             _destructionSubscription = EventSystem.Receive<ComponentsRemovedEvent>()
-                .Where(x => _viewCache.ContainsKey(x.Entity.Id))
-                .Where(x => x.Components.Any(y => y is ViewComponent))
-                .Subscribe(x => OnViewRemoved(x.Entity));
+                .Subscribe(x =>
+                {
+                    if(_viewCache.ContainsKey(x.Entity.Id) && x.Components.Any(y => y is ViewComponent))
+                    { OnViewRemoved(x.Entity); }
+                });
         }
 
         protected virtual void OnViewRemoved(IEntity entity)

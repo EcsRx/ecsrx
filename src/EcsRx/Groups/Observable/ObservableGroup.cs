@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
+using EcsRx.Polyfills;
 
 namespace EcsRx.Groups.Observable
 {
@@ -45,8 +44,11 @@ namespace EcsRx.Groups.Observable
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<EntityRemovedEvent>()
-                .Where(x => CachedEntities.ContainsKey(x.Entity.Id))
-                .Subscribe(OnEntityRemovedFromPool)
+                .Subscribe(x =>
+                {
+                    if(CachedEntities.ContainsKey(x.Entity.Id))
+                    { OnEntityRemovedFromPool(x); }
+                })
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<ComponentsAddedEvent>()
@@ -54,8 +56,11 @@ namespace EcsRx.Groups.Observable
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<ComponentsRemovedEvent>()
-                .Where(x => CachedEntities.ContainsKey(x.Entity.Id))
-                .Subscribe(OnEntityComponentRemoved)
+                .Subscribe(x =>
+                {
+                    if (CachedEntities.ContainsKey(x.Entity.Id))
+                    { OnEntityComponentRemoved(x); } 
+                })
                 .AddTo(Subscriptions);
         }
 

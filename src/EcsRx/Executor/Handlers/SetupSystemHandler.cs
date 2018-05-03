@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Timers;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using EcsRx.Polyfills;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -87,14 +84,15 @@ namespace EcsRx.Executor.Handlers
                 system.Setup(entity);
                 return null;
             }
-            
-            return entity.WaitForPredicateMet(groupPredicate.CanProcessEntity)
-                .FirstAsync()
-                .Subscribe(x =>
+
+            entity.WaitForPredicateMet(groupPredicate.CanProcessEntity)
+                .ContinueWith(x =>
                 {
-                    _entitySubscriptions[system].Remove(x.Id);
-                    system.Setup(x);
+                    _entitySubscriptions[system].Remove(x.Result.Id);
+                    system.Setup(x.Result);
                 });
+
+            return Disposable.Empty;
         }
 
         public void Dispose()

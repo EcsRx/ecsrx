@@ -3,11 +3,11 @@ using EcsRx.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Disposables;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
+using EcsRx.Polyfills;
 
 namespace EcsRx.Executor.Handlers
 {

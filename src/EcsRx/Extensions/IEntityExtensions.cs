@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
+using System.Threading.Tasks;
 using EcsRx.Blueprints;
 using EcsRx.Components;
 using EcsRx.Entities;
@@ -11,11 +11,12 @@ namespace EcsRx.Extensions
 {
     public static class IEntityExtensions
     {
-        public static IObservable<IEntity> WaitForPredicateMet(this IEntity entity, Predicate<IEntity> predicate)
+        public static async Task<IEntity> WaitForPredicateMet(this IEntity entity, Predicate<IEntity> predicate)
         {
-            return Observable.Interval(TimeSpan.FromSeconds(1))
-                .Where(x => predicate(entity))
-                .Select(x => entity);
+            while(!predicate(entity))
+            { await Task.Delay(1000); }
+
+            return entity;
         }
 
         public static bool MatchesGroup(this IEntity entity, IGroup group)

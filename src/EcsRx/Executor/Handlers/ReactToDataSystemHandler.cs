@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Reflection;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using EcsRx.Polyfills;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -48,8 +46,11 @@ namespace EcsRx.Executor.Handlers
             
             var groupPredicate = system.TargetGroup as IHasPredicate;
             return reactObservable
-                .Where(x => groupPredicate.CanProcessEntity(entity))
-                .Subscribe(x => system.Execute(entity, x));
+                .Subscribe(x =>
+                {
+                    if(groupPredicate.CanProcessEntity(entity))
+                    { system.Execute(entity, x);}
+                });
         }
 
         public bool CanHandleSystem(ISystem system)

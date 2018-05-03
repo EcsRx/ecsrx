@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
+using EcsRx.Polyfills;
 
 /*
  *    This code was taken from UniRx project by neuecc
@@ -48,7 +47,7 @@ namespace EcsRx.Reactive
                     notifiers.Add(typeof(T), notifier);
                 }
             }
-            return ((IObservable<T>)notifier).AsObservable();
+            return ((IObservable<T>)notifier);
         }
 
         public void Dispose()

@@ -56,8 +56,8 @@ namespace EcsRx.Tests.Framework
             removeSubject.OnNext(fakeEntity1);
             
             mockSystem.Received(1).Teardown(Arg.Is(fakeEntity1));
-            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
-            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
+            Assert.Equal(1, systemHandler.SystemSubscriptions.Count);
+            Assert.NotNull(systemHandler.SystemSubscriptions[mockSystem]);
         }
     }
     

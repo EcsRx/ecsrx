@@ -8,8 +8,8 @@ namespace EcsRx.Extensions
 {
     public static class EntityCollectionManagerExtensions
     {
-        public static IEnumerable<IEntity> GetAllEntities(this IEnumerable<IEntityCollection> pools)
-        { return pools.SelectMany(x => x); }
+        public static IEnumerable<IEntity> GetAllEntities(this IEnumerable<IEntityCollection> entityCollections)
+        { return entityCollections.SelectMany(x => x); }
 
         public static IEntityCollection GetCollectionFor(this IEntityCollectionManager entityCollectionManager, IEntity entity)
         { return entityCollectionManager.Pools.SingleOrDefault(x => x.ContainsEntity(entity)); }

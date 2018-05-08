@@ -12,11 +12,11 @@ namespace EcsRx.Extensions
         { return entityCollections.SelectMany(x => x); }
 
         public static IEntityCollection GetCollectionFor(this IEntityCollectionManager entityCollectionManager, IEntity entity)
-        { return entityCollectionManager.Pools.SingleOrDefault(x => x.ContainsEntity(entity)); }
+        { return entityCollectionManager.Collections.SingleOrDefault(x => x.ContainsEntity(entity)); }
 
         public static void RemoveEntitiesContaining(this IEntityCollectionManager entityCollectionManager, params Type[] components)
         {
-            foreach (var pool in entityCollectionManager.Pools)
+            foreach (var pool in entityCollectionManager.Collections)
             { pool.RemoveEntitiesContaining(components); }
         }
 
@@ -28,7 +28,7 @@ namespace EcsRx.Extensions
 
         public static void RemoveEntities(this IEntityCollectionManager entityCollectionManager, Func<IEntity, bool> predicate)
         {
-            var matchingEntities = entityCollectionManager.Pools.SelectMany(x => x).Where(predicate).ToArray();
+            var matchingEntities = entityCollectionManager.Collections.SelectMany(x => x).Where(predicate).ToArray();
             RemoveEntities(entityCollectionManager, matchingEntities);
         }
 

@@ -7,7 +7,7 @@ namespace EcsRx.Collections
 {
     public interface IEntityCollectionManager
     {
-        IEnumerable<IEntityCollection> Pools { get; }
+        IEnumerable<IEntityCollection> Collections { get; }
 
         IEnumerable<IEntity> GetEntitiesFor(IGroup group, string collectionName = null);
         IObservableGroup CreateObservableGroup(IGroup group, string collectionName = null);

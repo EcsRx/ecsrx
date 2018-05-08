@@ -14,10 +14,10 @@ namespace EcsRx.Collections
         public const string DefaultPoolName = "default";
         
         private readonly IDictionary<ObservableGroupToken, IObservableGroup> _observableGroups;
-        private readonly IDictionary<string, IEntityCollection> _pools;
+        private readonly IDictionary<string, IEntityCollection> _collections;
 
         public IEventSystem EventSystem { get; }
-        public IEnumerable<IEntityCollection> Pools => _pools.Values;
+        public IEnumerable<IEntityCollection> Collections => _collections.Values;
         public IEntityCollectionFactory EntityCollectionFactory { get; }
         public IObservableGroupFactory ObservableGroupFactory { get; }
 
@@ -28,7 +28,7 @@ namespace EcsRx.Collections
             ObservableGroupFactory = observableGroupFactory;
 
             _observableGroups = new Dictionary<ObservableGroupToken, IObservableGroup>();
-            _pools = new Dictionary<string, IEntityCollection>();
+            _collections = new Dictionary<string, IEntityCollection>();
 
             CreateCollection(DefaultPoolName);
         }
@@ -36,7 +36,7 @@ namespace EcsRx.Collections
         public IEntityCollection CreateCollection(string name)
         {
             var pool = EntityCollectionFactory.Create(name);
-            _pools.Add(name, pool);
+            _collections.Add(name, pool);
 
             EventSystem.Publish(new PoolAddedEvent(pool));
 
@@ -44,14 +44,14 @@ namespace EcsRx.Collections
         }
 
         public IEntityCollection GetCollection(string name = null)
-        { return _pools[name ?? DefaultPoolName]; }
+        { return _collections[name ?? DefaultPoolName]; }
 
         public void RemoveCollection(string name)
         {
-            if(!_pools.ContainsKey(name)) { return; }
+            if(!_collections.ContainsKey(name)) { return; }
 
-            var pool = _pools[name];
-            _pools.Remove(name);
+            var pool = _collections[name];
+            _collections.Remove(name);
 
             EventSystem.Publish(new PoolRemovedEvent(pool));
         }
@@ -62,9 +62,9 @@ namespace EcsRx.Collections
             { return new IEntity[0]; }
 
             if (collectionName != null)
-            { return _pools[collectionName].MatchingGroup(group); }
+            { return _collections[collectionName].MatchingGroup(group); }
 
-            return Pools.GetAllEntities().MatchingGroup(group);
+            return Collections.GetAllEntities().MatchingGroup(group);
         }
 
         public IObservableGroup CreateObservableGroup(IGroup group, string collectionName = null)

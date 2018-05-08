@@ -38,7 +38,7 @@ namespace EcsRx.Examples.GroupPerformance
         private TimeSpan ProcesEntities(int amount)
         {
             var defaultPool = EntityCollectionManager.GetCollection();
-            EntityCollectionManager.Pools.ForEachRun(x => x.RemoveAllEntities());
+            EntityCollectionManager.Collections.ForEachRun(x => x.RemoveAllEntities());
             var startTime = DateTime.Now;
 
             for (var i = 0; i < amount; i++)

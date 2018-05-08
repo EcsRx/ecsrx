@@ -24,19 +24,25 @@ namespace EcsRx.Views.Systems
 
         protected virtual void RecycleView(IEntity entity, ViewComponent viewComponent)
         {
-            ViewPool.ReleaseInstance(viewComponent.View);
-            OnViewRecycled(viewComponent.View, entity);
+            var view = viewComponent.View;
+            ViewPool.ReleaseInstance(view);
+            viewComponent.View = null;
+            OnViewRecycled(view, entity);
         }
 
-        protected virtual object AllocateView(IEntity entity)
+        protected virtual object AllocateView(IEntity entity, ViewComponent viewComponent)
         {
             var viewToAllocate = ViewPool.AllocateInstance();
+            viewComponent.View = viewToAllocate;
             OnViewAllocated(viewToAllocate, entity);
             return viewToAllocate;
         }
 
         public void Setup(IEntity entity)
-        { AllocateView(entity); }
+        {
+            var viewComponent = entity.GetComponent<ViewComponent>();
+            AllocateView(entity, viewComponent);
+        }
 
         public virtual void Teardown(IEntity entity)
         {

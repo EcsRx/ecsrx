@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
@@ -36,7 +37,7 @@ namespace EcsRx.Tests.Framework
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
-            var fakeEntities = new[] { fakeEntity1, fakeEntity2 };
+            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
 
             var guid1 = Guid.NewGuid();
             var guid2 = Guid.NewGuid();
@@ -44,7 +45,7 @@ namespace EcsRx.Tests.Framework
             fakeEntity2.Id.Returns(guid2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             
@@ -91,7 +92,7 @@ namespace EcsRx.Tests.Framework
             fakeEntity2.Id.Returns(guid2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.Entities.Returns(new IEntity[0]);
+            mockObservableGroup.GetEnumerator().Returns(new List<IEntity>().GetEnumerator());
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
 
             var addedSubject = new Subject<IEntity>();
@@ -143,7 +144,7 @@ namespace EcsRx.Tests.Framework
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
-            var fakeEntities = new[] { fakeEntity1, fakeEntity2 };
+            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
 
             var guid1 = Guid.NewGuid();
             var guid2 = Guid.NewGuid();
@@ -151,7 +152,8 @@ namespace EcsRx.Tests.Framework
             fakeEntity2.Id.Returns(guid2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator()
+                .Returns(fakeEntities.GetEnumerator());
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             
             var removedSubject = new Subject<IEntity>();
@@ -191,7 +193,7 @@ namespace EcsRx.Tests.Framework
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
-            var fakeEntities = new[] { fakeEntity1, fakeEntity2 };
+            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
 
             var guid1 = Guid.NewGuid();
             var guid2 = Guid.NewGuid();
@@ -199,7 +201,7 @@ namespace EcsRx.Tests.Framework
             fakeEntity2.Id.Returns(guid2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             

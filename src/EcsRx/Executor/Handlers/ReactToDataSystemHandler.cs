@@ -66,9 +66,9 @@ namespace EcsRx.Executor.Handlers
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
             
-            var groupAccessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
 
-            groupAccessor.OnEntityAdded
+            observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
                     var subscription = processEntityFunction(x);
@@ -76,7 +76,7 @@ namespace EcsRx.Executor.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
             
-            groupAccessor.OnEntityRemoved
+            observableGroup.OnEntityRemoved
                 .Subscribe(x =>
                 {
                     entitySubscriptions.RemoveAndDispose(x.Id);
@@ -84,7 +84,7 @@ namespace EcsRx.Executor.Handlers
                 .AddTo(entityChangeSubscriptions);
             
             
-            foreach (var entity in groupAccessor.Entities)
+            foreach (var entity in observableGroup)
             {
                 var subscription = processEntityFunction(entity);
                 entitySubscriptions.Add(entity.Id, subscription);

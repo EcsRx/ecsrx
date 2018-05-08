@@ -2,8 +2,5 @@
 
 namespace EcsRx.Collections
 {
-    public interface IEntityCollectionFactory : IFactory<string, IEntityCollection>
-    {
-        
-    }
+    public interface IEntityCollectionFactory : IFactory<string, IEntityCollection> {}
 }

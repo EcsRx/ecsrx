@@ -35,13 +35,13 @@ namespace EcsRx.Executor.Handlers
 
             if (!hasEntityPredicate)
             {
-                var noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Entities, castSystem));
+                var noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x, castSystem));
                 _systemSubscriptions.Add(system, noPredicateSub);
                 return;
             }
 
             var groupPredicate = system.TargetGroup as IHasPredicate;
-            var subscription = reactObservable.Subscribe(x => ExecuteForGroup(x.Entities.Where(groupPredicate.CanProcessEntity), castSystem));
+            var subscription = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity), castSystem));
             _systemSubscriptions.Add(system, subscription);
         }
 

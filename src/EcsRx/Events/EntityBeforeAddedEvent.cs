@@ -1,14 +1,14 @@
-using EcsRx.Collections;
+﻿using EcsRx.Collections;
 using EcsRx.Entities;
 
 namespace EcsRx.Events
 {
-    public class EntityRemovedEvent
+    public class EntityBeforeAddedEvent
     {
         public IEntity Entity { get; }
         public IEntityCollection EntityCollection { get; }
 
-        public EntityRemovedEvent(IEntity entity, IEntityCollection entityCollection)
+        public EntityBeforeAddedEvent(IEntity entity, IEntityCollection entityCollection)
         {
             Entity = entity;
             EntityCollection = entityCollection;

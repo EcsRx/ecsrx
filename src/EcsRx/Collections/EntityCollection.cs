@@ -28,18 +28,20 @@ namespace EcsRx.Collections
         {
             var entity = EntityFactory.Create(null);
 
+            EventSystem.Publish(new EntityBeforeAddedEvent(entity, this));
+
             _entities.Add(entity.Id, entity);
+            blueprint?.Apply(entity);
 
             EventSystem.Publish(new EntityAddedEvent(entity, this));
-
-            if (blueprint != null)
-            { blueprint.Apply(entity); }
 
             return entity;
         }
 
         public void RemoveEntity(IEntity entity)
         {
+            EventSystem.Publish(new EntityBeforeRemovedEvent(entity, this));
+
             _entities.Remove(entity.Id);
             entity.Dispose();
 
@@ -51,6 +53,7 @@ namespace EcsRx.Collections
             if(entity.Id == Guid.Empty)
             { throw new InvalidEntityException("Entity provided does not have an assigned Id"); }
 
+            EventSystem.Publish(new EntityBeforeAddedEvent(entity, this));
             _entities.Add(entity.Id, entity);
             EventSystem.Publish(new EntityAddedEvent(entity, this));
         }

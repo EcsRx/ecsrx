@@ -5,7 +5,7 @@ namespace EcsRx.Events
 {
     public class PoolAddedEvent
     {
-        public IEntityCollection EntityCollection { get; private set; }
+        public IEntityCollection EntityCollection { get; }
 
         public PoolAddedEvent(IEntityCollection entityCollection)
         {

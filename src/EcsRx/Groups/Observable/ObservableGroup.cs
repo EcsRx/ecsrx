@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Entities;
@@ -20,7 +21,6 @@ namespace EcsRx.Groups.Observable
         private readonly Subject<IEntity> _onEntityRemoved;
         
         public ObservableGroupToken Token { get; }
-        public IReadOnlyCollection<IEntity> Entities => CachedEntities.Values;
         public IEventSystem EventSystem { get; }
 
         public ObservableGroup(IEventSystem eventSystem, ObservableGroupToken token, IEnumerable<IEntity> initialEntities)
@@ -112,5 +112,11 @@ namespace EcsRx.Groups.Observable
             _onEntityAdded.Dispose();
             _onEntityRemoved.Dispose();
         }
+
+        public IEnumerator<IEntity> GetEnumerator()
+        { return CachedEntities.Values.GetEnumerator(); }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        { return GetEnumerator(); }
     }
 }

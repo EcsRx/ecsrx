@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Events;
-using EcsRx.Extensions;
 
 namespace EcsRx.Entities
 {

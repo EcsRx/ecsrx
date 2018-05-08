@@ -5,8 +5,8 @@ namespace EcsRx.Events
 {
     public class EntityAddedEvent
     {
-        public IEntity Entity { get; private set; }
-        public IEntityCollection EntityCollection { get; private set; }
+        public IEntity Entity { get; }
+        public IEntityCollection EntityCollection { get; }
 
         public EntityAddedEvent(IEntity entity, IEntityCollection entityCollection)
         {

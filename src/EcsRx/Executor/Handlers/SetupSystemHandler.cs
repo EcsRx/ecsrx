@@ -35,9 +35,9 @@ namespace EcsRx.Executor.Handlers
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ISetupSystem) system;
-            var accessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
 
-            accessor.OnEntityAdded
+            observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
                     var possibleSubscription = ProcessEntity(castSystem, x);
@@ -46,7 +46,7 @@ namespace EcsRx.Executor.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
             
-            accessor.OnEntityRemoved
+            observableGroup.OnEntityRemoved
                 .Subscribe(x =>
                 {
                     if (entitySubscriptions.ContainsKey(x.Id))
@@ -54,7 +54,7 @@ namespace EcsRx.Executor.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            foreach (var entity in accessor.Entities)
+            foreach (var entity in observableGroup)
             {
                 var possibleSubscription = ProcessEntity(castSystem, entity);
                 if (possibleSubscription != null)

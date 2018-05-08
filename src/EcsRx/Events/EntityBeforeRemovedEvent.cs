@@ -3,12 +3,12 @@ using EcsRx.Entities;
 
 namespace EcsRx.Events
 {
-    public class EntityRemovedEvent
+    public class EntityBeforeRemovedEvent
     {
         public IEntity Entity { get; }
         public IEntityCollection EntityCollection { get; }
 
-        public EntityRemovedEvent(IEntity entity, IEntityCollection entityCollection)
+        public EntityBeforeRemovedEvent(IEntity entity, IEntityCollection entityCollection)
         {
             Entity = entity;
             EntityCollection = entityCollection;

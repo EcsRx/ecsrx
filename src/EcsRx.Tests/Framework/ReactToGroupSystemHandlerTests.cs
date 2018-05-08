@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reactive.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
@@ -31,14 +32,14 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_execute_system_without_predicate()
         {
-            var fakeEntities = new[]
+            var fakeEntities = new List<IEntity>
             {
                 Substitute.For<IEntity>(),
                 Substitute.For<IEntity>()
             };
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
@@ -67,7 +68,7 @@ namespace EcsRx.Tests.Framework
             var guidToMatch = Guid.NewGuid();
             entityToMatch.Id.Returns(guidToMatch);
             
-            var fakeEntities = new[]
+            var fakeEntities = new List<IEntity>
             {
                 entityToMatch,
                 Substitute.For<IEntity>()
@@ -75,7 +76,7 @@ namespace EcsRx.Tests.Framework
            
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 

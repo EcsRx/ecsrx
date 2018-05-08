@@ -29,9 +29,9 @@ namespace EcsRx.Executor.Handlers
             SystemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ITeardownSystem) system;
-            var accessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
             
-            accessor.OnEntityRemoved
+            observableGroup.OnEntityRemoved
                 .Subscribe(castSystem.Teardown)
                 .AddTo(entityChangeSubscriptions);        
         }

@@ -39,7 +39,7 @@ namespace EcsRx.Tests.Framework
             var removeSubject = new Subject<IEntity>();
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
-            mockObservableGroup.OnEntityRemoved.Returns(removeSubject);
+            mockObservableGroup.OnEntityRemoving.Returns(removeSubject);
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();

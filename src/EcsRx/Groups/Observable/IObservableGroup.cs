@@ -10,5 +10,6 @@ namespace EcsRx.Groups.Observable
         
         IObservable<IEntity> OnEntityAdded { get; }
         IObservable<IEntity> OnEntityRemoved { get; }
+        IObservable<IEntity> OnEntityRemoving { get; }
     }
 }

@@ -31,7 +31,7 @@ namespace EcsRx.Executor.Handlers
             var castSystem = (ITeardownSystem) system;
             var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
             
-            observableGroup.OnEntityRemoved
+            observableGroup.OnEntityRemoving
                 .Subscribe(castSystem.Teardown)
                 .AddTo(entityChangeSubscriptions);        
         }

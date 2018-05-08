@@ -16,9 +16,11 @@ namespace EcsRx.Groups.Observable
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
         public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
+        public IObservable<IEntity> OnEntityRemoving => _onEntityRemoving;
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
+        private readonly Subject<IEntity> _onEntityRemoving;
         
         public ObservableGroupToken Token { get; }
         public IEventSystem EventSystem { get; }
@@ -30,6 +32,7 @@ namespace EcsRx.Groups.Observable
 
             _onEntityAdded = new Subject<IEntity>();
             _onEntityRemoved = new Subject<IEntity>();
+            _onEntityRemoving = new Subject<IEntity>();
 
             CachedEntities = initialEntities.ToDictionary(x => x.Id, x => x);
             Subscriptions = new List<IDisposable>();
@@ -55,6 +58,14 @@ namespace EcsRx.Groups.Observable
                 .Subscribe(OnEntityComponentAdded)
                 .AddTo(Subscriptions);
 
+            EventSystem.Receive<ComponentsBeforeRemovedEvent>()
+                .Subscribe(x =>
+                {
+                    if (CachedEntities.ContainsKey(x.Entity.Id))
+                    { OnEntityBeforeComponentRemoved(x); }
+                })
+                .AddTo(Subscriptions);
+
             EventSystem.Receive<ComponentsRemovedEvent>()
                 .Subscribe(x =>
                 {
@@ -70,6 +81,12 @@ namespace EcsRx.Groups.Observable
             
             CachedEntities.Remove(args.Entity.Id);
             _onEntityRemoved.OnNext(args.Entity);
+        }
+
+        public void OnEntityBeforeComponentRemoved(ComponentsBeforeRemovedEvent args)
+        {
+            if (args.Entity.HasComponents(Token.ComponentTypes)) { return; }
+            _onEntityRemoving.OnNext(args.Entity);
         }
 
         public void OnEntityComponentAdded(ComponentsAddedEvent args)
@@ -97,7 +114,7 @@ namespace EcsRx.Groups.Observable
             CachedEntities.Add(args.Entity.Id, args.Entity);
             _onEntityAdded.OnNext(args.Entity);
         }
-
+        
         public void OnEntityRemovedFromPool(EntityRemovedEvent args)
         {
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }

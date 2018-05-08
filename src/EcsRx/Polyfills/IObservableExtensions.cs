@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Threading;
 
+/*
+ *    This code was taken from UniRx project by neuecc
+ *    https://github.com/neuecc/UniRx
+ */
 namespace EcsRx.Polyfills
 {
     public static class IObservableExtensions

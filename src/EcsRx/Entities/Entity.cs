@@ -31,6 +31,8 @@ namespace EcsRx.Entities
 
         public void AddComponents(params IComponent[] components)
         {
+            EventSystem.Publish(new ComponentsBeforeAddedEvent(this, components));
+
             for (var i = components.Length - 1; i >= 0; i--)
             { _components.Add(components[i].GetType(), components[i]); }
             
@@ -41,26 +43,20 @@ namespace EcsRx.Entities
         { return (T)AddComponent(new T()); }
 
         public void RemoveComponent(IComponent component)
-        {
-            if(!_components.ContainsKey(component.GetType())) { return; }
-
-            if (component is IDisposable disposable)
-            {  disposable.Dispose(); }
-
-            _components.Remove(component.GetType());
-            EventSystem.Publish(new ComponentsRemovedEvent(this, new []{component}));
-        }
+        { RemoveComponents(component); }
 
         public void RemoveComponent<T>() where T : class, IComponent
         {
             if(!HasComponent<T>()) { return; }
 
             var component = GetComponent<T>();
-            RemoveComponent(component);
+            RemoveComponents(component);
         }
 
         public void RemoveComponents(params IComponent[] components)
         {
+            EventSystem.Publish(new ComponentsBeforeRemovedEvent(this, components));
+
             for (var i = components.Length - 1; i >= 0; i--)
             {
                 if(!_components.ContainsKey(components[i].GetType())) { continue; }

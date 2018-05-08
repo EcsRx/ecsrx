@@ -85,23 +85,24 @@ namespace EcsRx.Groups.Observable
 
         public void OnEntityBeforeComponentRemoved(ComponentsBeforeRemovedEvent args)
         {
-            if (args.Entity.HasComponents(Token.ComponentTypes)) { return; }
+            if (!args.Components.Any(x => Token.ComponentTypes.Contains(x.GetType()))) { return; }
             _onEntityRemoving.OnNext(args.Entity);
         }
 
         public void OnEntityComponentAdded(ComponentsAddedEvent args)
         {
             if(CachedEntities.ContainsKey(args.Entity.Id)) { return; }
+            if (!args.Entity.HasComponents(Token.ComponentTypes)) { return; }
 
-            if (args.Entity.HasComponents(Token.ComponentTypes))
-            {
-                CachedEntities.Add(args.Entity.Id, args.Entity);
-                _onEntityAdded.OnNext(args.Entity);
-            }
+            CachedEntities.Add(args.Entity.Id, args.Entity);
+            _onEntityAdded.OnNext(args.Entity);
         }
 
         public void OnEntityAddedToPool(EntityAddedEvent args)
         {
+            // This is because you may have fired a blueprint before it is created
+            if (CachedEntities.ContainsKey(args.Entity.Id)) { return; }
+
             if (!string.IsNullOrEmpty(Token.Pool))
             {
                 if(args.EntityCollection.Name != Token.Pool)

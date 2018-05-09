@@ -77,6 +77,7 @@ namespace EcsRx.Groups.Observable
 
         public void OnEntityComponentRemoved(ComponentsRemovedEvent args)
         {
+            if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             if (args.Entity.HasComponents(Token.ComponentTypes)) { return; }
             
             CachedEntities.Remove(args.Entity.Id);
@@ -85,6 +86,7 @@ namespace EcsRx.Groups.Observable
 
         public void OnEntityBeforeComponentRemoved(ComponentsBeforeRemovedEvent args)
         {
+            if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             if (!args.Components.Any(x => Token.ComponentTypes.Contains(x.GetType()))) { return; }
             _onEntityRemoving.OnNext(args.Entity);
         }

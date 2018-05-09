@@ -8,7 +8,7 @@ namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
-        private readonly Dictionary<int, IComponent> _components;
+        private readonly Dictionary<Type, IComponent> _components;
 
         public IEventSystem EventSystem { get; }
 
@@ -19,12 +19,12 @@ namespace EcsRx.Entities
         {
             Id = id;
             EventSystem = eventSystem;
-            _components = new Dictionary<int, IComponent>();
+            _components = new Dictionary<Type, IComponent>();
         }
 
         public IComponent AddComponent(IComponent component)
         {
-            _components.Add(component.GetType().GetHashCode(), component);
+            _components.Add(component.GetType(), component);
             EventSystem.Publish(new ComponentsAddedEvent(this, new []{component}));
             return component;
         }
@@ -34,7 +34,7 @@ namespace EcsRx.Entities
             EventSystem.Publish(new ComponentsBeforeAddedEvent(this, components));
 
             for (var i = components.Length - 1; i >= 0; i--)
-            { _components.Add(components[i].GetType().GetHashCode(), components[i]); }
+            { _components.Add(components[i].GetType(), components[i]); }
             
             EventSystem.Publish(new ComponentsAddedEvent(this, components));
         }
@@ -59,12 +59,12 @@ namespace EcsRx.Entities
 
             for (var i = components.Length - 1; i >= 0; i--)
             {
-                if(!_components.ContainsKey(components[i].GetType().GetHashCode())) { continue; }
+                if(!_components.ContainsKey(components[i].GetType())) { continue; }
 
                 if (components[i] is IDisposable disposable)
                 { disposable.Dispose(); }
 
-                _components.Remove(components[i].GetType().GetHashCode());
+                _components.Remove(components[i].GetType());
             }
             
             EventSystem.Publish(new ComponentsRemovedEvent(this, components));
@@ -78,7 +78,7 @@ namespace EcsRx.Entities
         }
 
         public bool HasComponent<T>() where T : class, IComponent
-        { return _components.ContainsKey(typeof(T).GetHashCode()); }
+        { return _components.ContainsKey(typeof(T)); }
 
         public bool HasComponents(params Type[] componentTypes)
         {
@@ -88,7 +88,7 @@ namespace EcsRx.Entities
             for (var index = componentTypes.Length - 1; index >= 0; index--)
             {
                 var x = componentTypes[index];
-                if (!_components.ContainsKey(x.GetHashCode())) return false;
+                if (!_components.ContainsKey(x)) return false;
             }
 
             return true;
@@ -101,7 +101,7 @@ namespace EcsRx.Entities
         }
 
         public IComponent GetComponent(Type componentType)
-        { return _components.TryGetValue(componentType.GetHashCode(), out var component) ? component : null; }
+        { return _components.TryGetValue(componentType, out var component) ? component : null; }
 
         public override int GetHashCode()
         { return Id.GetHashCode(); }

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Examples.Application;
-using EcsRx.Examples.GroupPerformance.Helper;
+using EcsRx.Examples.Performance.Helper;
 using EcsRx.Extensions;
 
-namespace EcsRx.Examples.GroupPerformance
+namespace EcsRx.Examples.Performance
 {
     public class GroupPerformanceApplication : EcsRxConsoleApplication
     {
@@ -39,7 +40,8 @@ namespace EcsRx.Examples.GroupPerformance
         {
             var defaultPool = EntityCollectionManager.GetCollection();
             EntityCollectionManager.Collections.ForEachRun(x => x.RemoveAllEntities());
-            var startTime = DateTime.Now;
+            GC.Collect();
+            var timer = Stopwatch.StartNew();
 
             for (var i = 0; i < amount; i++)
             {
@@ -47,9 +49,9 @@ namespace EcsRx.Examples.GroupPerformance
                 entity.AddComponents(_availableComponents);
                 entity.RemoveComponents(_availableComponents);
             }
-            
-            var endTime = DateTime.Now;
-            return endTime - startTime;
+
+            timer.Stop();
+            return TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
         }
     }
 }

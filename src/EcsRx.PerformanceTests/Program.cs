@@ -8,6 +8,7 @@ namespace EcsRx.PerformanceTests
         static void Main(string[] args)
         {
             BenchmarkRunner.Run<GroupPerformanceScenario>();
+            BenchmarkRunner.Run<EntityUpdatesScenario>();
         }
     }
 }

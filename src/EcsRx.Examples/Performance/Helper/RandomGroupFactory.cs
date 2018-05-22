@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EcsRx.Examples.GroupPerformance.Components;
-using EcsRx.Examples.GroupPerformance.Extensions;
+using EcsRx.Examples.Performance.Components;
+using EcsRx.Examples.Performance.Extensions;
 using EcsRx.Groups;
 
-namespace EcsRx.Examples.GroupPerformance.Helper
+namespace EcsRx.Examples.Performance.Helper
 {
     public class RandomGroupFactory
     {

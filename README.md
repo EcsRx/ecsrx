@@ -30,9 +30,9 @@ The library was built to support .net standard 2.0, so you can just reference th
 
 ## Quick Start
 
-It is advised to look at the examples, which show the [bare bones required setup](src/EcsRx.Examples/HelloWorldExample/HelloWorldExample.cs), this is jus an example and we will look at having more support for specific frameworks going forward.
+It is advised to look at the examples, which show the [bare bones required setup](src/EcsRx.Examples/HelloWorldExample/HelloWorldExample.cs), this is just an example which uses a console based application, in the real world you will probably be targetting Unity or Monogame or maybe even Godot etc, but all that differs is your `EcsRxApplication` implementation (assuming you are using the pre-made infrastructure module).
 
-If you are using unity it is recommended you just ignore everything here and use the instructions on the [ecsrx.unity repository](ttps://github.com/ecsrx/ecsrx.unity).
+If you are using unity it is recommended you just ignore everything here and use the instructions on the [ecsrx.unity repository](ttps://github.com/ecsrx/ecsrx.unity) as that has not been fully mapped over to use this core version yet so is its own eco system until that jump is made.
 
 ### Simple components
 

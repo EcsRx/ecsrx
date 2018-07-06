@@ -46,7 +46,7 @@ namespace EcsRx.Tests.Framework
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.MatchesComponents.Returns(new Type[0]);
-            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ITeardownSystem>();
             mockSystem.TargetGroup.Returns(fakeGroup);

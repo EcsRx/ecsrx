@@ -31,7 +31,7 @@ namespace EcsRx.Tests.Framework
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
-            mockCollectionManager.CreateObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
             var mockSystem = Substitute.For<IManualSystem>();
 
             var systemHandler = new ManualSystemHandler(mockCollectionManager);
@@ -46,7 +46,7 @@ namespace EcsRx.Tests.Framework
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
-            mockCollectionManager.CreateObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
             var mockSystem = Substitute.For<IManualSystem>();
 
             var systemHandler = new ManualSystemHandler(mockCollectionManager);

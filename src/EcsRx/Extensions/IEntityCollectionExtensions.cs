@@ -18,7 +18,7 @@ namespace EcsRx.Extensions
                 .ToArray();
             
             for(var i=0;i<entities.Length;i++)
-            { entityCollection.RemoveEntity(entities[i]); }
+            { entityCollection.RemoveEntity(entities[i].Id); }
         }
 
         public static void RemoveEntitiesContaining(this IEntityCollection entityCollection, params Type[] components)
@@ -28,33 +28,33 @@ namespace EcsRx.Extensions
                 .ToArray();
 
             for (var i = 0; i < entities.Length; i++)
-            { entityCollection.RemoveEntity(entities[i]); }
+            { entityCollection.RemoveEntity(entities[i].Id); }
         }
 
         public static void RemoveAllEntities(this IEntityCollection entityCollection)
         {
             var entities = entityCollection.ToArray();
             for (var i = 0; i < entities.Length; i++)
-            { entityCollection.RemoveEntity(entities[i]); }
+            { entityCollection.RemoveEntity(entities[i].Id); }
         }
 
         public static void RemoveEntities(this IEntityCollection entityCollection, Func<IEntity, bool> predicate)
         {
             var entities = entityCollection.Where(predicate).ToArray();
             for (var i = 0; i < entities.Length; i++)
-            { entityCollection.RemoveEntity(entities[i]); }
+            { entityCollection.RemoveEntity(entities[i].Id); }
         }
 
         public static void RemoveEntities(this IEntityCollection entityCollection, params IEntity[] entities)
         {
             for (var i = 0; i < entities.Length; i++)
-            { entityCollection.RemoveEntity(entities[i]); }
+            { entityCollection.RemoveEntity(entities[i].Id); }
         }
 
         public static void RemoveEntities(this IEntityCollection entityCollection, IEnumerable<IEntity> entities)
         {
             foreach (var entity in entities)
-            { entityCollection.RemoveEntity(entity); }
+            { entityCollection.RemoveEntity(entity.Id); }
         }
 
         public static IEnumerable<IEntity> Query(this IEntityCollection entityCollection, IEntityCollectionQuery query)

@@ -28,10 +28,10 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var groupAccessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
             var hasEntityPredicate = system.TargetGroup is IHasPredicate;
             var castSystem = (IReactToGroupSystem)system;
-            var reactObservable = castSystem.ReactToGroup(groupAccessor);
+            var reactObservable = castSystem.ReactToGroup(observableGroup);
 
             if (!hasEntityPredicate)
             {

@@ -19,8 +19,8 @@ namespace EcsRx.Tests.Framework
             var messageBroker = new EventSystem(new MessageBroker());
             var entityFactory = new DefaultEntityFactory(messageBroker);
             var collectionFactory = new DefaultEntityCollectionFactory(entityFactory, messageBroker);
-            var groupAccessorFactory = new DefaultObservableObservableGroupFactory(messageBroker);
-            return new EntityCollectionManager(messageBroker, collectionFactory, groupAccessorFactory);
+            var observableGroupFactory = new DefaultObservableObservableGroupFactory(messageBroker);
+            return new EntityCollectionManager(messageBroker, collectionFactory, observableGroupFactory);
         }
         
         private SystemExecutor CreateExecutor(IEntityCollectionManager entityCollectionManager)

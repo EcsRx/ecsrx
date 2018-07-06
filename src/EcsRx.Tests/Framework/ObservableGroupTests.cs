@@ -34,14 +34,14 @@ namespace EcsRx.Tests.Framework
                 new Entity(Guid.NewGuid(), mockEventSystem)
             };
 
-            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, dummyEntitySnapshot);
+            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, dummyEntitySnapshot);
 
-            Assert.Equal(3, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal(dummyEntitySnapshot[0], cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[0].Id]);
-            Assert.Equal(dummyEntitySnapshot[1], cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[1].Id]);
-            Assert.Equal(dummyEntitySnapshot[2], cacheableGroupAccessor.CachedEntities[dummyEntitySnapshot[2].Id]);
+            Assert.Equal(3, cacheableobservableGroup.CachedEntities.Count);
+            Assert.Equal(dummyEntitySnapshot[0], cacheableobservableGroup.CachedEntities[dummyEntitySnapshot[0].Id]);
+            Assert.Equal(dummyEntitySnapshot[1], cacheableobservableGroup.CachedEntities[dummyEntitySnapshot[1].Id]);
+            Assert.Equal(dummyEntitySnapshot[2], cacheableobservableGroup.CachedEntities[dummyEntitySnapshot[2].Id]);
 
-            cacheableGroupAccessor.Dispose();
+            cacheableobservableGroup.Dispose();
         }
 
         [Fact]
@@ -67,11 +67,11 @@ namespace EcsRx.Tests.Framework
             mockEventSystem.Receive<ComponentsBeforeRemovedEvent>().Returns(Observable.Empty<ComponentsBeforeRemovedEvent>());
             mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
 
-            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
+            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockCollection));
             
-            Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal<IEntity>(applicableEntity, cacheableGroupAccessor.CachedEntities[applicableEntity.Id]);
+            Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
+            Assert.Equal<IEntity>(applicableEntity, cacheableobservableGroup.CachedEntities[applicableEntity.Id]);
         }
 
         [Fact]
@@ -97,10 +97,10 @@ namespace EcsRx.Tests.Framework
             mockEventSystem.Receive<ComponentsBeforeRemovedEvent>().Returns(Observable.Empty<ComponentsBeforeRemovedEvent>());
             mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
 
-            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
+            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockCollection));
 
-            Assert.Empty(cacheableGroupAccessor.CachedEntities);
+            Assert.Empty(cacheableobservableGroup.CachedEntities);
         }
 
         [Fact]
@@ -128,11 +128,11 @@ namespace EcsRx.Tests.Framework
             mockEventSystem.Receive<ComponentsBeforeRemovedEvent>().Returns(Observable.Empty<ComponentsBeforeRemovedEvent>());
             mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
 
-            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
+            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
             underlyingEvent.SetValueAndForceNotify(new EntityRemovedEvent(existingEntityOne, mockCollection));
 
-            Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal<IEntity>(existingEntityTwo, cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id]);
+            Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
+            Assert.Equal<IEntity>(existingEntityTwo, cacheableobservableGroup.CachedEntities[existingEntityTwo.Id]);
         }
 
         [Fact]
@@ -160,15 +160,15 @@ namespace EcsRx.Tests.Framework
             mockEventSystem.Receive<ComponentsBeforeRemovedEvent>().Returns(Observable.Empty<ComponentsBeforeRemovedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
 
-            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
+            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { existingEntityOne, existingEntityTwo });
             existingEntityOne.RemoveComponent(componentToRemove);
             underlyingEvent.SetValueAndForceNotify(new ComponentsRemovedEvent(existingEntityOne, new [] {componentToRemove}));
 
             existingEntityTwo.RemoveComponent(unapplicableComponent);
             underlyingEvent.SetValueAndForceNotify(new ComponentsRemovedEvent(existingEntityTwo, new[] {unapplicableComponent}));
 
-            Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal<IEntity>(existingEntityTwo, cacheableGroupAccessor.CachedEntities[existingEntityTwo.Id]);
+            Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
+            Assert.Equal<IEntity>(existingEntityTwo, cacheableobservableGroup.CachedEntities[existingEntityTwo.Id]);
         }
 
         [Fact]
@@ -193,15 +193,15 @@ namespace EcsRx.Tests.Framework
             mockEventSystem.Receive<ComponentsBeforeRemovedEvent>().Returns(Observable.Empty<ComponentsBeforeRemovedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
 
-            var cacheableGroupAccessor = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] {});
+            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] {});
             existingEntityOne.AddComponent(componentToAdd);
             underlyingEvent.SetValueAndForceNotify(new ComponentsAddedEvent(existingEntityOne, new[]{componentToAdd}));
 
             existingEntityTwo.AddComponent(unapplicableComponent);
             underlyingEvent.SetValueAndForceNotify(new ComponentsAddedEvent(existingEntityTwo, new[]{unapplicableComponent}));
 
-            Assert.Equal(1, cacheableGroupAccessor.CachedEntities.Count);
-            Assert.Equal<IEntity>(existingEntityOne, cacheableGroupAccessor.CachedEntities[existingEntityOne.Id]);
+            Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
+            Assert.Equal<IEntity>(existingEntityOne, cacheableobservableGroup.CachedEntities[existingEntityOne.Id]);
         }
         
         [Fact]

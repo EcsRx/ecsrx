@@ -29,7 +29,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);            
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);            
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);

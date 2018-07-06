@@ -10,7 +10,7 @@ namespace EcsRx.Collections
 {
     public class EntityCollection : IEntityCollection
     {
-        private readonly IDictionary<Guid, IEntity> _entities;
+        public readonly IDictionary<Guid, IEntity> EntityLookup;
 
         public string Name { get; }
         public IEventSystem EventSystem { get; }
@@ -18,7 +18,7 @@ namespace EcsRx.Collections
 
         public EntityCollection(string name, IEntityFactory entityFactory, IEventSystem eventSystem)
         {
-            _entities = new Dictionary<Guid, IEntity>();
+            EntityLookup = new Dictionary<Guid, IEntity>();
             Name = name;
             EventSystem = eventSystem;
             EntityFactory = entityFactory;
@@ -30,7 +30,7 @@ namespace EcsRx.Collections
 
             EventSystem.Publish(new EntityBeforeAddedEvent(entity, this));
 
-            _entities.Add(entity.Id, entity);
+            EntityLookup.Add(entity.Id, entity);
             blueprint?.Apply(entity);
 
             EventSystem.Publish(new EntityAddedEvent(entity, this));
@@ -38,12 +38,17 @@ namespace EcsRx.Collections
             return entity;
         }
 
-        public void RemoveEntity(IEntity entity)
-        {
-            EventSystem.Publish(new EntityBeforeRemovedEvent(entity, this));
+        public IEntity GetEntity(Guid id)
+        { return EntityLookup[id]; }
 
-            _entities.Remove(entity.Id);
-            entity.Dispose();
+        public void RemoveEntity(Guid id, bool disposeOnRemoval = true)
+        {
+            var entity = GetEntity(id);
+            EventSystem.Publish(new EntityBeforeRemovedEvent(entity, this));
+            EntityLookup.Remove(id);
+            
+            if(disposeOnRemoval)
+            { entity.Dispose(); }
 
             EventSystem.Publish(new EntityRemovedEvent(entity, this));
         }
@@ -54,15 +59,15 @@ namespace EcsRx.Collections
             { throw new InvalidEntityException("Entity provided does not have an assigned Id"); }
 
             EventSystem.Publish(new EntityBeforeAddedEvent(entity, this));
-            _entities.Add(entity.Id, entity);
+            EntityLookup.Add(entity.Id, entity);
             EventSystem.Publish(new EntityAddedEvent(entity, this));
         }
 
-        public bool ContainsEntity(IEntity entity)
-        { return _entities.ContainsKey(entity.Id); }
+        public bool ContainsEntity(Guid id)
+        { return EntityLookup.ContainsKey(id); }
 
         public IEnumerator<IEntity> GetEnumerator()
-        { return _entities.Values.GetEnumerator(); }
+        { return EntityLookup.Values.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }

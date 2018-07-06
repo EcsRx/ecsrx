@@ -66,7 +66,7 @@ namespace EcsRx.Executor.Handlers
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
             
-            var groupAccessor = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

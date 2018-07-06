@@ -131,7 +131,7 @@ namespace EcsRx.Tests.Framework
 
             var entityCollection = new EntityCollection("", mockEntityFactory, mockEventSystem);
             var entity = entityCollection.CreateEntity();
-            entityCollection.RemoveEntity(entity);
+            entityCollection.RemoveEntity(entity.Id);
 
             mockEventSystem.Received().Publish(Arg.Is<EntityBeforeRemovedEvent>(x => x.Entity == entity && x.EntityCollection == entityCollection));
 

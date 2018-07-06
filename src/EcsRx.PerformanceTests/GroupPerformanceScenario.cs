@@ -38,8 +38,8 @@ namespace EcsRx.PerformanceTests
             
             var entityFactory = new DefaultEntityFactory(_eventSystem);
             var poolFactory = new DefaultEntityCollectionFactory(entityFactory, _eventSystem);
-            var groupAccessorFactory = new DefaultObservableObservableGroupFactory(_eventSystem);
-            _entityCollectionManager = new EntityCollectionManager(_eventSystem, poolFactory, groupAccessorFactory);
+            var observableGroupFactory = new DefaultObservableObservableGroupFactory(_eventSystem);
+            _entityCollectionManager = new EntityCollectionManager(_eventSystem, poolFactory, observableGroupFactory);
             
             _availableComponents = _groupFactory.GetComponentTypes
                 .Select(x => Activator.CreateInstance(x) as IComponent)

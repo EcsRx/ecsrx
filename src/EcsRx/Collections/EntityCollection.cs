@@ -30,7 +30,7 @@ namespace EcsRx.Collections
 
             EventSystem.Publish(new EntityBeforeAddedEvent(entity, this));
 
-            _entities.Add(entity.Id, entity);
+            EntityLookup.Add(entity.Id, entity);
             blueprint?.Apply(entity);
 
             EventSystem.Publish(new EntityAddedEvent(entity, this));
@@ -43,10 +43,12 @@ namespace EcsRx.Collections
 
         public void RemoveEntity(Guid id, bool disposeOnRemoval = true)
         {
+            var entity = GetEntity(id);
             EventSystem.Publish(new EntityBeforeRemovedEvent(entity, this));
-
-            _entities.Remove(entity.Id);
-            entity.Dispose();
+            EntityLookup.Remove(id);
+            
+            if(disposeOnRemoval)
+            { entity.Dispose(); }
 
             EventSystem.Publish(new EntityRemovedEvent(entity, this));
         }
@@ -57,7 +59,7 @@ namespace EcsRx.Collections
             { throw new InvalidEntityException("Entity provided does not have an assigned Id"); }
 
             EventSystem.Publish(new EntityBeforeAddedEvent(entity, this));
-            _entities.Add(entity.Id, entity);
+            EntityLookup.Add(entity.Id, entity);
             EventSystem.Publish(new EntityAddedEvent(entity, this));
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.PerformanceTests.Components;

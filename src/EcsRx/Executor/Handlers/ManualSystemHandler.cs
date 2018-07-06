@@ -19,7 +19,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var groupAccessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var groupAccessor = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
             var castSystem = (IManualSystem)system;
             castSystem.StartSystem(groupAccessor);
         }
@@ -27,7 +27,7 @@ namespace EcsRx.Executor.Handlers
         public void DestroySystem(ISystem system)
         {
             var castSystem = (IManualSystem)system;
-            var groupAccessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var groupAccessor = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
             castSystem.StopSystem(groupAccessor);
         }
 

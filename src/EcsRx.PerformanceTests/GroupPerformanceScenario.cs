@@ -48,7 +48,7 @@ namespace EcsRx.PerformanceTests
             _testGroups = _groupFactory.CreateTestGroups().ToArray();
 
             foreach (var group in _testGroups)
-            { _entityCollectionManager.CreateObservableGroup(group); }
+            { _entityCollectionManager.GetObservableGroup(group); }
 
             _defaultEntityCollection = _entityCollectionManager.GetCollection();
         }

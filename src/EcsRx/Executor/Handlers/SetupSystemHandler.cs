@@ -38,7 +38,7 @@ namespace EcsRx.Executor.Handlers
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ISetupSystem) system;
-            var accessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var accessor = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
 
             accessor.OnEntityAdded
                 .Subscribe(x =>

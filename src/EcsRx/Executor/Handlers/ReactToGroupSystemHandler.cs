@@ -28,7 +28,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var groupAccessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var groupAccessor = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
             var hasEntityPredicate = system.TargetGroup is IHasPredicate;
             var castSystem = (IReactToGroupSystem)system;
             var reactObservable = castSystem.ReactToGroup(groupAccessor);

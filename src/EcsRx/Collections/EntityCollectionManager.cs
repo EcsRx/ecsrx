@@ -13,11 +13,11 @@ namespace EcsRx.Collections
     {
         public const string DefaultPoolName = "default";
         
-        private readonly IDictionary<ObservableGroupToken, IObservableGroup> _groupAccessors;
-        private readonly IDictionary<string, IEntityCollection> _pools;
+        private readonly IDictionary<ObservableGroupToken, IObservableGroup> _observableGroups;
+        private readonly IDictionary<string, IEntityCollection> _collections;
 
         public IEventSystem EventSystem { get; }
-        public IEnumerable<IEntityCollection> Collections => _pools.Values;
+        public IEnumerable<IEntityCollection> Collections => _collections.Values;
         public IEntityCollectionFactory EntityCollectionFactory { get; }
         public IObservableGroupFactory ObservableGroupFactory { get; }
 
@@ -27,8 +27,8 @@ namespace EcsRx.Collections
             EntityCollectionFactory = entityCollectionFactory;
             ObservableGroupFactory = observableGroupFactory;
 
-            _groupAccessors = new Dictionary<ObservableGroupToken, IObservableGroup>();
-            _pools = new Dictionary<string, IEntityCollection>();
+            _observableGroups = new Dictionary<ObservableGroupToken, IObservableGroup>();
+            _collections = new Dictionary<string, IEntityCollection>();
 
             CreateCollection(DefaultPoolName);
         }
@@ -36,7 +36,7 @@ namespace EcsRx.Collections
         public IEntityCollection CreateCollection(string name)
         {
             var pool = EntityCollectionFactory.Create(name);
-            _pools.Add(name, pool);
+            _collections.Add(name, pool);
 
             EventSystem.Publish(new PoolAddedEvent(pool));
 
@@ -44,16 +44,19 @@ namespace EcsRx.Collections
         }
 
         public IEntityCollection GetCollection(string name = null)
-        { return _pools[name ?? DefaultPoolName]; }
+        { return _collections[name ?? DefaultPoolName]; }
 
-        public void RemoveCollection(string name)
+        public void RemoveCollection(string name, bool disposeEntities = true)
         {
-            if(!_pools.ContainsKey(name)) { return; }
+            if(!_collections.ContainsKey(name)) 
+            { return; }
 
-            var pool = _pools[name];
-            _pools.Remove(name);
+            var collection = _collections[name];
+            _collections.Remove(name);
+            
+            collection.RemoveAllEntities();
 
-            EventSystem.Publish(new PoolRemovedEvent(pool));
+            EventSystem.Publish(new PoolRemovedEvent(collection));
         }
         
         public IEnumerable<IEntity> GetEntitiesFor(IGroup group, string collectionName = null)
@@ -62,15 +65,15 @@ namespace EcsRx.Collections
             { return new IEntity[0]; }
 
             if (collectionName != null)
-            { return _pools[collectionName].MatchingGroup(group); }
+            { return _collections[collectionName].MatchingGroup(group); }
 
             return Collections.GetAllEntities().MatchingGroup(group);
         }
 
-        public IObservableGroup CreateObservableGroup(IGroup group, string collectionName = null)
+        public IObservableGroup GetObservableGroup(IGroup group, string collectionName = null)
         {
             var groupAccessorToken = new ObservableGroupToken(group.MatchesComponents.ToArray(), collectionName);
-            if (_groupAccessors.ContainsKey(groupAccessorToken)) { return _groupAccessors[groupAccessorToken]; }
+            if (_observableGroups.ContainsKey(groupAccessorToken)) { return _observableGroups[groupAccessorToken]; }
 
             var entityMatches = GetEntitiesFor(group, collectionName);
             var groupAccessor = ObservableGroupFactory.Create(new ObservableGroupConfiguration
@@ -79,14 +82,14 @@ namespace EcsRx.Collections
                 InitialEntities = entityMatches
             });
             
-            _groupAccessors.Add(groupAccessorToken, groupAccessor);
+            _observableGroups.Add(groupAccessorToken, groupAccessor);
 
-            return _groupAccessors[groupAccessorToken];
+            return _observableGroups[groupAccessorToken];
         }
 
         public void Dispose()
         {
-            foreach (var accessor in _groupAccessors.Values)
+            foreach (var accessor in _observableGroups.Values)
             { (accessor as IDisposable)?.Dispose(); }
         }
     }

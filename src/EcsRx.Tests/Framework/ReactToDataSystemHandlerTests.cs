@@ -51,7 +51,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -100,7 +100,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -160,7 +160,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -206,7 +206,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group(x => x.Id == guid1);
-            mockCollectionManager.CreateObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();

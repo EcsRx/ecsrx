@@ -21,7 +21,7 @@ namespace EcsRx.Examples.GroupPerformance
             
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
-            { EntityCollectionManager.CreateObservableGroup(group); }
+            { EntityCollectionManager.GetObservableGroup(group); }
 
             var firstRun = ProcesEntities(10000);
             var secondRun = ProcesEntities(10000);

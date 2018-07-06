@@ -40,11 +40,13 @@ namespace EcsRx.Collections
         public IEntity GetEntity(Guid id)
         { return EntityLookup[id]; }
 
-        public void RemoveEntity(Guid id)
+        public void RemoveEntity(Guid id, bool disposeOnRemoval = true)
         {
             var entity = EntityLookup[id];
             EntityLookup.Remove(id);
-            entity.Dispose();
+            
+            if(disposeOnRemoval)
+            { entity.Dispose(); }
 
             EventSystem.Publish(new EntityRemovedEvent(entity, this));
         }

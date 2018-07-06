@@ -18,9 +18,9 @@ namespace EcsRx.Tests.Views
             pool.PreAllocate(20);
 
             mockViewHandler.Received(20).CreateView();
-            Assert.Equal(20, pool._pooledObjects.Count);
-            Assert.All(pool._pooledObjects, x => Assert.False(x.IsInUse));
-            Assert.All(pool._pooledObjects, x => Assert.Null(x.ViewObject));
+            Assert.Equal(20, pool.PooledObjects.Count);
+            Assert.All(pool.PooledObjects, x => Assert.False(x.IsInUse));
+            Assert.All(pool.PooledObjects, x => Assert.Null(x.ViewObject));
         }
 
         [Fact]
@@ -36,14 +36,14 @@ namespace EcsRx.Tests.Views
                 if (i < 5)
                 { viewObject.IsInUse = true; }
 
-                pool._pooledObjects.Add(viewObject);
+                pool.PooledObjects.Add(viewObject);
             }
 
             pool.DeAllocate(10);
 
             mockViewHandler.Received(5).DestroyView(Arg.Any<object>());
-            Assert.Equal(5, pool._pooledObjects.Count);
-            Assert.All(pool._pooledObjects, x => Assert.True(x.IsInUse));
+            Assert.Equal(5, pool.PooledObjects.Count);
+            Assert.All(pool.PooledObjects, x => Assert.True(x.IsInUse));
         }
 
         [Fact]
@@ -59,13 +59,13 @@ namespace EcsRx.Tests.Views
                 if (i < 5)
                 { viewObject.IsInUse = true; }
 
-                pool._pooledObjects.Add(viewObject);
+                pool.PooledObjects.Add(viewObject);
             }
 
             pool.EmptyPool();
 
             mockViewHandler.Received(10).DestroyView(Arg.Any<object>());
-            Assert.Empty(pool._pooledObjects);
+            Assert.Empty(pool.PooledObjects);
         }
 
         [Fact]
@@ -76,9 +76,9 @@ namespace EcsRx.Tests.Views
             pool.AllocateInstance();
 
             mockViewHandler.Received(5).CreateView();
-            Assert.Equal(5, pool._pooledObjects.Count);
-            Assert.Equal(4, pool._pooledObjects.Count(x => x.IsInUse == false));
-            Assert.Equal(1, pool._pooledObjects.Count(x => x.IsInUse));
+            Assert.Equal(5, pool.PooledObjects.Count);
+            Assert.Equal(4, pool.PooledObjects.Count(x => x.IsInUse == false));
+            Assert.Equal(1, pool.PooledObjects.Count(x => x.IsInUse));
         }
 
         [Fact]
@@ -88,14 +88,14 @@ namespace EcsRx.Tests.Views
             var pool = new ViewPool(5, mockViewHandler);
 
             var viewObject = new ViewObjectContainer(null);
-            pool._pooledObjects.Add(viewObject);
+            pool.PooledObjects.Add(viewObject);
 
             pool.AllocateInstance();
 
             mockViewHandler.Received(0).CreateView();
             mockViewHandler.Received(1).SetActiveState(Arg.Any<object>(), true);
-            Assert.Equal(1, pool._pooledObjects.Count);
-            Assert.Equal(1, pool._pooledObjects.Count(x => x.IsInUse));
+            Assert.Equal(1, pool.PooledObjects.Count);
+            Assert.Equal(1, pool.PooledObjects.Count(x => x.IsInUse));
         }
 
         [Fact]
@@ -106,14 +106,14 @@ namespace EcsRx.Tests.Views
 
             var actualView = new object();
             var viewObject = new ViewObjectContainer(actualView) { IsInUse = true };
-            pool._pooledObjects.Add(viewObject);
+            pool.PooledObjects.Add(viewObject);
 
             pool.ReleaseInstance(actualView);
 
             mockViewHandler.Received(0).DestroyView(actualView);
             mockViewHandler.Received(1).SetActiveState(actualView, false);
-            Assert.Equal(1, pool._pooledObjects.Count);
-            Assert.Equal(1, pool._pooledObjects.Count(x => x.IsInUse == false));
+            Assert.Equal(1, pool.PooledObjects.Count);
+            Assert.Equal(1, pool.PooledObjects.Count(x => x.IsInUse == false));
         }
     }
 }

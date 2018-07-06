@@ -7,7 +7,7 @@ namespace EcsRx.Views.Pooling
 {
     public class ViewPool : IViewPool
     {
-        public readonly IList<ViewObjectContainer> _pooledObjects = new List<ViewObjectContainer>();
+        public readonly IList<ViewObjectContainer> PooledObjects = new List<ViewObjectContainer>();
         
         public int IncrementSize { get; }
         public IViewHandler ViewHandler { get; }
@@ -26,13 +26,13 @@ namespace EcsRx.Views.Pooling
                 ViewHandler.SetActiveState(newInstance, false);
                 
                 var objectContainer = new ViewObjectContainer(newInstance);
-                _pooledObjects.Add(objectContainer);
+                PooledObjects.Add(objectContainer);
             }
         }
 
         public void DeAllocate(int dellocationCount)
         {
-            _pooledObjects.Where(x => !x.IsInUse)
+            PooledObjects.Where(x => !x.IsInUse)
                 .Take(dellocationCount)
                 .ToArray()
                 .ForEachRun(OnDeallocateView);
@@ -40,17 +40,17 @@ namespace EcsRx.Views.Pooling
 
         private void OnDeallocateView(ViewObjectContainer x)
         {
-            _pooledObjects.Remove(x);
+            PooledObjects.Remove(x);
             ViewHandler.DestroyView(x.ViewObject);
         }
 
         public object AllocateInstance()
         {
-            var availableViewObject = _pooledObjects.FirstOrDefault(x => !x.IsInUse);
+            var availableViewObject = PooledObjects.FirstOrDefault(x => !x.IsInUse);
             if (availableViewObject == null)
             {
                 PreAllocate(IncrementSize);
-                availableViewObject = _pooledObjects.First(x => !x.IsInUse);
+                availableViewObject = PooledObjects.First(x => !x.IsInUse);
             }
 
             availableViewObject.IsInUse = true;
@@ -60,7 +60,7 @@ namespace EcsRx.Views.Pooling
         
         public void ReleaseInstance(object view)
         {
-            var container = _pooledObjects.FirstOrDefault(x => x.ViewObject == view);
+            var container = PooledObjects.FirstOrDefault(x => x.ViewObject == view);
             if(container == null) { return; }
 
             container.IsInUse = false;
@@ -70,10 +70,10 @@ namespace EcsRx.Views.Pooling
 
         public void EmptyPool()
         {
-            _pooledObjects.ToArray()
+            PooledObjects.ToArray()
                 .ForEachRun(OnDeallocateView);
 
-            _pooledObjects.Clear();
+            PooledObjects.Clear();
         }
     }
 }

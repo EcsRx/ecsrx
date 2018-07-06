@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Reflection;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using EcsRx.Polyfills;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -48,8 +46,11 @@ namespace EcsRx.Executor.Handlers
             
             var groupPredicate = system.TargetGroup as IHasPredicate;
             return reactObservable
-                .Where(x => groupPredicate.CanProcessEntity(entity))
-                .Subscribe(x => system.Execute(entity, x));
+                .Subscribe(x =>
+                {
+                    if(groupPredicate.CanProcessEntity(entity))
+                    { system.Execute(entity, x);}
+                });
         }
 
         public bool CanHandleSystem(ISystem system)
@@ -65,9 +66,9 @@ namespace EcsRx.Executor.Handlers
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
             
-            var groupAccessor = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
 
-            groupAccessor.OnEntityAdded
+            observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
                     var subscription = processEntityFunction(x);
@@ -75,7 +76,7 @@ namespace EcsRx.Executor.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
             
-            groupAccessor.OnEntityRemoved
+            observableGroup.OnEntityRemoved
                 .Subscribe(x =>
                 {
                     entitySubscriptions.RemoveAndDispose(x.Id);
@@ -83,7 +84,7 @@ namespace EcsRx.Executor.Handlers
                 .AddTo(entityChangeSubscriptions);
             
             
-            foreach (var entity in groupAccessor.Entities)
+            foreach (var entity in observableGroup)
             {
                 var subscription = processEntityFunction(entity);
                 entitySubscriptions.Add(entity.Id, subscription);

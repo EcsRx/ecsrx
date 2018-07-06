@@ -4,12 +4,12 @@ using EcsRx.Entities;
 
 namespace EcsRx.Groups.Observable
 {
-    public interface IObservableGroup
+    public interface IObservableGroup : IEnumerable<IEntity>
     {
         ObservableGroupToken Token { get; }
-        IReadOnlyCollection<IEntity> Entities { get; }
         
         IObservable<IEntity> OnEntityAdded { get; }
         IObservable<IEntity> OnEntityRemoved { get; }
+        IObservable<IEntity> OnEntityRemoving { get; }
     }
 }

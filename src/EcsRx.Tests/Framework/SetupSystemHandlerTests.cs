@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reactive.Subjects;
 using System.Threading;
 using EcsRx.Collections;
@@ -36,12 +37,12 @@ namespace EcsRx.Tests.Framework
             var fakeEntity2 = Substitute.For<IEntity>();
             fakeEntity1.Id.Returns(Guid.NewGuid());
             fakeEntity2.Id.Returns(Guid.NewGuid());
-            var fakeEntities = new[] { fakeEntity1, fakeEntity2 };
+            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
@@ -70,13 +71,13 @@ namespace EcsRx.Tests.Framework
             var fakeEntity2 = Substitute.For<IEntity>();
             fakeEntity1.Id.Returns(Guid.NewGuid());
             fakeEntity2.Id.Returns(Guid.NewGuid());
-            var fakeEntities = new IEntity[] { };
+            var fakeEntities = new List<IEntity>();
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             var addingSubject = new Subject<IEntity>();
             mockObservableGroup.OnEntityAdded.Returns(addingSubject);
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
@@ -113,13 +114,13 @@ namespace EcsRx.Tests.Framework
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             fakeEntity1.Id.Returns(Guid.NewGuid());
-            var fakeEntities = new IEntity[] { };
+            var fakeEntities = new List<IEntity>();
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             var removingSubject = new Subject<IEntity>();
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(removingSubject);
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
@@ -154,14 +155,14 @@ namespace EcsRx.Tests.Framework
             
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
-            var fakeEntities = new[] { fakeEntity1, fakeEntity2 };
+            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
             fakeEntity1.Id.Returns(guid1);
             fakeEntity2.Id.Returns(guid2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
@@ -193,14 +194,14 @@ namespace EcsRx.Tests.Framework
             
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
-            var fakeEntities = new[] { fakeEntity1, fakeEntity2 };
+            var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
             fakeEntity1.Id.Returns(guid1);
             fakeEntity2.Id.Returns(guid2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
-            mockObservableGroup.Entities.Returns(fakeEntities);
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 

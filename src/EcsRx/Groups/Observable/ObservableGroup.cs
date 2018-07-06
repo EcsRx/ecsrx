@@ -1,11 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
+using EcsRx.Polyfills;
 
 namespace EcsRx.Groups.Observable
 {
@@ -16,12 +16,13 @@ namespace EcsRx.Groups.Observable
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
         public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
+        public IObservable<IEntity> OnEntityRemoving => _onEntityRemoving;
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
+        private readonly Subject<IEntity> _onEntityRemoving;
         
         public ObservableGroupToken Token { get; }
-        public IReadOnlyCollection<IEntity> Entities => CachedEntities.Values;
         public IEventSystem EventSystem { get; }
 
         public ObservableGroup(IEventSystem eventSystem, ObservableGroupToken token, IEnumerable<IEntity> initialEntities)
@@ -31,6 +32,7 @@ namespace EcsRx.Groups.Observable
 
             _onEntityAdded = new Subject<IEntity>();
             _onEntityRemoved = new Subject<IEntity>();
+            _onEntityRemoving = new Subject<IEntity>();
 
             CachedEntities = initialEntities.ToDictionary(x => x.Id, x => x);
             Subscriptions = new List<IDisposable>();
@@ -45,41 +47,64 @@ namespace EcsRx.Groups.Observable
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<EntityRemovedEvent>()
-                .Where(x => CachedEntities.ContainsKey(x.Entity.Id))
-                .Subscribe(OnEntityRemovedFromPool)
+                .Subscribe(x =>
+                {
+                    if(CachedEntities.ContainsKey(x.Entity.Id))
+                    { OnEntityRemovedFromPool(x); }
+                })
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<ComponentsAddedEvent>()
                 .Subscribe(OnEntityComponentAdded)
                 .AddTo(Subscriptions);
 
+            EventSystem.Receive<ComponentsBeforeRemovedEvent>()
+                .Subscribe(x =>
+                {
+                    if (CachedEntities.ContainsKey(x.Entity.Id))
+                    { OnEntityBeforeComponentRemoved(x); }
+                })
+                .AddTo(Subscriptions);
+
             EventSystem.Receive<ComponentsRemovedEvent>()
-                .Where(x => CachedEntities.ContainsKey(x.Entity.Id))
-                .Subscribe(OnEntityComponentRemoved)
+                .Subscribe(x =>
+                {
+                    if (CachedEntities.ContainsKey(x.Entity.Id))
+                    { OnEntityComponentRemoved(x); } 
+                })
                 .AddTo(Subscriptions);
         }
 
         public void OnEntityComponentRemoved(ComponentsRemovedEvent args)
         {
+            if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             if (args.Entity.HasComponents(Token.ComponentTypes)) { return; }
             
             CachedEntities.Remove(args.Entity.Id);
             _onEntityRemoved.OnNext(args.Entity);
         }
 
+        public void OnEntityBeforeComponentRemoved(ComponentsBeforeRemovedEvent args)
+        {
+            if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
+            if (!args.Components.Any(x => Token.ComponentTypes.Contains(x.GetType()))) { return; }
+            _onEntityRemoving.OnNext(args.Entity);
+        }
+
         public void OnEntityComponentAdded(ComponentsAddedEvent args)
         {
             if(CachedEntities.ContainsKey(args.Entity.Id)) { return; }
+            if (!args.Entity.HasComponents(Token.ComponentTypes)) { return; }
 
-            if (args.Entity.HasComponents(Token.ComponentTypes))
-            {
-                CachedEntities.Add(args.Entity.Id, args.Entity);
-                _onEntityAdded.OnNext(args.Entity);
-            }
+            CachedEntities.Add(args.Entity.Id, args.Entity);
+            _onEntityAdded.OnNext(args.Entity);
         }
 
         public void OnEntityAddedToPool(EntityAddedEvent args)
         {
+            // This is because you may have fired a blueprint before it is created
+            if (CachedEntities.ContainsKey(args.Entity.Id)) { return; }
+
             if (!string.IsNullOrEmpty(Token.Pool))
             {
                 if(args.EntityCollection.Name != Token.Pool)
@@ -92,7 +117,7 @@ namespace EcsRx.Groups.Observable
             CachedEntities.Add(args.Entity.Id, args.Entity);
             _onEntityAdded.OnNext(args.Entity);
         }
-
+        
         public void OnEntityRemovedFromPool(EntityRemovedEvent args)
         {
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
@@ -107,5 +132,11 @@ namespace EcsRx.Groups.Observable
             _onEntityAdded.Dispose();
             _onEntityRemoved.Dispose();
         }
+
+        public IEnumerator<IEntity> GetEnumerator()
+        { return CachedEntities.Values.GetEnumerator(); }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        { return GetEnumerator(); }
     }
 }

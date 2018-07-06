@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Timers;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using EcsRx.Polyfills;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -38,9 +35,9 @@ namespace EcsRx.Executor.Handlers
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ISetupSystem) system;
-            var accessor = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
 
-            accessor.OnEntityAdded
+            observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
                     var possibleSubscription = ProcessEntity(castSystem, x);
@@ -49,7 +46,7 @@ namespace EcsRx.Executor.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
             
-            accessor.OnEntityRemoved
+            observableGroup.OnEntityRemoved
                 .Subscribe(x =>
                 {
                     if (entitySubscriptions.ContainsKey(x.Id))
@@ -57,7 +54,7 @@ namespace EcsRx.Executor.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            foreach (var entity in accessor.Entities)
+            foreach (var entity in observableGroup)
             {
                 var possibleSubscription = ProcessEntity(castSystem, entity);
                 if (possibleSubscription != null)
@@ -87,14 +84,16 @@ namespace EcsRx.Executor.Handlers
                 system.Setup(entity);
                 return null;
             }
-            
-            return entity.WaitForPredicateMet(groupPredicate.CanProcessEntity)
-                .FirstAsync()
-                .Subscribe(x =>
+
+            var disposable = entity
+                .WaitForPredicateMet(groupPredicate.CanProcessEntity)
+                .ContinueWith(x =>
                 {
-                    _entitySubscriptions[system].Remove(x.Id);
-                    system.Setup(x);
+                    _entitySubscriptions[system].Remove(x.Result.Id);
+                    system.Setup(x.Result);
                 });
+
+            return disposable;
         }
 
         public void Dispose()

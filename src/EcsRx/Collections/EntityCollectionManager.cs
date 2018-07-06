@@ -48,13 +48,10 @@ namespace EcsRx.Collections
 
         public void RemoveCollection(string name, bool disposeEntities = true)
         {
-            if(!_collections.ContainsKey(name)) 
-            { return; }
+            if(!_collections.ContainsKey(name)) { return; }
 
-            var collection = _collections[name];
+            var pool = _collections[name];
             _collections.Remove(name);
-            
-            collection.RemoveAllEntities();
 
             EventSystem.Publish(new PoolRemovedEvent(collection));
         }
@@ -72,19 +69,19 @@ namespace EcsRx.Collections
 
         public IObservableGroup GetObservableGroup(IGroup group, string collectionName = null)
         {
-            var groupAccessorToken = new ObservableGroupToken(group.MatchesComponents.ToArray(), collectionName);
-            if (_observableGroups.ContainsKey(groupAccessorToken)) { return _observableGroups[groupAccessorToken]; }
+            var observableGroupToken = new ObservableGroupToken(group.MatchesComponents.ToArray(), collectionName);
+            if (_observableGroups.ContainsKey(observableGroupToken)) { return _observableGroups[observableGroupToken]; }
 
             var entityMatches = GetEntitiesFor(group, collectionName);
             var groupAccessor = ObservableGroupFactory.Create(new ObservableGroupConfiguration
             {
-                ObservableGroupToken = groupAccessorToken,
+                ObservableGroupToken = observableGroupToken,
                 InitialEntities = entityMatches
             });
             
-            _observableGroups.Add(groupAccessorToken, groupAccessor);
+            _observableGroups.Add(observableGroupToken, groupAccessor);
 
-            return _observableGroups[groupAccessorToken];
+            return _observableGroups[observableGroupToken];
         }
 
         public void Dispose()

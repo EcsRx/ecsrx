@@ -1,11 +1,10 @@
 obj
 bin
 packages/
+
 .idea/
 *.user
 *.suo
 *.nupkg
 /src/.vs
 /src/EcsRx.PerformanceTests/BenchmarkDotNet.Artifacts
-
-src/\.vs/

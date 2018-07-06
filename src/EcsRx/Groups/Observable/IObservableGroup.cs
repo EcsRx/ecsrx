@@ -4,10 +4,10 @@ using EcsRx.Entities;
 
 namespace EcsRx.Groups.Observable
 {
-    /// <summary>
-    /// A maintained collection of entities which match a given group
+    public interface IObservableGroup : IEnumerable<IEntity>
     /// </summary>
-    public interface IObservableGroup
+    /// A maintained collection of entities which match a given group
+    /// <summary>
     {
         /// <summary>
         /// The underlying token that is used to describe the group
@@ -27,7 +27,6 @@ namespace EcsRx.Groups.Observable
         /// more performant to use this rather than querying a collection directly.
         /// This can change based upon implementations though.
         /// </remarks>
-        IReadOnlyCollection<IEntity> Entities { get; }
         
         /// <summary>
         /// Event stream for when an entity has been added to this group
@@ -38,5 +37,6 @@ namespace EcsRx.Groups.Observable
         /// Event stream for when an entity has been removed from this group
         /// </summary>
         IObservable<IEntity> OnEntityRemoved { get; }
+        IObservable<IEntity> OnEntityRemoving { get; }
     }
 }

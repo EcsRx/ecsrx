@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
-using System.Timers;
 using EcsRx.Attributes;
 using EcsRx.Collections;
-using EcsRx.Entities;
 using EcsRx.Extensions;
-using EcsRx.Groups;
+using EcsRx.Polyfills;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -17,12 +12,12 @@ namespace EcsRx.Executor.Handlers
     public class TeardownSystemHandler : IConventionalSystemHandler
     {
         public readonly IEntityCollectionManager EntityCollectionManager;
-        public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
+        public readonly IDictionary<ISystem, IDisposable> SystemSubscriptions;
         
         public TeardownSystemHandler(IEntityCollectionManager entityCollectionManager)
         {
             EntityCollectionManager = entityCollectionManager;
-            _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
+            SystemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
         public bool CanHandleSystem(ISystem system)
@@ -31,24 +26,24 @@ namespace EcsRx.Executor.Handlers
         public void SetupSystem(ISystem system)
         {
             var entityChangeSubscriptions = new CompositeDisposable();
-            _systemSubscriptions.Add(system, entityChangeSubscriptions);
+            SystemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ITeardownSystem) system;
-            var accessor = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);
             
-            accessor.OnEntityRemoved
+            observableGroup.OnEntityRemoving
                 .Subscribe(castSystem.Teardown)
                 .AddTo(entityChangeSubscriptions);        
         }
 
         public void DestroySystem(ISystem system)
         {
-            _systemSubscriptions.RemoveAndDispose(system);
+            SystemSubscriptions.RemoveAndDispose(system);
         }       
 
         public void Dispose()
         {
-            _systemSubscriptions.DisposeAll();
+            SystemSubscriptions.DisposeAll();
         }
     }
 }

@@ -2,8 +2,5 @@
 
 namespace EcsRx.Groups.Observable
 {
-    public interface IObservableGroupFactory : IFactory<ObservableGroupConfiguration, IObservableGroup>
-    {
-        
-    }
+    public interface IObservableGroupFactory : IFactory<ObservableGroupConfiguration, IObservableGroup> {}
 }

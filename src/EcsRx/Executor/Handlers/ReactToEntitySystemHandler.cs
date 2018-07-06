@@ -1,14 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using System;
-using System.Diagnostics;
-using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using EcsRx.Polyfills;
 using EcsRx.Systems;
 
 namespace EcsRx.Executor.Handlers
@@ -32,14 +29,14 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var accessor = EntityCollectionManager.GetObservableGroup(system.TargetGroup);            
+            var observableGroup = EntityCollectionManager.CreateObservableGroup(system.TargetGroup);            
             var entitySubscriptions = new Dictionary<Guid, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (IReactToEntitySystem) system;
             
-            accessor.OnEntityAdded
+            observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
                     var entitySubscription = ProcessEntity(castSystem, x);
@@ -47,14 +44,14 @@ namespace EcsRx.Executor.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
             
-            accessor.OnEntityRemoved
+            observableGroup.OnEntityRemoved
                 .Subscribe(x =>
                 {
                     entitySubscriptions.RemoveAndDispose(x.Id);
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            foreach (var entity in accessor.Entities)
+            foreach (var entity in observableGroup)
             {
                 var entitySubscription = ProcessEntity(castSystem, entity);
                 entitySubscriptions.Add(entity.Id, entitySubscription);
@@ -83,8 +80,11 @@ namespace EcsRx.Executor.Handlers
 
             var groupPredicate = system.TargetGroup as IHasPredicate;
             return reactObservable
-                .Where(groupPredicate.CanProcessEntity)
-                .Subscribe(system.Execute);
+                .Subscribe(x =>
+                {
+                    if(groupPredicate.CanProcessEntity(x))
+                    { system.Execute(x); }
+                });
         }
 
         public void Dispose()

@@ -1,6 +1,7 @@
 obj
 bin
 packages/
+
 .idea/
 *.user
 *.suo

@@ -30,9 +30,9 @@ The library was built to support .net standard 2.0, so you can just reference th
 
 ## Quick Start
 
-It is advised to look at the examples, which show the [bare bones required setup](src/EcsRx.Examples/Application/EcsRxApplication.cs), this is jus an example and we will look at having more support for specific frameworks going forward.
+It is advised to look at the examples, which show the [bare bones required setup](src/EcsRx.Examples/HelloWorldExample/HelloWorldExample.cs), this is just an example which uses a console based application, in the real world you will probably be targetting Unity or Monogame or maybe even Godot etc, but all that differs is your `EcsRxApplication` implementation (assuming you are using the pre-made infrastructure module).
 
-If you are using unity it is recommended you just ignore everything here and use the instructions on the [ecsrx.unity repository](ttps://github.com/ecsrx/ecsrx.unity).
+If you are using unity it is recommended you just ignore everything here and use the instructions on the [ecsrx.unity repository](ttps://github.com/ecsrx/ecsrx.unity) as that has not been fully mapped over to use this core version yet so is its own eco system until that jump is made.
 
 ### Simple components
 
@@ -93,11 +93,21 @@ If you want to run the examples then just clone it and open examples project in 
 
 There are also a suite of tests which are being expanded as the project grows, it was written with testability in mind.
 
+## Note on infrastructure/view namespaces and going forward
+
+This library started out as a unity specific project but has moved to a generic .net library, due to this the movement of functionality from the unity layer down into the core has been incremental. 
+
+We are now at a point where the underlying infrastructure module (mainly for `EcsRxApplication` and dependency injection notions) has been added, and the generic view module has been moved here. While both of these libraries offer a stepping stone to get up and running quicker they unfortunately are not as easy as just including and off you go.
+
+The examples folder shows examples on how to create your own application implementations, but hopefully once things have been ironed out in the whole Rx world this area will improve more as we start to add another layer which will let you just drop in and go (like the unity version).
+
+If you want to know more about this drop into the gitter chat and we can discuss more.
+
 ## Docs
 
 See the [docs folder](docs) for more information. (This will grow)
 
-[build-status-image]: https://travis-ci.org/ecsrx/ecsrx.svg
-[build-status-url]: https://travis-ci.org/ecsrx/ecsrx
+[build-status-image]: https://ci.appveyor.com/api/projects/status/55d1256yrra6fmls/branch/master?svg=true
+[build-status-url]: https://ci.appveyor.com/project/grofit/ecsrx/branch/master
 [gitter-image]: https://badges.gitter.im/grofit/ecsrx.svg
 [gitter-url]: https://gitter.im/grofit/ecsrx

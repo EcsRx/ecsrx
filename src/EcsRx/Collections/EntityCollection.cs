@@ -10,7 +10,7 @@ namespace EcsRx.Collections
 {
     public class EntityCollection : IEntityCollection
     {
-        private readonly IDictionary<Guid, IEntity> _entities;
+        public readonly IDictionary<Guid, IEntity> EntityLookup;
 
         public string Name { get; }
         public IEventSystem EventSystem { get; }
@@ -18,7 +18,7 @@ namespace EcsRx.Collections
 
         public EntityCollection(string name, IEntityFactory entityFactory, IEventSystem eventSystem)
         {
-            _entities = new Dictionary<Guid, IEntity>();
+            EntityLookup = new Dictionary<Guid, IEntity>();
             Name = name;
             EventSystem = eventSystem;
             EntityFactory = entityFactory;
@@ -28,19 +28,22 @@ namespace EcsRx.Collections
         {
             var entity = EntityFactory.Create(null);
 
-            _entities.Add(entity.Id, entity);
+            EntityLookup.Add(entity.Id, entity);
 
             EventSystem.Publish(new EntityAddedEvent(entity, this));
 
-            if (blueprint != null)
-            { blueprint.Apply(entity); }
+            blueprint?.Apply(entity);
 
             return entity;
         }
 
-        public void RemoveEntity(IEntity entity)
+        public IEntity GetEntity(Guid id)
+        { return EntityLookup[id]; }
+
+        public void RemoveEntity(Guid id)
         {
-            _entities.Remove(entity.Id);
+            var entity = EntityLookup[id];
+            EntityLookup.Remove(id);
             entity.Dispose();
 
             EventSystem.Publish(new EntityRemovedEvent(entity, this));
@@ -51,15 +54,15 @@ namespace EcsRx.Collections
             if(entity.Id == Guid.Empty)
             { throw new InvalidEntityException("Entity provided does not have an assigned Id"); }
 
-            _entities.Add(entity.Id, entity);
+            EntityLookup.Add(entity.Id, entity);
             EventSystem.Publish(new EntityAddedEvent(entity, this));
         }
 
-        public bool ContainsEntity(IEntity entity)
-        { return _entities.ContainsKey(entity.Id); }
+        public bool ContainsEntity(Guid id)
+        { return EntityLookup.ContainsKey(id); }
 
         public IEnumerator<IEntity> GetEnumerator()
-        { return _entities.Values.GetEnumerator(); }
+        { return EntityLookup.Values.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }

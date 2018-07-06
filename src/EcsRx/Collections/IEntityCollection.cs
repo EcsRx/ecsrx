@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EcsRx.Blueprints;
 using EcsRx.Entities;
 
@@ -10,7 +11,9 @@ namespace EcsRx.Collections
         
         IEntity CreateEntity(IBlueprint blueprint = null);
         void AddEntity(IEntity entity);
-        bool ContainsEntity(IEntity entity);
-        void RemoveEntity(IEntity entity);
+        
+        IEntity GetEntity(Guid id);
+        bool ContainsEntity(Guid id);
+        void RemoveEntity(Guid id);
     }
 }

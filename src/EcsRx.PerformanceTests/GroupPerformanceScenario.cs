@@ -56,7 +56,7 @@ namespace EcsRx.PerformanceTests
         [IterationSetup]
         public void IterationSetup()
         {
-            foreach (var pool in _entityCollectionManager.Pools)
+            foreach (var pool in _entityCollectionManager.Collections)
             { pool.RemoveAllEntities(); }
         }
 

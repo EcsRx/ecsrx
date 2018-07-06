@@ -6,29 +6,29 @@ using EcsRx.Entities;
 
 namespace EcsRx.Extensions
 {
-    public static class EntityCollectionManagerExtensions
+    public static class IEntityCollectionManagerExtensions
     {
         public static IEnumerable<IEntity> GetAllEntities(this IEnumerable<IEntityCollection> pools)
         { return pools.SelectMany(x => x); }
 
         public static IEntityCollection GetCollectionFor(this IEntityCollectionManager entityCollectionManager, IEntity entity)
-        { return entityCollectionManager.Pools.SingleOrDefault(x => x.ContainsEntity(entity)); }
+        { return entityCollectionManager.Collections.SingleOrDefault(x => x.ContainsEntity(entity.Id)); }
 
         public static void RemoveEntitiesContaining(this IEntityCollectionManager entityCollectionManager, params Type[] components)
         {
-            foreach (var pool in entityCollectionManager.Pools)
+            foreach (var pool in entityCollectionManager.Collections)
             { pool.RemoveEntitiesContaining(components); }
         }
 
         public static void RemoveEntity(this IEntityCollectionManager entityCollectionManager, IEntity entity)
         {
             var containingPool = entityCollectionManager.GetCollectionFor(entity);
-            containingPool.RemoveEntity(entity);
+            containingPool.RemoveEntity(entity.Id);
         }
 
         public static void RemoveEntities(this IEntityCollectionManager entityCollectionManager, Func<IEntity, bool> predicate)
         {
-            var matchingEntities = entityCollectionManager.Pools.SelectMany(x => x).Where(predicate).ToArray();
+            var matchingEntities = entityCollectionManager.Collections.SelectMany(x => x).Where(predicate).ToArray();
             RemoveEntities(entityCollectionManager, matchingEntities);
         }
 
@@ -42,6 +42,13 @@ namespace EcsRx.Extensions
         {
             foreach(var entity in entities)
             { RemoveEntity(entityCollectionManager, entity);}
+        }
+
+        public static IEntity GetEntity(this IEntityCollectionManager entityCollectionManager, Guid id)
+        {
+            return entityCollectionManager.Collections
+                .Select(collection => collection.GetEntity(id))
+                .FirstOrDefault(possibleEntity => possibleEntity != null);
         }
     }
 }

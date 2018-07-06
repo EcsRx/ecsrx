@@ -17,7 +17,7 @@ namespace EcsRx.Collections
         private readonly IDictionary<string, IEntityCollection> _pools;
 
         public IEventSystem EventSystem { get; }
-        public IEnumerable<IEntityCollection> Pools => _pools.Values;
+        public IEnumerable<IEntityCollection> Collections => _pools.Values;
         public IEntityCollectionFactory EntityCollectionFactory { get; }
         public IObservableGroupFactory ObservableGroupFactory { get; }
 
@@ -64,7 +64,7 @@ namespace EcsRx.Collections
             if (collectionName != null)
             { return _pools[collectionName].MatchingGroup(group); }
 
-            return Pools.GetAllEntities().MatchingGroup(group);
+            return Collections.GetAllEntities().MatchingGroup(group);
         }
 
         public IObservableGroup CreateObservableGroup(IGroup group, string collectionName = null)

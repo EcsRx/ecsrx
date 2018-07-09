@@ -11,7 +11,7 @@ namespace EcsRx.Groups.Observable
 {
     public class ObservableGroup : IObservableGroup, IDisposable
     {
-        public readonly Dictionary<Guid, IEntity> CachedEntities;
+        public readonly IDictionary<Guid, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
@@ -125,12 +125,16 @@ namespace EcsRx.Groups.Observable
             CachedEntities.Remove(args.Entity.Id); 
             _onEntityRemoved.OnNext(args.Entity);
         }
+        
+        public bool ContainsEntity(Guid id)
+        { return CachedEntities.ContainsKey(id); }
 
         public void Dispose()
         {
             Subscriptions.DisposeAll();
             _onEntityAdded.Dispose();
             _onEntityRemoved.Dispose();
+            _onEntityRemoving.Dispose();
         }
 
         public IEnumerator<IEntity> GetEnumerator()

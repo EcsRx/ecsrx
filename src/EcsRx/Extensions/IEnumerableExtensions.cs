@@ -22,8 +22,14 @@ namespace EcsRx.Extensions
 
         public static IEnumerable<IEntity> MatchingGroup(this IEnumerable<IEntity> entities, IGroup group)
         {
-            var componentTypes = group.WithComponents.ToArray();
-            return entities.Where(x => x.HasComponents(componentTypes));
+            var requiredComponents = group.WithComponents.ToArray();
+            var groupHasOptOutComponents = group is IWithoutComponents;
+            
+            if(!groupHasOptOutComponents)
+            { return entities.Where(x => x.HasComponents(requiredComponents)); }
+
+            var withoutComponents = (group as IWithoutComponents).WithoutComponents.ToArray();
+            return entities.Where(x => x.HasComponents(requiredComponents) && withoutComponents.All(y => !x.HasComponents(y)));
         }
 
         public static IEnumerable<ISystem> GetApplicableSystems(this IEnumerable<ISystem> systems, IEntity entity)

@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Blueprints;
 using EcsRx.Components;
+using EcsRx.Entities;
+using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
@@ -71,5 +75,44 @@ namespace EcsRx.Tests.Framework
             Assert.Equal(1, applicableSystems.Count());
             Assert.Contains(applicableSystem1, applicableSystems);
         }
+        
+        [Fact]
+        public void should_corectly_get_matching_entities()
+        {
+            var mockEventSystem = Substitute.For<IEventSystem>();
+            var hasOneAndTwo = new Entity(Guid.NewGuid(), mockEventSystem);
+            hasOneAndTwo.AddComponent<TestComponentOne>();
+            hasOneAndTwo.AddComponent<TestComponentTwo>();
+            
+            var hasAllComponents = new Entity(Guid.NewGuid(), mockEventSystem);
+            hasAllComponents.AddComponent<TestComponentOne>();
+            hasAllComponents.AddComponent<TestComponentTwo>();
+            hasAllComponents.AddComponent<TestComponentThree>();
+
+            var hasOneAndThree = new Entity(Guid.NewGuid(), mockEventSystem);
+            hasOneAndThree.AddComponent<TestComponentOne>();
+            hasOneAndThree.AddComponent<TestComponentThree>();
+
+            var entityGroup = new [] {hasOneAndTwo, hasAllComponents, hasOneAndThree};
+            
+            var matchGroup1 = new Group(typeof(TestComponentOne), typeof(TestComponentTwo));
+            var matchGroup2 = new Group(null, new [] {typeof(TestComponentOne), typeof(TestComponentTwo)}, new[] {typeof(TestComponentThree)});
+            var matchGroup3 = new Group(null, new Type[0], new[] {typeof(TestComponentTwo)});
+
+
+            var group1Results1 = entityGroup.MatchingGroup(matchGroup1).ToArray();
+            Assert.Equal(2, group1Results1.Length);
+            Assert.Contains(hasOneAndTwo, group1Results1);
+            Assert.Contains(hasAllComponents, group1Results1);
+
+            var group1Results2 = entityGroup.MatchingGroup(matchGroup2).ToArray();
+            Assert.Equal(1, group1Results2.Length);
+            Assert.Contains(hasOneAndTwo, group1Results2);
+            
+            var group1Results3 = entityGroup.MatchingGroup(matchGroup3).ToArray();
+            Assert.Equal(1, group1Results3.Length);
+            Assert.Contains(hasOneAndThree, group1Results3);
+        }
+
     }
 }

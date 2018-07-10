@@ -47,7 +47,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
-            fakeGroup.MatchesComponents.Returns(new Type[0]);
+            fakeGroup.WithComponents.Returns(new Type[0]);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
@@ -82,7 +82,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
-            fakeGroup.MatchesComponents.Returns(new Type[0]);
+            fakeGroup.WithComponents.Returns(new Type[0]);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
@@ -125,7 +125,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
-            fakeGroup.MatchesComponents.Returns(new Type[0]);
+            fakeGroup.WithComponents.Returns(new Type[0]);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();

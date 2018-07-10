@@ -69,7 +69,7 @@ namespace EcsRx.Collections
 
         public IObservableGroup GetObservableGroup(IGroup group, string collectionName = null)
         {
-            var observableGroupToken = new ObservableGroupToken(group.MatchesComponents.ToArray(), collectionName);
+            var observableGroupToken = new ObservableGroupToken(group.WithComponents.ToArray(), collectionName);
             if (_observableGroups.ContainsKey(observableGroupToken)) { return _observableGroups[observableGroupToken]; }
 
             var entityMatches = GetEntitiesFor(group, collectionName);

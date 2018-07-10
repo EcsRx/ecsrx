@@ -7,25 +7,35 @@ namespace EcsRx.Groups
 {
     public class GroupBuilder
     {
-        private List<Type> _components;
+        private List<Type> _withComponents;
+        private List<Type> _withoutComponents;
         private Predicate<IEntity> _predicate;
 
         public GroupBuilder()
         {
-            _components = new List<Type>();
+            _withComponents = new List<Type>();
+            _withoutComponents = new List<Type>();
         }
 
         public GroupBuilder Create()
         {
-            _components = new List<Type>();
+            _withComponents = new List<Type>();
+            _withoutComponents = new List<Type>();
             return this;
         }
 
         public GroupBuilder WithComponent<T>() where T : class, IComponent
         {
-            _components.Add(typeof(T));
+            _withComponents.Add(typeof(T));
             return this;
         }
+        
+        public GroupBuilder WithoutComponent<T>() where T : class, IComponent
+        {
+            _withoutComponents.Add(typeof(T));
+            return this;
+        }
+
 
         public GroupBuilder WithPredicate(Predicate<IEntity> predicate)
         {
@@ -34,6 +44,6 @@ namespace EcsRx.Groups
         }
 
         public IGroup Build()
-        { return new Group(_predicate, _components.ToArray()); }
+        { return new Group(_predicate, _withComponents.ToArray(), _withoutComponents.ToArray()); }
     }
 }

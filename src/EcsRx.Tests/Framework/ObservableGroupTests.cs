@@ -48,7 +48,7 @@ namespace EcsRx.Tests.Framework
         public void should_only_cache_applicable_entity_when_applicable_entity_added()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var collectionName = "defaut";
+            var collectionName = "default";
             var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, collectionName);
             var mockCollection = Substitute.For<IEntityCollection>();
             mockCollection.Name.Returns(collectionName);
@@ -78,7 +78,7 @@ namespace EcsRx.Tests.Framework
         public void should_not_cache_applicable_entity_when_added_to_different_collection()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var collectionName = "defaut";
+            var collectionName = "default";
             var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "some-other-entityCollection-name");
             var mockCollection = Substitute.For<IEntityCollection>();
             mockCollection.Name.Returns(collectionName);

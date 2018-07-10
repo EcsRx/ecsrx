@@ -36,14 +36,14 @@ namespace EcsRx.Groups.Computed
             _onEntityRemoving = new Subject<IEntity>();
 
             MonitorChanges();
+            RefreshEntities();
         }
 
         public void MonitorChanges()
         {
             InternalObservableGroup.OnEntityAdded.Subscribe(OnEntityAddedToGroup).AddTo(Subscriptions);
-            InternalObservableGroup.OnEntityRemoved.Subscribe(OnEntityRemovedFromGroup).AddTo(Subscriptions);
+            InternalObservableGroup.OnEntityRemoving.Subscribe(OnEntityRemovingFromGroup).AddTo(Subscriptions);
             RefreshWhen().Subscribe(x => RefreshEntities()).AddTo(Subscriptions);
-            RefreshEntities();
         }
 
         public void OnEntityAddedToGroup(IEntity entity)
@@ -55,7 +55,7 @@ namespace EcsRx.Groups.Computed
             _onEntityAdded.OnNext(entity);
         }
         
-        public void OnEntityRemovedFromGroup(IEntity entity)
+        public void OnEntityRemovingFromGroup(IEntity entity)
         {
             if(!CachedEntities.ContainsKey(entity.Id))
             { return; }
@@ -68,7 +68,7 @@ namespace EcsRx.Groups.Computed
         public void RefreshEntities()
         {
             var applicableEntities = InternalObservableGroup.Where(IsEntityApplicable).ToArray();
-            var entitiesToRemove = InternalObservableGroup.Where(x => !applicableEntities.Contains(x)).ToArray();
+            var entitiesToRemove = InternalObservableGroup.Where(x => applicableEntities.All(y => y.Id != x.Id)).ToArray();
             var entitiesToAdd = applicableEntities.Where(x => !CachedEntities.ContainsKey(x.Id)).ToArray();
             
             for (var i = entitiesToAdd.Length - 1; i >= 0; i--)

@@ -10,7 +10,7 @@ namespace EcsRx.Extensions
     {
         public static IGroup WithComponent<T>(this IGroup group) where T : class, IComponent
         {
-            var componentTypes = new List<Type>(group.MatchesComponents);
+            var componentTypes = new List<Type>(group.WithComponents);
             componentTypes.Add(typeof(T));
             return new Group(componentTypes.ToArray());
         }
@@ -20,7 +20,7 @@ namespace EcsRx.Extensions
             var castComponents = components.Select(x => x.GetType()).ToArray();
             for (var i = components.Length - 1; i >= 0; i--)
             {
-                if (!group.MatchesComponents.Contains(castComponents[i]))
+                if (!group.WithComponents.Contains(castComponents[i]))
                 { return false; }
             }
             return true;
@@ -29,7 +29,7 @@ namespace EcsRx.Extensions
         public static bool ContainsAny(this IGroup group, IComponent[] components)
         {
             var castComponents = components.Select(x => x.GetType()).ToArray();
-            return group.MatchesComponents.Any(x => castComponents.Contains(x));
+            return group.WithComponents.Any(x => castComponents.Contains(x));
         }
     }
 }

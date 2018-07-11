@@ -6,7 +6,8 @@ namespace EcsRx.Groups
 {
     public class EmptyGroup : IGroup
     {
-        public IEnumerable<Type> WithComponents => new Type[0];
+        public Type[] RequiredComponents { get; } = new Type[0];
+        public Type[] ExcludedComponents { get; } = new Type[0];
         public Predicate<IEntity> TargettedEntities => null;
     }
 }

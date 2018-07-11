@@ -59,42 +59,54 @@ namespace EcsRx.Groups.Observable
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<ComponentsBeforeRemovedEvent>()
-                .Subscribe(x =>
-                {
-                    if (CachedEntities.ContainsKey(x.Entity.Id))
-                    { OnEntityBeforeComponentRemoved(x); }
-                })
+                .Subscribe(OnEntityBeforeComponentRemoved)
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<ComponentsRemovedEvent>()
-                .Subscribe(x =>
-                {
-                    if (CachedEntities.ContainsKey(x.Entity.Id))
-                    { OnEntityComponentRemoved(x); } 
-                })
+                .Subscribe(OnEntityComponentRemoved)
                 .AddTo(Subscriptions);
         }
 
         public void OnEntityComponentRemoved(ComponentsRemovedEvent args)
         {
-            if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
-            if (args.Entity.HasComponents(Token.ComponentTypes)) { return; }
+            if (CachedEntities.ContainsKey(args.Entity.Id))
+            {
+                if (!Token.Group.ContainsAnyRequiredComponents(args.Components)) 
+                {return;}
+                
+                CachedEntities.Remove(args.Entity.Id);
+                _onEntityRemoved.OnNext(args.Entity);
+                return;
+            }
+
+            if (!Token.Group.Matches(args.Entity)) {return;}
             
-            CachedEntities.Remove(args.Entity.Id);
-            _onEntityRemoved.OnNext(args.Entity);
+            CachedEntities.Add(args.Entity.Id, args.Entity);
+            _onEntityAdded.OnNext(args.Entity);
         }
 
         public void OnEntityBeforeComponentRemoved(ComponentsBeforeRemovedEvent args)
         {
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
-            if (!args.Components.Any(x => Token.ComponentTypes.Contains(x.GetType()))) { return; }
-            _onEntityRemoving.OnNext(args.Entity);
+            
+            if(Token.Group.ContainsAnyRequiredComponents(args.Components))
+            { _onEntityRemoving.OnNext(args.Entity); }
         }
 
         public void OnEntityComponentAdded(ComponentsAddedEvent args)
         {
-            if(CachedEntities.ContainsKey(args.Entity.Id)) { return; }
-            if (!args.Entity.HasComponents(Token.ComponentTypes)) { return; }
+            if (CachedEntities.ContainsKey(args.Entity.Id))
+            {
+                if(!Token.Group.ContainsAnyExcludedComponents(args.Components))
+                { return; }
+
+                _onEntityRemoving.OnNext(args.Entity);
+                CachedEntities.Remove(args.Entity.Id); 
+                _onEntityRemoved.OnNext(args.Entity);
+                return;
+            }
+            
+            if (!Token.Group.Matches(args.Entity)) { return; }
 
             CachedEntities.Add(args.Entity.Id, args.Entity);
             _onEntityAdded.OnNext(args.Entity);
@@ -112,7 +124,7 @@ namespace EcsRx.Groups.Observable
             }
             
             if (!args.Entity.Components.Any()) { return; }
-            if (!args.Entity.HasComponents(Token.ComponentTypes)) { return; }
+            if (!Token.Group.Matches(args.Entity)) { return; }
             
             CachedEntities.Add(args.Entity.Id, args.Entity);
             _onEntityAdded.OnNext(args.Entity);

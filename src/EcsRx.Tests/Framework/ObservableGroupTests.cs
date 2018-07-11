@@ -19,7 +19,7 @@ namespace EcsRx.Tests.Framework
         public void should_include_entity_snapshot_on_creation()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var accessorToken = new ObservableGroupToken(new Type[] { }, "default");
+            var accessorToken = new ObservableGroupToken(new Type[0], new Type[0], "default");
 
             mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
             mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
@@ -49,7 +49,7 @@ namespace EcsRx.Tests.Framework
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
             var collectionName = "default";
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, collectionName);
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], collectionName);
             var mockCollection = Substitute.For<IEntityCollection>();
             mockCollection.Name.Returns(collectionName);
             
@@ -71,7 +71,7 @@ namespace EcsRx.Tests.Framework
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockCollection));
             
             Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
-            Assert.Equal<IEntity>(applicableEntity, cacheableobservableGroup.CachedEntities[applicableEntity.Id]);
+            Assert.Equal(applicableEntity, cacheableobservableGroup.CachedEntities[applicableEntity.Id]);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace EcsRx.Tests.Framework
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
             var collectionName = "default";
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "some-other-entityCollection-name");
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], "some-other-entityCollection-name");
             var mockCollection = Substitute.For<IEntityCollection>();
             mockCollection.Name.Returns(collectionName);
 
@@ -107,7 +107,7 @@ namespace EcsRx.Tests.Framework
         public void should_only_remove_applicable_entity_when_entity_removed()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], "default");
             var mockCollection = Substitute.For<IEntityCollection>();
 
             var existingEntityOne = new Entity(Guid.NewGuid(), mockEventSystem);
@@ -132,14 +132,14 @@ namespace EcsRx.Tests.Framework
             underlyingEvent.SetValueAndForceNotify(new EntityRemovedEvent(existingEntityOne, mockCollection));
 
             Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
-            Assert.Equal<IEntity>(existingEntityTwo, cacheableobservableGroup.CachedEntities[existingEntityTwo.Id]);
+            Assert.Equal(existingEntityTwo, cacheableobservableGroup.CachedEntities[existingEntityTwo.Id]);
         }
 
         [Fact]
-        public void should_only_remove_entity_when_components_no_longer_match_group()
+        public void should_remove_entity_when_required_components_no_longer_match_group()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], "default");
 
             var existingEntityOne = new Entity(Guid.NewGuid(), mockEventSystem);
             var componentToRemove = new TestComponentOne();
@@ -168,14 +168,41 @@ namespace EcsRx.Tests.Framework
             underlyingEvent.SetValueAndForceNotify(new ComponentsRemovedEvent(existingEntityTwo, new[] {unapplicableComponent}));
 
             Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
-            Assert.Equal<IEntity>(existingEntityTwo, cacheableobservableGroup.CachedEntities[existingEntityTwo.Id]);
+            Assert.Equal(existingEntityTwo, cacheableobservableGroup.CachedEntities[existingEntityTwo.Id]);
+        }
+        
+        [Fact]
+        public void should_add_entity_when_required_components_match_and_excluded_component_removed()
+        {
+            var mockEventSystem = Substitute.For<IEventSystem>();
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new [] { typeof(TestComponentThree)}, "default");
+
+            var entityToAdd = new Entity(Guid.NewGuid(), mockEventSystem);
+            var componentToRemove = new TestComponentThree();
+            entityToAdd.AddComponent<TestComponentOne>();
+            entityToAdd.AddComponent<TestComponentTwo>();
+            entityToAdd.AddComponent(componentToRemove);
+
+            var underlyingEvent = new Subject<ComponentsRemovedEvent>();
+            mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(underlyingEvent);
+            mockEventSystem.Receive<EntityAddedEvent>().Returns(Observable.Empty<EntityAddedEvent>());
+            mockEventSystem.Receive<ComponentsAddedEvent>().Returns(Observable.Empty<ComponentsAddedEvent>());
+            mockEventSystem.Receive<ComponentsBeforeRemovedEvent>().Returns(Observable.Empty<ComponentsBeforeRemovedEvent>());
+            mockEventSystem.Receive<EntityRemovedEvent>().Returns(Observable.Empty<EntityRemovedEvent>());
+
+            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[0]);
+            entityToAdd.RemoveComponent(componentToRemove);
+            underlyingEvent.OnNext(new ComponentsRemovedEvent(entityToAdd, new[]{componentToRemove}));
+
+            Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
+            Assert.Equal(entityToAdd, cacheableobservableGroup.CachedEntities[entityToAdd.Id]);
         }
 
         [Fact]
         public void should_only_add_entity_when_components_match_group()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, "default");
+            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], "default");
 
             var existingEntityOne = new Entity(Guid.NewGuid(), mockEventSystem);
             var componentToAdd = new TestComponentOne();
@@ -201,7 +228,7 @@ namespace EcsRx.Tests.Framework
             underlyingEvent.SetValueAndForceNotify(new ComponentsAddedEvent(existingEntityTwo, new[]{unapplicableComponent}));
 
             Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
-            Assert.Equal<IEntity>(existingEntityOne, cacheableobservableGroup.CachedEntities[existingEntityOne.Id]);
+            Assert.Equal(existingEntityOne, cacheableobservableGroup.CachedEntities[existingEntityOne.Id]);
         }
         
         [Fact]
@@ -210,7 +237,7 @@ namespace EcsRx.Tests.Framework
             var componentTypes = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
             var mockEventSystem = Substitute.For<IEventSystem>();
             var mockCollection = Substitute.For<IEntityCollection>();
-            var accessorToken = new ObservableGroupToken(componentTypes, "default");
+            var accessorToken = new ObservableGroupToken(componentTypes, new Type[0], "default");
             
             var fakeEntity1 = new Entity(Guid.Empty, mockEventSystem);
             fakeEntity1.AddComponent<TestComponentOne>();
@@ -249,7 +276,7 @@ namespace EcsRx.Tests.Framework
             var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
             var mockEventSystem = Substitute.For<IEventSystem>();
             var mockCollection = Substitute.For<IEntityCollection>();
-            var accessorToken = new ObservableGroupToken(componentTypes, "default");
+            var accessorToken = new ObservableGroupToken(componentTypes, new Type[0], "default");
 
             var fakeEntity1 = new Entity(Guid.Empty, mockEventSystem);
             fakeEntity1.AddComponent<TestComponentOne>();
@@ -287,7 +314,7 @@ namespace EcsRx.Tests.Framework
         {
             var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
             var fakeEventSystem = new EventSystem(new MessageBroker());
-            var accessorToken = new ObservableGroupToken(componentTypes, "default");
+            var accessorToken = new ObservableGroupToken(componentTypes, new Type[0], "default");
 
             var fakeEntity1 = new Entity(Guid.Empty, fakeEventSystem);
             fakeEntity1.AddComponent<TestComponentOne>();
@@ -316,14 +343,14 @@ namespace EcsRx.Tests.Framework
         {
             var componentTypes = new[] { typeof(TestComponentOne), typeof(TestComponentTwo) };
             var fakeEventSystem = new EventSystem(new MessageBroker());
-            var accessorToken = new ObservableGroupToken(componentTypes, "default");
+            var accessorToken = new ObservableGroupToken(componentTypes, new Type[0], "default");
 
-            var fakeEntity1 = new Entity(Guid.Empty, fakeEventSystem);
+            var fakeEntity1 = new Entity(Guid.NewGuid(), fakeEventSystem);
             fakeEntity1.AddComponent<TestComponentOne>();
             fakeEntity1.AddComponent<TestComponentTwo>();
             fakeEntity1.AddComponent<TestComponentThree>();
 
-            var fakeEntity2 = new Entity(Guid.Empty, fakeEventSystem);
+            var fakeEntity2 = new Entity(Guid.NewGuid(), fakeEventSystem);
             fakeEntity2.AddComponent<TestComponentOne>();
             fakeEntity2.AddComponent<TestComponentThree>();
 

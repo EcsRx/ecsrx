@@ -21,16 +21,7 @@ namespace EcsRx.Extensions
         }
 
         public static IEnumerable<IEntity> MatchingGroup(this IEnumerable<IEntity> entities, IGroup group)
-        {
-            var requiredComponents = group.WithComponents.ToArray();
-            var groupHasOptOutComponents = group is IWithoutComponents;
-            
-            if(!groupHasOptOutComponents)
-            { return entities.Where(x => x.HasComponents(requiredComponents)); }
-
-            var withoutComponents = (group as IWithoutComponents).WithoutComponents.ToArray();
-            return entities.Where(x => x.HasComponents(requiredComponents) && withoutComponents.All(y => !x.HasComponents(y)));
-        }
+        { return entities.Where(group.Matches); }
 
         public static IEnumerable<ISystem> GetApplicableSystems(this IEnumerable<ISystem> systems, IEntity entity)
         { return systems.Where(x => entity.MatchesGroup(x.TargetGroup)); }
@@ -38,7 +29,7 @@ namespace EcsRx.Extensions
         public static IEnumerable<ISystem> GetApplicableSystems(this IEnumerable<ISystem> systems, IEnumerable<IComponent> components)
         {
             var componentTypes = components.Select(x => x.GetType());
-            return systems.Where(x => x.TargetGroup.WithComponents.All(y => componentTypes.Contains(y)));
+            return systems.Where(x => x.TargetGroup.RequiredComponents.All(y => componentTypes.Contains(y)));
         }
 
         public static IEnumerable<T> OrderByPriority<T>(this IEnumerable<T> listToPrioritize)

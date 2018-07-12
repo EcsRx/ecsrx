@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
@@ -23,12 +24,14 @@ namespace EcsRx.Groups.Observable
         private readonly Subject<IEntity> _onEntityRemoving;
         
         public ObservableGroupToken Token { get; }
+        public IEntityCollection ParentCollection { get; }
         public IEventSystem EventSystem { get; }
 
-        public ObservableGroup(IEventSystem eventSystem, ObservableGroupToken token, IEnumerable<IEntity> initialEntities)
+        public ObservableGroup(IEventSystem eventSystem, ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEntityCollection parentCollection = null)
         {
             Token = token;
             EventSystem = eventSystem;
+            ParentCollection = parentCollection;
 
             _onEntityAdded = new Subject<IEntity>();
             _onEntityRemoved = new Subject<IEntity>();
@@ -43,15 +46,11 @@ namespace EcsRx.Groups.Observable
         private void MonitorEntityChanges()
         {
             EventSystem.Receive<EntityAddedEvent>()
-                .Subscribe(OnEntityAddedToPool)
+                .Subscribe(OnEntityAddedToCollection)
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<EntityRemovedEvent>()
-                .Subscribe(x =>
-                {
-                    if(CachedEntities.ContainsKey(x.Entity.Id))
-                    { OnEntityRemovedFromPool(x); }
-                })
+                .Subscribe(OnEntityRemovedFromCollection)
                 .AddTo(Subscriptions);
 
             EventSystem.Receive<ComponentsAddedEvent>()
@@ -67,8 +66,13 @@ namespace EcsRx.Groups.Observable
                 .AddTo(Subscriptions);
         }
 
+        public bool shouldProcessEntity(IEntity entity)
+        { return ParentCollection == null || ParentCollection.ContainsEntity(entity.Id); }
+
         public void OnEntityComponentRemoved(ComponentsRemovedEvent args)
         {
+            if(!shouldProcessEntity(args.Entity)) { return; }
+            
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
                 if (!Token.Group.ContainsAnyRequiredComponents(args.Components)) 
@@ -87,6 +91,8 @@ namespace EcsRx.Groups.Observable
 
         public void OnEntityBeforeComponentRemoved(ComponentsBeforeRemovedEvent args)
         {
+            if(!shouldProcessEntity(args.Entity)) { return; }
+            
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
             if(Token.Group.ContainsAnyRequiredComponents(args.Components))
@@ -95,6 +101,8 @@ namespace EcsRx.Groups.Observable
 
         public void OnEntityComponentAdded(ComponentsAddedEvent args)
         {
+            if(!shouldProcessEntity(args.Entity)) { return; }
+            
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
                 if(!Token.Group.ContainsAnyExcludedComponents(args.Components))
@@ -112,17 +120,12 @@ namespace EcsRx.Groups.Observable
             _onEntityAdded.OnNext(args.Entity);
         }
 
-        public void OnEntityAddedToPool(EntityAddedEvent args)
+        public void OnEntityAddedToCollection(EntityAddedEvent args)
         {
+            if(!shouldProcessEntity(args.Entity)) { return; }
+
             // This is because you may have fired a blueprint before it is created
             if (CachedEntities.ContainsKey(args.Entity.Id)) { return; }
-
-            if (!string.IsNullOrEmpty(Token.Pool))
-            {
-                if(args.EntityCollection.Name != Token.Pool)
-                { return; }
-            }
-            
             if (!args.Entity.Components.Any()) { return; }
             if (!Token.Group.Matches(args.Entity)) { return; }
             
@@ -130,8 +133,10 @@ namespace EcsRx.Groups.Observable
             _onEntityAdded.OnNext(args.Entity);
         }
         
-        public void OnEntityRemovedFromPool(EntityRemovedEvent args)
+        public void OnEntityRemovedFromCollection(EntityRemovedEvent args)
         {
+            if(!shouldProcessEntity(args.Entity)) { return; }
+            
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
             CachedEntities.Remove(args.Entity.Id); 

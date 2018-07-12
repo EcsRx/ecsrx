@@ -97,7 +97,7 @@ namespace EcsRx.Tests.Framework
             mockEventSystem.Receive<ComponentsBeforeRemovedEvent>().Returns(Observable.Empty<ComponentsBeforeRemovedEvent>());
             mockEventSystem.Receive<ComponentsRemovedEvent>().Returns(Observable.Empty<ComponentsRemovedEvent>());
 
-            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { });
+            var cacheableobservableGroup = new ObservableGroup(mockEventSystem, accessorToken, new IEntity[] { }, mockCollection);
             underlyingEvent.SetValueAndForceNotify(new EntityAddedEvent(unapplicableEntity, mockCollection));
 
             Assert.Empty(cacheableobservableGroup.CachedEntities);

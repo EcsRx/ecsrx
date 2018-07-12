@@ -5,12 +5,12 @@ namespace EcsRx.Groups.Observable
     public class ObservableGroupToken
     {
         public IGroup Group { get; }
-        public string Pool { get; }
+        public string CollectionName { get; }
 
-        public ObservableGroupToken(Type[] withComponents, Type[] withoutComponents, string pool)
+        public ObservableGroupToken(Type[] withComponents, Type[] withoutComponents, string collectionName)
         {
             Group = new Group(null, withComponents, withoutComponents);
-            Pool = pool;
+            CollectionName = collectionName;
         }
 
         public ObservableGroupToken(IGroup group, string pool) : this(group.RequiredComponents, group.ExcludedComponents, pool) {}
@@ -19,7 +19,7 @@ namespace EcsRx.Groups.Observable
         {
             var requiredHash = Group.RequiredComponents?.GetHashCode() ?? 0;
             var excludedHash = Group.ExcludedComponents?.GetHashCode() ?? 0;
-            var poolHash = Pool?.GetHashCode() ?? 0;
+            var poolHash = CollectionName?.GetHashCode() ?? 0;
             return requiredHash ^ excludedHash ^ poolHash;
         }
     }

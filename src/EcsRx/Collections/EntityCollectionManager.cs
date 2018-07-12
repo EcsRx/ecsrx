@@ -73,12 +73,16 @@ namespace EcsRx.Collections
             if (_observableGroups.ContainsKey(observableGroupToken)) { return _observableGroups[observableGroupToken]; }
 
             var entityMatches = GetEntitiesFor(group, collectionName);
-            var observableGroup = ObservableGroupFactory.Create(new ObservableGroupConfiguration
+            var configuration = new ObservableGroupConfiguration
             {
                 ObservableGroupToken = observableGroupToken,
                 InitialEntities = entityMatches
-            });
+            };
+
+            if (collectionName != null)
+            { configuration.ParentCollection = _collections[collectionName]; }
             
+            var observableGroup = ObservableGroupFactory.Create(configuration);
             _observableGroups.Add(observableGroupToken, observableGroup);
 
             return _observableGroups[observableGroupToken];

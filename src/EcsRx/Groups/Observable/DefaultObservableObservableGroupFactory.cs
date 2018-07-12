@@ -13,7 +13,7 @@ namespace EcsRx.Groups.Observable
 
         public IObservableGroup Create(ObservableGroupConfiguration arg)
         {
-            return new ObservableGroup(_eventSystem, arg.ObservableGroupToken, arg.InitialEntities);      
+            return new ObservableGroup(_eventSystem, arg.ObservableGroupToken, arg.InitialEntities, arg.ParentCollection);      
         }
     }
 }

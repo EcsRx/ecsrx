@@ -17,8 +17,12 @@ namespace EcsRx.Extensions
         
         public static bool ContainsAllRequiredComponents(this IGroup group, IEnumerable<IComponent> components)
         {
-            var castComponents = components.Select(x => x.GetType()).ToArray();
-            return ContainsAllRequiredComponents(group, castComponents);
+            for (var i = group.RequiredComponents.Length - 1; i >= 0; i--)
+            {
+                if(!components.Any(x => group.RequiredComponents[i].IsInstanceOfType(x)))
+                { return false; }
+            }
+            return true;
         }
         
         public static bool ContainsAllRequiredComponents(this IGroup group, params Type[] componentTypes)
@@ -34,8 +38,12 @@ namespace EcsRx.Extensions
         
         public static bool ContainsAnyRequiredComponents(this IGroup group, IEnumerable<IComponent> components)
         {
-            var castComponents = components.Select(x => x.GetType()).ToArray();
-            return ContainsAnyRequiredComponents(group, castComponents);
+            for (var i = group.RequiredComponents.Length - 1; i >= 0; i--)
+            {
+                if(components.Any(x => group.RequiredComponents[i].IsInstanceOfType(x)))
+                { return true; }
+            }
+            return false;
         }
         
         public static bool ContainsAnyRequiredComponents(this IGroup group, params Type[] componentTypes)
@@ -52,8 +60,10 @@ namespace EcsRx.Extensions
 
         public static bool ContainsAny(this IGroup group, params IComponent[] components)
         {
-            var castComponents = components.Select(x => x.GetType()).ToArray();
-            return ContainsAny(group, castComponents);
+            var requiredContains = group.ContainsAnyRequiredComponents(components);
+            if(requiredContains) { return true; }
+
+            return group.ContainsAnyExcludedComponents(components);
         }
         
         public static bool ContainsAny(this IGroup group, params Type[] componentTypes)

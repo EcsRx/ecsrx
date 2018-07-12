@@ -32,8 +32,6 @@ namespace EcsRx.Examples.ExampleApps.Performance
             Console.WriteLine($"First Took: {firstRun.TotalSeconds}s");
             Console.WriteLine($"Second Took: {secondRun.TotalSeconds}s");
             Console.WriteLine($"Third Took: {thirdRun.TotalSeconds}s");
-            Console.WriteLine("Press Enter To Exit");
-            Console.ReadKey();
         }
 
         private TimeSpan ProcesEntities(int amount)

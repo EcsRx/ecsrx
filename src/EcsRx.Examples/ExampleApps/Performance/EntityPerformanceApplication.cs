@@ -30,7 +30,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(Guid.NewGuid(), EventSystem);
+                var entity = new Entity(Guid.NewGuid());
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);
             }

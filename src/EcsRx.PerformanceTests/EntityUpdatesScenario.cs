@@ -49,7 +49,7 @@ namespace EcsRx.PerformanceTests
             _entities = new List<IEntity>();
             for (var i = 0; i < Entities; i++)
             {
-                var entity = new Entity(Guid.NewGuid(), _eventSystem);
+                var entity = new Entity(Guid.NewGuid());
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);
             }

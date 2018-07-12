@@ -24,14 +24,13 @@ namespace EcsRx.Groups.Observable
         private readonly Subject<IEntity> _onEntityRemoving;
         
         public ObservableGroupToken Token { get; }
-        public IEntityCollection ParentCollection { get; }
+        public INotifyingEntityCollection NotifyingCollection { get; }
         public IEventSystem EventSystem { get; }
 
-        public ObservableGroup(IEventSystem eventSystem, ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEntityCollection parentCollection = null)
+        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, INotifyingEntityCollection notifyingCollection)
         {
             Token = token;
-            EventSystem = eventSystem;
-            ParentCollection = parentCollection;
+            NotifyingCollection = notifyingCollection;
 
             _onEntityAdded = new Subject<IEntity>();
             _onEntityRemoved = new Subject<IEntity>();
@@ -45,34 +44,29 @@ namespace EcsRx.Groups.Observable
 
         private void MonitorEntityChanges()
         {
-            EventSystem.Receive<EntityAddedEvent>()
+            NotifyingCollection.EntityAdded
                 .Subscribe(OnEntityAddedToCollection)
                 .AddTo(Subscriptions);
 
-            EventSystem.Receive<EntityRemovedEvent>()
+            NotifyingCollection.EntityRemoved
                 .Subscribe(OnEntityRemovedFromCollection)
                 .AddTo(Subscriptions);
 
-            EventSystem.Receive<ComponentsAddedEvent>()
+            NotifyingCollection.EntityComponentsAdded
                 .Subscribe(OnEntityComponentAdded)
                 .AddTo(Subscriptions);
 
-            EventSystem.Receive<ComponentsBeforeRemovedEvent>()
+            NotifyingCollection.EntityComponentsRemoved
                 .Subscribe(OnEntityBeforeComponentRemoved)
                 .AddTo(Subscriptions);
 
-            EventSystem.Receive<ComponentsRemovedEvent>()
+            NotifyingCollection.EntityComponentsRemoved
                 .Subscribe(OnEntityComponentRemoved)
                 .AddTo(Subscriptions);
         }
 
-        public bool shouldProcessEntity(IEntity entity)
-        { return ParentCollection == null || ParentCollection.ContainsEntity(entity.Id); }
-
-        public void OnEntityComponentRemoved(ComponentsRemovedEvent args)
+        public void OnEntityComponentRemoved(ComponentsChangedEvent args)
         {
-            if(!shouldProcessEntity(args.Entity)) { return; }
-            
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
                 if (!Token.Group.ContainsAnyRequiredComponents(args.Components)) 
@@ -89,20 +83,16 @@ namespace EcsRx.Groups.Observable
             _onEntityAdded.OnNext(args.Entity);
         }
 
-        public void OnEntityBeforeComponentRemoved(ComponentsBeforeRemovedEvent args)
+        public void OnEntityBeforeComponentRemoved(ComponentsChangedEvent args)
         {
-            if(!shouldProcessEntity(args.Entity)) { return; }
-            
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
             if(Token.Group.ContainsAnyRequiredComponents(args.Components))
             { _onEntityRemoving.OnNext(args.Entity); }
         }
 
-        public void OnEntityComponentAdded(ComponentsAddedEvent args)
+        public void OnEntityComponentAdded(ComponentsChangedEvent args)
         {
-            if(!shouldProcessEntity(args.Entity)) { return; }
-            
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
                 if(!Token.Group.ContainsAnyExcludedComponents(args.Components))
@@ -120,10 +110,8 @@ namespace EcsRx.Groups.Observable
             _onEntityAdded.OnNext(args.Entity);
         }
 
-        public void OnEntityAddedToCollection(EntityAddedEvent args)
+        public void OnEntityAddedToCollection(CollectionEntityEvent args)
         {
-            if(!shouldProcessEntity(args.Entity)) { return; }
-
             // This is because you may have fired a blueprint before it is created
             if (CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             if (!args.Entity.Components.Any()) { return; }
@@ -133,10 +121,8 @@ namespace EcsRx.Groups.Observable
             _onEntityAdded.OnNext(args.Entity);
         }
         
-        public void OnEntityRemovedFromCollection(EntityRemovedEvent args)
+        public void OnEntityRemovedFromCollection(CollectionEntityEvent args)
         {
-            if(!shouldProcessEntity(args.Entity)) { return; }
-            
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
             CachedEntities.Remove(args.Entity.Id); 

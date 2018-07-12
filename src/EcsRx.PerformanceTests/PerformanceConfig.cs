@@ -3,6 +3,7 @@ using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
+using BenchmarkDotNet.Toolchains.CsProj;
 
 namespace EcsRx.PerformanceTests
 {
@@ -14,7 +15,7 @@ namespace EcsRx.PerformanceTests
             Add(MemoryDiagnoser.Default);
 
             var baseConfig = Job.ShortRun.WithLaunchCount(1).WithTargetCount(1).WithWarmupCount(1);
-            Add(baseConfig.With(Runtime.Core).With(Platform.X64));
+            Add(baseConfig.With(Runtime.Core).With(Platform.X64).With(CsProjCoreToolchain.NetCoreApp20));
         }
     }
 }

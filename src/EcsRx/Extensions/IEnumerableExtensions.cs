@@ -11,7 +11,6 @@ namespace EcsRx.Extensions
 {
     public static class IEnumerableExtensions
     {
-        
         public static void ForEachRun<T>(this IEnumerable<T> enumerable, Action<T> method)
         {
             foreach (var item in enumerable)

@@ -36,10 +36,10 @@ namespace EcsRx.PerformanceTests
         {
             _eventSystem = new EventSystem(new MessageBroker());
             
-            var entityFactory = new DefaultEntityFactory(_eventSystem);
-            var poolFactory = new DefaultEntityCollectionFactory(entityFactory, _eventSystem);
-            var observableGroupFactory = new DefaultObservableObservableGroupFactory(_eventSystem);
-            _entityCollectionManager = new EntityCollectionManager(_eventSystem, poolFactory, observableGroupFactory);
+            var entityFactory = new DefaultEntityFactory();
+            var poolFactory = new DefaultEntityCollectionFactory(entityFactory);
+            var observableGroupFactory = new DefaultObservableObservableGroupFactory();
+            _entityCollectionManager = new EntityCollectionManager(poolFactory, observableGroupFactory);
             
             _availableComponents = _groupFactory.GetComponentTypes
                 .Select(x => Activator.CreateInstance(x) as IComponent)
@@ -48,7 +48,7 @@ namespace EcsRx.PerformanceTests
             _testGroups = _groupFactory.CreateTestGroups().ToArray();
 
             foreach (var group in _testGroups)
-            { _entityCollectionManager.GetObservableGroup(group); }
+            { _entityCollectionManager.GetObservableGroup(group, "default"); }
 
             _defaultEntityCollection = _entityCollectionManager.GetCollection();
         }

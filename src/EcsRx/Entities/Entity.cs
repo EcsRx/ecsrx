@@ -3,40 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Events;
+using EcsRx.Polyfills;
 
 namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
         private readonly Dictionary<Type, IComponent> _components;
-
-        public IEventSystem EventSystem { get; }
-
+        
+        public IObservable<IComponent[]> ComponentsAdded => _onComponentsAdded;
+        public IObservable<IComponent[]> ComponentsRemoving => _onComponentsRemoving;
+        public IObservable<IComponent[]> ComponentsRemoved => _onComponentsRemoved;
+        
+        private readonly Subject<IComponent[]> _onComponentsAdded;
+        private readonly Subject<IComponent[]> _onComponentsRemoving;
+        private readonly Subject<IComponent[]> _onComponentsRemoved;
+        
         public Guid Id { get; }
         public IEnumerable<IComponent> Components => _components.Values;
 
-        public Entity(Guid id, IEventSystem eventSystem)
+        public Entity(Guid id)
         {
             Id = id;
-            EventSystem = eventSystem;
             _components = new Dictionary<Type, IComponent>();
+            
+            _onComponentsAdded = new Subject<IComponent[]>();
+            _onComponentsRemoving = new Subject<IComponent[]>();
+            _onComponentsRemoved = new Subject<IComponent[]>();
         }
 
         public IComponent AddComponent(IComponent component)
         {
             _components.Add(component.GetType(), component);
-            EventSystem.Publish(new ComponentsAddedEvent(this, new []{component}));
+            _onComponentsAdded.OnNext(new []{component});
             return component;
         }
 
         public void AddComponents(params IComponent[] components)
         {
-            EventSystem.Publish(new ComponentsBeforeAddedEvent(this, components));
-
             for (var i = components.Length - 1; i >= 0; i--)
             { _components.Add(components[i].GetType(), components[i]); }
             
-            EventSystem.Publish(new ComponentsAddedEvent(this, components));
+            _onComponentsAdded.OnNext(components);
         }
         
         public T AddComponent<T>() where T : class, IComponent, new()
@@ -55,8 +63,8 @@ namespace EcsRx.Entities
 
         public void RemoveComponents(params IComponent[] components)
         {
-            EventSystem.Publish(new ComponentsBeforeRemovedEvent(this, components));
-
+            _onComponentsRemoving.OnNext(components);
+            
             for (var i = components.Length - 1; i >= 0; i--)
             {
                 if(!_components.ContainsKey(components[i].GetType())) { continue; }
@@ -67,9 +75,8 @@ namespace EcsRx.Entities
                 _components.Remove(components[i].GetType());
             }
             
-            EventSystem.Publish(new ComponentsRemovedEvent(this, components));
+            _onComponentsRemoved.OnNext(components);
         }
-
 
         public void RemoveAllComponents()
         {
@@ -107,6 +114,11 @@ namespace EcsRx.Entities
         { return Id.GetHashCode(); }
 
         public void Dispose()
-        { RemoveAllComponents(); }
+        {
+            RemoveAllComponents();
+            _onComponentsAdded.Dispose();
+            _onComponentsRemoving.Dispose();
+            _onComponentsRemoved.Dispose();
+        }
     }
 }

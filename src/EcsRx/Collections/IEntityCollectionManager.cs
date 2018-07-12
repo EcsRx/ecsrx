@@ -9,7 +9,7 @@ namespace EcsRx.Collections
     /// This acts as the database to store all entities, rather than containing all entities directly
     /// within itself, it partitions them into collections which can contain differing amounts of entities.
     /// </summary>
-    public interface IEntityCollectionManager
+    public interface IEntityCollectionManager : INotifyingEntityCollection
     {
         /// <summary>
         /// All the entity collections that the manager contains

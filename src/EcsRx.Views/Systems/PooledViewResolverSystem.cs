@@ -25,14 +25,14 @@ namespace EcsRx.Views.Systems
         protected virtual void RecycleView(IEntity entity, ViewComponent viewComponent)
         {
             var view = viewComponent.View;
-            ViewPool.ReleaseInstance(view);
+            ViewPool.Free(view);
             viewComponent.View = null;
             OnViewRecycled(view, entity);
         }
 
         protected virtual object AllocateView(IEntity entity, ViewComponent viewComponent)
         {
-            var viewToAllocate = ViewPool.AllocateInstance();
+            var viewToAllocate = ViewPool.Claim();
             viewComponent.View = viewToAllocate;
             OnViewAllocated(viewToAllocate, entity);
             return viewToAllocate;

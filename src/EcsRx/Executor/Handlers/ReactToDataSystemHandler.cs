@@ -15,7 +15,7 @@ namespace EcsRx.Executor.Handlers
     public class ReactToDataSystemHandler : IConventionalSystemHandler
     {
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
-        public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
+        public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IEntityCollectionManager EntityCollectionManager;
 
         private readonly MethodInfo _processEntityMethod;
@@ -24,7 +24,7 @@ namespace EcsRx.Executor.Handlers
         {
             EntityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
-            _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
+            _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
             _processEntityMethod = GetType().GetMethod("ProcessEntity");
         }
 
@@ -63,7 +63,7 @@ namespace EcsRx.Executor.Handlers
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
             
-            var entitySubscriptions = new Dictionary<Guid, IDisposable>();
+            var entitySubscriptions = new Dictionary<int, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
             
             var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);

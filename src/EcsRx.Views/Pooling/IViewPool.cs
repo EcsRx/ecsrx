@@ -1,14 +1,11 @@
-﻿namespace EcsRx.Views.Pooling
-{
-    public interface IViewPool
-    {
-        int IncrementSize { get; }
+﻿using EcsRx.Entities;
 
+namespace EcsRx.Views.Pooling
+{
+    public interface IViewPool : IPool<object>
+    {
         void PreAllocate(int allocationCount);
         void DeAllocate(int dellocationCount);
         void EmptyPool();
-
-        object AllocateInstance();
-        void ReleaseInstance(object instance);
     }
 }

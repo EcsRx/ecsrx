@@ -47,6 +47,6 @@ namespace EcsRx.Groups.Observable
         /// </summary>
         /// <param name="id">The Id of the entity you want to locate</param>
         /// <returns>true if it finds the entity, false if it cannot</returns>
-        bool ContainsEntity(Guid id);
+        bool ContainsEntity(int id);
     }
 }

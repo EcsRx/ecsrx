@@ -12,8 +12,8 @@ namespace EcsRx.Collections
 {
     public class EntityCollection : IEntityCollection, IDisposable
     {
-        public readonly IDictionary<Guid, IEntity> EntityLookup;
-        public readonly IDictionary<Guid, IDisposable> EntitySubscriptions;
+        public readonly IDictionary<int, IEntity> EntityLookup;
+        public readonly IDictionary<int, IDisposable> EntitySubscriptions;
 
         public IObservable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
         public IObservable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
@@ -32,8 +32,8 @@ namespace EcsRx.Collections
         
         public EntityCollection(string name, IEntityFactory entityFactory)
         {
-            EntityLookup = new Dictionary<Guid, IEntity>();
-            EntitySubscriptions = new Dictionary<Guid, IDisposable>();
+            EntityLookup = new Dictionary<int, IEntity>();
+            EntitySubscriptions = new Dictionary<int, IDisposable>();
             Name = name;
             EntityFactory = entityFactory;
 
@@ -53,7 +53,7 @@ namespace EcsRx.Collections
             EntitySubscriptions.Add(entity.Id, entityDisposable);
         }
 
-        public void UnsubscribeFromEntity(Guid entityId)
+        public void UnsubscribeFromEntity(int entityId)
         { EntitySubscriptions.RemoveAndDispose(entityId); }
         
         public IEntity CreateEntity(IBlueprint blueprint = null)
@@ -69,34 +69,35 @@ namespace EcsRx.Collections
             return entity;
         }
 
-        public IEntity GetEntity(Guid id)
+        public IEntity GetEntity(int id)
         { return EntityLookup[id]; }
 
-        public void RemoveEntity(Guid id, bool disposeOnRemoval = true)
+        public void RemoveEntity(int id, bool disposeOnRemoval = true)
         {
             var entity = GetEntity(id);
             EntityLookup.Remove(id);
 
             var entityId = entity.Id;
 
-            if(disposeOnRemoval)
-            { entity.Dispose(); }
+            if (disposeOnRemoval)
+            {
+                entity.Dispose();
+                EntityFactory.Destroy(entityId);
+            }
             
             UnsubscribeFromEntity(entityId);
+            
             _onEntityRemoved.OnNext(new CollectionEntityEvent(entity, this));
         }
 
         public void AddEntity(IEntity entity)
         {
-            if(entity.Id == Guid.Empty)
-            { throw new InvalidEntityException("Entity provided does not have an assigned Id"); }
-
             EntityLookup.Add(entity.Id, entity);
             _onEntityAdded.OnNext(new CollectionEntityEvent(entity, this));
             SubscribeToEntity(entity);
         }
 
-        public bool ContainsEntity(Guid id)
+        public bool ContainsEntity(int id)
         { return EntityLookup.ContainsKey(id); }
 
         public IEnumerator<IEntity> GetEnumerator()

@@ -15,6 +15,7 @@ namespace EcsRx.Infrastructure.Modules
         {
             container.Bind<IMessageBroker, MessageBroker>();
             container.Bind<IEventSystem, EventSystem>();
+            container.Bind<IIdPool, IdPool>();
             container.Bind<IEntityFactory, DefaultEntityFactory>();
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();

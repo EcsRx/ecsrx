@@ -11,7 +11,7 @@ namespace EcsRx.Groups.Computed
 {
     public abstract class ComputedGroup : IObservableGroup, IDisposable
     {
-        public readonly IDictionary<Guid, IEntity> CachedEntities;
+        public readonly IDictionary<int, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
         
         public ObservableGroupToken Token => InternalObservableGroup.Token;
@@ -28,7 +28,7 @@ namespace EcsRx.Groups.Computed
         public ComputedGroup(IObservableGroup internalObservableGroup)
         {
             InternalObservableGroup = internalObservableGroup;
-            CachedEntities = new Dictionary<Guid, IEntity>();
+            CachedEntities = new Dictionary<int, IEntity>();
             Subscriptions = new List<IDisposable>();
             
             _onEntityAdded = new Subject<IEntity>();
@@ -85,7 +85,7 @@ namespace EcsRx.Groups.Computed
             }
         }
         
-        public bool ContainsEntity(Guid id)
+        public bool ContainsEntity(int id)
         { return CachedEntities.ContainsKey(id); }
 
         /// <summary>

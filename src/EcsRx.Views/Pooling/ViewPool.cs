@@ -44,7 +44,7 @@ namespace EcsRx.Views.Pooling
             ViewHandler.DestroyView(x.ViewObject);
         }
 
-        public object AllocateInstance()
+        public object Claim()
         {
             var availableViewObject = PooledObjects.FirstOrDefault(x => !x.IsInUse);
             if (availableViewObject == null)
@@ -58,7 +58,7 @@ namespace EcsRx.Views.Pooling
             return availableViewObject.ViewObject;
         }
         
-        public void ReleaseInstance(object view)
+        public void Free(object view)
         {
             var container = PooledObjects.FirstOrDefault(x => x.ViewObject == view);
             if(container == null) { return; }

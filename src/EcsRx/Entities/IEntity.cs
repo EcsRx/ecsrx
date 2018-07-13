@@ -40,7 +40,7 @@ namespace EcsRx.Entities
         /// It is recommended you do not pass entities around and instead pass their ids around
         /// and then use the collection/observable group methods to get the entity from its id
         /// </remarks>
-        Guid Id { get; }
+        int Id { get; }
         
         /// <summary>
         /// All the components which have been applied to this entity

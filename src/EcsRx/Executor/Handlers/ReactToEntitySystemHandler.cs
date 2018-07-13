@@ -13,7 +13,7 @@ namespace EcsRx.Executor.Handlers
     [Priority(3)]
     public class ReactToEntitySystemHandler : IConventionalSystemHandler
     {
-        public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
+        public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IEntityCollectionManager EntityCollectionManager;
         
@@ -21,7 +21,7 @@ namespace EcsRx.Executor.Handlers
         {
             EntityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
-            _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
+            _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
         }
 
         public bool CanHandleSystem(ISystem system)
@@ -30,7 +30,7 @@ namespace EcsRx.Executor.Handlers
         public void SetupSystem(ISystem system)
         {
             var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);            
-            var entitySubscriptions = new Dictionary<Guid, IDisposable>();
+            var entitySubscriptions = new Dictionary<int, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 

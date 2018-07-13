@@ -12,7 +12,7 @@ namespace EcsRx.Groups.Observable
 {
     public class ObservableGroup : IObservableGroup, IDisposable
     {
-        public readonly IDictionary<Guid, IEntity> CachedEntities;
+        public readonly IDictionary<int, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
@@ -129,7 +129,7 @@ namespace EcsRx.Groups.Observable
             _onEntityRemoved.OnNext(args.Entity);
         }
         
-        public bool ContainsEntity(Guid id)
+        public bool ContainsEntity(int id)
         { return CachedEntities.ContainsKey(id); }
 
         public void Dispose()

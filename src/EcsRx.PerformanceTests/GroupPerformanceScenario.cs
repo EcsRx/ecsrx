@@ -36,7 +36,7 @@ namespace EcsRx.PerformanceTests
         {
             _eventSystem = new EventSystem(new MessageBroker());
             
-            var entityFactory = new DefaultEntityFactory();
+            var entityFactory = new DefaultEntityFactory(new IdPool());
             var poolFactory = new DefaultEntityCollectionFactory(entityFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
             _entityCollectionManager = new EntityCollectionManager(poolFactory, observableGroupFactory);

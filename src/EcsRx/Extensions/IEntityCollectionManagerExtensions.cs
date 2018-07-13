@@ -44,7 +44,7 @@ namespace EcsRx.Extensions
             { RemoveEntity(entityCollectionManager, entity);}
         }
 
-        public static IEntity GetEntity(this IEntityCollectionManager entityCollectionManager, Guid id)
+        public static IEntity GetEntity(this IEntityCollectionManager entityCollectionManager, int id)
         {
             return entityCollectionManager.Collections
                 .Select(collection => collection.GetEntity(id))

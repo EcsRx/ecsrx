@@ -14,14 +14,14 @@ namespace EcsRx.Executor.Handlers
     public class SetupSystemHandler : IConventionalSystemHandler
     {
         public readonly IEntityCollectionManager EntityCollectionManager;
-        public readonly IDictionary<ISystem, IDictionary<Guid, IDisposable>> _entitySubscriptions;
+        public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
         public SetupSystemHandler(IEntityCollectionManager entityCollectionManager)
         {
             EntityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
-            _entitySubscriptions = new Dictionary<ISystem, IDictionary<Guid, IDisposable>>();
+            _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
         }
 
         public bool CanHandleSystem(ISystem system)
@@ -29,7 +29,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var entitySubscriptions = new Dictionary<Guid, IDisposable>();
+            var entitySubscriptions = new Dictionary<int, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);

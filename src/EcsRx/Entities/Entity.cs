@@ -19,10 +19,10 @@ namespace EcsRx.Entities
         private readonly Subject<IComponent[]> _onComponentsRemoving;
         private readonly Subject<IComponent[]> _onComponentsRemoved;
         
-        public Guid Id { get; }
+        public int Id { get; }
         public IEnumerable<IComponent> Components => _components.Values;
 
-        public Entity(Guid id)
+        public Entity(int id)
         {
             Id = id;
             _components = new Dictionary<Type, IComponent>();

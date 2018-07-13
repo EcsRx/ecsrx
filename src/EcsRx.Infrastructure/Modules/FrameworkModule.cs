@@ -1,4 +1,8 @@
-﻿using EcsRx.Collections;
+﻿using System;
+using System.Linq;
+using EcsRx.Collections;
+using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
@@ -16,6 +20,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IMessageBroker, MessageBroker>();
             container.Bind<IEventSystem, EventSystem>();
             container.Bind<IIdPool, IdPool>();
+            container.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             container.Bind<IEntityFactory, DefaultEntityFactory>();
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
@@ -27,6 +32,16 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IConventionalSystemHandler, SetupSystemHandler>();
             container.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
+            
+            var allComponents = componentTypeAssigner.GenerateComponentLookups();
+            var componentLookup = new ComponentTypeLookup(allComponents);
+            
+            _availableComponents = allComponents.Keys
+                .Select(x => Activator.CreateInstance(x) as IComponent)
+                .ToArray();
+            
+            var componentDatabase = new ComponentDatabase(componentLookup);
+            var componentRepository = new ComponentRepository(componentLookup, componentDatabase);
         }
     }
 }

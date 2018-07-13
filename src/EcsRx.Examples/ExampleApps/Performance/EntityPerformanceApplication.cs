@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
@@ -23,14 +24,21 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         protected override void ApplicationStarted()
         {
-            _availableComponents = _groupFactory.GetComponentTypes
+            var componentTypeAssigner = new DefaultComponentTypeAssigner();
+            var allComponents = componentTypeAssigner.GenerateComponentLookups();
+            var componentLookup = new ComponentTypeLookup(allComponents);
+            
+            _availableComponents = allComponents.Keys
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
-
+            
+            var componentDatabase = new ComponentDatabase(componentLookup);
+            var componentRepository = new ComponentRepository(componentLookup, componentDatabase);
+            
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i);
+                var entity = new Entity(i, componentRepository);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);
             }

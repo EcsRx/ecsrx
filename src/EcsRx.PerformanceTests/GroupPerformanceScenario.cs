@@ -3,6 +3,7 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsRx.Collections;
 using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
@@ -23,20 +24,26 @@ namespace EcsRx.PerformanceTests
         
         private IComponent[] _availableComponents;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
-        private readonly Random _random = new Random();
 
-        private IEventSystem _eventSystem;
         private IEntityCollectionManager _entityCollectionManager;
-        private ISystemExecutor _systemExecutor;
         private IGroup[] _testGroups;
         private IEntityCollection _defaultEntityCollection;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
-            _eventSystem = new EventSystem(new MessageBroker());
+            var componentTypeAssigner = new DefaultComponentTypeAssigner();
+            var allComponents = componentTypeAssigner.GenerateComponentLookups();
+            var componentLookup = new ComponentTypeLookup(allComponents);
             
-            var entityFactory = new DefaultEntityFactory(new IdPool());
+            _availableComponents = allComponents.Keys
+                .Select(x => Activator.CreateInstance(x) as IComponent)
+                .ToArray();
+            
+            var componentDatabase = new ComponentDatabase(componentLookup);
+            var componentRepository = new ComponentRepository(componentLookup, componentDatabase);
+            
+            var entityFactory = new DefaultEntityFactory(new IdPool(), componentRepository);
             var poolFactory = new DefaultEntityCollectionFactory(entityFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
             _entityCollectionManager = new EntityCollectionManager(poolFactory, observableGroupFactory);

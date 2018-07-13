@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Events;
+using EcsRx.Extensions;
 using EcsRx.Polyfills;
 
 namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
-        private readonly Dictionary<Type, IComponent> _components;
-        
         public IObservable<IComponent[]> ComponentsAdded => _onComponentsAdded;
         public IObservable<IComponent[]> ComponentsRemoving => _onComponentsRemoving;
         public IObservable<IComponent[]> ComponentsRemoved => _onComponentsRemoved;
@@ -20,12 +20,14 @@ namespace EcsRx.Entities
         private readonly Subject<IComponent[]> _onComponentsRemoved;
         
         public int Id { get; }
-        public IEnumerable<IComponent> Components => _components.Values;
+        public IComponentRepository ComponentRepository { get; }
+        public IEnumerable<IComponent> Components => ComponentRepository.GetAll(Id);
 
-        public Entity(int id)
+        public Entity(int id, IComponentRepository componentRepository)
         {
             Id = id;
-            _components = new Dictionary<Type, IComponent>();
+            ComponentRepository = componentRepository;
+            componentRepository.ExpandDatabaseIfNeeded(id);
             
             _onComponentsAdded = new Subject<IComponent[]>();
             _onComponentsRemoving = new Subject<IComponent[]>();
@@ -34,7 +36,7 @@ namespace EcsRx.Entities
 
         public IComponent AddComponent(IComponent component)
         {
-            _components.Add(component.GetType(), component);
+            ComponentRepository.Add(Id, component);
             _onComponentsAdded.OnNext(new []{component});
             return component;
         }
@@ -42,7 +44,7 @@ namespace EcsRx.Entities
         public void AddComponents(params IComponent[] components)
         {
             for (var i = components.Length - 1; i >= 0; i--)
-            { _components.Add(components[i].GetType(), components[i]); }
+            { ComponentRepository.Add(Id, components[i]); }
             
             _onComponentsAdded.OnNext(components);
         }
@@ -54,48 +56,30 @@ namespace EcsRx.Entities
         { RemoveComponents(component); }
 
         public void RemoveComponent<T>() where T : class, IComponent
-        {
-            if(!HasComponent<T>()) { return; }
-
-            var component = GetComponent<T>();
-            RemoveComponents(component);
-        }
+        { ComponentRepository.Remove(Id, typeof(T)); }
 
         public void RemoveComponents(params IComponent[] components)
         {
             _onComponentsRemoving.OnNext(components);
             
             for (var i = components.Length - 1; i >= 0; i--)
-            {
-                if(!_components.ContainsKey(components[i].GetType())) { continue; }
-
-                if (components[i] is IDisposable disposable)
-                { disposable.Dispose(); }
-
-                _components.Remove(components[i].GetType());
-            }
+            { RemoveComponent(components[i]); }
             
             _onComponentsRemoved.OnNext(components);
         }
 
         public void RemoveAllComponents()
-        {
-            var components = Components.ToArray();
-            RemoveComponents(components);
-        }
+        { RemoveComponents(Components.ToArray()); }
 
         public bool HasComponent<T>() where T : class, IComponent
-        { return _components.ContainsKey(typeof(T)); }
+        { return ComponentRepository.Has(Id, typeof(T)); }
 
         public bool HasComponents(params Type[] componentTypes)
         {
-            if(_components.Count == 0)
-            { return false; }
-            
             for (var index = componentTypes.Length - 1; index >= 0; index--)
             {
-                var x = componentTypes[index];
-                if (!_components.ContainsKey(x)) return false;
+                if(!ComponentRepository.Has(Id, componentTypes[index]))
+                { return false; }
             }
 
             return true;
@@ -108,10 +92,10 @@ namespace EcsRx.Entities
         }
 
         public IComponent GetComponent(Type componentType)
-        { return _components.TryGetValue(componentType, out var component) ? component : null; }
+        { return ComponentRepository.Get(Id, componentType); }
 
         public override int GetHashCode()
-        { return Id.GetHashCode(); }
+        { return Id; }
 
         public void Dispose()
         {

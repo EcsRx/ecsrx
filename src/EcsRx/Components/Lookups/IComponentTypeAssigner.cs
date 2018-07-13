@@ -5,7 +5,6 @@ namespace EcsRx.Components
 {
     public interface IComponentTypeAssigner
     {
-        IEnumerable<Type> GetAllComponentTypes();
-        IDictionary<Type, int> GenerateComponentLookups();
+        IReadOnlyDictionary<Type, int> GenerateComponentLookups();
     }
 }

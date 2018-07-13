@@ -6,7 +6,7 @@ namespace EcsRx.Components
 {
     public class DefaultComponentTypeAssigner : IComponentTypeAssigner
     {
-        public IEnumerable<Type> GetAllComponentTypes()
+        private IEnumerable<Type> GetAllComponentTypes()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var componentType = typeof(IComponent);
@@ -16,7 +16,7 @@ namespace EcsRx.Components
                 .Where(p => componentType.IsAssignableFrom(p));
         }
         
-        public IDictionary<Type, int> GenerateComponentLookups()
+        public IReadOnlyDictionary<Type, int> GenerateComponentLookups()
         {
             var lookupId = 0;
             var componentTypes = GetAllComponentTypes();

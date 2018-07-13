@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using EcsRx.Collections;
 using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
@@ -28,7 +29,7 @@ namespace EcsRx.PerformanceTests
         private IComponent[] _availableComponents;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
 
-        private IEventSystem _eventSystem;
+        private IComponentRepository _componentRepository;
 
         private IReactToEntitySystem _system;
         private List<IEntity> _entities;
@@ -36,11 +37,16 @@ namespace EcsRx.PerformanceTests
         [GlobalSetup]
         public void GlobalSetup()
         {
-            _eventSystem = new EventSystem(new MessageBroker());
-
-            _availableComponents = _groupFactory.GetComponentTypes
+            var componentTypeAssigner = new DefaultComponentTypeAssigner();
+            var allComponents = componentTypeAssigner.GenerateComponentLookups();
+            var componentLookup = new ComponentTypeLookup(allComponents);
+            
+            _availableComponents = allComponents.Keys
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
+            
+            var componentDatabase = new ComponentDatabase(componentLookup);
+            _componentRepository = new ComponentRepository(componentLookup, componentDatabase);
         }
 
         [IterationSetup]
@@ -49,7 +55,7 @@ namespace EcsRx.PerformanceTests
             _entities = new List<IEntity>();
             for (var i = 0; i < Entities; i++)
             {
-                var entity = new Entity(i);
+                var entity = new Entity(i, _componentRepository);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);
             }

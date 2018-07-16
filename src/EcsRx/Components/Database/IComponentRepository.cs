@@ -12,5 +12,6 @@ namespace EcsRx.Components.Database
         T Add<T>(int entityId, T component) where T : class, IComponent;
         bool Has(int entityId, Type componentType);
         void Remove(int entityId, Type componentType);
+        void RemoveAll(int entityId);
     }
 }

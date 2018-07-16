@@ -12,5 +12,11 @@ namespace EcsRx.Extensions
             foreach (var element in elementsToRemove)
             { list.Remove(element); }
         }
+
+        public static void ExpandListTo<T>(this IList<T> list, int amountToAdd) where T : class
+        {
+            for (var i = 0; i < amountToAdd; i++)
+            { list.Add(null); }
+        }
     }
 }

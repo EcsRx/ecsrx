@@ -69,7 +69,7 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
-                if (!Token.Group.ContainsAnyRequiredComponents(args.Components)) 
+                if (!Token.Group.ContainsAnyRequiredComponents(args.Entity)) 
                 {return;}
                 
                 CachedEntities.Remove(args.Entity.Id);
@@ -95,7 +95,7 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
-                if(!Token.Group.ContainsAnyExcludedComponents(args.Components))
+                if(!Token.Group.ContainsAnyExcludedComponents(args.Entity))
                 { return; }
 
                 _onEntityRemoving.OnNext(args.Entity);
@@ -114,7 +114,6 @@ namespace EcsRx.Groups.Observable
         {
             // This is because you may have fired a blueprint before it is created
             if (CachedEntities.ContainsKey(args.Entity.Id)) { return; }
-            if (!args.Entity.Components.Any()) { return; }
             if (!Token.Group.Matches(args.Entity)) { return; }
             
             CachedEntities.Add(args.Entity.Id, args.Entity);

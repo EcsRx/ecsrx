@@ -24,7 +24,7 @@ namespace EcsRx.Extensions
             }
             return true;
         }
-        
+               
         public static bool ContainsAllRequiredComponents(this IGroup group, params Type[] componentTypes)
         {
             for (var i = group.RequiredComponents.Length - 1; i >= 0; i--)
@@ -35,6 +35,9 @@ namespace EcsRx.Extensions
             
             return true;
         }
+        
+        public static bool ContainsAllRequiredComponents(this IGroup group, IEntity entity)
+        { return entity.HasComponents(group.RequiredComponents); }
         
         public static bool ContainsAnyRequiredComponents(this IGroup group, IEnumerable<IComponent> components)
         {
@@ -49,6 +52,16 @@ namespace EcsRx.Extensions
         public static bool ContainsAnyRequiredComponents(this IGroup group, params Type[] componentTypes)
         { return group.RequiredComponents.Any(componentTypes.Contains); }
         
+        public static bool ContainsAnyRequiredComponents(this IGroup group, IEntity entity)
+        {
+            for (var i = group.RequiredComponents.Length - 1; i >= 0; i--)
+            {
+                if(entity.HasComponents(group.RequiredComponents[i]))
+                { return true; }
+            }
+            return false;
+        }
+        
         public static bool ContainsAnyExcludedComponents(this IGroup group, IEnumerable<IComponent> components)
         {
             var castComponents = components.Select(x => x.GetType()).ToArray();
@@ -57,6 +70,16 @@ namespace EcsRx.Extensions
         
         public static bool ContainsAnyExcludedComponents(this IGroup group, params Type[] componentTypes)
         { return group.ExcludedComponents.Any(componentTypes.Contains); }
+        
+        public static bool ContainsAnyExcludedComponents(this IGroup group, IEntity entity)
+        {
+            for (var i = group.ExcludedComponents.Length - 1; i >= 0; i--)
+            {
+                if(entity.HasComponents(group.ExcludedComponents[i]))
+                { return true; }
+            }
+            return false;
+        }
 
         public static bool ContainsAny(this IGroup group, params IComponent[] components)
         {
@@ -74,13 +97,21 @@ namespace EcsRx.Extensions
 
             return group.ExcludedComponents.Any(componentTypes.Contains);
         }
+        
+        public static bool ContainsAny(this IGroup group, IEntity entity)
+        {
+            var requiredContains = group.ContainsAnyRequiredComponents(entity);
+            if(requiredContains) { return true; }
+
+            return group.ContainsAnyExcludedComponents(entity);
+        }
 
         public static bool Matches(this IGroup group, IEntity entity)
         {
             if(group.ExcludedComponents.Length == 0)
-            { return ContainsAllRequiredComponents(group, entity.Components); }
+            { return ContainsAllRequiredComponents(group, entity); }
             
-            return ContainsAllRequiredComponents(group, entity.Components) && !ContainsAnyExcludedComponents(group, entity.Components);
+            return ContainsAllRequiredComponents(group, entity) && !ContainsAnyExcludedComponents(group, entity);
         }
     }
 }

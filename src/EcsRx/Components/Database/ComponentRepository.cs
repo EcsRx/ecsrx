@@ -37,6 +37,9 @@ namespace EcsRx.Components.Database
         public IEnumerable<IComponent> GetAll(int entityId)
         { return Database.GetAll(entityId); }
 
+        public void RemoveAll(int entityId)
+        { Database.RemoveAll(entityId); }
+
         public T Add<T>(int entityId, T component) where T : class, IComponent
         {
             var componentTypeId = ComponentLookup.GetComponentType<T>();

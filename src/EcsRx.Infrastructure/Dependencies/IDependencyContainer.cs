@@ -21,7 +21,6 @@ namespace EcsRx.Infrastructure.Dependencies
         
         void Bind<TFrom, TTo>(BindingConfiguration configuration = null) where TTo : TFrom;
         void Bind<T>(BindingConfiguration configuration = null);
-        void BindToInstance<T>(T instance, BindingConfiguration configuration = null);
 
         T Resolve<T>(string name = null);
         IEnumerable<T> ResolveAll<T>();

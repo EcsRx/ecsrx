@@ -13,7 +13,7 @@ namespace EcsRx.Components.Database
                 if (EntityComponents.Length == 0)
                 { return 0; }
 
-                return EntityComponents[0].Count;
+                return EntityComponents[0].Count - 1;
             }
         }
 
@@ -30,13 +30,18 @@ namespace EcsRx.Components.Database
         {
             var componentTypes = ComponentTypeLookup.GetAllComponentTypes().Values.ToArray();
             EntityComponents = new List<IComponent>[componentTypes.Length];
+            
+            for(var i=0;i<EntityComponents.Length;i++)
+            { EntityComponents[i] = new List<IComponent>(); }
+            
             AccommodateMoreEntities(entitySetupSize);
         }
         
         public void AccommodateMoreEntities(int newMaxSize)
         {
-            for (var i = EntityComponents.Length - 1; i >= 0; i--)
-            { EntityComponents[i].Insert(newMaxSize, null); }
+            var expandBy = newMaxSize - CurrentEntityBounds;
+            for (var i=0;i<EntityComponents.Length;i++)
+            { EntityComponents[i].ExpandListTo(expandBy); }
         }
         
         public IComponent Get(int componentTypeId, int entityId)

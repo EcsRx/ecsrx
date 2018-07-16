@@ -53,7 +53,7 @@ namespace EcsRx.Entities
         { return (T)AddComponent(new T()); }
 
         public void RemoveComponent(IComponent component)
-        { RemoveComponents(component); }
+        { ComponentRepository.Remove(Id, component.GetType()); }
 
         public void RemoveComponent<T>() where T : class, IComponent
         { ComponentRepository.Remove(Id, typeof(T)); }
@@ -62,7 +62,7 @@ namespace EcsRx.Entities
         {
             _onComponentsRemoving.OnNext(components);
             
-            for (var i = components.Length - 1; i >= 0; i--)
+            for (var i = 0; i < components.Length; i++)
             { RemoveComponent(components[i]); }
             
             _onComponentsRemoved.OnNext(components);

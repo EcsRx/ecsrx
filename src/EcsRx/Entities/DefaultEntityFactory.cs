@@ -17,9 +17,9 @@ namespace EcsRx.Entities
         public int GetId(int? id = null)
         {
             if(!id.HasValue)
-            { return IdPool.Claim(); }
+            { return IdPool.AllocateInstance(); }
 
-            IdPool.ClaimSpecific(id.Value);
+            IdPool.AllocateSpecificId(id.Value);
             return id.Value;
         }
         
@@ -33,6 +33,6 @@ namespace EcsRx.Entities
         }
 
         public void Destroy(int entityId)
-        { IdPool.Free(entityId); }
+        { IdPool.ReleaseInstance(entityId); }
     }
 }

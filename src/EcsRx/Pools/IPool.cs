@@ -4,7 +4,7 @@
     {
         int IncrementSize { get; }
         
-        T Claim();
-        void Free(T obj);
+        T AllocateInstance();
+        void ReleaseInstance(T obj);
     }
 }

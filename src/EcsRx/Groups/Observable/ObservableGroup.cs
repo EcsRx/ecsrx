@@ -25,8 +25,7 @@ namespace EcsRx.Groups.Observable
         
         public ObservableGroupToken Token { get; }
         public INotifyingEntityCollection NotifyingCollection { get; }
-        public IEventSystem EventSystem { get; }
-
+        
         public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, INotifyingEntityCollection notifyingCollection)
         {
             Token = token;
@@ -36,7 +35,7 @@ namespace EcsRx.Groups.Observable
             _onEntityRemoved = new Subject<IEntity>();
             _onEntityRemoving = new Subject<IEntity>();
 
-            CachedEntities = initialEntities.ToDictionary(x => x.Id, x => x);
+            CachedEntities = initialEntities.Where(x => Token.Group.Matches(x)).ToDictionary(x => x.Id, x => x);
             Subscriptions = new List<IDisposable>();
 
             MonitorEntityChanges();
@@ -56,8 +55,8 @@ namespace EcsRx.Groups.Observable
                 .Subscribe(OnEntityComponentAdded)
                 .AddTo(Subscriptions);
 
-            NotifyingCollection.EntityComponentsRemoved
-                .Subscribe(OnEntityBeforeComponentRemoved)
+            NotifyingCollection.EntityComponentsRemoving
+                .Subscribe(OnEntityComponentRemoving)
                 .AddTo(Subscriptions);
 
             NotifyingCollection.EntityComponentsRemoved
@@ -69,9 +68,10 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
-                if (!Token.Group.ContainsAnyRequiredComponents(args.Entity)) 
-                {return;}
-                
+                if (args.Entity.HasAllComponents(Token.Group.RequiredComponents)) 
+                { return; }
+
+                _onEntityRemoving.OnNext(args.Entity);
                 CachedEntities.Remove(args.Entity.Id);
                 _onEntityRemoved.OnNext(args.Entity);
                 return;
@@ -83,7 +83,7 @@ namespace EcsRx.Groups.Observable
             _onEntityAdded.OnNext(args.Entity);
         }
 
-        public void OnEntityBeforeComponentRemoved(ComponentsChangedEvent args)
+        public void OnEntityComponentRemoving(ComponentsChangedEvent args)
         {
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
@@ -124,6 +124,7 @@ namespace EcsRx.Groups.Observable
         {
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
+            _onEntityRemoving.OnNext(args.Entity);
             CachedEntities.Remove(args.Entity.Id); 
             _onEntityRemoved.OnNext(args.Entity);
         }

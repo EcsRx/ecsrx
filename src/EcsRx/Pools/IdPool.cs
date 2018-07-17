@@ -11,38 +11,38 @@ namespace EcsRx.Entities
         private int _lastMax;
         private readonly int _increaseSize;
         
-        private readonly List<int> _availableIds;
+        public readonly List<int> AvailableIds;
 
         public IdPool(int increaseSize = 1000, int startingSize = 10000)
         {
             _lastMax = startingSize;
             _increaseSize = increaseSize;
-            _availableIds = Enumerable.Range(1, _lastMax).ToList();
+            AvailableIds = Enumerable.Range(1, _lastMax).ToList();
         }
 
-        public int Claim()
+        public int AllocateInstance()
         {
-            if(_availableIds.Count == 0)
+            if(AvailableIds.Count == 0)
             { Expand(); }
             
-            var id = _availableIds[0];
-            _availableIds.RemoveAt(0);
+            var id = AvailableIds[0];
+            AvailableIds.RemoveAt(0);
 
             return id;
         }
 
         public bool IsAvailable(int id)
-        { return id > _lastMax || _availableIds.Contains(id); }
+        { return id > _lastMax || AvailableIds.Contains(id); }
 
-        public void ClaimSpecific(int id)
+        public void AllocateSpecificId(int id)
         {
             if(id > _lastMax)
             { Expand(id); }
 
-            _availableIds.Remove(id);            
+            AvailableIds.Remove(id);            
         }
 
-        public void Free(int id)
+        public void ReleaseInstance(int id)
         {
             if(id <= 0)
             { throw new ArgumentException("id has to be >= 1"); }
@@ -50,13 +50,13 @@ namespace EcsRx.Entities
             if (id > _lastMax)
             { Expand(id); }
             
-            _availableIds.Add(id);
+            AvailableIds.Add(id);
         }
 
         public void Expand(int? newId = null)
         {
-            var increaseBy = newId ?? _increaseSize;
-            _availableIds.AddRange(Enumerable.Range(_lastMax + 1, increaseBy));
+            var increaseBy = newId -_lastMax ?? _increaseSize;
+            AvailableIds.AddRange(Enumerable.Range(_lastMax + 1, increaseBy));
             _lastMax += increaseBy + 1;
         }
     }

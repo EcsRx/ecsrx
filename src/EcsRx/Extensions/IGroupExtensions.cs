@@ -37,30 +37,23 @@ namespace EcsRx.Extensions
         }
         
         public static bool ContainsAllRequiredComponents(this IGroup group, IEntity entity)
-        { return entity.HasComponents(group.RequiredComponents); }
+        { return entity.HasAllComponents(group.RequiredComponents); }
         
         public static bool ContainsAnyRequiredComponents(this IGroup group, IEnumerable<IComponent> components)
         {
             for (var i = group.RequiredComponents.Length - 1; i >= 0; i--)
             {
-                if(components.Any(x => group.RequiredComponents[i].IsInstanceOfType(x)))
+                if(components.Any(x => group.RequiredComponents[i] == x.GetType()))
                 { return true; }
             }
             return false;
         }
-        
+                
         public static bool ContainsAnyRequiredComponents(this IGroup group, params Type[] componentTypes)
         { return group.RequiredComponents.Any(componentTypes.Contains); }
         
         public static bool ContainsAnyRequiredComponents(this IGroup group, IEntity entity)
-        {
-            for (var i = group.RequiredComponents.Length - 1; i >= 0; i--)
-            {
-                if(entity.HasComponents(group.RequiredComponents[i]))
-                { return true; }
-            }
-            return false;
-        }
+        { return entity.HasAnyComponents(group.RequiredComponents); }
         
         public static bool ContainsAnyExcludedComponents(this IGroup group, IEnumerable<IComponent> components)
         {
@@ -72,14 +65,7 @@ namespace EcsRx.Extensions
         { return group.ExcludedComponents.Any(componentTypes.Contains); }
         
         public static bool ContainsAnyExcludedComponents(this IGroup group, IEntity entity)
-        {
-            for (var i = group.ExcludedComponents.Length - 1; i >= 0; i--)
-            {
-                if(entity.HasComponents(group.ExcludedComponents[i]))
-                { return true; }
-            }
-            return false;
-        }
+        { return entity.HasAnyComponents(group.ExcludedComponents); }
 
         public static bool ContainsAny(this IGroup group, params IComponent[] components)
         {

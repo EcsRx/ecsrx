@@ -116,7 +116,7 @@ namespace EcsRx.Entities
         /// </summary>
         /// <param name="component">Types of component to check for</param>
         /// <returns>true if all the component was found, false if one or more is missing</returns>
-        bool HasComponents(params Type[] component);
+        bool HasAllComponents(params Type[] component);
         
         /// <summary>
         /// Checks to see if the entity contains given components by their instances
@@ -124,5 +124,7 @@ namespace EcsRx.Entities
         /// <param name="component">instances of component to check for</param>
         /// <returns>true if all the component was found, false if one or more is missing</returns>
         void AddComponents(params IComponent[] components);
+
+        bool HasAnyComponents(params Type[] componentTypes);
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Groups.Observable;
@@ -16,18 +14,22 @@ namespace EcsRx.Tests.Framework
 {
     public class ComputedGroupTests
     {
+        
         [Fact]
         public void should_populate_entity_cache_upon_creation()
         {
-            var mockEventSystem = Substitute.For<IEventSystem>();
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-
-            var shouldContainEntity1 = new Entity(Guid.NewGuid(), mockEventSystem);
-            shouldContainEntity1.AddComponent<TestComponentOne>();
-            var shouldContainEntity2 = new Entity(Guid.NewGuid(), mockEventSystem);
-            shouldContainEntity2.AddComponent<TestComponentOne>();
-
-            var shouldNotContainEntity1 = new Entity(Guid.NewGuid(), mockEventSystem);
+            var shouldContainEntity1 = Substitute.For<IEntity>();
+            shouldContainEntity1.Id.Returns(1);
+            shouldContainEntity1.HasComponent<TestComponentOne>().Returns(true);
+            
+            var shouldContainEntity2 = Substitute.For<IEntity>();
+            shouldContainEntity1.Id.Returns(2);
+            shouldContainEntity2.HasComponent<TestComponentOne>().Returns(true);
+            
+            var shouldNotContainEntity1 = Substitute.For<IEntity>();
+            shouldContainEntity1.Id.Returns(3);
+            shouldNotContainEntity1.HasComponent<TestComponentOne>().Returns(false);
             
             var dummyEntitySnapshot = new List<IEntity>
             {
@@ -36,39 +38,42 @@ namespace EcsRx.Tests.Framework
                 shouldNotContainEntity1
             };
 
-            mockObservableGroup.GetEnumerator().Returns(dummyEntitySnapshot.GetEnumerator());
+            mockObservableGroup.GetEnumerator().Returns(x => dummyEntitySnapshot.GetEnumerator());
             mockObservableGroup.OnEntityAdded.Returns(Observable.Empty<IEntity>());
             mockObservableGroup.OnEntityRemoving.Returns(Observable.Empty<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(Observable.Empty<IEntity>());
-            var cacheableobservableGroup = new TestComputedGroup(mockObservableGroup);
+            var computedGroup = new TestComputedGroup(mockObservableGroup);
 
-            Assert.Equal(2, cacheableobservableGroup.CachedEntities.Count);
-            Assert.Contains(shouldContainEntity1, cacheableobservableGroup.CachedEntities.Values);
-            Assert.Contains(shouldContainEntity2, cacheableobservableGroup.CachedEntities.Values);
-            Assert.DoesNotContain(shouldNotContainEntity1, cacheableobservableGroup.CachedEntities.Values);
+            Assert.Equal(2, computedGroup.CachedEntities.Count);
+            Assert.Contains(shouldContainEntity1, computedGroup.CachedEntities.Values);
+            Assert.Contains(shouldContainEntity2, computedGroup.CachedEntities.Values);
+            Assert.DoesNotContain(shouldNotContainEntity1, computedGroup.CachedEntities.Values);
         }
         
         [Fact]
         public void should_only_add_and_fire_event_when_applicable_entity_added()
         {
-            var mockEventSystem = Substitute.For<IEventSystem>();
             var mockObservableGroup = Substitute.For<IObservableGroup>();
 
-            var shouldContainEntity = new Entity(Guid.NewGuid(), mockEventSystem);
-            shouldContainEntity.AddComponent<TestComponentOne>();
-            var shouldNotContainEntity = new Entity(Guid.NewGuid(), mockEventSystem);
+            var shouldContainEntity = Substitute.For<IEntity>();
+            shouldContainEntity.Id.Returns(1);
+            shouldContainEntity.HasComponent<TestComponentOne>().Returns(true);
+            
+            var shouldNotContainEntity = Substitute.For<IEntity>();
+            shouldContainEntity.Id.Returns(2);
+            shouldNotContainEntity.HasComponent<TestComponentOne>().Returns(false);
 
             var dummyEntitySnapshot = new List<IEntity>();
-            mockObservableGroup.GetEnumerator().Returns(dummyEntitySnapshot.GetEnumerator());
+            mockObservableGroup.GetEnumerator().Returns(x => dummyEntitySnapshot.GetEnumerator());
 
             var onEntityAddedSubject = new Subject<IEntity>();
             mockObservableGroup.OnEntityAdded.Returns(onEntityAddedSubject);
             mockObservableGroup.OnEntityRemoving.Returns(Observable.Empty<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(Observable.Empty<IEntity>());
-            var cacheableobservableGroup = new TestComputedGroup(mockObservableGroup);
+            var computedGroup = new TestComputedGroup(mockObservableGroup);
 
             var firedTimes = 0;
-            cacheableobservableGroup.OnEntityAdded.Subscribe(x =>
+            computedGroup.OnEntityAdded.Subscribe(x =>
             {
                 Assert.Equal(shouldContainEntity, x);
                 firedTimes++;
@@ -77,22 +82,22 @@ namespace EcsRx.Tests.Framework
             onEntityAddedSubject.OnNext(shouldContainEntity);
             onEntityAddedSubject.OnNext(shouldNotContainEntity);
 
-            Assert.Equal(1, cacheableobservableGroup.CachedEntities.Count);
+            Assert.Equal(1, computedGroup.CachedEntities.Count);
             Assert.Equal(1, firedTimes);
-            Assert.Contains(shouldContainEntity, cacheableobservableGroup.CachedEntities.Values);
-            Assert.DoesNotContain(shouldNotContainEntity, cacheableobservableGroup.CachedEntities.Values);
+            Assert.Contains(shouldContainEntity, computedGroup.CachedEntities.Values);
+            Assert.DoesNotContain(shouldNotContainEntity, computedGroup.CachedEntities.Values);
         }
-        
+
         [Fact]
         public void should_only_remove_and_fire_events_when_non_applicable_entity_removed()
         {
-            var mockEventSystem = Substitute.For<IEventSystem>();
             var mockObservableGroup = Substitute.For<IObservableGroup>();
 
-            var shouldContainEntity = new Entity(Guid.NewGuid(), mockEventSystem);
-            shouldContainEntity.AddComponent<TestComponentOne>();
+            var shouldContainEntity = Substitute.For<IEntity>();
+            shouldContainEntity.Id.Returns(1);
+            shouldContainEntity.HasComponent<TestComponentOne>().Returns(true);
 
-            var dummyEntitySnapshot = new List<IEntity> { shouldContainEntity };
+            var dummyEntitySnapshot = new List<IEntity> {shouldContainEntity};
             mockObservableGroup.GetEnumerator().Returns(x => dummyEntitySnapshot.GetEnumerator());
 
             var onEntityRemovingSubject = new Subject<IEntity>();
@@ -100,27 +105,27 @@ namespace EcsRx.Tests.Framework
             mockObservableGroup.OnEntityAdded.Returns(Observable.Empty<IEntity>());
             mockObservableGroup.OnEntityRemoving.Returns(onEntityRemovingSubject);
             mockObservableGroup.OnEntityRemoved.Returns(onEntityRemovedSubject);
-                        
-            var cacheableobservableGroup = new TestComputedGroup(mockObservableGroup);
+
+            var computedGroup = new TestComputedGroup(mockObservableGroup);
 
             var removingFiredTimes = 0;
-            cacheableobservableGroup.OnEntityRemoving.Subscribe(x =>
+            computedGroup.OnEntityRemoving.Subscribe(x =>
             {
                 Assert.Equal(shouldContainEntity, x);
                 removingFiredTimes++;
             });
-            
+
             var removedFiredTimes = 0;
-            cacheableobservableGroup.OnEntityRemoved.Subscribe(x =>
+            computedGroup.OnEntityRemoved.Subscribe(x =>
             {
                 Assert.Equal(shouldContainEntity, x);
                 removedFiredTimes++;
             });
-            
-            shouldContainEntity.RemoveComponent<TestComponentOne>();
-            cacheableobservableGroup.RefreshEntities();
-            
-            Assert.Equal(0, cacheableobservableGroup.CachedEntities.Count);
+
+            shouldContainEntity.HasComponent<TestComponentOne>().Returns(false);
+            computedGroup.RefreshEntities();
+
+            Assert.Equal(0, computedGroup.CachedEntities.Count);
             Assert.Equal(1, removingFiredTimes);
             Assert.Equal(1, removedFiredTimes);
         }

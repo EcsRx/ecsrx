@@ -13,7 +13,7 @@ namespace EcsRx.Components.Database
                 if (EntityComponents.Length == 0)
                 { return 0; }
 
-                return EntityComponents[0].Count - 1;
+                return EntityComponents[0].Count;
             }
         }
 
@@ -28,8 +28,8 @@ namespace EcsRx.Components.Database
 
         public void Initialize(int entitySetupSize)
         {
-            var componentTypes = ComponentTypeLookup.GetAllComponentTypes().Values.ToArray();
-            EntityComponents = new List<IComponent>[componentTypes.Length];
+            var componentCount = ComponentTypeLookup.GetAllComponentTypes().Count;
+            EntityComponents = new List<IComponent>[componentCount];
             
             for(var i=0;i<EntityComponents.Length;i++)
             { EntityComponents[i] = new List<IComponent>(); }

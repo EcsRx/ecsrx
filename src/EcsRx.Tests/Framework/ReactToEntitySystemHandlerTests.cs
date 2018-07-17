@@ -36,10 +36,10 @@ namespace EcsRx.Tests.Framework
             var fakeEntity2 = Substitute.For<IEntity>();
             var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
 
-            var guid1 = Guid.NewGuid();
-            var guid2 = Guid.NewGuid();
-            fakeEntity1.Id.Returns(guid1);
-            fakeEntity2.Id.Returns(guid2);
+            var id1 = 1;
+            var id2 = 2;
+            fakeEntity1.Id.Returns(id1);
+            fakeEntity2.Id.Returns(id2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
@@ -72,8 +72,8 @@ namespace EcsRx.Tests.Framework
             
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
             Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id1));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
             Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
@@ -83,10 +83,10 @@ namespace EcsRx.Tests.Framework
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
 
-            var guid1 = Guid.NewGuid();
-            var guid2 = Guid.NewGuid();
-            fakeEntity1.Id.Returns(guid1);
-            fakeEntity2.Id.Returns(guid2);
+            var id1 = 1;
+            var id2 = 2;
+            fakeEntity1.Id.Returns(id1);
+            fakeEntity2.Id.Returns(id2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.GetEnumerator().Returns(new List<IEntity>().GetEnumerator());
@@ -131,8 +131,8 @@ namespace EcsRx.Tests.Framework
             
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
             Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id1));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
             Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
@@ -143,10 +143,10 @@ namespace EcsRx.Tests.Framework
             var fakeEntity2 = Substitute.For<IEntity>();
             var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
 
-            var guid1 = Guid.NewGuid();
-            var guid2 = Guid.NewGuid();
-            fakeEntity1.Id.Returns(guid1);
-            fakeEntity2.Id.Returns(guid2);
+            var id1 = 1;
+            var id2 = 2;
+            fakeEntity1.Id.Returns(id1);
+            fakeEntity2.Id.Returns(id2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
@@ -172,15 +172,15 @@ namespace EcsRx.Tests.Framework
             
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
             Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id1));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
             Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
 
             removedSubject.OnNext(fakeEntity1);
             
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
             Assert.Equal(1, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
             Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
@@ -191,10 +191,10 @@ namespace EcsRx.Tests.Framework
             var fakeEntity2 = Substitute.For<IEntity>();
             var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
 
-            var guid1 = Guid.NewGuid();
-            var guid2 = Guid.NewGuid();
-            fakeEntity1.Id.Returns(guid1);
-            fakeEntity2.Id.Returns(guid2);
+            var id1 = 1;
+            var id2 = 2;
+            fakeEntity1.Id.Returns(id1);
+            fakeEntity2.Id.Returns(id2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
@@ -203,7 +203,7 @@ namespace EcsRx.Tests.Framework
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
-            var fakeGroup = new Group(x => x.Id == guid1);
+            var fakeGroup = new Group(x => x.Id == id1);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<IEntity>();
@@ -227,16 +227,16 @@ namespace EcsRx.Tests.Framework
             
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
             Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid1));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(guid2));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id1));
+            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
             Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
         [Fact]
         public void should_destroy_and_dispose_system()
         {
-            var guid1 = Guid.NewGuid();
-            var guid2 = Guid.NewGuid();
+            var id1 = 1;
+            var id2 = 2;
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
@@ -245,11 +245,11 @@ namespace EcsRx.Tests.Framework
             var systemHandler = new ReactToEntitySystemHandler(mockCollectionManager);
             systemHandler._systemSubscriptions.Add(mockSystem, mockSystemDisposable);
             
-            var entitySubscriptions = new Dictionary<Guid, IDisposable>();
+            var entitySubscriptions = new Dictionary<int, IDisposable>();
             var mockEntityDisposable1 = Substitute.For<IDisposable>();
-            entitySubscriptions.Add(guid1, mockEntityDisposable1);
+            entitySubscriptions.Add(id1, mockEntityDisposable1);
             var mockEntityDisposable2 = Substitute.For<IDisposable>();
-            entitySubscriptions.Add(guid2, mockEntityDisposable2);
+            entitySubscriptions.Add(id2, mockEntityDisposable2);
             systemHandler._entitySubscriptions.Add(mockSystem, entitySubscriptions);
             
             systemHandler.DestroySystem(mockSystem);

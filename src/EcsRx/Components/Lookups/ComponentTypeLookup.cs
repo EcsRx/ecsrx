@@ -13,8 +13,8 @@ namespace EcsRx.Components
             ComponentTypes = componentTypes;
         }
 
-        public int GetComponentType<T>()
-        { return ComponentTypes[typeof(T)]; }
+        public int GetComponentType<T>() where T : IComponent
+        { return GetComponentType(typeof(T)); }
 
         public int GetComponentType(Type type)
         { return ComponentTypes[type]; }

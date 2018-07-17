@@ -35,8 +35,8 @@ namespace EcsRx.Tests.Framework
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(Guid.NewGuid());
-            fakeEntity2.Id.Returns(Guid.NewGuid());
+            fakeEntity1.Id.Returns(1);
+            fakeEntity2.Id.Returns(2);
             var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
@@ -69,8 +69,8 @@ namespace EcsRx.Tests.Framework
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(Guid.NewGuid());
-            fakeEntity2.Id.Returns(Guid.NewGuid());
+            fakeEntity1.Id.Returns(1);
+            fakeEntity2.Id.Returns(2);
             var fakeEntities = new List<IEntity>();
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
@@ -113,7 +113,7 @@ namespace EcsRx.Tests.Framework
         public void should_dispose_observables_when_entity_removed()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(Guid.NewGuid());
+            fakeEntity1.Id.Returns(1);
             var fakeEntities = new List<IEntity>();
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
@@ -150,14 +150,14 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_execute_systems_when_predicate_met()
         {
-            var guid1 = Guid.NewGuid();
-            var guid2 = Guid.NewGuid();
+            var id1 = 1;
+            var id2 = 2;
             
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
             var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
-            fakeEntity1.Id.Returns(guid1);
-            fakeEntity2.Id.Returns(guid2);
+            fakeEntity1.Id.Returns(id1);
+            fakeEntity2.Id.Returns(id2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
@@ -188,15 +188,15 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_execute_systems_when_predicate_met_after_period()
         {
-            var guid1 = Guid.NewGuid();
-            var guid2 = Guid.NewGuid();
+            var id1 = 1;
+            var id2 = 2;
             var expectedDate = DateTime.Now + TimeSpan.FromSeconds(1);
             
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
             var fakeEntities = new List<IEntity> { fakeEntity1, fakeEntity2 };
-            fakeEntity1.Id.Returns(guid1);
-            fakeEntity2.Id.Returns(guid2);
+            fakeEntity1.Id.Returns(id1);
+            fakeEntity2.Id.Returns(id2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());

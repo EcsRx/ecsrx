@@ -65,8 +65,8 @@ namespace EcsRx.Tests.Framework
         public void should_only_execute_system_when_predicate_met()
         {
             var entityToMatch = Substitute.For<IEntity>();
-            var guidToMatch = Guid.NewGuid();
-            entityToMatch.Id.Returns(guidToMatch);
+            var idToMatch = 1;
+            entityToMatch.Id.Returns(idToMatch);
             
             var fakeEntities = new List<IEntity>
             {
@@ -80,7 +80,7 @@ namespace EcsRx.Tests.Framework
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
-            var fakeGroup = new Group(x => x.Id == guidToMatch);
+            var fakeGroup = new Group(x => x.Id == idToMatch);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();

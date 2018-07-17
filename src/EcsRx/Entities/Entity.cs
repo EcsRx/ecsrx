@@ -53,17 +53,17 @@ namespace EcsRx.Entities
         { return (T)AddComponent(new T()); }
 
         public void RemoveComponent(IComponent component)
-        { ComponentRepository.Remove(Id, component.GetType()); }
+        { RemoveComponents(component); }
 
         public void RemoveComponent<T>() where T : class, IComponent
-        { ComponentRepository.Remove(Id, typeof(T)); }
+        { RemoveComponents(default(T)); }
 
         public void RemoveComponents(params IComponent[] components)
         {
             _onComponentsRemoving.OnNext(components);
             
             for (var i = 0; i < components.Length; i++)
-            { RemoveComponent(components[i]); }
+            { ComponentRepository.Remove(Id, components[i].GetType()); }
             
             _onComponentsRemoved.OnNext(components);
         }
@@ -74,7 +74,7 @@ namespace EcsRx.Entities
         public bool HasComponent<T>() where T : class, IComponent
         { return ComponentRepository.Has(Id, typeof(T)); }
 
-        public bool HasComponents(params Type[] componentTypes)
+        public bool HasAllComponents(params Type[] componentTypes)
         {
             for (var index = componentTypes.Length - 1; index >= 0; index--)
             {
@@ -83,6 +83,17 @@ namespace EcsRx.Entities
             }
 
             return true;
+        }
+        
+        public bool HasAnyComponents(params Type[] componentTypes)
+        {
+            for (var index = componentTypes.Length - 1; index >= 0; index--)
+            {
+                if(ComponentRepository.Has(Id, componentTypes[index]))
+                { return true; }
+            }
+
+            return false;
         }
 
         public T GetComponent<T>() where T : class, IComponent

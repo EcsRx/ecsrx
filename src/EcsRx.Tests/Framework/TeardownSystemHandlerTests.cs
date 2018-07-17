@@ -33,7 +33,7 @@ namespace EcsRx.Tests.Framework
         public void should_teardown_entity_when_removed()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(Guid.NewGuid());
+            fakeEntity1.Id.Returns(1);
             var fakeEntities = new List<IEntity>();
 
             var removeSubject = new Subject<IEntity>();

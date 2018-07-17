@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Blueprints;
 using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
@@ -79,17 +80,27 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_corectly_get_matching_entities()
         {
-            var mockEventSystem = Substitute.For<IEventSystem>();
-            var hasOneAndTwo = new Entity(Guid.NewGuid(), mockEventSystem);
+            // easier to test with real stuff
+            var componentLookups = new Dictionary<Type, int>
+            {
+                {typeof(TestComponentOne), 0},
+                {typeof(TestComponentTwo), 1},
+                {typeof(TestComponentThree), 2}
+            };
+            var componentLookupType = new ComponentTypeLookup(componentLookups);
+            var componentDatabase = new ComponentDatabase(componentLookupType);
+            var componentRepository = new ComponentRepository(componentLookupType, componentDatabase);
+            
+            var hasOneAndTwo = new Entity(1, componentRepository);
             hasOneAndTwo.AddComponent<TestComponentOne>();
             hasOneAndTwo.AddComponent<TestComponentTwo>();
             
-            var hasAllComponents = new Entity(Guid.NewGuid(), mockEventSystem);
+            var hasAllComponents = new Entity(2, componentRepository);
             hasAllComponents.AddComponent<TestComponentOne>();
             hasAllComponents.AddComponent<TestComponentTwo>();
             hasAllComponents.AddComponent<TestComponentThree>();
 
-            var hasOneAndThree = new Entity(Guid.NewGuid(), mockEventSystem);
+            var hasOneAndThree = new Entity(3, componentRepository);
             hasOneAndThree.AddComponent<TestComponentOne>();
             hasOneAndThree.AddComponent<TestComponentThree>();
 

@@ -18,8 +18,9 @@ namespace EcsRx.Components.Database
 
         public void ExpandDatabaseIfNeeded(int entityId)
         {
-            if(entityId <= Database.CurrentEntityBounds) { return; }
-            Database.AccommodateMoreEntities(entityId + DefaultExpansionSize);
+            if(entityId < Database.CurrentEntityBounds) { return; }
+            var newSize = entityId + DefaultExpansionSize + 1;
+            Database.AccommodateMoreEntities(newSize);
         }
        
         public IComponent Get(int entityId, Type componentType)
@@ -42,7 +43,8 @@ namespace EcsRx.Components.Database
 
         public T Add<T>(int entityId, T component) where T : class, IComponent
         {
-            var componentTypeId = ComponentLookup.GetComponentType<T>();
+            var underlyingType = component.GetType();
+            var componentTypeId = ComponentLookup.GetComponentType(underlyingType);
             Database.Add(componentTypeId, entityId, component);
             return component;
         }

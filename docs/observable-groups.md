@@ -5,7 +5,7 @@ So now you know what entities are and how you can get hold of them, its worth go
 ## Filtration Flow
 
 ```
-IEntityCollectionManager	<-  This contains all pools, which in turn contains ALL entities
+IEntityCollectionManager	<-  This contains all collections, which in turn contains ALL entities
      |
      |
 IObservableGroup      		<-  This filters all entities down to only ones which are within the group
@@ -31,19 +31,19 @@ This has a huge performance benefit as it will stop you needing to evaluate linq
 
 ## IComputedGroup
 
-The computed group is created manually and requires an `IObservableGroup` for it to use for the basis of its queries. It is provided to allow you to filter past the group level and get more specific data sets without having to hardcode the logic for the lookup in various systems.
+The computed group is created manually and requires an `IObservableGroup` for it to use for the basis of its queries. It is provided to allow you to filter past the group level and get more specific data sets without having to hard code the logic for the lookup in various systems.
 
 General use cases for this may be things like:
 
 - Get 5 highest scoring players
 - Get enemies within a radius of the player
-- Transform entitys with various game state components to some single poco for saving state
+- Get all units within current squad
 
-It is meant to be an interface for you to implement with your own filtration logic, however there is an existing abstract implementation which provides caching for the filter results out of the box.
+It is meant to be an interface for you to implement with your own filtration logic, and this is internally cached and exposes its own added/removed state handlers so you can subscribe to them just like an ObservableGroup.
 
-### `CacheableComputedGroup`
+### `ComputedGroup`
 
-This group filter has caching built in so it will try to keep a pre-evaluted list of entities which match the filtration requirements, this can be beneficial if you are using this in a few places and want it to update automatically when the underlying data changes.
+This implementation has caching built in so it will try to keep a pre-evaluted list of entities which match the filtration requirements, this can be beneficial if you are using this in a few places and want it to update automatically when the underlying data changes.
 
 ## Querys
 

@@ -44,6 +44,6 @@ namespace EcsRx.Groups
         }
 
         public IGroup Build()
-        { return new Group(_predicate, _withComponents.ToArray(), _withoutComponents.ToArray()); }
+        { return new Group(_predicate, _withComponents, _withoutComponents); }
     }
 }

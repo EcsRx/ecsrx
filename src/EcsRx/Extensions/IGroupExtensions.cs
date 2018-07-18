@@ -11,8 +11,28 @@ namespace EcsRx.Extensions
     {
         public static IGroup WithComponent<T>(this IGroup group) where T : class, IComponent
         {
-            var componentTypes = new List<Type>(group.RequiredComponents) {typeof(T)};
-            return new Group(componentTypes.ToArray());
+            var requiredComponents = new List<Type>(group.RequiredComponents) {typeof(T)};
+            return new Group(null, requiredComponents, group.ExcludedComponents);
+        }
+        
+        public static IGroup WithComponents(this IGroup group, params Type[] requiredComponents)
+        {
+            var newComponents = new List<Type>(group.RequiredComponents);
+            newComponents.AddRange(requiredComponents);
+            return new Group(null, newComponents, group.ExcludedComponents);
+        }
+        
+        public static IGroup WithoutComponent<T>(this IGroup group) where T : class, IComponent
+        {
+            var excludedComponents = new List<Type>(group.ExcludedComponents) {typeof(T)};
+            return new Group(null, group.RequiredComponents, excludedComponents);
+        }
+        
+        public static IGroup WithoutComponent<T>(this IGroup group, params Type[] excludedComponents)
+        {
+            var newComponents = new List<Type>(group.ExcludedComponents);
+            newComponents.AddRange(excludedComponents);
+            return new Group(null, group.RequiredComponents, newComponents);
         }
         
         public static bool ContainsAllRequiredComponents(this IGroup group, IEnumerable<IComponent> components)

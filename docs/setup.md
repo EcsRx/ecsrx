@@ -17,23 +17,34 @@ public abstract class EcsRxApplication
 {
 	public ISystemExecutor SystemExecutor { get; }
 	public IEventSystem EventSystem { get; }
-	public IPoolManager PoolManager { get; }
+	public IEntityCollectionManager EntityCollectionlManager { get; }
 
 	protected EcsRxApplication()
 	{
+	    // For sending events around
 		EventSystem = new EventSystem(new MessageBroker());
+		
+		// For mapping component types to underlying indexes
+		var componentTypeAssigner = new DefaultComponentTypeAssigner();
+		var allComponents = componentTypeAssigner.GenerateComponentLookups();
+		
+		// For interacting with the component databases
+		var componentDatabase = new ComponentDatabase(componentLookup);
+        var componentRepository = new ComponentRepository(componentLookup, componentDatabase);	
+		
+		// For creating entities, collections, observable groups and managing Ids
+		var entityFactory = new DefaultEntityFactory(new IdPool(), componentRepository);
+		var entityCollectionFactory = new DefaultEntityCollectionFactory(entityFactory);
+		var observableGroupFactory = new DefaultObservableObservableGroupFactory();
+		EntityCollectionManager = new EntityCollectionManager(poolFactory, observableGroupFactory);
 
-		var entityFactory = new DefaultEntityFactory(EventSystem);
-		var poolFactory = new DefaultPoolFactory(entityFactory, EventSystem);
-		var groupAccessorFactory = new DefaultObservableObservableGroupFactory(EventSystem);
-		PoolManager = new PoolManager(EventSystem, poolFactory, groupAccessorFactory);
-
-		var reactsToEntityHandler = new ReactToEntitySystemHandler(PoolManager);
-		var reactsToGroupHandler = new ReactToGroupSystemHandler(PoolManager);
-		var reactsToDataHandler = new ReactToDataSystemHandler(PoolManager);
-		var manualSystemHandler = new ManualSystemHandler(PoolManager);
-		var setupHandler = new SetupSystemHandler(PoolManager);
-		var teardownHandler = new TeardownSystemHandler(PoolManager);
+		// All system handlers for the system types you want to support
+		var reactsToEntityHandler = new ReactToEntitySystemHandler(EntityCollectionManager);
+		var reactsToGroupHandler = new ReactToGroupSystemHandler(EntityCollectionManager);
+		var reactsToDataHandler = new ReactToDataSystemHandler(EntityCollectionManager);
+		var manualSystemHandler = new ManualSystemHandler(EntityCollectionManager);
+		var setupHandler = new SetupSystemHandler(EntityCollectionManager);
+		var teardownHandler = new TeardownSystemHandler(EntityCollectionManager);
 
 		var conventionalSystems = new List<IConventionalSystemHandler>
 		{
@@ -45,6 +56,7 @@ public abstract class EcsRxApplication
 			manualSystemHandler
 		};
 		
+		// The main executor which manages how systems are given information
 		SystemExecutor = new SystemExecutor(conventionalSystems);
 	}
 
@@ -61,8 +73,8 @@ public class HelloWorldExampleApplication : EcsRxApplication
 	{
 		SystemExecutor.AddSystem(new TalkingSystem());
 
-		var defaultPool = PoolManager.GetPool();
-		var entity = defaultPool.CreateEntity();
+		var defaultCollection = EntityCollectionManager.GetCollection();
+		var entity = defaultCollection.CreateEntity();
 
 		var canTalkComponent = new CanTalkComponent {Message = "Hello world"};
 		entity.AddComponent(canTalkComponent);

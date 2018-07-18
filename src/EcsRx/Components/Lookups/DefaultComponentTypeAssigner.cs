@@ -13,7 +13,7 @@ namespace EcsRx.Components
 
             return assemblies
                 .SelectMany(s => s.GetTypes())
-                .Where(p => componentType.IsAssignableFrom(p));
+                .Where(p => componentType.IsAssignableFrom(p) && !p.IsInterface && !p.IsAbstract);
         }
         
         public IReadOnlyDictionary<Type, int> GenerateComponentLookups()

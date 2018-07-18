@@ -87,7 +87,7 @@ namespace EcsRx.Groups.Observable
         {
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
-            if(Token.Group.ContainsAnyRequiredComponents(args.Components))
+            if(Token.Group.ContainsAnyRequiredComponents(args.ComponentTypes))
             { _onEntityRemoving.OnNext(args.Entity); }
         }
 

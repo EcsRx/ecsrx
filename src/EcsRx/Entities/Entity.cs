@@ -11,13 +11,13 @@ namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
-        public IObservable<IComponent[]> ComponentsAdded => _onComponentsAdded;
-        public IObservable<IComponent[]> ComponentsRemoving => _onComponentsRemoving;
-        public IObservable<IComponent[]> ComponentsRemoved => _onComponentsRemoved;
+        public IObservable<Type[]> ComponentsAdded => _onComponentsAdded;
+        public IObservable<Type[]> ComponentsRemoving => _onComponentsRemoving;
+        public IObservable<Type[]> ComponentsRemoved => _onComponentsRemoved;
         
-        private readonly Subject<IComponent[]> _onComponentsAdded;
-        private readonly Subject<IComponent[]> _onComponentsRemoving;
-        private readonly Subject<IComponent[]> _onComponentsRemoved;
+        private readonly Subject<Type[]> _onComponentsAdded;
+        private readonly Subject<Type[]> _onComponentsRemoving;
+        private readonly Subject<Type[]> _onComponentsRemoved;
         
         public int Id { get; }
         public IComponentRepository ComponentRepository { get; }
@@ -29,15 +29,15 @@ namespace EcsRx.Entities
             ComponentRepository = componentRepository;
             componentRepository.ExpandDatabaseIfNeeded(id);
             
-            _onComponentsAdded = new Subject<IComponent[]>();
-            _onComponentsRemoving = new Subject<IComponent[]>();
-            _onComponentsRemoved = new Subject<IComponent[]>();
+            _onComponentsAdded = new Subject<Type[]>();
+            _onComponentsRemoving = new Subject<Type[]>();
+            _onComponentsRemoved = new Subject<Type[]>();
         }
 
         public IComponent AddComponent(IComponent component)
         {
             ComponentRepository.Add(Id, component);
-            _onComponentsAdded.OnNext(new []{component});
+            _onComponentsAdded.OnNext(new []{component.GetType()});
             return component;
         }
 
@@ -46,7 +46,7 @@ namespace EcsRx.Entities
             for (var i = components.Length - 1; i >= 0; i--)
             { ComponentRepository.Add(Id, components[i]); }
             
-            _onComponentsAdded.OnNext(components);
+            _onComponentsAdded.OnNext(components.Select(x => x.GetType()).ToArray());
         }
         
         public T AddComponent<T>() where T : class, IComponent, new()
@@ -60,12 +60,13 @@ namespace EcsRx.Entities
 
         public void RemoveComponents(params IComponent[] components)
         {
-            _onComponentsRemoving.OnNext(components);
+            var componentTypes = components.Select(x => x.GetType()).ToArray();
+            _onComponentsRemoving.OnNext(componentTypes);
             
             for (var i = 0; i < components.Length; i++)
-            { ComponentRepository.Remove(Id, components[i].GetType()); }
+            { ComponentRepository.Remove(Id, componentTypes[i]); }
             
-            _onComponentsRemoved.OnNext(components);
+            _onComponentsRemoved.OnNext(componentTypes);
         }
 
         public void RemoveAllComponents()

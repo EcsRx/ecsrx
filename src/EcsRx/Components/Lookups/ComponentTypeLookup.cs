@@ -21,7 +21,7 @@ namespace EcsRx.Components
         
         public int[] GetComponentTypes(params Type[] types)
         { return types.Select(GetComponentType).ToArray(); }
-        
+
         public IReadOnlyDictionary<Type, int> GetAllComponentTypes()
         { return ComponentTypes; }
     }

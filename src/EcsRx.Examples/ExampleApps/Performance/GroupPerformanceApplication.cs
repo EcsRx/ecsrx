@@ -24,9 +24,9 @@ namespace EcsRx.Examples.ExampleApps.Performance
             foreach (var group in groups)
             { EntityCollectionManager.GetObservableGroup(group); }
 
-            var firstRun = ProcesEntities(10000);
-            var secondRun = ProcesEntities(10000);
-            var thirdRun = ProcesEntities(10000);
+            var firstRun = ProcessEntities(10000);
+            var secondRun = ProcessEntities(10000);
+            var thirdRun = ProcessEntities(10000);
 
             Console.WriteLine($"Finished In: {(firstRun + secondRun + thirdRun).TotalSeconds}s");
             Console.WriteLine($"First Took: {firstRun.TotalSeconds}s");
@@ -34,7 +34,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
             Console.WriteLine($"Third Took: {thirdRun.TotalSeconds}s");
         }
 
-        private TimeSpan ProcesEntities(int amount)
+        private TimeSpan ProcessEntities(int amount)
         {
             var defaultPool = EntityCollectionManager.GetCollection();
             EntityCollectionManager.Collections.ForEachRun(x => x.RemoveAllEntities());

@@ -107,12 +107,14 @@ namespace EcsRx.Tests.Framework
             entity.ComponentsRemoving.Subscribe(x =>
             {
                 beforeWasCalled = true;
-                Assert.All(x, y => fakeComponents.Contains(y));
+                var fakeComponentTypes = fakeComponents.Select(y => y.GetType());
+                Assert.All(x, y => fakeComponentTypes.Contains(y));
             });
             entity.ComponentsRemoved.Subscribe(x =>
             {
                 afterWasCalled = true;
-                Assert.All(x, y => fakeComponents.Contains(y));
+                var fakeComponentTypes = fakeComponents.Select(y => y.GetType());
+                Assert.All(x, y => fakeComponentTypes.Contains(y));
             });
             
             entity.Dispose();

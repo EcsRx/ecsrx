@@ -1,5 +1,5 @@
-﻿using EcsRx.Collections;
-using EcsRx.Components;
+﻿using System;
+using EcsRx.Collections;
 using EcsRx.Entities;
 
 namespace EcsRx.Events
@@ -8,13 +8,13 @@ namespace EcsRx.Events
     {
         public IEntityCollection Collection { get; }
         public IEntity Entity { get; }
-        public IComponent[] Components { get; }
+        public Type[] ComponentTypes { get; }
 
-        public ComponentsChangedEvent(IEntityCollection collection, IEntity entity, IComponent[] components)
+        public ComponentsChangedEvent(IEntityCollection collection, IEntity entity, Type[] componentTypes)
         {
             Collection = collection;
             Entity = entity;
-            Components = components;
+            ComponentTypes = componentTypes;
         }
     }
 }

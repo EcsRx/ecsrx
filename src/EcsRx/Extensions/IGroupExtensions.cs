@@ -48,9 +48,21 @@ namespace EcsRx.Extensions
             }
             return false;
         }
-                
+
         public static bool ContainsAnyRequiredComponents(this IGroup group, params Type[] componentTypes)
-        { return group.RequiredComponents.Any(componentTypes.Contains); }
+        {
+
+            for (var i = @group.RequiredComponents.Length - 1; i >= 0; i--)
+            {
+                for (var j = componentTypes.Length - 1; j >= 0; j--)
+                {
+                    if(group.RequiredComponents[i] == componentTypes[j])
+                    { return true; }
+                }
+            }
+
+            return false;
+        }
         
         public static bool ContainsAnyRequiredComponents(this IGroup group, IEntity entity)
         { return entity.HasAnyComponents(group.RequiredComponents); }

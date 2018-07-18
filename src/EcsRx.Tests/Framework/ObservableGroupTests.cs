@@ -197,8 +197,8 @@ namespace EcsRx.Tests.Framework
             
             applicableEntity.HasAnyComponents(accessorToken.Group.RequiredComponents).Returns(false);
             applicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(false);
-            componentRemoving.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new IComponent[]{ new TestComponentOne() }));
-            componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new IComponent[]{ new TestComponentOne() }));
+            componentRemoving.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ typeof(TestComponentOne) }));
+            componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ typeof(TestComponentOne) }));
             
             Assert.DoesNotContain(applicableEntity, observableGroup.CachedEntities.Values);
             Assert.True(wasRemovingCalled);

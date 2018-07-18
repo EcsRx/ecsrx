@@ -15,7 +15,7 @@ namespace EcsRx.Entities
         /// <remarks>
         /// If you are adding components individually it will be fired once per interaction, its better to batch them
         /// </remarks>
-        IObservable<IComponent[]> ComponentsAdded { get; }
+        IObservable<Type[]> ComponentsAdded { get; }
         
         /// <summary>
         /// Triggered every time components are about to be removed from the entity
@@ -23,7 +23,7 @@ namespace EcsRx.Entities
         /// <remarks>
         /// If you are removing components individually it will be fired once per interaction, its better to batch them
         /// </remarks>
-        IObservable<IComponent[]> ComponentsRemoving { get; }
+        IObservable<Type[]> ComponentsRemoving { get; }
         
         /// <summary>
         /// Triggered every time components have been removed removed from the entity
@@ -31,7 +31,7 @@ namespace EcsRx.Entities
         /// <remarks>
         /// If you are removing components individually it will be fired once per interaction, its better to batch them
         /// </remarks>
-        IObservable<IComponent[]> ComponentsRemoved { get; }
+        IObservable<Type[]> ComponentsRemoved { get; }
         
         /// <summary>
         /// The Id of the entity

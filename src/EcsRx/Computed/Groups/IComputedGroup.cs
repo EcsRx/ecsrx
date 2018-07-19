@@ -4,6 +4,5 @@ namespace EcsRx.Groups.Computed
 {
     public interface IComputedGroup : IObservableGroup
     {
-        
     }
 }

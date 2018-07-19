@@ -54,7 +54,7 @@ namespace EcsRx.Tests.Framework
             var firstEntitySubject = new Subject<IEntity>();
             var secondEntitySubject = new Subject<IEntity>();
             var mockSystem = Substitute.For<IReactToEntitySystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToEntity(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
             mockSystem.ReactToEntity(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
@@ -64,8 +64,8 @@ namespace EcsRx.Tests.Framework
             firstEntitySubject.OnNext(fakeEntity1);
             secondEntitySubject.OnNext(fakeEntity2);
             
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1));
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).Process(Arg.Is(fakeEntity1));
+            mockSystem.Received(1).Process(Arg.Is(fakeEntity2));
             
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
@@ -103,7 +103,7 @@ namespace EcsRx.Tests.Framework
             var firstEntitySubject = new Subject<IEntity>();
             var secondEntitySubject = new Subject<IEntity>();
             var mockSystem = Substitute.For<IReactToEntitySystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToEntity(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
             mockSystem.ReactToEntity(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
@@ -123,8 +123,8 @@ namespace EcsRx.Tests.Framework
             firstEntitySubject.OnNext(fakeEntity1);
             secondEntitySubject.OnNext(fakeEntity2);
             
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1));
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).Process(Arg.Is(fakeEntity1));
+            mockSystem.Received(1).Process(Arg.Is(fakeEntity2));
             
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
@@ -163,7 +163,7 @@ namespace EcsRx.Tests.Framework
             var firstEntitySubject = new Subject<IEntity>();
             var secondEntitySubject = new Subject<IEntity>();
             var mockSystem = Substitute.For<IReactToEntitySystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToEntity(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
             mockSystem.ReactToEntity(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
@@ -209,7 +209,7 @@ namespace EcsRx.Tests.Framework
             var firstEntitySubject = new Subject<IEntity>();
             var secondEntitySubject = new Subject<IEntity>();
             var mockSystem = Substitute.For<IReactToEntitySystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToEntity(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
             mockSystem.ReactToEntity(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
@@ -219,8 +219,8 @@ namespace EcsRx.Tests.Framework
             firstEntitySubject.OnNext(fakeEntity1);
             secondEntitySubject.OnNext(fakeEntity2);
             
-            mockSystem.Received(1).Execute(Arg.Is(fakeEntity1));
-            mockSystem.Received(0).Execute(Arg.Is(fakeEntity2));
+            mockSystem.Received(1).Process(Arg.Is(fakeEntity1));
+            mockSystem.Received(0).Process(Arg.Is(fakeEntity2));
             
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);

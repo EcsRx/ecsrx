@@ -8,7 +8,7 @@ namespace EcsRx.Examples.ExampleApps.Performance.Systems
 {
     public class EntityUpdateSystem : IReactToEntitySystem
     {
-        public IGroup TargetGroup => new Group(
+        public IGroup Group => new Group(
             typeof(Component1),
             typeof(Component2),
             typeof(Component3),
@@ -36,7 +36,7 @@ namespace EcsRx.Examples.ExampleApps.Performance.Systems
             return null;
         }
 
-        public void Execute(IEntity entity)
+        public void Process(IEntity entity)
         {
             var component1 = entity.GetComponent<Component1>();
             var component2 = entity.GetComponent<Component2>();

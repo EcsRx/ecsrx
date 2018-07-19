@@ -12,13 +12,13 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
     {
         private const int HealthChange = 20;
         
-        public IGroup TargetGroup { get; } = new Group(typeof(HasHealthComponent));
+        public IGroup Group { get; } = new Group(typeof(HasHealthComponent));
         private Random _random = new Random();
         
         public IObservable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromMilliseconds(500)).Select(x => observableGroup); }
 
-        public void Execute(IEntity entity)
+        public void Process(IEntity entity)
         {
             var healthComponent = entity.GetComponent<HasHealthComponent>();
 

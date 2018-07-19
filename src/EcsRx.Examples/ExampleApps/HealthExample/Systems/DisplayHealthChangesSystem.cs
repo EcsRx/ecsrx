@@ -11,7 +11,7 @@ namespace EcsRx.Examples.ExampleApps.HealthExample.Systems
 {
     public class DisplayHealthChangesSystem : IReactToDataSystem<float>
     {
-        public IGroup TargetGroup => new Group(typeof(HealthComponent));
+        public IGroup Group => new Group(typeof(HealthComponent));
         private const int HealthSegments = 10;
 
         public IObservable<float> ReactToData(IEntity entity)
@@ -20,7 +20,7 @@ namespace EcsRx.Examples.ExampleApps.HealthExample.Systems
             return healthComponent.Health.WithValueChange().Select(CalculateDamageTaken);
         }
 
-        public void Execute(IEntity entity, float damageDone)
+        public void Process(IEntity entity, float damageDone)
         {
             var healthComponent = entity.GetComponent<HealthComponent>();
 

@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EcsRx.PerformanceTests", "E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Reactive", "EcsRx.Reactive\EcsRx.Reactive.csproj", "{57324D05-1FFD-4F2E-89FE-9B84000A562C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Systems", "EcsRx.Systems\EcsRx.Systems.csproj", "{47108D36-1410-4070-A3D2-A6E414E7029D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{57324D05-1FFD-4F2E-89FE-9B84000A562C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57324D05-1FFD-4F2E-89FE-9B84000A562C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57324D05-1FFD-4F2E-89FE-9B84000A562C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47108D36-1410-4070-A3D2-A6E414E7029D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47108D36-1410-4070-A3D2-A6E414E7029D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47108D36-1410-4070-A3D2-A6E414E7029D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47108D36-1410-4070-A3D2-A6E414E7029D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{A0A8F9BB-29E6-4D5F-9E6F-07347EA82CDC} = {1B6A21E2-A539-42B6-9234-6687CD36C2A0}
 		{7B58A7B7-0A94-4E9E-B15C-2A9EBAC261D1} = {DDDDD3FE-5FB1-465B-9A8E-F77047B23A6E}
 		{57324D05-1FFD-4F2E-89FE-9B84000A562C} = {1B6A21E2-A539-42B6-9234-6687CD36C2A0}
+		{47108D36-1410-4070-A3D2-A6E414E7029D} = {1B6A21E2-A539-42B6-9234-6687CD36C2A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9292D27-B07F-42D9-94D7-38263CA662DB}

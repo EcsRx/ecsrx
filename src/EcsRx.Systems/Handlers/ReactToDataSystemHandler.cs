@@ -8,6 +8,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Polyfills;
 using EcsRx.Systems;
+using EcsRx.Systems.Extensions;
 
 namespace EcsRx.Executor.Handlers
 {
@@ -38,18 +39,18 @@ namespace EcsRx.Executor.Handlers
 
         public IDisposable ProcessEntity<T>(IReactToDataSystem<T> system, IEntity entity)
         {
-            var hasEntityPredicate = system.TargetGroup is IHasPredicate;
+            var hasEntityPredicate = system.Group is IHasPredicate;
             var reactObservable = system.ReactToData(entity);
             
             if (!hasEntityPredicate)
-            { return reactObservable.Subscribe(x => system.Execute(entity, x)); }
+            { return reactObservable.Subscribe(x => system.Process(entity, x)); }
             
-            var groupPredicate = system.TargetGroup as IHasPredicate;
+            var groupPredicate = system.Group as IHasPredicate;
             return reactObservable
                 .Subscribe(x =>
                 {
                     if(groupPredicate.CanProcessEntity(entity))
-                    { system.Execute(entity, x);}
+                    { system.Process(entity, x);}
                 });
         }
 
@@ -66,7 +67,7 @@ namespace EcsRx.Executor.Handlers
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
             
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

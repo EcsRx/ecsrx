@@ -51,7 +51,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
 
             var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
@@ -86,7 +86,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
 
             var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
@@ -129,7 +129,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
 
             var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
@@ -170,7 +170,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
 
             var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);
@@ -209,7 +209,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
 
             var systemHandler = new SetupSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);

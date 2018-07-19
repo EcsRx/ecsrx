@@ -35,7 +35,7 @@ namespace EcsRx.Executor.Handlers
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ISetupSystem) system;
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
@@ -69,7 +69,7 @@ namespace EcsRx.Executor.Handlers
 
         public IDisposable ProcessEntity(ISetupSystem system, IEntity entity)
         {
-            var hasEntityPredicate = system.TargetGroup is IHasPredicate;
+            var hasEntityPredicate = system.Group is IHasPredicate;
 
             if (!hasEntityPredicate)
             {
@@ -77,7 +77,7 @@ namespace EcsRx.Executor.Handlers
                 return null;
             }
 
-            var groupPredicate = system.TargetGroup as IHasPredicate;
+            var groupPredicate = system.Group as IHasPredicate;
 
             if (groupPredicate.CanProcessEntity(entity))
             {

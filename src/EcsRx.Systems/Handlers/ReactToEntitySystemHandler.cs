@@ -29,7 +29,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);            
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
@@ -72,18 +72,18 @@ namespace EcsRx.Executor.Handlers
         
         public IDisposable ProcessEntity(IReactToEntitySystem system, IEntity entity)
         {
-            var hasEntityPredicate = system.TargetGroup is IHasPredicate;
+            var hasEntityPredicate = system.Group is IHasPredicate;
             var reactObservable = system.ReactToEntity(entity);
             
             if (!hasEntityPredicate)
-            { return reactObservable.Subscribe(system.Execute); }
+            { return reactObservable.Subscribe(system.Process); }
 
-            var groupPredicate = system.TargetGroup as IHasPredicate;
+            var groupPredicate = system.Group as IHasPredicate;
             return reactObservable
                 .Subscribe(x =>
                 {
                     if(groupPredicate.CanProcessEntity(x))
-                    { system.Execute(x); }
+                    { system.Process(x); }
                 });
         }
 

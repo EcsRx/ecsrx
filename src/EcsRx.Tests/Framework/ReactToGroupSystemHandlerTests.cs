@@ -48,7 +48,7 @@ namespace EcsRx.Tests.Framework
 
             var observableSubject = new Subject<IObservableGroup>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToGroup(Arg.Is(mockObservableGroup)).Returns(observableSubject);
             
             var systemHandler = new ReactToGroupSystemHandler(mockCollectionManager);
@@ -56,7 +56,7 @@ namespace EcsRx.Tests.Framework
             
             observableSubject.OnNext(mockObservableGroup);
             
-            mockSystem.ReceivedWithAnyArgs(2).Execute(Arg.Any<IEntity>());
+            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntity>());
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }
@@ -85,7 +85,7 @@ namespace EcsRx.Tests.Framework
 
             var observableSubject = new Subject<IObservableGroup>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToGroup(Arg.Is(mockObservableGroup)).Returns(observableSubject);
             
             var systemHandler = new ReactToGroupSystemHandler(mockCollectionManager);
@@ -93,7 +93,7 @@ namespace EcsRx.Tests.Framework
             
             observableSubject.OnNext(mockObservableGroup);
             
-            mockSystem.ReceivedWithAnyArgs(1).Execute(Arg.Is(entityToMatch));
+            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Is(entityToMatch));
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }

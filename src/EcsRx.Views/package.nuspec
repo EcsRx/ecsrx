@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>    
-    <id>ecsrx</id>
+    <id>ecsrx.views</id>
     <version>0.1.0</version>
     <title>EcsRx.Views</title>
     <authors>grofit</authors>
     <owners>grofit</owners>
-    <licenseUrl>https://github.com/grofit/ecsrx/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/grofit/ecsrx</projectUrl>
+    <licenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/ecsrx/ecsrx</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A set of view based conventions to assist with separating view from logic/data</description>
     <summary>A set of view based conventions to assist with separating view from logic/data</summary>
     <releaseNotes>See Git Repo</releaseNotes>
     <tags>ecs rx reactive patterns ioc game-development view-separation xna monogame unity ecsrx</tags>
     <dependencies>
-      <dependency id="EcsRx" version="4.0" />
+      <dependency id="EcsRx" version="0.2.0" />
     </dependencies>
   </metadata>
   <files>

@@ -67,7 +67,7 @@ namespace EcsRx.PerformanceTests
         public void GetAllComponentsOnAllEntities()
         {
             for (var i = 0; i < Entities; i++)
-            { _system.Execute(_entities[i]); }
+            { _system.Process(_entities[i]); }
         }
     }
 }

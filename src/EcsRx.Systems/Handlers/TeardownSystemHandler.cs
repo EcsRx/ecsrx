@@ -29,7 +29,7 @@ namespace EcsRx.Executor.Handlers
             SystemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ITeardownSystem) system;
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
             
             observableGroup.OnEntityRemoving
                 .Subscribe(castSystem.Teardown)

@@ -10,12 +10,12 @@ namespace EcsRx.Examples.ExampleApps.HelloWorldExample.Systems
 {
     public class TalkingSystem : IReactToGroupSystem
     {
-        public IGroup TargetGroup => new Group(typeof(CanTalkComponent));
+        public IGroup Group => new Group(typeof(CanTalkComponent));
 
         public IObservable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(2)).Select(x => observableGroup); }
 
-        public void Execute(IEntity entity)
+        public void Process(IEntity entity)
         {
             var canTalkComponent = entity.GetComponent<CanTalkComponent>();
             Console.WriteLine($"Entity says '{canTalkComponent.Message}' @ {DateTime.Now}");

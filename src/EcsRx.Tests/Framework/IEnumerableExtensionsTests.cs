@@ -51,17 +51,17 @@ namespace EcsRx.Tests.Framework
             var requiredComponents = new IComponent[] { new TestComponentOne(), new TestComponentTwo() };
 
             var applicableSystem1 = Substitute.For<ISystem>();
-            applicableSystem1.TargetGroup.Returns(new Group(typeof(TestComponentOne), typeof(TestComponentTwo)));
+            applicableSystem1.Group.Returns(new Group(typeof(TestComponentOne), typeof(TestComponentTwo)));
             
             var notApplicableSystem1 = Substitute.For<ISystem>();
-            notApplicableSystem1.TargetGroup.Returns(new Group(typeof(TestComponentOne), typeof(TestComponentThree)));
+            notApplicableSystem1.Group.Returns(new Group(typeof(TestComponentOne), typeof(TestComponentThree)));
 
             var notApplicableSystem2 = Substitute.For<ISystem>();
-            notApplicableSystem2.TargetGroup.Returns(new Group(typeof(TestComponentTwo), typeof(TestComponentThree)));
+            notApplicableSystem2.Group.Returns(new Group(typeof(TestComponentTwo), typeof(TestComponentThree)));
             
             // Although this wants both 1 and 2, it also needs 3, which is not within the required components so shouldnt match
             var notApplicableSystem3 = Substitute.For<ISystem>();
-            notApplicableSystem3.TargetGroup.Returns(new Group(typeof(TestComponentOne), typeof(TestComponentTwo), typeof(TestComponentThree)));
+            notApplicableSystem3.Group.Returns(new Group(typeof(TestComponentOne), typeof(TestComponentTwo), typeof(TestComponentThree)));
 
             var systemList = new List<ISystem>
             {

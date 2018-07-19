@@ -59,7 +59,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
             var timer = Stopwatch.StartNew();
 
             for (var i = 0; i < EntityCount; i++)
-            { _system.Execute(_entities[i]); }
+            { _system.Process(_entities[i]); }
 
             timer.Stop();
             return TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);

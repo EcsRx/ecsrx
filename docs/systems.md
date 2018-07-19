@@ -6,9 +6,9 @@ This means your systems don't need to worry about the logistics of getting entit
 
 ## System Types
 
-This is where it gets interesting, so we have multiple flavours of systems depending on how you want to consume the entities. You can also mix them up so you could have a single system implement `ISetupSystem` and `IReactToEntitySystem` which would run a setup method for each entity it matches but also then react to certain entity changes and execute logic on them.
+This is where it gets interesting, so we have multiple flavours of systems depending on how you want to consume the entities, by default there is `IManualSystem` but there is a project containing all most common systems (`EcsRx.Systems`). You can also mix them up so you could have a single system implement `ISetupSystem`, `ITeardown` and `IReactToEntitySystem` which would run a setup method for each entity when it joins the group then react to the entity changes and process them on changes, then finally run some logic when the entity is being removed from the group.
 
-All systems have the notion of a `TargetGroup` which describes what entities to target out of the pool, so you don't need to do much other than setup the right groupings and implement the methods for the interfaces.
+All systems have the notion of a `Group` which describes what entities to target out of the pool, so you don't need to do much other than setup the right groupings and implement the methods for the interfaces.
 
 One other thing worth mentioning is that you can implement many of the interfaces in one class if you wish, so if you want an `ISetupSystem` and an `ITeardownSystem` implemented in the same class, you can do so and it will all just work, so implement as much or as little as you wish for your scenarios.
 

@@ -28,8 +28,8 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.TargetGroup);
-            var hasEntityPredicate = system.TargetGroup is IHasPredicate;
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
+            var hasEntityPredicate = system.Group is IHasPredicate;
             var castSystem = (IReactToGroupSystem)system;
             var reactObservable = castSystem.ReactToGroup(observableGroup);
 
@@ -40,7 +40,7 @@ namespace EcsRx.Executor.Handlers
                 return;
             }
 
-            var groupPredicate = system.TargetGroup as IHasPredicate;
+            var groupPredicate = system.Group as IHasPredicate;
             var subscription = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity), castSystem));
             _systemSubscriptions.Add(system, subscription);
         }
@@ -48,7 +48,7 @@ namespace EcsRx.Executor.Handlers
         private static void ExecuteForGroup(IEnumerable<IEntity> entities, IReactToGroupSystem castSystem)
         {
             foreach(var entity in entities)
-            { castSystem.Execute(entity); }
+            { castSystem.Process(entity); }
         }
 
         public void DestroySystem(ISystem system)

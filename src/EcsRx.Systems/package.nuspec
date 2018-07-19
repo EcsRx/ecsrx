@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>    
-    <id>ecsrx</id>
+    <id>ecsrx.systems</id>
     <version>0.1.0</version>
-    <title>EcsRx.Infrastructure</title>
+    <title>EcsRx.Systems</title>
     <authors>grofit</authors>
     <owners>grofit</owners>
     <licenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</licenseUrl>
@@ -18,8 +18,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\net46\EcsRx.Infrastructure.dll" target="lib/net46" />
-    <file src="bin\Release\netstandard2.0\EcsRx.Infrastructure.dll" target="lib/netstandard2.0" />
+    <file src="bin\Release\net46\EcsRx.Systems.dll" target="lib/net46" />
+    <file src="bin\Release\netstandard2.0\EcsRx.Systems.dll" target="lib/netstandard2.0" />
     <file src="../../readme.md" target="" />
   </files>
 </package>

@@ -7,7 +7,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Polyfills;
 
-namespace EcsRx.Groups.Computed
+namespace EcsRx.Computed
 {
     public abstract class ComputedGroup : IObservableGroup, IDisposable
     {

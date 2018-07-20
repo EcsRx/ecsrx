@@ -1,6 +1,6 @@
 ﻿using EcsRx.Groups.Observable;
 
-namespace EcsRx.Groups.Computed
+namespace EcsRx.Computed
 {
     public interface IComputedGroup : IObservableGroup
     {

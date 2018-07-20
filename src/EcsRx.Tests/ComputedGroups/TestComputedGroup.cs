@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using EcsRx.Computed;
 using EcsRx.Entities;
-using EcsRx.Groups.Computed;
 using EcsRx.Groups.Observable;
 using EcsRx.Polyfills;
 using EcsRx.Tests.Models;

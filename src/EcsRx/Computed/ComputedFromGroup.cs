@@ -6,19 +6,17 @@ using EcsRx.Polyfills;
 
 namespace EcsRx.Computed
 {
-    public abstract class ComputedGroupData<T> : IComputedGroupData<T>, IDisposable
+    public abstract class ComputedFromGroup<T> : IComputed<T>, IDisposable
     {
         public T CachedData;
         public readonly List<IDisposable> Subscriptions;
         
-        public IObservable<T> OnDataChanged => _onDataChanged;
-
         private readonly Subject<T> _onDataChanged;
         private bool _needsUpdate;
         
         public IObservableGroup InternalObservableGroup { get; }
 
-        public ComputedGroupData(IObservableGroup internalObservableGroup)
+        public ComputedFromGroup(IObservableGroup internalObservableGroup)
         {
             InternalObservableGroup = internalObservableGroup;
             Subscriptions = new List<IDisposable>();
@@ -28,6 +26,11 @@ namespace EcsRx.Computed
             MonitorChanges();
             RefreshData();
         }
+                
+        public IDisposable Subscribe(IObserver<T> observer)
+        { return _onDataChanged.Subscribe(observer); }
+
+        public T Value => GetData();
 
         public void MonitorChanges()
         {
@@ -37,11 +40,16 @@ namespace EcsRx.Computed
         }
 
         public void RequestUpdate(object _ = null)
-        { _needsUpdate = true; }
+        {
+            _needsUpdate = true;
+            
+            if(_onDataChanged.HasObservers)
+            { RefreshData(); }
+        }
 
         public void RefreshData()
         {
-            var newData = Filter(InternalObservableGroup);
+            var newData = Transform(InternalObservableGroup);
             if (newData.Equals(CachedData)) { return; }
             
             CachedData = newData;
@@ -61,11 +69,11 @@ namespace EcsRx.Computed
         public abstract IObservable<bool> RefreshWhen();
         
         /// <summary>
-        /// The method to check if the entity is applicable to this computed group
+        /// The method to generate given data from the data source
         /// </summary>
         /// <param name="observableGroup">The group to process</param>
-        /// <returns>The filtered data</returns>
-        public abstract T Filter(IObservableGroup observableGroup);
+        /// <returns>The transformed data</returns>
+        public abstract T Transform(IObservableGroup observableGroup);
 
         public T GetData()
         {

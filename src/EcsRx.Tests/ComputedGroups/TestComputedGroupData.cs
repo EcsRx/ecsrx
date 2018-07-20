@@ -7,17 +7,17 @@ using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.ComputedGroups
 {
-    public class TestComputedGroupData : ComputedGroupData<double>
+    public class TestComputedFromGroup : ComputedFromGroup<double>
     {
         public Subject<bool> ManuallyRefresh = new Subject<bool>();
         
-        public TestComputedGroupData(IObservableGroup internalObservableGroup) : base(internalObservableGroup)
+        public TestComputedFromGroup(IObservableGroup internalObservableGroup) : base(internalObservableGroup)
         {}
 
         public override IObservable<bool> RefreshWhen()
         { return ManuallyRefresh; }
 
-        public override double Filter(IObservableGroup observableGroup)
+        public override double Transform(IObservableGroup observableGroup)
         { return observableGroup.Where(x => x.HasComponent<TestComponentThree>()).Average(x => x.GetHashCode()); }
     }
 }

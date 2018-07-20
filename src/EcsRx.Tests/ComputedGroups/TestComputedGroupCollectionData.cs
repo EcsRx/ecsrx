@@ -9,11 +9,11 @@ using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.ComputedGroups
 {
-    public class TestComputedGroupCollectionData : ComputedGroupCollectionData<int>
+    public class TestComputedCollectionFromGroup : ComputedCollectionFromGroup<int>
     {
         public Subject<bool> ManuallyRefresh = new Subject<bool>();
         
-        public TestComputedGroupCollectionData(IObservableGroup internalObservableGroup) : base(internalObservableGroup)
+        public TestComputedCollectionFromGroup(IObservableGroup internalObservableGroup) : base(internalObservableGroup)
         { }
 
         public override IObservable<bool> RefreshWhen()

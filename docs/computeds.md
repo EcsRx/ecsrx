@@ -58,11 +58,21 @@ GroupHud.PartyRating.Text = partyRating.Value.ToString();
 
 This can be useful for taking a group and computing a singular value based upon all the data available, like for example you may want to average values on all entities or even just create a payload object containing multiple bits of data from the group. 
 
+### `ComputedFromData`
+
+```c#
+var firstPlaceRacer = new ComputedFirstPlace(collectionOfRacers); // inherits from ComputedFromData<Racer, IEnumerable<Racer>>
+
+RacerHud.CurrentWinner.Text = firstPlaceRacer.Value.Name;
+```
+
+This is a versatile computed generator where you can basically create a pre computed variable based upon anything. So you pass in any object you require which represents the state, then you calculate what the output value should be internally.
+
 ## Sounds good, but why?
 
-You may never need this functionality, but in some cases you may want to share pre-computed data around your application without having to constantly re-compute it everywhere.
+You may never need this functionality, but in some cases you may want to share pre-computed data around your application without having to constantly re-compute it everywhere. This can make your code more simplistic and easier to maintain while also providing performance benefits were you do not need to keep doing live queries for data.
 
-Lets pretend we have a game with the following components
+So to look at some real world scenarios, lets pretend we have a game with the following components:
 
 - `CanAttack`
 - `HasHealth`

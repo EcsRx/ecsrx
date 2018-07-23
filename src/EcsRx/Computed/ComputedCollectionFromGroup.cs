@@ -63,51 +63,76 @@ namespace EcsRx.Computed
             if(_onDataChanged.HasObservers || _onElementAdded.HasObservers || _onElementChanged.HasObservers || _onElementRemoved.HasObservers)
             { RefreshData(); }
         }
-        
+
+        private void ProcessEntity(IEntity entity)
+        {
+            var isApplicable = ShouldTransform(entity);
+
+            if (!isApplicable)
+            {
+                if (!FilteredCache.ContainsKey(entity.Id)) 
+                { return; }
+
+                RemoveEntity(entity.Id);
+                return;
+            }
+
+            var transformedData = Transform(entity);
+            if (FilteredCache.ContainsKey(entity.Id))
+            {
+                ChangeEntity(entity.Id, transformedData);
+                return;
+            }
+
+            AddEntity(entity.Id, transformedData);
+        }
+
+        private void AddEntity(int entityId, T transformedData)
+        {
+            FilteredCache.Add(entityId, transformedData);
+            _onElementAdded.OnNext(new CollectionElementChangedEvent<T>
+            {
+                Index = entityId,
+                OldValue = default(T),
+                NewValue = transformedData
+            });
+        }
+
+        private void RemoveEntity(int entityId)
+        {
+            var currentValue = FilteredCache[entityId];
+            FilteredCache.Remove(entityId);
+            _onElementRemoved.OnNext(new CollectionElementChangedEvent<T>
+            {
+                Index = entityId,
+                OldValue = currentValue,
+                NewValue = default(T)
+            });
+        }
+
+        private void ChangeEntity(int entityId, T transformedData)
+        {
+            var currentData = FilteredCache[entityId];
+            FilteredCache[entityId] = transformedData;
+            _onElementChanged.OnNext(new CollectionElementChangedEvent<T>
+            {
+                Index = entityId,
+                OldValue = currentData,
+                NewValue = transformedData
+            });
+        }
+                       
         public void RefreshData()
         {
+            var unprocessedIds = FilteredCache.Keys.ToList();
             foreach (var entity in InternalObservableGroup)
             {
-                var isApplicable = ShouldTransform(entity);
-
-                if (!isApplicable)
-                {
-                    if (FilteredCache.ContainsKey(entity.Id))
-                    {
-                        var currentValue = FilteredCache[entity.Id];
-                        FilteredCache.Remove(entity.Id);
-                        _onElementRemoved.OnNext(new CollectionElementChangedEvent<T>
-                        {
-                            Index = entity.Id,
-                            OldValue = currentValue,
-                            NewValue = default(T)
-                        });
-                    }                    
-                    continue;
-                }
-
-                var transformedData = Transform(entity);
-                if (FilteredCache.ContainsKey(entity.Id))
-                {
-                    var currentData = FilteredCache[entity.Id];
-                    FilteredCache[entity.Id] = transformedData;
-                    _onElementChanged.OnNext(new CollectionElementChangedEvent<T>
-                    {
-                        Index = entity.Id,
-                        OldValue = currentData,
-                        NewValue = transformedData
-                    });
-                    continue;
-                }
-
-                FilteredCache.Add(entity.Id, transformedData);
-                _onElementAdded.OnNext(new CollectionElementChangedEvent<T>
-                {
-                    Index = entity.Id,
-                    OldValue = default(T),
-                    NewValue = transformedData
-                });
+                unprocessedIds.Remove(entity.Id);
+                ProcessEntity(entity);
             }
+
+            foreach(var id in unprocessedIds)
+            { RemoveEntity(id);}
             
             _onDataChanged.OnNext(FilteredCache.Values);
             _needsUpdate = false;

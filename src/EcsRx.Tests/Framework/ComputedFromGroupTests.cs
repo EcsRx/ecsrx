@@ -40,7 +40,7 @@ namespace EcsRx.Tests.Framework
         }
         
         [Fact]
-        public void should_refresh_when_entities_added()
+        public void should_refresh_when_entities_added_and_value_requested()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             fakeEntity1.HasComponent<TestComponentThree>().Returns(false);
@@ -68,13 +68,13 @@ namespace EcsRx.Tests.Framework
             fakeEntities.Remove(fakeEntity2);
             addedEvent.OnNext(null);
             
-            var actualData = computedGroupData.GetData();
+            var actualData = computedGroupData.Value;
 
             Assert.Equal(expectedData, actualData);         
         }
         
         [Fact]
-        public void should_refresh_when_entities_removed()
+        public void should_refresh_when_entities_removed_and_value_requested()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             fakeEntity1.HasComponent<TestComponentThree>().Returns(false);
@@ -102,13 +102,13 @@ namespace EcsRx.Tests.Framework
             fakeEntities.Remove(fakeEntity2);
             removedEvent.OnNext(null);
             
-            var actualData = computedGroupData.GetData();
+            var actualData = computedGroupData.Value;
 
             Assert.Equal(expectedData, actualData);         
         }
         
         [Fact]
-        public void should_refresh_on_trigger()
+        public void should_refresh_on_trigger_and_value_requested()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             fakeEntity1.HasComponent<TestComponentThree>().Returns(false);
@@ -134,13 +134,13 @@ namespace EcsRx.Tests.Framework
             fakeEntities.Remove(fakeEntity2);
             computedGroupData.ManuallyRefresh.OnNext(true);
                        
-            var actualData = computedGroupData.GetData();
+            var actualData = computedGroupData.Value;
 
             Assert.Equal(expectedData, actualData);         
         }
         
         [Fact]
-        public void should_not_refresh_get_data_with_no_subs_events_or_triggers()
+        public void should_not_refresh_value_with_no_subs_and_value_requested()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             fakeEntity1.HasComponent<TestComponentThree>().Returns(false);
@@ -164,13 +164,13 @@ namespace EcsRx.Tests.Framework
             var computedGroupData = new TestComputedFromGroup(mockObservableGroup);
 
             fakeEntities.Remove(fakeEntity2);            
-            var actualData = computedGroupData.GetData();
+            var actualData = computedGroupData.Value;
 
             Assert.Equal(expectedData, actualData);         
         }
         
         [Fact]
-        public void should_not_refresh_cached_data_on_events_or_triggers_with_no_get_or_subs()
+        public void should_not_refresh_cached_data_on_change_notified_but_no_subs_without_value_request()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             fakeEntity1.HasComponent<TestComponentThree>().Returns(false);
@@ -204,7 +204,7 @@ namespace EcsRx.Tests.Framework
         }
         
         [Fact]
-        public void should_refresh_cached_data_on_events_or_triggers_with_when_has_subs()
+        public void should_refresh_cached_data_on_change_notified_with_active_subs_without_value_request()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
             fakeEntity1.HasComponent<TestComponentThree>().Returns(false);

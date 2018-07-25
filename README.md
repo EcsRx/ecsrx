@@ -3,13 +3,8 @@
 EcsRx is a reactive take on the common ECS pattern with a well separated design using rx and adhering to IoC and other sensible design patterns.
 
 [![Build Status][build-status-image]][build-status-url]
+[![Nuget Version][nuget-image]][nuget-url]
 [![Join Gitter Chat][gitter-image]][gitter-url]
-
-## New Info!
-
-This is the future core library for ecsrx, the previous unity version will become a unity flavour of the ecsrx framework.
-
-We have split this out and the unity version is available @ [grofit/ecsrx.unity](https://github.com/ecsrx/ecsrx.unity)
 
 ## Features
 
@@ -22,7 +17,7 @@ We have split this out and the unity version is available @ [grofit/ecsrx.unity]
 - Built in support for pooling (easy to add your own implementation or wrap 3rd party pooling tools)
 - Built in support for plugins (wrap up your own components/systems/events and share them with others)
 
-The core framework is meant to be used primarily by .net applications/games, there is a unity specific version [here](https://github.com/ecsrx/ecsrx.unity)
+The core framework is meant to be used primarily by .net applications/games, there is a unity specific version [here](https://github.com/ecsrx/ecsrx.unity) which is currently being ported over to use this version.
 
 ## Installation
 
@@ -111,3 +106,5 @@ See the [docs folder](docs) for more information. (This will grow)
 [build-status-url]: https://ci.appveyor.com/project/grofit/ecsrx/branch/master
 [gitter-image]: https://badges.gitter.im/grofit/ecsrx.svg
 [gitter-url]: https://gitter.im/grofit/ecsrx
+[nuget-image]: https://img.shields.io/nuget/v/ecsrx.svg
+[nuget-url]: https://www.nuget.org/packages/EcsRx/

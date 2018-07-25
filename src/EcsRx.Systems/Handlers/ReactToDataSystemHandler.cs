@@ -4,13 +4,13 @@ using System.Reflection;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
+using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Polyfills;
-using EcsRx.Systems;
 using EcsRx.Systems.Extensions;
 
-namespace EcsRx.Executor.Handlers
+namespace EcsRx.Systems.Handlers
 {
     [Priority(4)]
     public class ReactToDataSystemHandler : IConventionalSystemHandler

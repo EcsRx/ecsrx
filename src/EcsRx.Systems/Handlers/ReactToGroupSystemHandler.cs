@@ -1,15 +1,15 @@
-using EcsRx.Groups;
-using EcsRx.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
+using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
+using EcsRx.Groups;
 using EcsRx.Polyfills;
 
-namespace EcsRx.Executor.Handlers
+namespace EcsRx.Systems.Handlers
 {
     [Priority(2)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler

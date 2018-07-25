@@ -7,6 +7,7 @@ using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;
+using EcsRx.Systems.Handlers;
 using NSubstitute;
 using Xunit;
 

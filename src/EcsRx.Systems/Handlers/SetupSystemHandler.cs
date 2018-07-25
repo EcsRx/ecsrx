@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
+using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Polyfills;
-using EcsRx.Systems;
 
-namespace EcsRx.Executor.Handlers
+namespace EcsRx.Systems.Handlers
 {
     [Priority(1)]
     public class SetupSystemHandler : IConventionalSystemHandler

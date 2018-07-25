@@ -7,6 +7,7 @@ using EcsRx.Entities;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;
+using EcsRx.Systems.Handlers;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using Xunit;

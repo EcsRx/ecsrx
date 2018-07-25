@@ -5,6 +5,6 @@ namespace EcsRx.Tests.Systems
 {
     public class DefaultPrioritySystem : ISystem
     {
-        public IGroup TargetGroup => null;
+        public IGroup Group => null;
     }
 }

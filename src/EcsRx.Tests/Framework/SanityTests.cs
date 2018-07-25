@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EcsRx.Collections;
+using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;
-using EcsRx.Reactive;
+using EcsRx.Systems.Handlers;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using Xunit;
@@ -16,11 +18,19 @@ namespace EcsRx.Tests.Framework
     {
         private IEntityCollectionManager CreateCollectionManager()
         {
-            var messageBroker = new EventSystem(new MessageBroker());
-            var entityFactory = new DefaultEntityFactory(messageBroker);
-            var collectionFactory = new DefaultEntityCollectionFactory(entityFactory, messageBroker);
-            var observableGroupFactory = new DefaultObservableObservableGroupFactory(messageBroker);
-            return new EntityCollectionManager(messageBroker, collectionFactory, observableGroupFactory);
+            var componentLookups = new Dictionary<Type, int>
+            {
+                {typeof(TestComponentOne), 0},
+                {typeof(TestComponentTwo), 1},
+                {typeof(TestComponentThree), 2}
+            };
+            var componentLookupType = new ComponentTypeLookup(componentLookups);
+            var componentDatabase = new ComponentDatabase(componentLookupType);
+            var componentRepository = new ComponentRepository(componentLookupType, componentDatabase);
+            var entityFactory = new DefaultEntityFactory(new IdPool(), componentRepository);
+            var collectionFactory = new DefaultEntityCollectionFactory(entityFactory);
+            var observableGroupFactory = new DefaultObservableObservableGroupFactory();
+            return new EntityCollectionManager(collectionFactory, observableGroupFactory);
         }
         
         private SystemExecutor CreateExecutor(IEntityCollectionManager entityCollectionManager)

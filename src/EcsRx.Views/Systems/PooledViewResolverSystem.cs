@@ -11,7 +11,7 @@ namespace EcsRx.Views.Systems
     {
         public IEventSystem EventSystem { get; }
 
-        public virtual IGroup TargetGroup => new Group(typeof(ViewComponent));
+        public virtual IGroup Group => new Group(typeof(ViewComponent));
         public abstract IViewPool ViewPool { get; }
 
         protected PooledViewResolverSystem(IEventSystem eventSystem)

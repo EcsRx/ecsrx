@@ -20,7 +20,7 @@ namespace EcsRx.Extensions
         }
 
         public static bool MatchesGroup(this IEntity entity, IGroup group)
-        { return entity.HasComponents(group.MatchesComponents.ToArray()); }
+        { return group.Matches(entity); }
 
         public static IEntity ApplyBlueprint(this IEntity entity, IBlueprint blueprint)
         {

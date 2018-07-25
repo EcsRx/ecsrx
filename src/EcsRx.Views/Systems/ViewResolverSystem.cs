@@ -15,7 +15,7 @@ namespace EcsRx.Views.Systems
 
         public abstract IViewHandler ViewHandler { get; }
 
-        public virtual IGroup TargetGroup => new Group(typeof(ViewComponent));
+        public virtual IGroup Group => new Group(typeof(ViewComponent));
 
         protected ViewResolverSystem(IEventSystem eventSystem)
         {

@@ -10,13 +10,37 @@ namespace EcsRx.Entities
     public interface IEntity : IDisposable
     {
         /// <summary>
+        /// Triggered every time components are added to the entity
+        /// </summary>
+        /// <remarks>
+        /// If you are adding components individually it will be fired once per interaction, its better to batch them
+        /// </remarks>
+        IObservable<Type[]> ComponentsAdded { get; }
+        
+        /// <summary>
+        /// Triggered every time components are about to be removed from the entity
+        /// </summary>
+        /// <remarks>
+        /// If you are removing components individually it will be fired once per interaction, its better to batch them
+        /// </remarks>
+        IObservable<Type[]> ComponentsRemoving { get; }
+        
+        /// <summary>
+        /// Triggered every time components have been removed removed from the entity
+        /// </summary>
+        /// <remarks>
+        /// If you are removing components individually it will be fired once per interaction, its better to batch them
+        /// </remarks>
+        IObservable<Type[]> ComponentsRemoved { get; }
+        
+        /// <summary>
         /// The Id of the entity
         /// </summary>
         /// <remarks>
         /// It is recommended you do not pass entities around and instead pass their ids around
         /// and then use the collection/observable group methods to get the entity from its id
         /// </remarks>
-        Guid Id { get; }
+        int Id { get; }
         
         /// <summary>
         /// All the components which have been applied to this entity
@@ -92,7 +116,7 @@ namespace EcsRx.Entities
         /// </summary>
         /// <param name="component">Types of component to check for</param>
         /// <returns>true if all the component was found, false if one or more is missing</returns>
-        bool HasComponents(params Type[] component);
+        bool HasAllComponents(params Type[] component);
         
         /// <summary>
         /// Checks to see if the entity contains given components by their instances
@@ -100,5 +124,7 @@ namespace EcsRx.Entities
         /// <param name="component">instances of component to check for</param>
         /// <returns>true if all the component was found, false if one or more is missing</returns>
         void AddComponents(params IComponent[] components);
+
+        bool HasAnyComponents(params Type[] componentTypes);
     }
 }

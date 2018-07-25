@@ -7,6 +7,7 @@ using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;
+using EcsRx.Systems.Handlers;
 using NSubstitute;
 using Xunit;
 
@@ -33,7 +34,7 @@ namespace EcsRx.Tests.Framework
         public void should_teardown_entity_when_removed()
         {
             var fakeEntity1 = Substitute.For<IEntity>();
-            fakeEntity1.Id.Returns(Guid.NewGuid());
+            fakeEntity1.Id.Returns(1);
             var fakeEntities = new List<IEntity>();
 
             var removeSubject = new Subject<IEntity>();
@@ -45,11 +46,11 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
-            fakeGroup.MatchesComponents.Returns(new Type[0]);
+            fakeGroup.RequiredComponents.Returns(new Type[0]);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ITeardownSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
 
             var systemHandler = new TeardownSystemHandler(mockCollectionManager);
             systemHandler.SetupSystem(mockSystem);

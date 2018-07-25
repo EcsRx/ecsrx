@@ -41,5 +41,12 @@ namespace EcsRx.Groups.Observable
         /// Event stream for when an entity is about to be removed from this group
         /// </summary>
         IObservable<IEntity> OnEntityRemoving { get; }
+        
+        /// <summary>
+        /// Checks if the observable group contains a given entity
+        /// </summary>
+        /// <param name="id">The Id of the entity you want to locate</param>
+        /// <returns>true if it finds the entity, false if it cannot</returns>
+        bool ContainsEntity(int id);
     }
 }

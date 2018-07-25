@@ -9,7 +9,7 @@ namespace EcsRx.Collections
     /// The entity collection is a container for entities, it can be seen as a Repository of sorts
     /// as it allows for CRUD based operations and querying (through extensions)
     /// </summary>
-    public interface IEntityCollection : IEnumerable<IEntity>
+    public interface IEntityCollection : IEnumerable<IEntity>, INotifyingEntityCollection
     {
         /// <summary>
         /// Name of the collection
@@ -37,14 +37,14 @@ namespace EcsRx.Collections
         /// </summary>
         /// <param name="id">The Id of the entity you want to locate</param>
         /// <returns>The entity that has been located or null if one could not be found</returns>
-        IEntity GetEntity(Guid id);
+        IEntity GetEntity(int id);
         
         /// <summary>
         /// Checks if the collection contains a given entity
         /// </summary>
         /// <param name="id">The Id of the entity you want to locate</param>
         /// <returns>true if it finds the entity, false if it cannot</returns>
-        bool ContainsEntity(Guid id);
+        bool ContainsEntity(int id);
         
         /// <summary>
         /// This will remove the entity from the collection and optionally destroy the entity.
@@ -52,6 +52,6 @@ namespace EcsRx.Collections
         /// </summary>
         /// <param name="id">The Id of the entity you want to remove</param>
         /// <param name="disposeOnRemoval">If the entity should be disposed when removed (defaults to true)</param>
-        void RemoveEntity(Guid id, bool disposeOnRemoval = true);
+        void RemoveEntity(int id, bool disposeOnRemoval = true);
     }
 }

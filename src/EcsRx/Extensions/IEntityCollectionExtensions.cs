@@ -24,7 +24,7 @@ namespace EcsRx.Extensions
         public static void RemoveEntitiesContaining(this IEntityCollection entityCollection, params Type[] components)
         {
             var entities = entityCollection
-                .Where(entity => components.Any(x => entity.HasComponents(x)))
+                .Where(entity => components.Any(x => entity.HasAllComponents(x)))
                 .ToArray();
 
             for (var i = 0; i < entities.Length; i++)

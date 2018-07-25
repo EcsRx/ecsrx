@@ -7,6 +7,7 @@ using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;
+using EcsRx.Systems.Handlers;
 using NSubstitute;
 using Xunit;
 
@@ -48,7 +49,7 @@ namespace EcsRx.Tests.Framework
 
             var observableSubject = new Subject<IObservableGroup>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToGroup(Arg.Is(mockObservableGroup)).Returns(observableSubject);
             
             var systemHandler = new ReactToGroupSystemHandler(mockCollectionManager);
@@ -56,7 +57,7 @@ namespace EcsRx.Tests.Framework
             
             observableSubject.OnNext(mockObservableGroup);
             
-            mockSystem.ReceivedWithAnyArgs(2).Execute(Arg.Any<IEntity>());
+            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntity>());
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }
@@ -65,8 +66,8 @@ namespace EcsRx.Tests.Framework
         public void should_only_execute_system_when_predicate_met()
         {
             var entityToMatch = Substitute.For<IEntity>();
-            var guidToMatch = Guid.NewGuid();
-            entityToMatch.Id.Returns(guidToMatch);
+            var idToMatch = 1;
+            entityToMatch.Id.Returns(idToMatch);
             
             var fakeEntities = new List<IEntity>
             {
@@ -80,12 +81,12 @@ namespace EcsRx.Tests.Framework
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
-            var fakeGroup = new Group(x => x.Id == guidToMatch);
+            var fakeGroup = new Group(x => x.Id == idToMatch);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
-            mockSystem.TargetGroup.Returns(fakeGroup);
+            mockSystem.Group.Returns(fakeGroup);
             mockSystem.ReactToGroup(Arg.Is(mockObservableGroup)).Returns(observableSubject);
             
             var systemHandler = new ReactToGroupSystemHandler(mockCollectionManager);
@@ -93,7 +94,7 @@ namespace EcsRx.Tests.Framework
             
             observableSubject.OnNext(mockObservableGroup);
             
-            mockSystem.ReceivedWithAnyArgs(1).Execute(Arg.Is(entityToMatch));
+            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Is(entityToMatch));
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }

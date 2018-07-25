@@ -1,5 +1,6 @@
 ﻿using EcsRx.Extensions;
 using EcsRx.Systems;
+using EcsRx.Systems.Extensions;
 using NSubstitute;
 using Xunit;
 

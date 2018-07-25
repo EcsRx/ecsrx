@@ -1,23 +1,38 @@
 ﻿using System;
-using EcsRx.Events;
+using EcsRx.Components.Database;
 
 namespace EcsRx.Entities
 {
     public class DefaultEntityFactory : IEntityFactory
     {
-        private readonly IEventSystem _eventSystem;
+        public IIdPool IdPool { get; }
+        public IComponentRepository ComponentRepository { get; }
 
-        public DefaultEntityFactory(IEventSystem eventSystem)
+        public DefaultEntityFactory(IIdPool idPool, IComponentRepository componentRepository)
         {
-            _eventSystem = eventSystem;
+            IdPool = idPool;
+            ComponentRepository = componentRepository;
         }
 
-        public IEntity Create(Guid? id = null)
+        public int GetId(int? id = null)
         {
-            if (!id.HasValue)
-            { id = Guid.NewGuid(); }
+            if(!id.HasValue)
+            { return IdPool.AllocateInstance(); }
 
-            return new Entity(id.Value, _eventSystem);
+            IdPool.AllocateSpecificId(id.Value);
+            return id.Value;
         }
+        
+        public IEntity Create(int? id = null)
+        {
+            if(id.HasValue && id.Value == 0)
+            { throw new ArgumentException("id must be null or > 0"); }
+            
+            var usedId = GetId(id);
+            return new Entity(usedId, ComponentRepository);
+        }
+
+        public void Destroy(int entityId)
+        { IdPool.ReleaseInstance(entityId); }
     }
 }

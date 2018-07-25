@@ -10,14 +10,14 @@ namespace EcsRx.Tests.Systems
 {
     public class ReactiveDataTestSystem : IReactToDataSystem<float>
     {
-        public IGroup TargetGroup => new Group().WithComponent<TestComponentOne>();
+        public IGroup Group => new Group().WithComponent<TestComponentOne>();
 
         public IObservable<float> ReactToData(IEntity entity)
         {
             return Observable.Timer(TimeSpan.FromSeconds(1)).Select(x => 0.1f);
         }
 
-        public void Execute(IEntity entity, float reactionData)
+        public void Process(IEntity entity, float reactionData)
         {
             throw new System.NotImplementedException();
         }

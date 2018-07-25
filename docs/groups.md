@@ -8,7 +8,7 @@ So for example lets say that I wanted the notion of a `Player`, that may actuall
 
 So groups are pretty simple, they are just POCOs which describe the component types that you wish to match from within the collection of entities. So if you have hundreds of entities all with different components you can use a group as a way of expressing a high level intent for a system. 
 
-So *Pools* expose a way to pass a group in and get entities matching that group back, as mentioned the primary matching mechanism is via component but there is also the notion of entity matching, which is more experimental, and you can find out more about these furthe down this page.
+So *Entity Collections* expose a way to pass a group in and get entities matching that group back, as mentioned the primary matching mechanism is via component but there is also the notion of entity matching, which is more experimental, and you can find out more about these further down this page.
 
 ## Creating Groups
 
@@ -25,10 +25,12 @@ var group = new Group(typeof(SomeComponent));
 There are also some helper methods here so you can add component types if needed via extension methods, like so:
 
 ```c#
-var group = new Group().WithComponent<SomeComponent>();
+var group = new Group()
+    .WithComponent<SomeComponent>()
+    .WithoutComponent<SomeOtherComponent();
 ```
 
-This is a halfway house between the builder approach and the instantiation approach.
+This is a halfway house between the builder approach and the instantiation approach, which is often handy if you want to quickly create a new group from an existing one. It also supports adding many components at once via params if needed.
 
 ### Use the GroupBuilder
 
@@ -50,20 +52,17 @@ It is quite simple to make your own group, you just need to implement the 2 gett
 ```c#
 public class MyGroup : IGroup
 {
-    public IEnumerable<Type> TargettedComponents 
-    { 
-        get { return new[] { typeof(SomeComponent), typeof(SomeOtherComponent) }; } 
-    }
+    public IEnumerable<Type> RequiredComponents {get;} =  return new[] { typeof(SomeComponent), typeof(SomeOtherComponent) };
         
-    public Predicate<IEntity> TargettedEntities { get { return null; } }
+    public IEnumerable<Type> ExcludedComponents {get;} =  return new[] { typeof(SomeComponentIDontWant) };
 }
 ```
 
 As you can see, you can now just instantiate `new MyGroup();` and everyone is happy.
 
-## TargettedComponents and TargettedEntities
+## Required/Excluded Components and TargettedEntities
 
-So as mentioned most entities and constrained by their component types, this is the `TargettedComponents` aspect, however there is also a **HUGELY EXPERIMENTAL** `TargettedEntities` notion, which basically takes the constraining a step further and allows you to constrain further on the entities matching the components.
+So as mentioned most entities and constrained by their component types, this is the `RequiredComponents` and `ExcludedComponents` parts, however there is also a `TargettedEntities` notion, which basically takes the constraining a step further and allows you to constrain further on the entities matching the components.
 
 The `TargettedEntities` property is just a predicate that takes an entity, and returns if it matches or not. Currently these are checked before subscriptions are passed to the system to execute, so you can express some complex constraints without having to be specific in each system.
 
@@ -71,4 +70,6 @@ So for example lets say you wanted a system which would only react to characters
 
 So this is where this functionality pays dividends as you can express this collation at a group level, so you can then make sure your systems will not even execute on the entities unless the predicate is matched.
 
-Currently this was implemented as it gives a nicer way to express high level grouping logic, however there may be some niche use-cases where this causes more confusion than it should, so this feature may be removed or changed slightly going forward.
+### Warning
+
+Currently this was implemented as it gives a nicer way to express high level grouping logic, however there may be some niche use-cases where this causes more confusion than it should, so this feature may be removed or changed slightly going forward as there is computed groups which has some overlap with this sort of functionality.

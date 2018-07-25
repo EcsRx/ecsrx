@@ -16,7 +16,7 @@ Although performance is not the primary focus efforts have been made to make the
 
 As everything adheres to IoC and is easily changed with custom implementations you can performance tweak the code how you see fit for your specific scenarios.
 
-If you want to make some performance tests I would love to see them!
+If you want to make some performance tests I would love to see them, we have some as part of the library to check on critical parts but it takes a lot of time to generate worthwhile scenarios, so feel free to write your own or provide us scenarios you want to see profiled.
 
 ### Why should I use it?
 

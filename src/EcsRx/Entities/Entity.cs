@@ -2,41 +2,51 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Events;
+using EcsRx.Extensions;
+using EcsRx.Polyfills;
 
 namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
-        private readonly Dictionary<Type, IComponent> _components;
+        public IObservable<Type[]> ComponentsAdded => _onComponentsAdded;
+        public IObservable<Type[]> ComponentsRemoving => _onComponentsRemoving;
+        public IObservable<Type[]> ComponentsRemoved => _onComponentsRemoved;
+        
+        private readonly Subject<Type[]> _onComponentsAdded;
+        private readonly Subject<Type[]> _onComponentsRemoving;
+        private readonly Subject<Type[]> _onComponentsRemoved;
+        
+        public int Id { get; }
+        public IComponentRepository ComponentRepository { get; }
+        public IEnumerable<IComponent> Components => ComponentRepository.GetAll(Id);
 
-        public IEventSystem EventSystem { get; }
-
-        public Guid Id { get; }
-        public IEnumerable<IComponent> Components => _components.Values;
-
-        public Entity(Guid id, IEventSystem eventSystem)
+        public Entity(int id, IComponentRepository componentRepository)
         {
             Id = id;
-            EventSystem = eventSystem;
-            _components = new Dictionary<Type, IComponent>();
+            ComponentRepository = componentRepository;
+            componentRepository.ExpandDatabaseIfNeeded(id);
+            
+            _onComponentsAdded = new Subject<Type[]>();
+            _onComponentsRemoving = new Subject<Type[]>();
+            _onComponentsRemoved = new Subject<Type[]>();
         }
 
         public IComponent AddComponent(IComponent component)
         {
-            _components.Add(component.GetType(), component);
-            EventSystem.Publish(new ComponentsAddedEvent(this, new []{component}));
+            ComponentRepository.Add(Id, component);
+            _onComponentsAdded.OnNext(new []{component.GetType()});
             return component;
         }
 
         public void AddComponents(params IComponent[] components)
         {
-            EventSystem.Publish(new ComponentsBeforeAddedEvent(this, components));
-
             for (var i = components.Length - 1; i >= 0; i--)
-            { _components.Add(components[i].GetType(), components[i]); }
+            { ComponentRepository.Add(Id, components[i]); }
             
-            EventSystem.Publish(new ComponentsAddedEvent(this, components));
+            _onComponentsAdded.OnNext(components.Select(x => x.GetType()).ToArray());
         }
         
         public T AddComponent<T>() where T : class, IComponent, new()
@@ -46,52 +56,45 @@ namespace EcsRx.Entities
         { RemoveComponents(component); }
 
         public void RemoveComponent<T>() where T : class, IComponent
-        {
-            if(!HasComponent<T>()) { return; }
-
-            var component = GetComponent<T>();
-            RemoveComponents(component);
-        }
+        { RemoveComponents(default(T)); }
 
         public void RemoveComponents(params IComponent[] components)
         {
-            EventSystem.Publish(new ComponentsBeforeRemovedEvent(this, components));
-
-            for (var i = components.Length - 1; i >= 0; i--)
-            {
-                if(!_components.ContainsKey(components[i].GetType())) { continue; }
-
-                if (components[i] is IDisposable disposable)
-                { disposable.Dispose(); }
-
-                _components.Remove(components[i].GetType());
-            }
+            var componentTypes = components.Select(x => x.GetType()).ToArray();
+            _onComponentsRemoving.OnNext(componentTypes);
             
-            EventSystem.Publish(new ComponentsRemovedEvent(this, components));
+            for (var i = 0; i < components.Length; i++)
+            { ComponentRepository.Remove(Id, componentTypes[i]); }
+            
+            _onComponentsRemoved.OnNext(componentTypes);
         }
-
 
         public void RemoveAllComponents()
-        {
-            var components = Components.ToArray();
-            RemoveComponents(components);
-        }
+        { RemoveComponents(Components.ToArray()); }
 
         public bool HasComponent<T>() where T : class, IComponent
-        { return _components.ContainsKey(typeof(T)); }
+        { return ComponentRepository.Has(Id, typeof(T)); }
 
-        public bool HasComponents(params Type[] componentTypes)
+        public bool HasAllComponents(params Type[] componentTypes)
         {
-            if(_components.Count == 0)
-            { return false; }
-            
             for (var index = componentTypes.Length - 1; index >= 0; index--)
             {
-                var x = componentTypes[index];
-                if (!_components.ContainsKey(x)) return false;
+                if(!ComponentRepository.Has(Id, componentTypes[index]))
+                { return false; }
             }
 
             return true;
+        }
+        
+        public bool HasAnyComponents(params Type[] componentTypes)
+        {
+            for (var index = componentTypes.Length - 1; index >= 0; index--)
+            {
+                if(ComponentRepository.Has(Id, componentTypes[index]))
+                { return true; }
+            }
+
+            return false;
         }
 
         public T GetComponent<T>() where T : class, IComponent
@@ -101,12 +104,17 @@ namespace EcsRx.Entities
         }
 
         public IComponent GetComponent(Type componentType)
-        { return _components.TryGetValue(componentType, out var component) ? component : null; }
+        { return ComponentRepository.Get(Id, componentType); }
 
         public override int GetHashCode()
-        { return Id.GetHashCode(); }
+        { return Id; }
 
         public void Dispose()
-        { RemoveAllComponents(); }
+        {
+            RemoveAllComponents();
+            _onComponentsAdded.Dispose();
+            _onComponentsRemoving.Dispose();
+            _onComponentsRemoved.Dispose();
+        }
     }
 }

@@ -11,7 +11,6 @@ namespace EcsRx.Extensions
 {
     public static class IEnumerableExtensions
     {
-        
         public static void ForEachRun<T>(this IEnumerable<T> enumerable, Action<T> method)
         {
             foreach (var item in enumerable)
@@ -21,18 +20,15 @@ namespace EcsRx.Extensions
         }
 
         public static IEnumerable<IEntity> MatchingGroup(this IEnumerable<IEntity> entities, IGroup group)
-        {
-            var componentTypes = group.MatchesComponents.ToArray();
-            return entities.Where(x => x.HasComponents(componentTypes));
-        }
+        { return entities.Where(group.Matches); }
 
         public static IEnumerable<ISystem> GetApplicableSystems(this IEnumerable<ISystem> systems, IEntity entity)
-        { return systems.Where(x => entity.MatchesGroup(x.TargetGroup)); }
+        { return systems.Where(x => entity.MatchesGroup(x.Group)); }
 
         public static IEnumerable<ISystem> GetApplicableSystems(this IEnumerable<ISystem> systems, IEnumerable<IComponent> components)
         {
             var componentTypes = components.Select(x => x.GetType());
-            return systems.Where(x => x.TargetGroup.MatchesComponents.All(y => componentTypes.Contains(y)));
+            return systems.Where(x => x.Group.RequiredComponents.All(y => componentTypes.Contains(y)));
         }
 
         public static IEnumerable<T> OrderByPriority<T>(this IEnumerable<T> listToPrioritize)

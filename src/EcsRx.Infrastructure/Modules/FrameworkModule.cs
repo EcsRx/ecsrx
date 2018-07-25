@@ -1,4 +1,6 @@
 ﻿using EcsRx.Collections;
+using EcsRx.Components;
+using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
@@ -6,6 +8,7 @@ using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Reactive;
+using EcsRx.Systems.Handlers;
 
 namespace EcsRx.Infrastructure.Modules
 {
@@ -15,6 +18,7 @@ namespace EcsRx.Infrastructure.Modules
         {
             container.Bind<IMessageBroker, MessageBroker>();
             container.Bind<IEventSystem, EventSystem>();
+            container.Bind<IIdPool, IdPool>();
             container.Bind<IEntityFactory, DefaultEntityFactory>();
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
@@ -26,6 +30,15 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IConventionalSystemHandler, SetupSystemHandler>();
             container.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
+            
+            var componentTypeAssigner = new DefaultComponentTypeAssigner();
+            var allComponents = componentTypeAssigner.GenerateComponentLookups();
+            var componentLookup = new ComponentTypeLookup(allComponents);
+            
+            container.Bind<IComponentTypeAssigner>(new BindingConfiguration{BindInstance = componentTypeAssigner});
+            container.Bind<IComponentTypeLookup>(new BindingConfiguration{BindInstance = componentLookup});           
+            container.Bind<IComponentDatabase, ComponentDatabase>();
+            container.Bind<IComponentRepository, ComponentRepository>();
         }
     }
 }

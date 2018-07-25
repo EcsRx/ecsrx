@@ -10,5 +10,11 @@ namespace EcsRx.Extensions
             disposables[key].Dispose();
             disposables.Remove(key);
         }
+        
+        public static void RemoveAndDisposeAll<T>(this IDictionary<T, IDisposable> disposables)
+        {
+            disposables.ForEachRun(x => x.Value.Dispose());
+            disposables.Clear();
+        }
     }
 }

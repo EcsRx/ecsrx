@@ -91,6 +91,7 @@ A wise choice sir, so in this instance things are currently not quite as nice as
 So to start with its advised that you take:
 
 - `EcsRx`
+- `EcsRx.Systems`
 - `EcsRx.Infrastructure`
 - `EcsRx.Views`
 

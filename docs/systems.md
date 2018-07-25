@@ -1,6 +1,6 @@
 # Systems
 
-Systems are where all the logic lives, it takes entities from the pool and executes logic on each one. The way systems are designed there is an orchestration layer which wraps all systems and handles the communication between the pools and the execution/reaction/setup methods known as `ISystemExecutor` (Which can be read about on other pages).
+Systems are where all the logic lives, it takes entities from the collection and executes logic on each one. The way systems are designed there is an orchestration layer which wraps all systems and handles the communication between the pools and the execution/reaction/setup methods known as `ISystemExecutor` (Which can be read about on other pages).
 
 This means your systems don't need to worry about the logistics of getting entities and dealing with them, you just express how you want to interact with entities and let the `SystemExecutor` handle the heavy lifting and pass you the entities for processing. This can easily be seen when you look at all the available system interfaces which all process individual entities not groups of them.
 
@@ -32,7 +32,7 @@ public IObservable<IEntity> ReactToEntity(IEntity entity)
 }
 ```
 
-Once you have setup your reactions the `Execute` method is triggered everytime the subscription from the reaction phase is triggered, so this way your system reacts to data rather than polling for changes each frame, this makes system logic for succinct and direct, it also can make quite complex scenarios quite simple as you can use the power of **Rx** to daisy chain together your observables to trigger whatever you want.
+Once you have setup your reactions the `Process` method is triggered every time the subscription from the reaction phase is triggered, so this way your system reacts to data rather than polling for changes each frame, this makes system logic for succinct and direct, it also can make quite complex scenarios quite simple as you can use the power of **Rx** to daisy chain together your observables to trigger whatever you want.
 
 It is also worth looking at the groups documentation as there are some features in groups which allow you to automatically constrain entities based upon predicates so that can push some constraining logic up to the *group* rather than your specific system, however sometimes it makes sense to be in the system, so its your call.
 
@@ -60,7 +60,7 @@ IObservable<CollisionEvent> ReactToEntity(IEntity entity)
 }
 ```
 
-So this offers a bit more power as the `Execute` method takes both the entity in the pool and the returned data from the subscription allowing you to work with external data when processing.
+So this offers a bit more power as the `Process` method takes both the entity in the pool and the returned data from the subscription allowing you to work with external data when processing.
 
 This is still a fairly new system type so will possibly have some minor changes as we move forward.
 

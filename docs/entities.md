@@ -28,7 +28,7 @@ The `IEntityCollection` interface actually implements `IEnumerable` so you can j
 
 To destroy an entity, remove it from the IEntityCollection it belongs to.
 
-- `entityCollection.RemoveEntity(entity);`
+- `entityCollection.RemoveEntity(entity.Id);`
 
 ## Recommendations
 

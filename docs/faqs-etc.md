@@ -54,7 +54,7 @@ There is also one other point worth making here and that is why do you need an i
 
 Now lets say you know all the above, and you want to make sure every entity exists in the scene with a game object, well its quite simple to achieve.
 
-Make a component like so:
+Make a component like so (unity scenario):
 
 ```
 public class ViewComponent : IComponent

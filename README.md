@@ -70,7 +70,7 @@ public class CheckForDeathSystem : IReactToEntitySystem
         return healthComponent.CurrentHealth.Where(x => x <= 0).Select(x => entity);
     }
     
-    public void Execute(IEntity entity) // Logic run whenever the above reaction occurs
+    public void Process(IEntity entity) // Logic run whenever the above reaction occurs
     {
         entity.RemoveComponent<HealthComponent>();
         entity.AddComponent<IsDeadComponent>();

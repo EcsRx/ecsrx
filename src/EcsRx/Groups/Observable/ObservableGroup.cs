@@ -71,7 +71,6 @@ namespace EcsRx.Groups.Observable
                 if (args.Entity.HasAllComponents(Token.Group.RequiredComponents)) 
                 { return; }
 
-                _onEntityRemoving.OnNext(args.Entity);
                 CachedEntities.Remove(args.Entity.Id);
                 _onEntityRemoved.OnNext(args.Entity);
                 return;
@@ -124,7 +123,6 @@ namespace EcsRx.Groups.Observable
         {
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
-            _onEntityRemoving.OnNext(args.Entity);
             CachedEntities.Remove(args.Entity.Id); 
             _onEntityRemoved.OnNext(args.Entity);
         }

@@ -82,8 +82,8 @@ namespace EcsRx.Tests.Framework
             mockCollectionNotifier.EntityComponentsRemoved.Returns(Observable.Empty<ComponentsChangedEvent>());
             
             var observableGroup = new ObservableGroup(accessorToken, new IEntity[0], mockCollectionNotifier);
-            var wasCalled = false;
-            observableGroup.OnEntityAdded.Subscribe(x => wasCalled = true);
+            var wasCalled = 0;
+            observableGroup.OnEntityAdded.Subscribe(x => wasCalled++);
             
             entityAddedSub.OnNext(new CollectionEntityEvent(unapplicableEntity, mockCollection));
             Assert.Empty(observableGroup.CachedEntities);
@@ -92,7 +92,7 @@ namespace EcsRx.Tests.Framework
             Assert.Equal(1, observableGroup.CachedEntities.Count);
             Assert.Equal(applicableEntity, observableGroup.CachedEntities[applicableEntity.Id]);
             
-            Assert.True(wasCalled);
+            Assert.Equal(1, wasCalled);
         }
 
         [Fact]
@@ -116,19 +116,19 @@ namespace EcsRx.Tests.Framework
             mockCollectionNotifier.EntityComponentsRemoved.Returns(componentRemoved);
             
             var observableGroup = new ObservableGroup(accessorToken, new IEntity[0], mockCollectionNotifier);
-            var wasCalled = false;
-            observableGroup.OnEntityAdded.Subscribe(x => wasCalled = true);
+            var wasCalled = 0;
+            observableGroup.OnEntityAdded.Subscribe(x => wasCalled++);
 
             applicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(true);
             applicableEntity.HasAnyComponents(accessorToken.Group.ExcludedComponents).Returns(false);
             componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, null));
             
             Assert.Contains(applicableEntity, observableGroup.CachedEntities.Values);
-            Assert.True(wasCalled);
+            Assert.Equal(1, wasCalled);
         }
 
         [Fact]
-        public void should_remove_entity_and_raise_event_when_entity_removed()
+        public void should_remove_entity_and_raise_events_when_entity_removed_with_components()
         {
             var collectionName = "default";
             var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], collectionName);
@@ -143,25 +143,33 @@ namespace EcsRx.Tests.Framework
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
             var entityRemoved = new Subject<CollectionEntityEvent>();
+            var componentRemoving = new Subject<ComponentsChangedEvent>();
             mockCollectionNotifier.EntityRemoved.Returns(entityRemoved);
             mockCollectionNotifier.EntityAdded.Returns(Observable.Empty<CollectionEntityEvent>());
             mockCollectionNotifier.EntityComponentsAdded.Returns(Observable.Empty<ComponentsChangedEvent>());
-            mockCollectionNotifier.EntityComponentsRemoving.Returns(Observable.Empty<ComponentsChangedEvent>());
+            mockCollectionNotifier.EntityComponentsRemoving.Returns(componentRemoving);
             mockCollectionNotifier.EntityComponentsRemoved.Returns(Observable.Empty<ComponentsChangedEvent>());
             
             var observableGroup = new ObservableGroup(accessorToken, new[]{applicableEntity}, mockCollectionNotifier);
-            var wasRemovingCalled = false;
-            observableGroup.OnEntityRemoving.Subscribe(x => wasRemovingCalled = true);            
-            var wasRemovedCalled = false;
-            observableGroup.OnEntityRemoved.Subscribe(x => wasRemovedCalled = true);
+            var wasRemovingCalled = 0;
+            observableGroup.OnEntityRemoving.Subscribe(x => wasRemovingCalled++);            
+            var wasRemovedCalled = 0;
+            observableGroup.OnEntityRemoved.Subscribe(x => wasRemovedCalled++);
             
+            componentRemoving.OnNext(new ComponentsChangedEvent(null, applicableEntity, new[]{typeof(TestComponentOne)}));
+            
+            Assert.Contains(applicableEntity, observableGroup.CachedEntities.Values);
+            Assert.Equal(1, wasRemovingCalled);
+            Assert.Equal(0, wasRemovedCalled);
+
+            wasRemovingCalled = wasRemovedCalled = 0;
             entityRemoved.OnNext(new CollectionEntityEvent(applicableEntity, null));
             
             Assert.DoesNotContain(applicableEntity, observableGroup.CachedEntities.Values);
-            Assert.True(wasRemovingCalled);
-            Assert.True(wasRemovedCalled);
+            Assert.Equal(0, wasRemovingCalled);
+            Assert.Equal(1, wasRemovedCalled);
         }
-
+        
         [Fact]
         public void should_remove_entity_and_raise_event_when_no_longer_matches_group()
         {
@@ -188,10 +196,10 @@ namespace EcsRx.Tests.Framework
             mockCollectionNotifier.EntityComponentsAdded.Returns(Observable.Empty<ComponentsChangedEvent>());
             
             var observableGroup = new ObservableGroup(accessorToken, new[]{applicableEntity}, mockCollectionNotifier);
-            var wasRemovingCalled = false;
-            observableGroup.OnEntityRemoving.Subscribe(x => wasRemovingCalled = true);            
-            var wasRemovedCalled = false;
-            observableGroup.OnEntityRemoved.Subscribe(x => wasRemovedCalled = true);
+            var wasRemovingCalled = 0;
+            observableGroup.OnEntityRemoving.Subscribe(x => wasRemovingCalled++);            
+            var wasRemovedCalled = 0;
+            observableGroup.OnEntityRemoved.Subscribe(x => wasRemovedCalled++);
             
             applicableEntity.HasAnyComponents(accessorToken.Group.RequiredComponents).Returns(false);
             applicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(false);
@@ -199,8 +207,8 @@ namespace EcsRx.Tests.Framework
             componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ typeof(TestComponentOne) }));
             
             Assert.DoesNotContain(applicableEntity, observableGroup.CachedEntities.Values);
-            Assert.True(wasRemovingCalled);
-            Assert.True(wasRemovedCalled);
+            Assert.Equal(1, wasRemovingCalled);
+            Assert.Equal(1, wasRemovedCalled);
         }
         
     }

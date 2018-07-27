@@ -71,5 +71,25 @@ namespace EcsRx.Tests.Framework
             Assert.Equal("woop", entityOne.GetComponent<TestComponentOne>().Data);
             Assert.Null(entityTwo.GetComponent<TestComponentTwo>().Data);
         }
+        
+        [Fact]
+        public void should_not_freak_out_when_removing_components_during_removing_event()
+        {
+            var collectionManager = CreateCollectionManager();
+            var collection = collectionManager.GetCollection();
+            var entityOne = collection.CreateEntity();
+
+            var timesCalled = 0;
+            entityOne.ComponentsRemoved.Subscribe(x =>
+            {
+                entityOne.RemoveComponent<TestComponentTwo>();
+                timesCalled++;
+            });
+
+            entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
+            entityOne.RemoveComponent<TestComponentOne>();
+            
+            Assert.Equal(2, timesCalled);
+        }
     }
 }

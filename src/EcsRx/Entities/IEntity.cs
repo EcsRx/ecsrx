@@ -86,6 +86,12 @@ namespace EcsRx.Entities
         void RemoveComponents(params IComponent[] components);
         
         /// <summary>
+        /// Removes many component types from the entity
+        /// </summary>
+        /// <param name="componentsTypes">The component types to remove</param>
+        void RemoveComponents(params Type[] componentsTypes);
+        
+        /// <summary>
         /// Removes all the components from the entity
         /// </summary>
         void RemoveAllComponents();
@@ -126,5 +132,6 @@ namespace EcsRx.Entities
         void AddComponents(params IComponent[] components);
 
         bool HasAnyComponents(params Type[] componentTypes);
+        bool HasComponent(Type componentType);
     }
 }

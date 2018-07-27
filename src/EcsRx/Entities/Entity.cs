@@ -56,24 +56,35 @@ namespace EcsRx.Entities
         { RemoveComponents(component); }
 
         public void RemoveComponent<T>() where T : class, IComponent
-        { RemoveComponents(default(T)); }
+        { RemoveComponents(typeof(T)); }
 
         public void RemoveComponents(params IComponent[] components)
         {
             var componentTypes = components.Select(x => x.GetType()).ToArray();
-            _onComponentsRemoving.OnNext(componentTypes);
+            RemoveComponents(componentTypes);
+        }
+        
+        public void RemoveComponents(params Type[] componentTypes)
+        {
+            var sanitisedComponents = componentTypes.Where(HasComponent).ToArray();
+            if(sanitisedComponents.Length == 0) { return; }
             
-            for (var i = 0; i < components.Length; i++)
-            { ComponentRepository.Remove(Id, componentTypes[i]); }
+            _onComponentsRemoving.OnNext(sanitisedComponents);
             
-            _onComponentsRemoved.OnNext(componentTypes);
+            for (var i = 0; i < sanitisedComponents.Length; i++)
+            { ComponentRepository.Remove(Id, sanitisedComponents[i]); }
+            
+            _onComponentsRemoved.OnNext(sanitisedComponents);
         }
 
         public void RemoveAllComponents()
         { RemoveComponents(Components.ToArray()); }
 
         public bool HasComponent<T>() where T : class, IComponent
-        { return ComponentRepository.Has(Id, typeof(T)); }
+        { return HasComponent(typeof(T)); }
+        
+        public bool HasComponent(Type componentType)
+        { return ComponentRepository.Has(Id, componentType); }
 
         public bool HasAllComponents(params Type[] componentTypes)
         {

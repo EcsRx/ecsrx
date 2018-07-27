@@ -13,7 +13,7 @@ namespace EcsRx.Tests.Framework
     public class EntityTests
     {
         [Fact]
-        public void should_correctly_raise_event_when_adding_component()
+        public void should_raise_event_when_adding_component()
         {
             var componentRepository = Substitute.For<IComponentRepository>();
             var entity = new Entity(1, componentRepository);
@@ -27,11 +27,13 @@ namespace EcsRx.Tests.Framework
         }
 
         [Fact]
-        public void should_correctly_raise_event_when_removing_component()
+        public void should_raise_event_when_removing_component_that_exists()
         {
             var componentRepository = Substitute.For<IComponentRepository>();
             var entity = new Entity(1, componentRepository);
             var dummyComponent = Substitute.For<IComponent>();
+
+            componentRepository.Has(Arg.Any<int>(), dummyComponent.GetType()).Returns(true);
 
             var beforeWasCalled = false;
             var afterWasCalled = false;
@@ -41,6 +43,24 @@ namespace EcsRx.Tests.Framework
             entity.RemoveComponent(dummyComponent);
             Assert.True(beforeWasCalled);
             Assert.True(afterWasCalled);
+        }
+        
+        [Fact]
+        public void should_not_raise_events_or_throw_when_removing_non_existent_components()
+        {
+            var componentRepository = Substitute.For<IComponentRepository>();
+            var entity = new Entity(1, componentRepository);
+
+            componentRepository.Has(Arg.Any<int>(), Arg.Any<Type>()).Returns(false);
+            
+            var beforeWasCalled = false;
+            var afterWasCalled = false;
+            entity.ComponentsRemoving.Subscribe(x => beforeWasCalled = true);
+            entity.ComponentsRemoved.Subscribe(x => afterWasCalled = true);
+
+            entity.RemoveComponent<TestComponentOne>();
+            Assert.False(beforeWasCalled);
+            Assert.False(afterWasCalled);
         }
 
         [Fact]
@@ -99,7 +119,9 @@ namespace EcsRx.Tests.Framework
 
             var componentRepository = Substitute.For<IComponentRepository>();
             componentRepository.GetAll(fakeEntityId).Returns(fakeComponents);
-                
+
+            componentRepository.Has(Arg.Any<int>(), Arg.Any<Type>()).Returns(true);
+
             var entity = new Entity(fakeEntityId, componentRepository);
 
             var beforeWasCalled = false;

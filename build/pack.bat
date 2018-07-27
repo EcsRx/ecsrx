@@ -1,4 +1,4 @@
-set version=0.2.0
+set version=0.2.1
 dotnet pack ../src/EcsRx -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsRx.Systems -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsRx.Views -c Release -o ../../_dist /p:version=%version%

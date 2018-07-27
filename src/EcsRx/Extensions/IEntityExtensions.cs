@@ -117,6 +117,22 @@ namespace EcsRx.Extensions
         }
         
         /// <summary>
+        /// Checks to see if the entity contains all of the given components
+        /// </summary>
+        /// <param name="componentTypeIds">Type ids of components to check for</param>
+        /// <returns>true if all the component was found, false if one or more is missing</returns>
+        public static bool HasAllComponents(this IEntity entity, params int[] componentTypeIds)
+        {
+            for (var index = componentTypeIds.Length - 1; index >= 0; index--)
+            {
+                if(!entity.HasComponent(componentTypeIds[index]))
+                { return false; }
+            }
+
+            return true;
+        }
+        
+        /// <summary>
         /// Checks to see if the entity contains any of the given components
         /// </summary>
         /// <param name="componentTypes">Types of the components to check for</param>
@@ -131,5 +147,21 @@ namespace EcsRx.Extensions
 
             return false;
         }        
+        
+        /// <summary>
+        /// Checks to see if the entity contains any of the given components
+        /// </summary>
+        /// <param name="componentTypeIds">Type ids of the components to check for</param>
+        /// <returns>true if any components were found, false if no matching components were found</returns>
+        public static bool HasAnyComponents(this IEntity entity, params int[] componentTypeIds)
+        {
+            for (var index = componentTypeIds.Length - 1; index >= 0; index--)
+            {
+                if(entity.HasComponent(componentTypeIds[index]))
+                { return true; }
+            }
+
+            return false;
+        }   
     }
 }

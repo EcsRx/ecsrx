@@ -43,6 +43,12 @@ namespace EcsRx.Infrastructure.Dependencies
         T Resolve<T>(string name = null);
         
         /// <summary>
+        /// Unbinds a type from the given context
+        /// </summary>
+        /// <typeparam name="T">The type to unbind</typeparam>
+        void Unbind<T>();
+        
+        /// <summary>
         /// Gets an enumerable of a given type from the underlying DI container
         /// </summary>
         /// <typeparam name="T">Type to resolve</typeparam>
@@ -54,5 +60,11 @@ namespace EcsRx.Infrastructure.Dependencies
         /// </summary>
         /// <typeparam name="T">Type of module to load</typeparam>
         void LoadModule<T>() where T : IDependencyModule, new();
+        
+        /// <summary>
+        /// Loads the given modules bindings into the underlying di container
+        /// </summary>
+        /// <param name="module">Type of module to load</param>
+        void LoadModule(IDependencyModule module);
     }
 }

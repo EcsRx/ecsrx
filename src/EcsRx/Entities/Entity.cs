@@ -55,14 +55,35 @@ namespace EcsRx.Entities
             _onComponentsRemoved.OnNext(sanitisedComponents);
         }
 
+        public void RemoveComponents(params int[] componentsTypeIds)
+        {
+            var sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
+            if(sanitisedComponentsIds.Length == 0) { return; }
+
+            var componentTypes = ComponentRepository.GetTypesFor(sanitisedComponentsIds);
+            
+            _onComponentsRemoving.OnNext(componentTypes);
+            
+            for (var i = 0; i < sanitisedComponentsIds.Length; i++)
+            { ComponentRepository.Remove(Id, sanitisedComponentsIds[i]); }
+            
+            _onComponentsRemoved.OnNext(componentTypes);
+        }
+
         public void RemoveAllComponents()
         { RemoveComponents(Components.Select(x => x.GetType()).ToArray()); }
        
         public bool HasComponent(Type componentType)
         { return ComponentRepository.Has(Id, componentType); }
-        
+
+        public bool HasComponent(int componentTypeId)
+        { return ComponentRepository.Has(Id, componentTypeId); }
+
         public IComponent GetComponent(Type componentType)
         { return ComponentRepository.Get(Id, componentType); }
+        
+        public IComponent GetComponent(int componentTypeId)
+        { return ComponentRepository.Get(Id, componentTypeId); }
 
         public override int GetHashCode()
         { return Id; }

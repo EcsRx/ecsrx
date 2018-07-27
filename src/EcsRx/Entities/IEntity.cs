@@ -54,6 +54,12 @@ namespace EcsRx.Entities
         void RemoveComponents(params Type[] componentsTypes);
         
         /// <summary>
+        /// Removes components from the entity based on their type ids
+        /// </summary>
+        /// <param name="componentsTypeIds">The component type ids to remove</param>
+        void RemoveComponents(params int[] componentsTypeIds);
+        
+        /// <summary>
         /// Removes all the components from the entity
         /// </summary>
         void RemoveAllComponents();
@@ -63,7 +69,14 @@ namespace EcsRx.Entities
         /// </summary>
         /// <param name="componentType">The type of component to retrieve</param>
         /// <returns>The component instance if found, or null if not</returns>
-        IComponent GetComponent(Type componentType);
+        IComponent GetComponent(Type componentType);        
+        
+        /// <summary>
+        /// Gets a component from the entity based upon its component type id
+        /// </summary>
+        /// <param name="componentTypeId">The id of the component type</param>
+        /// <returns>The component instance if found, or null if not</returns>
+        IComponent GetComponent(int componentTypeId);
         
         /// <summary>
         /// Checks to see if the entity contains given components by their instances
@@ -78,5 +91,12 @@ namespace EcsRx.Entities
         /// <param name="componentType">Type of component to look for</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         bool HasComponent(Type componentType);
+        
+        /// <summary>
+        /// Checks to see if the entity contains the given component based on its type id
+        /// </summary>
+        /// <param name="componentTypeId">Type id of component to look for</param>
+        /// <returns>true if the component can be found, false if it cant be</returns>
+        bool HasComponent(int componentTypeId);
     }
 }

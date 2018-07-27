@@ -22,24 +22,9 @@ namespace EcsRx.Components.Database
             var newSize = entityId + DefaultExpansionSize + 1;
             Database.AccommodateMoreEntities(newSize);
         }
-       
-        public IComponent Get(int entityId, Type componentType)
-        {
-            var componentTypeId = ComponentLookup.GetComponentType(componentType);
-            return Database.Get(componentTypeId, entityId);
-        }
-        
-        public bool Has(int entityId, Type componentType)
-        {
-            var componentTypeId = ComponentLookup.GetComponentType(componentType);
-            return Database.Has(componentTypeId, entityId);
-        }
-        
-        public IEnumerable<IComponent> GetAll(int entityId)
-        { return Database.GetAll(entityId); }
 
-        public void RemoveAll(int entityId)
-        { Database.RemoveAll(entityId); }
+        public Type[] GetTypesFor(params int[] componentTypeIds)
+        { return ComponentLookup.GetComponentTypes(componentTypeIds); }
 
         public T Add<T>(int entityId, T component) where T : class, IComponent
         {
@@ -48,11 +33,35 @@ namespace EcsRx.Components.Database
             Database.Add(componentTypeId, entityId, component);
             return component;
         }
+        
+        public IComponent Get(int entityId, int componentTypeId) => Database.Get(componentTypeId, entityId);        
+        
+        public IComponent Get(int entityId, Type componentType)
+        {
+            var componentTypeId = ComponentLookup.GetComponentType(componentType);
+            return Get(entityId, componentTypeId);
+        }
+
+        public bool Has(int entityId, int componentTypeId) => Database.Has(componentTypeId, entityId);   
+        
+        public bool Has(int entityId, Type componentType)
+        {
+            var componentTypeId = ComponentLookup.GetComponentType(componentType);
+            return Has(entityId, componentTypeId);
+        }
+
+        public IEnumerable<IComponent> GetAll(int entityId)
+        { return Database.GetAll(entityId); }
+
+        public void Remove(int entityId, int componentTypeId) => Database.Remove(componentTypeId, entityId);
 
         public void Remove(int entityId, Type componentType)
         {
             var componentTypeId = ComponentLookup.GetComponentType(componentType);
-            Database.Remove(componentTypeId, entityId);
+            Remove(entityId, componentTypeId);
         }
+        
+        public void RemoveAll(int entityId)
+        { Database.RemoveAll(entityId); }
     }
 }

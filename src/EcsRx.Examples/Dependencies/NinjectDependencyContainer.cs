@@ -74,13 +74,21 @@ namespace EcsRx.Examples.Dependencies
             return _kernel.Get<T>(name);
         }
 
+        public void Unbind<T>()
+        {
+            _kernel.Unbind<T>();
+        }
+
         public IEnumerable<T> ResolveAll<T>()
         { return _kernel.GetAll<T>(); }
 
         public void LoadModule<T>() where T : IDependencyModule, new()
         {
             var module = new T();
-            module.Setup(this);
+            LoadModule(module);
         }
+        
+        public void LoadModule(IDependencyModule module)
+        { module.Setup(this); }
     }
 }

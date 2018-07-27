@@ -1,22 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
+using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Extensions;
+using EcsRx.Infrastructure.Dependencies;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {
-    public class GroupPerformanceApplication : EcsRxConsoleApplication
+    public class OptimizedGroupPerformanceApplication : EcsRxConsoleApplication
     {
         private IComponent[] _availableComponents;
+        private int[] _availableComponentTypeIds;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         private readonly Random _random = new Random();
 
+        protected override IDependencyModule GetFrameworkModule()
+        { return new CustomFrameworkModule(); }
+
         protected override void ApplicationStarted()
         {
+            _availableComponentTypeIds = Enumerable.Range(0, 20).ToArray();
+            
             var componentNamespace = typeof(Component1).Namespace;
             _availableComponents = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
@@ -49,7 +58,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
             {
                 var entity = defaultPool.CreateEntity();
                 entity.AddComponents(_availableComponents);
-                entity.RemoveComponents(_availableComponents);
+                entity.RemoveComponents(_availableComponentTypeIds);
             }
 
             timer.Stop();

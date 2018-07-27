@@ -66,6 +66,7 @@ namespace EcsRx.Tests.Framework
             var entityTwo = collection.CreateEntity();
 
             entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
+            entityTwo.AddComponents(new TestComponentTwo());
 
             Assert.Equal("woop", entityOne.GetComponent<TestComponentOne>().Data);
             Assert.Null(entityTwo.GetComponent<TestComponentTwo>().Data);

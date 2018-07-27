@@ -35,10 +35,14 @@ namespace EcsRx.Infrastructure
             ApplicationStarted();
         }
 
+        protected virtual IDependencyModule GetFrameworkModule()
+        {
+            return new FrameworkModule();
+        }
+
         protected virtual void RegisterModules()
         {
-            DependencyContainer.LoadModule<FrameworkModule>();
-
+            DependencyContainer.LoadModule(GetFrameworkModule());
             SystemExecutor = DependencyContainer.Resolve<ISystemExecutor>();
             EventSystem = DependencyContainer.Resolve<IEventSystem>();
             EntityCollectionManager = DependencyContainer.Resolve<IEntityCollectionManager>();

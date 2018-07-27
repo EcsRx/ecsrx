@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Collections;
@@ -21,7 +22,7 @@ namespace EcsRx.Tests.Framework
         public void should_include_entity_snapshot_on_creation()
         {
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
-            var accessorToken = new ObservableGroupToken(new Type[0], new Type[0], "default");
+            var accessorToken = new ObservableGroupToken(new Type[]{ typeof(TestComponentOne) }, new Type[0], "default");
 
             var applicableEntity1 = Substitute.For<IEntity>();
             var applicableEntity2 = Substitute.For<IEntity>();
@@ -31,13 +32,9 @@ namespace EcsRx.Tests.Framework
             applicableEntity2.Id.Returns(2);
             notApplicableEntity1.Id.Returns(3);
             
-            applicableEntity1.HasAllComponents(Arg.Any<Type[]>()).Returns(true);
-            applicableEntity2.HasAllComponents(Arg.Any<Type[]>()).Returns(true);
-            notApplicableEntity1.HasAllComponents(Arg.Any<Type[]>()).Returns(false);
-            
-            applicableEntity1.HasAnyComponents(Arg.Any<Type[]>()).Returns(false);
-            applicableEntity2.HasAnyComponents(Arg.Any<Type[]>()).Returns(false);
-            notApplicableEntity1.HasAnyComponents(Arg.Any<Type[]>()).Returns(false);
+            applicableEntity1.HasComponent(Arg.Any<Type>()).Returns(true);
+            applicableEntity2.HasComponent(Arg.Any<Type>()).Returns(true);
+            notApplicableEntity1.HasComponent(Arg.Any<Type>()).Returns(false);            
             
             var dummyEntitySnapshot = new List<IEntity>
             {
@@ -69,10 +66,11 @@ namespace EcsRx.Tests.Framework
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.RequiredComponents.Contains(x))).Returns(true);
 
             var unapplicableEntity = Substitute.For<IEntity>();
-            unapplicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(false);
+            unapplicableEntity.Id.Returns(2);
+            unapplicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.RequiredComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
@@ -139,8 +137,8 @@ namespace EcsRx.Tests.Framework
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(true);
-            applicableEntity.HasAnyComponents(accessorToken.Group.ExcludedComponents).Returns(false);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.RequiredComponents.Contains(x))).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.ExcludedComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
@@ -174,8 +172,8 @@ namespace EcsRx.Tests.Framework
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(true);
-            applicableEntity.HasAnyComponents(accessorToken.Group.ExcludedComponents).Returns(false);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.RequiredComponents.Contains(x))).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.ExcludedComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     

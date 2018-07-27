@@ -9,5 +9,6 @@ namespace EcsRx.Components
         int GetComponentType<T>() where T : IComponent;
         int GetComponentType(Type type);
         int[] GetComponentTypes(params Type[] types);
+        Type[] GetComponentTypes(params int[] typeIds);
     }
 }

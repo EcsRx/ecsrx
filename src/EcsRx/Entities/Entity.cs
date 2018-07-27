@@ -56,7 +56,7 @@ namespace EcsRx.Entities
         { RemoveComponents(component); }
 
         public void RemoveComponent<T>() where T : class, IComponent
-        { RemoveComponents(default(T)); }
+        { RemoveComponents(GetComponent<T>()); }
 
         public void RemoveComponents(params IComponent[] components)
         {

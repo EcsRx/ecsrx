@@ -1,5 +1,6 @@
 ﻿using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Components;
+using EcsRx.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Extensions
 {

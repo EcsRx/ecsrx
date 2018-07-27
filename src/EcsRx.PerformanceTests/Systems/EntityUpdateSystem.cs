@@ -1,5 +1,6 @@
 ﻿using System;
 using EcsRx.Entities;
+using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.PerformanceTests.Components;
 using EcsRx.Systems;

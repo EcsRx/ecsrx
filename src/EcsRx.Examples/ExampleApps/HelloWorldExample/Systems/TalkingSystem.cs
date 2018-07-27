@@ -2,6 +2,7 @@
 using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.HelloWorldExample.Components;
+using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;

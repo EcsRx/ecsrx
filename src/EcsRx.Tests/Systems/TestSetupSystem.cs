@@ -1,4 +1,5 @@
 ﻿using EcsRx.Entities;
+using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;

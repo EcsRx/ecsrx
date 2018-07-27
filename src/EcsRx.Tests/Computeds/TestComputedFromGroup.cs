@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Computed;
+using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Tests.Models;
 

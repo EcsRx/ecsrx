@@ -3,7 +3,7 @@ using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Entities;
-using EcsRx.Events;
+using EcsRx.Extensions;
 using EcsRx.Tests.Models;
 using NSubstitute;
 using Xunit;
@@ -22,7 +22,7 @@ namespace EcsRx.Tests.Framework
             var wasCalled = false;
             entity.ComponentsAdded.Subscribe(x => wasCalled = true);
 
-            entity.AddComponent(dummyComponent);
+            entity.AddComponents(dummyComponent);
             Assert.True(wasCalled);
         }
 
@@ -40,7 +40,7 @@ namespace EcsRx.Tests.Framework
             entity.ComponentsRemoving.Subscribe(x => beforeWasCalled = true);
             entity.ComponentsRemoved.Subscribe(x => afterWasCalled = true);
 
-            entity.RemoveComponent(dummyComponent);
+            entity.RemoveComponents(dummyComponent.GetType());
             Assert.True(beforeWasCalled);
             Assert.True(afterWasCalled);
         }
@@ -58,7 +58,7 @@ namespace EcsRx.Tests.Framework
             entity.ComponentsRemoving.Subscribe(x => beforeWasCalled = true);
             entity.ComponentsRemoved.Subscribe(x => afterWasCalled = true);
 
-            entity.RemoveComponent<TestComponentOne>();
+            entity.RemoveComponents(typeof(TestComponentOne));
             Assert.False(beforeWasCalled);
             Assert.False(afterWasCalled);
         }

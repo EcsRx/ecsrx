@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
 using EcsRx.Views.Components;

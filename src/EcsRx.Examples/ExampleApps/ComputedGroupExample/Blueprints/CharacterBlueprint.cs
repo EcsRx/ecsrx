@@ -28,8 +28,7 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Blueprints
                 Name = Name
             };
 
-            entity.AddComponent(nameComponent);
-            entity.AddComponent(healthComponent);
+            entity.AddComponents(nameComponent, healthComponent);
         }
     }
 }

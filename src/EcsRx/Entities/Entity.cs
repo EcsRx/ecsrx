@@ -34,34 +34,12 @@ namespace EcsRx.Entities
             _onComponentsRemoved = new Subject<Type[]>();
         }
 
-        public IComponent AddComponent(IComponent component)
-        {
-            ComponentRepository.Add(Id, component);
-            _onComponentsAdded.OnNext(new []{component.GetType()});
-            return component;
-        }
-
         public void AddComponents(params IComponent[] components)
         {
             for (var i = components.Length - 1; i >= 0; i--)
             { ComponentRepository.Add(Id, components[i]); }
             
             _onComponentsAdded.OnNext(components.Select(x => x.GetType()).ToArray());
-        }
-        
-        public T AddComponent<T>() where T : class, IComponent, new()
-        { return (T)AddComponent(new T()); }
-
-        public void RemoveComponent(IComponent component)
-        { RemoveComponents(component); }
-
-        public void RemoveComponent<T>() where T : class, IComponent
-        { RemoveComponents(typeof(T)); }
-
-        public void RemoveComponents(params IComponent[] components)
-        {
-            var componentTypes = components.Select(x => x.GetType()).ToArray();
-            RemoveComponents(componentTypes);
         }
         
         public void RemoveComponents(params Type[] componentTypes)
@@ -78,42 +56,11 @@ namespace EcsRx.Entities
         }
 
         public void RemoveAllComponents()
-        { RemoveComponents(Components.ToArray()); }
-
-        public bool HasComponent<T>() where T : class, IComponent
-        { return HasComponent(typeof(T)); }
-        
+        { RemoveComponents(Components.Select(x => x.GetType()).ToArray()); }
+       
         public bool HasComponent(Type componentType)
         { return ComponentRepository.Has(Id, componentType); }
-
-        public bool HasAllComponents(params Type[] componentTypes)
-        {
-            for (var index = componentTypes.Length - 1; index >= 0; index--)
-            {
-                if(!ComponentRepository.Has(Id, componentTypes[index]))
-                { return false; }
-            }
-
-            return true;
-        }
         
-        public bool HasAnyComponents(params Type[] componentTypes)
-        {
-            for (var index = componentTypes.Length - 1; index >= 0; index--)
-            {
-                if(ComponentRepository.Has(Id, componentTypes[index]))
-                { return true; }
-            }
-
-            return false;
-        }
-
-        public T GetComponent<T>() where T : class, IComponent
-        {
-            var componentType = typeof(T);
-            return (T)GetComponent(componentType);
-        }
-
         public IComponent GetComponent(Type componentType)
         { return ComponentRepository.Get(Id, componentType); }
 

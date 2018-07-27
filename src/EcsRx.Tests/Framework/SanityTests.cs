@@ -6,6 +6,7 @@ using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
+using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems.Handlers;
 using EcsRx.Tests.Models;
@@ -64,8 +65,7 @@ namespace EcsRx.Tests.Framework
             var entityOne = collection.CreateEntity();
             var entityTwo = collection.CreateEntity();
 
-            entityOne.AddComponent(new TestComponentOne());
-            entityTwo.AddComponent(new TestComponentTwo());
+            entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
 
             Assert.Equal("woop", entityOne.GetComponent<TestComponentOne>().Data);
             Assert.Null(entityTwo.GetComponent<TestComponentTwo>().Data);

@@ -4,6 +4,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Tests.ComputedGroups;
 using EcsRx.Tests.Models;

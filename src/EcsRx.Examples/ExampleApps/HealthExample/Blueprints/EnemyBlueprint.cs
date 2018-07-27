@@ -21,7 +21,7 @@ namespace EcsRx.Examples.ExampleApps.HealthExample.Blueprints
                 Health = new ReactiveProperty<float>(Health),
                 MaxHealth = Health
             };
-            entity.AddComponent(healthComponent);
+            entity.AddComponents(healthComponent);
         }
     }
 }

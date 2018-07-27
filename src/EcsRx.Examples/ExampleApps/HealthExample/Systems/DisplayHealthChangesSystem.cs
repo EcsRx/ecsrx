@@ -4,6 +4,7 @@ using System.Text;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.HealthExample.Components;
 using EcsRx.Examples.Extensions;
+using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
 
@@ -33,7 +34,7 @@ namespace EcsRx.Examples.ExampleApps.HealthExample.Systems
             {
                 Console.WriteLine("Enemy Is Dead! Hooray etc");
                 Console.WriteLine(" - Press Escape To Quit -");
-                entity.RemoveComponent(healthComponent);
+                entity.RemoveComponents(healthComponent);
             }
         }
 

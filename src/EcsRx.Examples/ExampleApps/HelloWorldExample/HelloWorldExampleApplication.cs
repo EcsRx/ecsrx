@@ -22,7 +22,7 @@ namespace EcsRx.Examples.ExampleApps.HelloWorldExample
             var entity = defaultPool.CreateEntity();
 
             var canTalkComponent = new CanTalkComponent {Message = "Hello world"};
-            entity.AddComponent(canTalkComponent);
+            entity.AddComponents(canTalkComponent);
 
             HandleInput();
         }

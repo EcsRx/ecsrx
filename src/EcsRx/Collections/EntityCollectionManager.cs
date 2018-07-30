@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Components;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
@@ -21,23 +22,29 @@ namespace EcsRx.Collections
         public IEnumerable<IEntityCollection> Collections => _collections.Values;
         public IEntityCollectionFactory EntityCollectionFactory { get; }
         public IObservableGroupFactory ObservableGroupFactory { get; }
+        public IComponentTypeLookup ComponentTypeLookup { get; }
         
         public IObservable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
         public IObservable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
         public IObservable<ComponentsChangedEvent> EntityComponentsAdded => _onEntityComponentsAdded;
         public IObservable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
         public IObservable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
+        public IObservable<IEntityCollection> CollectionAdded => _onCollectionAdded;
+        public IObservable<IEntityCollection> CollectionRemoved => _onCollectionRemoved;
         
         private readonly Subject<CollectionEntityEvent> _onEntityAdded;
         private readonly Subject<CollectionEntityEvent> _onEntityRemoved;
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsAdded;
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoving;
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoved;
+        private readonly Subject<IEntityCollection> _onCollectionAdded;
+        private readonly Subject<IEntityCollection> _onCollectionRemoved;
 
-        public EntityCollectionManager(IEntityCollectionFactory entityCollectionFactory, IObservableGroupFactory observableGroupFactory)
+        public EntityCollectionManager(IEntityCollectionFactory entityCollectionFactory, IObservableGroupFactory observableGroupFactory, IComponentTypeLookup componentTypeLookup)
         {
             EntityCollectionFactory = entityCollectionFactory;
             ObservableGroupFactory = observableGroupFactory;
+            ComponentTypeLookup = componentTypeLookup;
 
             _observableGroups = new Dictionary<ObservableGroupToken, IObservableGroup>();
             _collections = new Dictionary<string, IEntityCollection>();
@@ -48,6 +55,8 @@ namespace EcsRx.Collections
             _onEntityComponentsAdded = new Subject<ComponentsChangedEvent>();
             _onEntityComponentsRemoving = new Subject<ComponentsChangedEvent>();
             _onEntityComponentsRemoved = new Subject<ComponentsChangedEvent>();
+            _onCollectionAdded = new Subject<IEntityCollection>();
+            _onCollectionRemoved = new Subject<IEntityCollection>();
 
             CreateCollection(DefaultPoolName);
         }
@@ -74,8 +83,8 @@ namespace EcsRx.Collections
             _collections.Add(name, collection);
             SubscribeToCollection(collection);
 
-            //EventSystem.Publish(new CollectionAddedEvent(collection));
-
+            _onCollectionAdded.OnNext(collection);
+            
             return collection;
         }
 
@@ -91,7 +100,7 @@ namespace EcsRx.Collections
             
             UnsubscribeFromCollection(name);
 
-            //EventSystem.Publish(new CollectionRemovedEvent(collection));
+            _onCollectionRemoved.OnNext(collection);
         }
         
         public IEnumerable<IEntity> GetEntitiesFor(IGroup group, string collectionName = null)
@@ -104,13 +113,27 @@ namespace EcsRx.Collections
 
             return Collections.GetAllEntities().MatchingGroup(group);
         }
+        
+        public IEnumerable<IEntity> GetEntitiesFor(ILookupGroup lookupGroup, string collectionName = null)
+        {
+            if(lookupGroup.RequiredComponents.Length == 0 && lookupGroup.ExcludedComponents.Length  == 0)
+            { return new IEntity[0]; }
+
+            if (collectionName != null)
+            { return _collections[collectionName].MatchingGroup(lookupGroup); }
+
+            return Collections.GetAllEntities().MatchingGroup(lookupGroup);
+        }
 
         public IObservableGroup GetObservableGroup(IGroup group, string collectionName = null)
         {
-            var observableGroupToken = new ObservableGroupToken(group, collectionName);
+            var requiredComponents = ComponentTypeLookup.GetComponentTypes(group.RequiredComponents);
+            var excludedComponents = ComponentTypeLookup.GetComponentTypes(group.ExcludedComponents);
+            var lookupGroup = new LookupGroup(requiredComponents, excludedComponents);
+            var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionName);
             if (_observableGroups.ContainsKey(observableGroupToken)) { return _observableGroups[observableGroupToken]; }
 
-            var entityMatches = GetEntitiesFor(group, collectionName);
+            var entityMatches = GetEntitiesFor(lookupGroup, collectionName);
             var configuration = new ObservableGroupConfiguration
             {
                 ObservableGroupToken = observableGroupToken,

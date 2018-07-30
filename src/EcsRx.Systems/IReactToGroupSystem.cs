@@ -5,7 +5,7 @@ using EcsRx.Groups.Observable;
 namespace EcsRx.Systems
 {
     /// <summary>
-    /// React To Group systems are the more common ECS style system,
+    /// React To LookupGroup systems are the more common ECS style system,
     /// as they batch handle all applicable entities at once. This means
     /// you do not react to individual entities and instead react at the
     /// group level, be it every frame or time period.

@@ -31,7 +31,7 @@ namespace EcsRx.Tests.Framework
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentRepository);
             var collectionFactory = new DefaultEntityCollectionFactory(entityFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
-            return new EntityCollectionManager(collectionFactory, observableGroupFactory);
+            return new EntityCollectionManager(collectionFactory, observableGroupFactory, componentLookupType);
         }
         
         private SystemExecutor CreateExecutor(IEntityCollectionManager entityCollectionManager)

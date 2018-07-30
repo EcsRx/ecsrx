@@ -33,7 +33,8 @@ namespace EcsRx.Tests.Framework
             var entity = new Entity(1, componentRepository);
             var dummyComponent = Substitute.For<IComponent>();
 
-            componentRepository.Has(Arg.Any<int>(), dummyComponent.GetType()).Returns(true);
+            componentRepository.Has(Arg.Any<int>(), 1).Returns(true);
+            componentRepository.GetTypesFor(Arg.Any<Type>()).Returns(new []{1});
 
             var beforeWasCalled = false;
             var afterWasCalled = false;
@@ -119,24 +120,23 @@ namespace EcsRx.Tests.Framework
 
             var componentRepository = Substitute.For<IComponentRepository>();
             componentRepository.GetAll(fakeEntityId).Returns(fakeComponents);
-
-            componentRepository.Has(Arg.Any<int>(), Arg.Any<Type>()).Returns(true);
+            componentRepository.GetTypesFor(Arg.Any<Type[]>()).Returns(new []{1,2});
+            componentRepository.Has(Arg.Any<int>(), Arg.Any<int>()).Returns(true);
 
             var entity = new Entity(fakeEntityId, componentRepository);
 
             var beforeWasCalled = false;
             var afterWasCalled = false;
+            var expectedRange = Enumerable.Range(1, 2);
             entity.ComponentsRemoving.Subscribe(x =>
             {
                 beforeWasCalled = true;
-                var fakeComponentTypes = fakeComponents.Select(y => y.GetType());
-                Assert.All(x, y => fakeComponentTypes.Contains(y));
+                Assert.All(x, y => expectedRange.Contains(y));
             });
             entity.ComponentsRemoved.Subscribe(x =>
             {
                 afterWasCalled = true;
-                var fakeComponentTypes = fakeComponents.Select(y => y.GetType());
-                Assert.All(x, y => fakeComponentTypes.Contains(y));
+                Assert.All(x, y => expectedRange.Contains(y));
             });
             
             entity.Dispose();

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using EcsRx.Entities;
+using EcsRx.Events;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 
@@ -15,6 +18,16 @@ namespace EcsRx.Collections
         /// All the entity collections that the manager contains
         /// </summary>
         IEnumerable<IEntityCollection> Collections { get; }
+        
+        /// <summary>
+        /// Fired when a collection has been added
+        /// </summary>
+        IObservable<IEntityCollection> CollectionAdded { get; }
+        
+        /// <summary>
+        /// Fired when a collection has been removed
+        /// </summary>
+        IObservable<IEntityCollection> CollectionRemoved { get; }
 
         /// <summary>
         /// Gets an enumerable collection of entities for you to iterate through,

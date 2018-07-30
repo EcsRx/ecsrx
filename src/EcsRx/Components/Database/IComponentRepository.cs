@@ -7,12 +7,13 @@ namespace EcsRx.Components.Database
     {
         void ExpandDatabaseIfNeeded(int entityId);
         Type[] GetTypesFor(params int[] componentTypeIds);
+        int[] GetTypesFor(params Type[] componentTypeIds);
         
         IComponent Get(int entityId, Type componentType);
         IComponent Get(int entityId, int componentTypeId);
         IEnumerable<IComponent> GetAll(int entityId);
         
-        T Add<T>(int entityId, T component) where T : class, IComponent;
+        int Add<T>(int entityId, T component) where T : class, IComponent;
         
         bool Has(int entityId, Type componentType);
         bool Has(int entityId, int componentTypeId);

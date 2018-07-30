@@ -64,7 +64,7 @@ namespace EcsRx.Examples.ExampleApps.Performance.Helper
             /*
             foreach (var component in _componenTypes)
             {
-                yield return new Group(component);
+                yield return new LookupGroup(component);
             }*/
         }
     }

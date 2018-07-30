@@ -9,7 +9,7 @@ namespace EcsRx.Examples
         static void Main(string[] args)
         {
             var application = new GroupPerformanceApplication();
-            //var application = new OptimizedGroupPerformanceApplication();();
+            //var application = new OptimizedGroupPerformanceApplication();
             //var application = new OptimizedEntityPerformanceApplication();
             //var application = new EntityPerformanceApplication();
             //var application = new ComputedGroupExampleApplication();

@@ -55,7 +55,7 @@ namespace EcsRx.Extensions
             
             return true;
         }
-        
+       
         public static bool ContainsAllRequiredComponents(this IGroup group, IEntity entity)
         { return entity.HasAllComponents(group.RequiredComponents); }
         

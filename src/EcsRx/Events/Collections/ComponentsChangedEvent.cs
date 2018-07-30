@@ -8,13 +8,13 @@ namespace EcsRx.Events
     {
         public IEntityCollection Collection { get; }
         public IEntity Entity { get; }
-        public Type[] ComponentTypes { get; }
+        public int[] ComponentTypeIds { get; }
 
-        public ComponentsChangedEvent(IEntityCollection collection, IEntity entity, Type[] componentTypes)
+        public ComponentsChangedEvent(IEntityCollection collection, IEntity entity, int[] componentTypeIds)
         {
             Collection = collection;
             Entity = entity;
-            ComponentTypes = componentTypes;
+            ComponentTypeIds = componentTypeIds;
         }
     }
 }

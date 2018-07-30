@@ -35,7 +35,7 @@ namespace EcsRx.Groups.Observable
             _onEntityRemoved = new Subject<IEntity>();
             _onEntityRemoving = new Subject<IEntity>();
 
-            CachedEntities = initialEntities.Where(x => Token.Group.Matches(x)).ToDictionary(x => x.Id, x => x);
+            CachedEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x)).ToDictionary(x => x.Id, x => x);
             Subscriptions = new List<IDisposable>();
 
             MonitorEntityChanges();
@@ -68,7 +68,7 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
-                if (args.Entity.HasAllComponents(Token.Group.RequiredComponents)) 
+                if (args.Entity.HasAllComponents(Token.LookupGroup.RequiredComponents)) 
                 { return; }
 
                 CachedEntities.Remove(args.Entity.Id);
@@ -76,7 +76,7 @@ namespace EcsRx.Groups.Observable
                 return;
             }
 
-            if (!Token.Group.Matches(args.Entity)) {return;}
+            if (!Token.LookupGroup.Matches(args.Entity)) {return;}
             
             CachedEntities.Add(args.Entity.Id, args.Entity);
             _onEntityAdded.OnNext(args.Entity);
@@ -86,7 +86,7 @@ namespace EcsRx.Groups.Observable
         {
             if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
             
-            if(Token.Group.ContainsAnyRequiredComponents(args.ComponentTypes))
+            if(Token.LookupGroup.ContainsAnyRequiredComponents(args.ComponentTypeIds))
             { _onEntityRemoving.OnNext(args.Entity); }
         }
 
@@ -94,7 +94,7 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.ContainsKey(args.Entity.Id))
             {
-                if(!Token.Group.ContainsAnyExcludedComponents(args.Entity))
+                if(!Token.LookupGroup.ContainsAnyExcludedComponents(args.Entity))
                 { return; }
 
                 _onEntityRemoving.OnNext(args.Entity);
@@ -103,7 +103,7 @@ namespace EcsRx.Groups.Observable
                 return;
             }
             
-            if (!Token.Group.Matches(args.Entity)) { return; }
+            if (!Token.LookupGroup.Matches(args.Entity)) { return; }
 
             CachedEntities.Add(args.Entity.Id, args.Entity);
             _onEntityAdded.OnNext(args.Entity);
@@ -113,7 +113,7 @@ namespace EcsRx.Groups.Observable
         {
             // This is because you may have fired a blueprint before it is created
             if (CachedEntities.ContainsKey(args.Entity.Id)) { return; }
-            if (!Token.Group.Matches(args.Entity)) { return; }
+            if (!Token.LookupGroup.Matches(args.Entity)) { return; }
             
             CachedEntities.Add(args.Entity.Id, args.Entity);
             _onEntityAdded.OnNext(args.Entity);

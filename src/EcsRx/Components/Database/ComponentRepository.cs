@@ -25,13 +25,16 @@ namespace EcsRx.Components.Database
 
         public Type[] GetTypesFor(params int[] componentTypeIds)
         { return ComponentLookup.GetComponentTypes(componentTypeIds); }
+                
+        public int[] GetTypesFor(params Type[] componentTypeIds)
+        { return ComponentLookup.GetComponentTypes(componentTypeIds); }
 
-        public T Add<T>(int entityId, T component) where T : class, IComponent
+        public int Add<T>(int entityId, T component) where T : class, IComponent
         {
             var underlyingType = component.GetType();
             var componentTypeId = ComponentLookup.GetComponentType(underlyingType);
             Database.Add(componentTypeId, entityId, component);
-            return component;
+            return componentTypeId;
         }
         
         public IComponent Get(int entityId, int componentTypeId) => Database.Get(componentTypeId, entityId);        

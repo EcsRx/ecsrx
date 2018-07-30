@@ -66,11 +66,11 @@ namespace EcsRx.Tests.Framework
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.RequiredComponents.Contains(x))).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
 
             var unapplicableEntity = Substitute.For<IEntity>();
             unapplicableEntity.Id.Returns(2);
-            unapplicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.RequiredComponents.Contains(x))).Returns(false);
+            unapplicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
@@ -119,8 +119,8 @@ namespace EcsRx.Tests.Framework
             var wasCalled = 0;
             observableGroup.OnEntityAdded.Subscribe(x => wasCalled++);
 
-            applicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(true);
-            applicableEntity.HasAnyComponents(accessorToken.Group.ExcludedComponents).Returns(false);
+            applicableEntity.HasAllComponents(accessorToken.LookupGroup.RequiredComponents).Returns(true);
+            applicableEntity.HasAnyComponents(accessorToken.LookupGroup.ExcludedComponents).Returns(false);
             componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, null));
             
             Assert.Contains(applicableEntity, observableGroup.CachedEntities.Values);
@@ -137,8 +137,8 @@ namespace EcsRx.Tests.Framework
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.RequiredComponents.Contains(x))).Returns(true);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.ExcludedComponents.Contains(x))).Returns(false);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.ExcludedComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
@@ -180,8 +180,8 @@ namespace EcsRx.Tests.Framework
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.RequiredComponents.Contains(x))).Returns(true);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.Group.ExcludedComponents.Contains(x))).Returns(false);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.ExcludedComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
@@ -201,8 +201,8 @@ namespace EcsRx.Tests.Framework
             var wasRemovedCalled = 0;
             observableGroup.OnEntityRemoved.Subscribe(x => wasRemovedCalled++);
             
-            applicableEntity.HasAnyComponents(accessorToken.Group.RequiredComponents).Returns(false);
-            applicableEntity.HasAllComponents(accessorToken.Group.RequiredComponents).Returns(false);
+            applicableEntity.HasAnyComponents(accessorToken.LookupGroup.RequiredComponents).Returns(false);
+            applicableEntity.HasAllComponents(accessorToken.LookupGroup.RequiredComponents).Returns(false);
             componentRemoving.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ typeof(TestComponentOne) }));
             componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ typeof(TestComponentOne) }));
             

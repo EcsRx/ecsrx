@@ -21,6 +21,9 @@ namespace EcsRx.Extensions
 
         public static IEnumerable<IEntity> MatchingGroup(this IEnumerable<IEntity> entities, IGroup group)
         { return entities.Where(group.Matches); }
+        
+        public static IEnumerable<IEntity> MatchingGroup(this IEnumerable<IEntity> entities, ILookupGroup group)
+        { return entities.Where(group.Matches); }
 
         public static IEnumerable<ISystem> GetApplicableSystems(this IEnumerable<ISystem> systems, IEntity entity)
         { return systems.Where(x => entity.MatchesGroup(x.Group)); }

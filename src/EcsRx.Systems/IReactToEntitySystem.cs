@@ -11,7 +11,7 @@ namespace EcsRx.Systems
     /// </summary>
     /// <remarks>
     /// If you do not need to react to each entity individually it is recommended you
-    /// use a React To Group system as they have less overhead as there is only one
+    /// use a React To LookupGroup system as they have less overhead as there is only one
     /// subscription required rather than 1 per entity.
     /// </remarks>
     public interface IReactToEntitySystem : ISystem

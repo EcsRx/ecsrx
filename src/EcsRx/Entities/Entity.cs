@@ -11,13 +11,13 @@ namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
-        public IObservable<Type[]> ComponentsAdded => _onComponentsAdded;
-        public IObservable<Type[]> ComponentsRemoving => _onComponentsRemoving;
-        public IObservable<Type[]> ComponentsRemoved => _onComponentsRemoved;
+        public IObservable<int[]> ComponentsAdded => _onComponentsAdded;
+        public IObservable<int[]> ComponentsRemoving => _onComponentsRemoving;
+        public IObservable<int[]> ComponentsRemoved => _onComponentsRemoved;
         
-        private readonly Subject<Type[]> _onComponentsAdded;
-        private readonly Subject<Type[]> _onComponentsRemoving;
-        private readonly Subject<Type[]> _onComponentsRemoved;
+        private readonly Subject<int[]> _onComponentsAdded;
+        private readonly Subject<int[]> _onComponentsRemoving;
+        private readonly Subject<int[]> _onComponentsRemoved;
         
         public int Id { get; }
         public IComponentRepository ComponentRepository { get; }
@@ -29,49 +29,45 @@ namespace EcsRx.Entities
             ComponentRepository = componentRepository;
             componentRepository.ExpandDatabaseIfNeeded(id);
             
-            _onComponentsAdded = new Subject<Type[]>();
-            _onComponentsRemoving = new Subject<Type[]>();
-            _onComponentsRemoved = new Subject<Type[]>();
+            _onComponentsAdded = new Subject<int[]>();
+            _onComponentsRemoving = new Subject<int[]>();
+            _onComponentsRemoved = new Subject<int[]>();
         }
 
         public void AddComponents(params IComponent[] components)
         {
+            var componentTypeIds = new int[components.Length];
             for (var i = components.Length - 1; i >= 0; i--)
-            { ComponentRepository.Add(Id, components[i]); }
+            { componentTypeIds[i] = ComponentRepository.Add(Id, components[i]); }            
             
-            _onComponentsAdded.OnNext(components.Select(x => x.GetType()).ToArray());
+            _onComponentsAdded.OnNext(componentTypeIds);
         }
         
         public void RemoveComponents(params Type[] componentTypes)
         {
-            var sanitisedComponents = componentTypes.Where(HasComponent).ToArray();
-            if(sanitisedComponents.Length == 0) { return; }
-            
-            _onComponentsRemoving.OnNext(sanitisedComponents);
-            
-            for (var i = 0; i < sanitisedComponents.Length; i++)
-            { ComponentRepository.Remove(Id, sanitisedComponents[i]); }
-            
-            _onComponentsRemoved.OnNext(sanitisedComponents);
+            var componentTypeIds = ComponentRepository.GetTypesFor(componentTypes);
+            RemoveComponents(componentTypeIds);
         }
 
         public void RemoveComponents(params int[] componentsTypeIds)
         {
             var sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
             if(sanitisedComponentsIds.Length == 0) { return; }
-
-            var componentTypes = ComponentRepository.GetTypesFor(sanitisedComponentsIds);
             
-            _onComponentsRemoving.OnNext(componentTypes);
+            _onComponentsRemoving.OnNext(sanitisedComponentsIds);
             
             for (var i = 0; i < sanitisedComponentsIds.Length; i++)
             { ComponentRepository.Remove(Id, sanitisedComponentsIds[i]); }
             
-            _onComponentsRemoved.OnNext(componentTypes);
+            _onComponentsRemoved.OnNext(sanitisedComponentsIds);
         }
 
         public void RemoveAllComponents()
-        { RemoveComponents(Components.Select(x => x.GetType()).ToArray()); }
+        {
+            var componentTypes = Components.Select(x => x.GetType()).ToArray();
+            var componentTypeIds = ComponentRepository.GetTypesFor(componentTypes);
+            RemoveComponents(componentTypeIds);
+        }
        
         public bool HasComponent(Type componentType)
         { return ComponentRepository.Has(Id, componentType); }

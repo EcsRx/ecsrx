@@ -35,8 +35,8 @@ namespace EcsRx.Groups.Observable
             _onEntityRemoved = new Subject<IEntity>();
             _onEntityRemoving = new Subject<IEntity>();
 
-            CachedEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x)).ToDictionary(x => x.Id, x => x);
             Subscriptions = new List<IDisposable>();
+            CachedEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x)).ToDictionary(x => x.Id, x => x);
 
             MonitorEntityChanges();
         }

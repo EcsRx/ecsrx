@@ -46,7 +46,7 @@ namespace EcsRx.PerformanceTests
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentRepository);
             var poolFactory = new DefaultEntityCollectionFactory(entityFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
-            _entityCollectionManager = new EntityCollectionManager(poolFactory, observableGroupFactory);
+            _entityCollectionManager = new EntityCollectionManager(poolFactory, observableGroupFactory, componentLookup);
             
             _availableComponents = _groupFactory.GetComponentTypes
                 .Select(x => Activator.CreateInstance(x) as IComponent)

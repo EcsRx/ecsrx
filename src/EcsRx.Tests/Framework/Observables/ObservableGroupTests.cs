@@ -22,7 +22,7 @@ namespace EcsRx.Tests.Framework
         public void should_include_entity_snapshot_on_creation()
         {
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
-            var accessorToken = new ObservableGroupToken(new Type[]{ typeof(TestComponentOne) }, new Type[0], "default");
+            var accessorToken = new ObservableGroupToken(new[]{1}, new int[0], "default");
 
             var applicableEntity1 = Substitute.For<IEntity>();
             var applicableEntity2 = Substitute.For<IEntity>();
@@ -32,9 +32,9 @@ namespace EcsRx.Tests.Framework
             applicableEntity2.Id.Returns(2);
             notApplicableEntity1.Id.Returns(3);
             
-            applicableEntity1.HasComponent(Arg.Any<Type>()).Returns(true);
-            applicableEntity2.HasComponent(Arg.Any<Type>()).Returns(true);
-            notApplicableEntity1.HasComponent(Arg.Any<Type>()).Returns(false);            
+            applicableEntity1.HasComponent(Arg.Any<int>()).Returns(true);
+            applicableEntity2.HasComponent(Arg.Any<int>()).Returns(true);
+            notApplicableEntity1.HasComponent(Arg.Any<int>()).Returns(false);            
             
             var dummyEntitySnapshot = new List<IEntity>
             {
@@ -60,17 +60,17 @@ namespace EcsRx.Tests.Framework
         public void should_add_entity_and_raise_event_when_applicable_entity_added()
         {
             var collectionName = "default";
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], collectionName);
+            var accessorToken = new ObservableGroupToken(new[] { 1,2 }, new int[0], collectionName);
             var mockCollection = Substitute.For<IEntityCollection>();
             mockCollection.Name.Returns(collectionName);
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<int>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
 
             var unapplicableEntity = Substitute.For<IEntity>();
             unapplicableEntity.Id.Returns(2);
-            unapplicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(false);
+            unapplicableEntity.HasComponent(Arg.Is<int>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
@@ -99,7 +99,7 @@ namespace EcsRx.Tests.Framework
         public void should_add_entity_and_raise_event_when_components_match_group()
         {
             var collectionName = "default";
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne) }, new []{typeof(TestComponentTwo)}, collectionName);
+            var accessorToken = new ObservableGroupToken(new[] { 1 }, new []{ 2 }, collectionName);
             var mockCollection = Substitute.For<IEntityCollection>();
             mockCollection.Name.Returns(collectionName);
 
@@ -131,14 +131,14 @@ namespace EcsRx.Tests.Framework
         public void should_remove_entity_and_raise_events_when_entity_removed_with_components()
         {
             var collectionName = "default";
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], collectionName);
+            var accessorToken = new ObservableGroupToken(new[] { 1, 2 }, new int[0], collectionName);
             var mockCollection = Substitute.For<IEntityCollection>();
             mockCollection.Name.Returns(collectionName);
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.ExcludedComponents.Contains(x))).Returns(false);
+            applicableEntity.HasComponent(Arg.Is<int>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<int>(x => accessorToken.LookupGroup.ExcludedComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
@@ -156,7 +156,7 @@ namespace EcsRx.Tests.Framework
             var wasRemovedCalled = 0;
             observableGroup.OnEntityRemoved.Subscribe(x => wasRemovedCalled++);
             
-            componentRemoving.OnNext(new ComponentsChangedEvent(null, applicableEntity, new[]{typeof(TestComponentOne)}));
+            componentRemoving.OnNext(new ComponentsChangedEvent(null, applicableEntity, new[]{1}));
             
             Assert.Contains(applicableEntity, observableGroup.CachedEntities.Values);
             Assert.Equal(1, wasRemovingCalled);
@@ -174,14 +174,14 @@ namespace EcsRx.Tests.Framework
         public void should_remove_entity_and_raise_event_when_no_longer_matches_group()
         {
             var collectionName = "default";
-            var accessorToken = new ObservableGroupToken(new[] { typeof(TestComponentOne), typeof(TestComponentTwo) }, new Type[0], collectionName);
+            var accessorToken = new ObservableGroupToken(new[] { 1,2 }, new int[0], collectionName);
             var mockCollection = Substitute.For<IEntityCollection>();
             mockCollection.Name.Returns(collectionName);
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
-            applicableEntity.HasComponent(Arg.Is<Type>(x => accessorToken.LookupGroup.ExcludedComponents.Contains(x))).Returns(false);
+            applicableEntity.HasComponent(Arg.Is<int>(x => accessorToken.LookupGroup.RequiredComponents.Contains(x))).Returns(true);
+            applicableEntity.HasComponent(Arg.Is<int>(x => accessorToken.LookupGroup.ExcludedComponents.Contains(x))).Returns(false);
 
             var mockCollectionNotifier = Substitute.For<INotifyingEntityCollection>();
     
@@ -203,8 +203,8 @@ namespace EcsRx.Tests.Framework
             
             applicableEntity.HasAnyComponents(accessorToken.LookupGroup.RequiredComponents).Returns(false);
             applicableEntity.HasAllComponents(accessorToken.LookupGroup.RequiredComponents).Returns(false);
-            componentRemoving.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ typeof(TestComponentOne) }));
-            componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ typeof(TestComponentOne) }));
+            componentRemoving.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ 1 }));
+            componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ 1 }));
             
             Assert.DoesNotContain(applicableEntity, observableGroup.CachedEntities.Values);
             Assert.Equal(1, wasRemovingCalled);

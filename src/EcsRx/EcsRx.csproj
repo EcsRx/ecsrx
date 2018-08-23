@@ -17,4 +17,7 @@
   <ItemGroup>
     <None Remove="Properties\**" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EcsRx.MicroRx\EcsRx.MicroRx.csproj" />
+  </ItemGroup>
 </Project>

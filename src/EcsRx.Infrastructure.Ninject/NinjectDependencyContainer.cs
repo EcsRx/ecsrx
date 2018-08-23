@@ -2,7 +2,7 @@
 using EcsRx.Infrastructure.Dependencies;
 using Ninject;
 
-namespace EcsRx.Examples.Dependencies
+namespace EcsRx.Infrastructure.Ninject
 {
     /// <summary>
     /// This is a ninject implementation for the dependency container.

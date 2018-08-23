@@ -5,7 +5,7 @@ using System.Collections.Generic;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Polyfills
+namespace EcsRx.MicroRx.Disposables
 {
     public sealed class CompositeDisposable : ICollection<IDisposable>, IDisposable
     {
@@ -239,10 +239,7 @@ namespace EcsRx.Polyfills
         /// <summary>
         /// Always returns false.
         /// </summary>
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Returns an enumerator that iterates through the CompositeDisposable.
@@ -275,9 +272,6 @@ namespace EcsRx.Polyfills
         /// <summary>
         /// Gets a value that indicates whether the object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get { return _disposed; }
-        }
+        public bool IsDisposed => _disposed;
     }
 }

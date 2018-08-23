@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    <Title>EcsRx.ReactiveData</Title>
+    <Authors>Grofit (LP)</Authors>
+    <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ecsrx/ecsrx</PackageProjectUrl>
+    <Description>Reactive data objects for extending the dotnet reactive library, unirx provides this out of the box</Description>
+    <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reactive.Core" Version="4.1.0" />
+    <PackageReference Include="System.Reactive.Linq" Version="4.1.0" />
+  </ItemGroup>
+  
+</Project>

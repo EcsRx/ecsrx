@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
-using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.MicroRx.Subjects;
 using EcsRx.Systems;
 using EcsRx.Systems.Handlers;
 using NSubstitute;

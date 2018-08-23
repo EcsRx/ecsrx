@@ -1,7 +1,9 @@
 ﻿using System;
-using EcsRx.Reactive;
+using EcsRx.Events;
+using EcsRx.MicroRx;
+using EcsRx.MicroRx.Events;
 
-namespace EcsRx.Events
+namespace EcsRx.Infrastructure.Events
 {
     public class EventSystem : IEventSystem
     {

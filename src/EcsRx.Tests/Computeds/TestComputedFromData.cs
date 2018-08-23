@@ -1,10 +1,6 @@
 using System;
-using System.Linq;
-using System.Reactive.Subjects;
 using EcsRx.Computed;
-using EcsRx.Entities;
-using EcsRx.Groups.Observable;
-using EcsRx.Tests.Models;
+using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Tests.ComputedGroups
 {

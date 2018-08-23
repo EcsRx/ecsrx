@@ -7,7 +7,8 @@ using EcsRx.Entities;
 using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Polyfills;
+using EcsRx.MicroRx;
+using EcsRx.MicroRx.Extensions;
 
 namespace EcsRx.Systems.Handlers
 {

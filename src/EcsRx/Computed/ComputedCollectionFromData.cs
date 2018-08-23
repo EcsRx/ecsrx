@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
-using EcsRx.Groups.Observable;
-using EcsRx.Polyfills;
+using EcsRx.MicroRx;
+using EcsRx.MicroRx.Extensions;
+using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Computed
 {

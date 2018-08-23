@@ -6,7 +6,10 @@ using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Exceptions;
 using EcsRx.Extensions;
-using EcsRx.Polyfills;
+using EcsRx.MicroRx;
+using EcsRx.MicroRx.Disposables;
+using EcsRx.MicroRx.Extensions;
+using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Collections
 {

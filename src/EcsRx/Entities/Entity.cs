@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Database;
-using EcsRx.Events;
-using EcsRx.Extensions;
-using EcsRx.Polyfills;
+using EcsRx.MicroRx;
 
 namespace EcsRx.Entities
 {

@@ -6,7 +6,7 @@ using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
-using EcsRx.Polyfills;
+using EcsRx.MicroRx;
 
 namespace EcsRx.Groups.Observable
 {

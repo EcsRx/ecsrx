@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using EcsRx.Polyfills;
 
 /*
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Reactive
+namespace EcsRx.MicroRx
 {
     public class MessageBroker : IMessageBroker, IDisposable
     {

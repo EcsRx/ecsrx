@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 /*
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Polyfills
+namespace EcsRx.MicroRx
 {
     public class ListObserver<T> : IObserver<T>
     {

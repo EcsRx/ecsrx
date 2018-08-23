@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using EcsRx.Computed;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using EcsRx.Polyfills;
 using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.ComputedGroups

@@ -4,7 +4,7 @@
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Reactive
+namespace EcsRx.MicroRx
 {
     public interface IMessagePublisher
     {

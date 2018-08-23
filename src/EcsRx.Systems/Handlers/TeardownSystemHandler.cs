@@ -4,7 +4,7 @@ using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
-using EcsRx.Polyfills;
+using EcsRx.MicroRx;
 
 namespace EcsRx.Systems.Handlers
 {

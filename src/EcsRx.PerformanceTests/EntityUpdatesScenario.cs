@@ -15,7 +15,6 @@ using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.PerformanceTests.Helper;
 using EcsRx.PerformanceTests.Systems;
-using EcsRx.Reactive;
 using EcsRx.Systems;
 
 namespace EcsRx.PerformanceTests

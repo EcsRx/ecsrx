@@ -5,16 +5,8 @@ using System.Collections.Generic;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Polyfills
+namespace EcsRx.MicroRx
 {
-    public interface ISubject<TSource, TResult> : IObserver<TSource>, IObservable<TResult>
-    {
-    }
-
-    public interface ISubject<T> : ISubject<T, T>, IObserver<T>, IObservable<T>
-    {
-    }
-
     public sealed class Subject<T> : ISubject<T>, IDisposable
     {
         object observerLock = new object();
@@ -24,13 +16,7 @@ namespace EcsRx.Polyfills
         Exception lastError;
         IObserver<T> outObserver = EmptyObserver<T>.Instance;
 
-        public bool HasObservers
-        {
-            get
-            {
-                return !(outObserver is EmptyObserver<T>) && !isStopped && !isDisposed;
-            }
-        }
+        public bool HasObservers => !(outObserver is EmptyObserver<T>) && !isStopped && !isDisposed;
 
         public void OnCompleted()
         {

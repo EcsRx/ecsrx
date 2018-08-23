@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EcsRx.Extensions;
-using EcsRx.Groups.Observable;
-using EcsRx.Polyfills;
+using EcsRx.MicroRx;
 
 namespace EcsRx.Computed
 {

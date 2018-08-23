@@ -5,7 +5,7 @@ using System.Threading;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Polyfills
+namespace EcsRx.MicroRx
 {
     public static class IObservableExtensions
     {

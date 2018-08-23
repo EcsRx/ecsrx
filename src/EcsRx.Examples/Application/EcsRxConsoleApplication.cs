@@ -1,6 +1,6 @@
-﻿using EcsRx.Examples.Dependencies;
-using EcsRx.Infrastructure;
+﻿using EcsRx.Infrastructure;
 using EcsRx.Infrastructure.Dependencies;
+using EcsRx.Infrastructure.Ninject;
 
 namespace EcsRx.Examples.Application
 {

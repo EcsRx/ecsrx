@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using System.Reactive.Subjects;
 using EcsRx.Computed;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
+using EcsRx.MicroRx.Subjects;
 using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.ComputedGroups

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
 using EcsRx.Computed;
-using EcsRx.Entities;
-using EcsRx.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Extensions;
 using EcsRx.Extensions;

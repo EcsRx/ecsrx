@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Reactive.Subjects;
+using EcsRx.MicroRx.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
-using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;

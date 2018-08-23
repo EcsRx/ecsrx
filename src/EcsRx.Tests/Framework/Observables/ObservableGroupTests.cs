@@ -4,13 +4,10 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Collections;
-using EcsRx.Components;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using EcsRx.Reactive;
-using EcsRx.Tests.Models;
 using NSubstitute;
 using Xunit;
 

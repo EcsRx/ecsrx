@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using EcsRx.Extensions;
 using EcsRx.MicroRx;
+using EcsRx.MicroRx.Extensions;
+using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Computed
 {

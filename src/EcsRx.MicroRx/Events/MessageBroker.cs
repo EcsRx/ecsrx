@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using EcsRx.MicroRx.Subjects;
 
 /*
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.MicroRx
+namespace EcsRx.MicroRx.Events
 {
     public class MessageBroker : IMessageBroker, IDisposable
     {

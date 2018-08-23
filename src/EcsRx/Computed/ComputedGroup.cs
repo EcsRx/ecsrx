@@ -6,6 +6,8 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx;
+using EcsRx.MicroRx.Extensions;
+using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Computed
 {

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.MicroRx;
+using EcsRx.MicroRx.Extensions;
+using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Computed
 {

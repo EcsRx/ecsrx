@@ -1,6 +1,7 @@
 ﻿using System;
 using EcsRx.Events;
 using EcsRx.MicroRx;
+using EcsRx.MicroRx.Events;
 
 namespace EcsRx.Infrastructure.Events
 {

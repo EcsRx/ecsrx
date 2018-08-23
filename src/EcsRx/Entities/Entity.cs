@@ -4,6 +4,7 @@ using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.MicroRx;
+using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Entities
 {

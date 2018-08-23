@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using EcsRx.MicroRx.Disposables;
+using EcsRx.MicroRx.Observers;
 
 /*
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.MicroRx
+namespace EcsRx.MicroRx.Subjects
 {
     public sealed class Subject<T> : ISubject<T>, IDisposable
     {
@@ -16,7 +17,13 @@ namespace EcsRx.MicroRx
         Exception lastError;
         IObserver<T> outObserver = EmptyObserver<T>.Instance;
 
-        public bool HasObservers => !(outObserver is EmptyObserver<T>) && !isStopped && !isDisposed;
+        public bool HasObservers
+        {
+            get
+            {
+                return !(outObserver is EmptyObserver<T>) && !isStopped && !isDisposed;
+            }
+        }
 
         public void OnCompleted()
         {
@@ -83,7 +90,7 @@ namespace EcsRx.MicroRx
                         }
                         else
                         {
-                            outObserver = new ListObserver<T>(new List<IObserver<T>>(new[] { current, observer }));
+                            outObserver = new ListObserver<T>(new ImmutableList<IObserver<T>>(new[] { current, observer }));
                         }
                     }
 

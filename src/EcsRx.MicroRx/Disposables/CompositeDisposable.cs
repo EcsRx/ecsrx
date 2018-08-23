@@ -5,7 +5,7 @@ using System.Collections.Generic;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.MicroRx
+namespace EcsRx.MicroRx.Disposables
 {
     public sealed class CompositeDisposable : ICollection<IDisposable>, IDisposable
     {

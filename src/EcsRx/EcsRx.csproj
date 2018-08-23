@@ -18,9 +18,6 @@
     <None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Reactive" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\EcsRx.MicroRx\EcsRx.MicroRx.csproj" />
   </ItemGroup>
 </Project>

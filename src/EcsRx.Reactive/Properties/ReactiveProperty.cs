@@ -7,19 +7,8 @@ using System.Reactive.Subjects;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Reactive
+namespace EcsRx.Reactive.Properties
 {
-    public interface IReadOnlyReactiveProperty<T> : IObservable<T>
-    {
-        T Value { get; }
-        bool HasValue { get; }
-    }
-
-    public interface IReactiveProperty<T> : IReadOnlyReactiveProperty<T>
-    {
-        new T Value { get; set; }
-    }
-
     /// <summary>
     /// Lightweight property broker.
     /// </summary>

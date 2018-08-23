@@ -4,131 +4,19 @@ using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Runtime.Serialization;
 
 /*
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Reactive
+namespace EcsRx.Reactive.Dictionaries
 {
-    public struct DictionaryAddEvent<TKey, TValue> : IEquatable<DictionaryAddEvent<TKey, TValue>>
-    {
-        public TKey Key { get; }
-        public TValue Value { get; }
-
-        public DictionaryAddEvent(TKey key, TValue value)
-            : this()
-        {
-            Key = key;
-            Value = value;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Key:{0} Value:{1}", Key, Value);
-        }
-
-        public override int GetHashCode()
-        {
-            return EqualityComparer<TKey>.Default.GetHashCode(Key) ^ EqualityComparer<TValue>.Default.GetHashCode(Value) << 2;
-        }
-
-        public bool Equals(DictionaryAddEvent<TKey, TValue> other)
-        {
-            return EqualityComparer<TKey>.Default.Equals(Key, other.Key) && EqualityComparer<TValue>.Default.Equals(Value, other.Value);
-        }
-    }
-
-    public struct DictionaryRemoveEvent<TKey, TValue> : IEquatable<DictionaryRemoveEvent<TKey, TValue>>
-    {
-        public TKey Key { get; }
-        public TValue Value { get; }
-
-        public DictionaryRemoveEvent(TKey key, TValue value)
-            : this()
-        {
-            Key = key;
-            Value = value;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Key:{0} Value:{1}", Key, Value);
-        }
-
-        public override int GetHashCode()
-        {
-            return EqualityComparer<TKey>.Default.GetHashCode(Key) ^ EqualityComparer<TValue>.Default.GetHashCode(Value) << 2;
-        }
-
-        public bool Equals(DictionaryRemoveEvent<TKey, TValue> other)
-        {
-            return EqualityComparer<TKey>.Default.Equals(Key, other.Key) && EqualityComparer<TValue>.Default.Equals(Value, other.Value);
-        }
-    }
-
-    public struct DictionaryReplaceEvent<TKey, TValue> : IEquatable<DictionaryReplaceEvent<TKey, TValue>>
-    {
-        public TKey Key { get; }
-        public TValue OldValue { get; }
-        public TValue NewValue { get; }
-
-        public DictionaryReplaceEvent(TKey key, TValue oldValue, TValue newValue)
-            : this()
-        {
-            Key = key;
-            OldValue = oldValue;
-            NewValue = newValue;
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Key:{0} OldValue:{1} NewValue:{2}", Key, OldValue, NewValue);
-        }
-
-        public override int GetHashCode()
-        {
-            return EqualityComparer<TKey>.Default.GetHashCode(Key) ^ EqualityComparer<TValue>.Default.GetHashCode(OldValue) << 2 ^ EqualityComparer<TValue>.Default.GetHashCode(NewValue) >> 2;
-        }
-
-        public bool Equals(DictionaryReplaceEvent<TKey, TValue> other)
-        {
-            return EqualityComparer<TKey>.Default.Equals(Key, other.Key) && EqualityComparer<TValue>.Default.Equals(OldValue, other.OldValue) && EqualityComparer<TValue>.Default.Equals(NewValue, other.NewValue);
-        }
-    }
-
-    // IReadOnlyDictionary is from .NET 4.5
-    public interface IReadOnlyReactiveDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
-    {
-        int Count { get; }
-        TValue this[TKey index] { get; }
-        bool ContainsKey(TKey key);
-        bool TryGetValue(TKey key, out TValue value);
-
-        IObservable<DictionaryAddEvent<TKey, TValue>> ObserveAdd();
-        IObservable<int> ObserveCountChanged();
-        IObservable<DictionaryRemoveEvent<TKey, TValue>> ObserveRemove();
-        IObservable<DictionaryReplaceEvent<TKey, TValue>> ObserveReplace();
-        IObservable<Unit> ObserveReset();
-    }
-
-    public interface IReactiveDictionary<TKey, TValue> : IReadOnlyReactiveDictionary<TKey, TValue>, IDictionary<TKey, TValue>
-    {
-    }
-
     [Serializable]
-    public class ReactiveDictionary<TKey, TValue> : IReactiveDictionary<TKey, TValue>, IDictionary<TKey, TValue>, IEnumerable, ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IDictionary, IDisposable
-#if !UNITY_METRO && UNITY
-        , ISerializable, IDeserializationCallback
-#endif
+    public class ReactiveDictionary<TKey, TValue> : IReactiveDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary, IDisposable
     {
         [NonSerialized]
         bool isDisposed = false;
 
-#if !UniRxLibrary && UNITY
-        [UnityEngine.SerializeField]
-#endif
         readonly Dictionary<TKey, TValue> inner;
 
         public ReactiveDictionary()
@@ -171,8 +59,8 @@ namespace EcsRx.Reactive
         }
 
         public int Count => inner.Count;
-        public Dictionary<TKey, TValue>.KeyCollection Keys => inner.Keys;
-        public Dictionary<TKey, TValue>.ValueCollection Values => inner.Values;
+        public IEnumerable<TKey> Keys => inner.Keys;
+        public IEnumerable<TValue> Values => inner.Values;
 
         public void Add(TKey key, TValue value)
         {
@@ -188,29 +76,21 @@ namespace EcsRx.Reactive
             inner.Clear();
 
             if (collectionReset != null) collectionReset.OnNext(Unit.Default);
-            if (beforeCount > 0)
-            {
-                if (countChanged != null) countChanged.OnNext(Count);
-            }
+            if (beforeCount <= 0) return;
+            if (countChanged != null) countChanged.OnNext(Count);
         }
 
         public bool Remove(TKey key)
         {
             TValue oldValue;
-            if (inner.TryGetValue(key, out oldValue))
-            {
-                var isSuccessRemove = inner.Remove(key);
-                if (isSuccessRemove)
-                {
-                    if (dictionaryRemove != null) dictionaryRemove.OnNext(new DictionaryRemoveEvent<TKey, TValue>(key, oldValue));
-                    if (countChanged != null) countChanged.OnNext(Count);
-                }
-                return isSuccessRemove;
-            }
-            else
-            {
-                return false;
-            }
+            if (!inner.TryGetValue(key, out oldValue)) return false;
+            
+            var isSuccessRemove = inner.Remove(key);
+            if (!isSuccessRemove) return isSuccessRemove;
+            
+            if (dictionaryRemove != null) dictionaryRemove.OnNext(new DictionaryRemoveEvent<TKey, TValue>(key, oldValue));
+            if (countChanged != null) countChanged.OnNext(Count);
+            return isSuccessRemove;
         }
 
         public bool ContainsKey(TKey key)
@@ -321,90 +201,29 @@ namespace EcsRx.Reactive
 
         object IDictionary.this[object key]
         {
-            get
-            {
-                return this[(TKey)key];
-            }
-
-            set
-            {
-                this[(TKey)key] = (TValue)value;
-            }
+            get => this[(TKey)key];
+            set => this[(TKey)key] = (TValue)value;
         }
 
 
-        bool IDictionary.IsFixedSize
-        {
-            get
-            {
-                return ((IDictionary)inner).IsFixedSize;
-            }
-        }
+        bool IDictionary.IsFixedSize => ((IDictionary)inner).IsFixedSize;
 
-        bool IDictionary.IsReadOnly
-        {
-            get
-            {
-                return ((IDictionary)inner).IsReadOnly;
-            }
-        }
+        bool IDictionary.IsReadOnly => ((IDictionary)inner).IsReadOnly;
 
-        bool ICollection.IsSynchronized
-        {
-            get
-            {
-                return ((IDictionary)inner).IsSynchronized;
-            }
-        }
+        bool ICollection.IsSynchronized => ((IDictionary)inner).IsSynchronized;
 
-        ICollection IDictionary.Keys
-        {
-            get
-            {
-                return ((IDictionary)inner).Keys;
-            }
-        }
+        ICollection IDictionary.Keys => ((IDictionary)inner).Keys;
 
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                return ((IDictionary)inner).SyncRoot;
-            }
-        }
+        object ICollection.SyncRoot => ((IDictionary)inner).SyncRoot;
 
-        ICollection IDictionary.Values
-        {
-            get
-            {
-                return ((IDictionary)inner).Values;
-            }
-        }
+        ICollection IDictionary.Values => ((IDictionary)inner).Values;
 
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get
-            {
-                return ((ICollection<KeyValuePair<TKey, TValue>>)inner).IsReadOnly;
-            }
-        }
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => ((ICollection<KeyValuePair<TKey, TValue>>)inner).IsReadOnly;
 
-        ICollection<TKey> IDictionary<TKey, TValue>.Keys
-        {
-            get
-            {
-                return inner.Keys;
-            }
-        }
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys => inner.Keys;
 
-        ICollection<TValue> IDictionary<TKey, TValue>.Values
-        {
-            get
-            {
-                return inner.Values;
-            }
-        }
+        ICollection<TValue> IDictionary<TKey, TValue>.Values => inner.Values;
 
         void IDictionary.Add(object key, object value)
         {
@@ -420,20 +239,6 @@ namespace EcsRx.Reactive
         {
             ((IDictionary)inner).CopyTo(array, index);
         }
-
-#if !UNITY_METRO && UNITY
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            ((ISerializable)inner).GetObjectData(info, context);
-        }
-
-        public void OnDeserialization(object sender)
-        {
-            ((IDeserializationCallback)inner).OnDeserialization(sender);
-        }
-
-#endif
 
         void IDictionary.Remove(object key)
         {
@@ -486,13 +291,5 @@ namespace EcsRx.Reactive
         }
 
         #endregion
-    }
-
-    public static partial class ReactiveDictionaryExtensions
-    {
-        public static ReactiveDictionary<TKey, TValue> ToReactiveDictionary<TKey, TValue>(this Dictionary<TKey, TValue> dictionary)
-        {
-            return new ReactiveDictionary<TKey, TValue>(dictionary);
-        }
     }
 }

@@ -239,10 +239,7 @@ namespace EcsRx.MicroRx.Disposables
         /// <summary>
         /// Always returns false.
         /// </summary>
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Returns an enumerator that iterates through the CompositeDisposable.
@@ -275,9 +272,6 @@ namespace EcsRx.MicroRx.Disposables
         /// <summary>
         /// Gets a value that indicates whether the object is disposed.
         /// </summary>
-        public bool IsDisposed
-        {
-            get { return _disposed; }
-        }
+        public bool IsDisposed => _disposed;
     }
 }

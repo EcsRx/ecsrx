@@ -70,6 +70,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         
         public void ProcessEntity(IEntity entity)
         {
+            // Called just to make sure the method runs
             bool ignore;
             
             if(entity.HasAllComponents(_availableComponentTypeIds))

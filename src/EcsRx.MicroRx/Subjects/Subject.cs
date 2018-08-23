@@ -17,13 +17,7 @@ namespace EcsRx.MicroRx.Subjects
         Exception lastError;
         IObserver<T> outObserver = EmptyObserver<T>.Instance;
 
-        public bool HasObservers
-        {
-            get
-            {
-                return !(outObserver is EmptyObserver<T>) && !isStopped && !isDisposed;
-            }
-        }
+        public bool HasObservers => !(outObserver is EmptyObserver<T>) && !isStopped && !isDisposed;
 
         public void OnCompleted()
         {

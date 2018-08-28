@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Collections;
+using EcsRx.Computed;
 using EcsRx.Entities;
 
 namespace EcsRx.Extensions

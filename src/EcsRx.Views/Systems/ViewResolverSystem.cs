@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using EcsRx.Entities;
+﻿using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
@@ -10,7 +8,7 @@ using EcsRx.Views.ViewHandlers;
 
 namespace EcsRx.Views.Systems
 {
-    public abstract class ViewResolverSystem : ISetupSystem, ITeardownSystem
+    public abstract class ViewResolverSystem : IViewResolverSystem
     {
         public IEventSystem EventSystem { get; }
 

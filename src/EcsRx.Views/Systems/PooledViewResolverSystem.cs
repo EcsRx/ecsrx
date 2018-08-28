@@ -8,18 +8,27 @@ using EcsRx.Views.Pooling;
 
 namespace EcsRx.Views.Systems
 {
-    public abstract class PooledViewResolverSystem : ISetupSystem, ITeardownSystem
+    public abstract class PooledViewResolverSystem : IViewResolverSystem
     {
         public IEventSystem EventSystem { get; }
 
         public virtual IGroup Group => new Group(typeof(ViewComponent));
-        public abstract IViewPool ViewPool { get; }
+        public IViewPool ViewPool { get; private set; }
 
         protected PooledViewResolverSystem(IEventSystem eventSystem)
         {
             EventSystem = eventSystem;
+            SetupViewPool();
         }
 
+        protected void SetupViewPool()
+        {
+            ViewPool = CreateViewPool();
+            OnPoolStarting();
+        }
+
+        protected abstract IViewPool CreateViewPool();
+        protected abstract void OnPoolStarting();
         protected abstract void OnViewRecycled(object view, IEntity entity);
         protected abstract void OnViewAllocated(object view, IEntity entity);
 

@@ -2,13 +2,14 @@
 using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using EcsRx.Groups.Observable;
 using EcsRx.Systems;
 using EcsRx.Views.Components;
 using EcsRx.Views.Pooling;
 
 namespace EcsRx.Views.Systems
 {
-    public abstract class PooledViewResolverSystem : IViewResolverSystem
+    public abstract class PooledViewResolverSystem : IViewResolverSystem, IManualSystem
     {
         public IEventSystem EventSystem { get; }
 
@@ -18,13 +19,6 @@ namespace EcsRx.Views.Systems
         protected PooledViewResolverSystem(IEventSystem eventSystem)
         {
             EventSystem = eventSystem;
-            SetupViewPool();
-        }
-
-        protected void SetupViewPool()
-        {
-            ViewPool = CreateViewPool();
-            OnPoolStarting();
         }
 
         protected abstract IViewPool CreateViewPool();
@@ -59,5 +53,14 @@ namespace EcsRx.Views.Systems
             var viewComponent = entity.GetComponent<ViewComponent>();
             RecycleView(entity, viewComponent);
         }
+
+        public void StartSystem(IObservableGroup observableGroup)
+        {
+            ViewPool = CreateViewPool();
+            OnPoolStarting();
+        }
+
+        public void StopSystem(IObservableGroup observableGroup)
+        { ViewPool.EmptyPool(); }
     }
 }

@@ -14,7 +14,7 @@ using EcsRx.Systems.Extensions;
 
 namespace EcsRx.Systems.Handlers
 {
-    [Priority(4)]
+    [Priority(3)]
     public class ReactToDataSystemHandler : IConventionalSystemHandler
     {
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;

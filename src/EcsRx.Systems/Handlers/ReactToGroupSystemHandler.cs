@@ -12,7 +12,7 @@ using EcsRx.MicroRx.Extensions;
 
 namespace EcsRx.Systems.Handlers
 {
-    [Priority(2)]
+    [Priority(6)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler
     {
         public readonly IEntityCollectionManager EntityCollectionManager;       

@@ -21,9 +21,9 @@ namespace EcsRx.Infrastructure.Ninject
     {
         private readonly IKernel _kernel;
 
-        public NinjectDependencyContainer()
+        public NinjectDependencyContainer(IKernel kernel = null)
         {
-            _kernel = new StandardKernel();
+            _kernel = kernel ?? new StandardKernel();
         }
 
         public object NativeContainer => _kernel;

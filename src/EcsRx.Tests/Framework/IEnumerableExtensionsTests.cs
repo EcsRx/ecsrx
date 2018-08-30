@@ -24,8 +24,8 @@ namespace EcsRx.Tests.Framework
             var defaultPrioritySystem = new DefaultPrioritySystem();
             var higherThanDefaultPrioritySystem = new HigherThanDefaultPrioritySystem();
             var lowerThanDefaultPrioritySystem = new LowerThanDefaultPrioritySystem();
-            var lowPrioritySystem = new LowPrioritySystem();
-            var highPrioritySystem = new HighPrioritySystem();
+            var lowPrioritySystem = new LowestPrioritySystem();
+            var highPrioritySystem = new HighestPrioritySystem();
 
             var systemList = new List<ISystem>
             {

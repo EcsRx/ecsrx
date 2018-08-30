@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace EcsRx.Infrastructure.Dependencies
 {
@@ -6,13 +7,16 @@ namespace EcsRx.Infrastructure.Dependencies
     {
         public bool AsSingleton { get; set; }  
         public string WithName { get; set; }
-        public object BindInstance { get; set; }
-        public IDictionary<string, object> WithConstructorArgs { get; }
+        public object ToInstance { get; set; }
+        public Func<IDependencyContainer, object> ToMethod { get; set; }
+        public IDictionary<string, object> WithNamedConstructorArgs { get; }
+        public IDictionary<Type, object> WithTypedConstructorArgs { get; }
 
         public BindingConfiguration()
         {
             AsSingleton = true;       
-            WithConstructorArgs = new Dictionary<string, object>();
+            WithNamedConstructorArgs = new Dictionary<string, object>();
+            WithTypedConstructorArgs = new Dictionary<Type, object>();
         }
     }
 }

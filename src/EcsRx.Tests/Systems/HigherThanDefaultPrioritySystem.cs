@@ -4,7 +4,7 @@ using EcsRx.Systems;
 
 namespace EcsRx.Tests.Systems
 {
-    [Priority(100)]
+    [Priority(1)]
     public class HigherThanDefaultPrioritySystem : ISystem
     {
         public IGroup Group => null;

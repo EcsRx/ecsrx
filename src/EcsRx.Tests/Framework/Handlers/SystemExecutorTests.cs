@@ -1,6 +1,9 @@
-﻿using EcsRx.Executor;
+﻿using System.Collections.Generic;
+using System.Text;
+using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Systems;
+using EcsRx.Tests.Systems.Handlers;
 using NSubstitute;
 using Xunit;
 
@@ -65,6 +68,26 @@ namespace EcsRx.Tests.Framework
             fakeSetupSystemHandler2.Received(1).Dispose();
 
             Assert.Empty(systemExecutor._systems);
+        }
+
+        [Fact]
+        public void should_run_systems_in_correct_priority()
+        {
+            var expectedOrder = "1234";
+            var actualOrder = new StringBuilder();
+            var conventionalSystems = new IConventionalSystemHandler[]
+            {
+                new DefaultPriorityHandler(() => actualOrder.Append(3)), 
+                new HigherPriorityHandler(() => actualOrder.Append(1)), 
+                new HighPriorityHandler(() => actualOrder.Append(2)), 
+                new LowerPriorityHandler(() => actualOrder.Append(4))
+            };
+            var systemExecutor = new SystemExecutor(conventionalSystems);
+            
+            var fakeSystem1 = Substitute.For<ISetupSystem>();
+            systemExecutor.AddSystem(fakeSystem1);
+            
+            Assert.Equal(expectedOrder, actualOrder.ToString());
         }
     }
 }

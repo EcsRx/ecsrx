@@ -10,7 +10,7 @@ using EcsRx.MicroRx.Extensions;
 
 namespace EcsRx.Systems.Handlers
 {
-    [Priority(1)]
+    [Priority(10)]
     public class TeardownSystemHandler : IConventionalSystemHandler
     {
         public readonly IEntityCollectionManager EntityCollectionManager;

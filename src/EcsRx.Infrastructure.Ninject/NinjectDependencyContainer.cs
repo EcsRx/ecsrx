@@ -21,9 +21,9 @@ namespace EcsRx.Infrastructure.Ninject
     {
         private readonly IKernel _kernel;
 
-        public NinjectDependencyContainer()
+        public NinjectDependencyContainer(IKernel kernel = null)
         {
-            _kernel = new StandardKernel();
+            _kernel = kernel ?? new StandardKernel();
         }
 
         public object NativeContainer => _kernel;
@@ -38,12 +38,22 @@ namespace EcsRx.Infrastructure.Ninject
                 return;
             }
 
-            if (configuration.BindInstance != null)
+            if (configuration.ToInstance != null)
             {
-                var instanceBinding = bindingSetup.ToConstant((TFrom) configuration.BindInstance);
+                var instanceBinding = bindingSetup.ToConstant((TFrom) configuration.ToInstance);
                 
                 if(configuration.AsSingleton)
                 { instanceBinding.InSingletonScope(); }
+
+                return;
+            }
+
+            if (configuration.ToMethod != null)
+            {
+                var methodBinding = bindingSetup.ToMethod(x => (TTo)configuration.ToMethod(this));
+
+                if(configuration.AsSingleton)
+                { methodBinding.InSingletonScope(); }
 
                 return;
             }
@@ -56,10 +66,10 @@ namespace EcsRx.Infrastructure.Ninject
             if(!string.IsNullOrEmpty(configuration.WithName))
             { binding.Named(configuration.WithName); }
 
-            if (configuration.WithConstructorArgs.Count == 0)
+            if (configuration.WithNamedConstructorArgs.Count == 0)
             { return; }
 
-            foreach (var constructorArg in configuration.WithConstructorArgs)
+            foreach (var constructorArg in configuration.WithNamedConstructorArgs)
             { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
         }
 

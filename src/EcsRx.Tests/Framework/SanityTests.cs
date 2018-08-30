@@ -11,6 +11,8 @@ using EcsRx.Groups.Observable;
 using EcsRx.Systems.Handlers;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
+using EcsRx.Views.Systems;
+using NSubstitute;
 using Xunit;
 
 namespace EcsRx.Tests.Framework
@@ -90,6 +92,19 @@ namespace EcsRx.Tests.Framework
             entityOne.RemoveComponent<TestComponentOne>();
             
             Assert.Equal(2, timesCalled);
+        }
+        
+        [Fact]
+        public void should_run_treat_view_handler_as_setup_system_and_teardown_system()
+        {
+            var mockEntityCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var setupSystemHandler = new SetupSystemHandler(mockEntityCollectionManager);
+            var teardownSystemHandler = new SetupSystemHandler(mockEntityCollectionManager);
+            
+            var viewSystem = Substitute.For<IViewResolverSystem>();
+            
+            Assert.True(setupSystemHandler.CanHandleSystem(viewSystem));
+            Assert.True(teardownSystemHandler.CanHandleSystem(viewSystem));
         }
     }
 }

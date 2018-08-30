@@ -37,8 +37,8 @@ namespace EcsRx.Infrastructure.Modules
             var allComponents = componentTypeAssigner.GenerateComponentLookups();
             var componentLookup = new ComponentTypeLookup(allComponents);
             
-            container.Bind<IComponentTypeAssigner>(new BindingConfiguration{BindInstance = componentTypeAssigner});
-            container.Bind<IComponentTypeLookup>(new BindingConfiguration{BindInstance = componentLookup});           
+            container.Bind<IComponentTypeAssigner>(new BindingConfiguration{ToInstance = componentTypeAssigner});
+            container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToInstance = componentLookup});           
             container.Bind<IComponentDatabase, ComponentDatabase>();
             container.Bind<IComponentRepository, ComponentRepository>();
         }

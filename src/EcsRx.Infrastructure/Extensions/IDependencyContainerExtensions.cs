@@ -1,5 +1,8 @@
 using System;
+using EcsRx.Collections;
 using EcsRx.Computed;
+using EcsRx.Groups;
+using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
 
 namespace EcsRx.Infrastructure.Extensions
@@ -33,6 +36,31 @@ namespace EcsRx.Infrastructure.Extensions
             builderAction(builder);
             var config = builder.Build();
             container.Bind<TFrom, TTo>(config);
+        }
+        
+        /// <summary>
+        /// Resolves an observable group
+        /// </summary>
+        /// <param name="container">The container to action on</param>
+        /// <param name="group">The group to observe</param>
+        /// <returns>The observable group</returns>
+        public static IObservableGroup ResolveObservableGroup(this IDependencyContainer container, IGroup group)
+        {
+            var collectionManager = container.Resolve<IEntityCollectionManager>();
+            return collectionManager.GetObservableGroup(group);
+        }
+        
+        /// <summary>
+        /// Resolves an observable group
+        /// </summary>
+        /// <param name="container">The container to action on</param>
+        /// <param name="componentTypes">The required components for the group to observe</param>
+        /// <returns></returns>
+        public static IObservableGroup ResolveObservableGroup(this IDependencyContainer container, params Type[] componentTypes)
+        {
+            var collectionManager = container.Resolve<IEntityCollectionManager>();
+            var group = new Group(componentTypes);
+            return collectionManager.GetObservableGroup(group);
         }
     }
 }

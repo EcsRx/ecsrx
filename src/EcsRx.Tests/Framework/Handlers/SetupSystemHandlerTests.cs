@@ -190,7 +190,7 @@ namespace EcsRx.Tests.Framework
         {
             var id1 = 1;
             var id2 = 2;
-            var expectedDate = DateTime.Now + TimeSpan.FromSeconds(1);
+            var expectedDate = DateTime.Now + TimeSpan.FromMilliseconds(500);
             
             var fakeEntity1 = Substitute.For<IEntity>();
             var fakeEntity2 = Substitute.For<IEntity>();
@@ -221,7 +221,7 @@ namespace EcsRx.Tests.Framework
             Assert.True(systemHandler._entitySubscriptions[mockSystem].ContainsKey(fakeEntity1.Id));
             Assert.True(systemHandler._entitySubscriptions[mockSystem].ContainsKey(fakeEntity2.Id));
 
-            Thread.Sleep(1100);
+            Thread.Sleep(2000);
             mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
             mockSystem.Received(0).Setup(Arg.Is(fakeEntity2));
             

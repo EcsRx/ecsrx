@@ -36,7 +36,7 @@ namespace EcsRx.Entities
         public void AddComponents(params IComponent[] components)
         {
             var componentTypeIds = new int[components.Length];
-            for (var i = components.Length - 1; i >= 0; i--)
+            for (var i = 0; i < components.Length; i++)
             { componentTypeIds[i] = ComponentRepository.Add(Id, components[i]); }            
             
             _onComponentsAdded.OnNext(componentTypeIds);

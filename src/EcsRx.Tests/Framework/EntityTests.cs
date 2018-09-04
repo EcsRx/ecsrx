@@ -146,5 +146,22 @@ namespace EcsRx.Tests.Framework
             Assert.True(afterWasCalled);
             Assert.Empty(entity.Components);
         }
+
+        [Fact]
+        public void should_add_components_in_parameter_order()
+        {
+            var fakeEntityId = 1;
+            var fakeComponents = new IComponent[] {new TestComponentOne(), new TestComponentTwo(), new TestComponentThree()};
+
+            var componentRepository = Substitute.For<IComponentRepository>();
+            var entity = new Entity(fakeEntityId, componentRepository);
+            entity.AddComponents(fakeComponents);
+            
+            Received.InOrder(() => {
+                componentRepository.Add(fakeEntityId, fakeComponents[0]);
+                componentRepository.Add(fakeEntityId, fakeComponents[1]);
+                componentRepository.Add(fakeEntityId, fakeComponents[2]);
+            });
+        }
     }
 }

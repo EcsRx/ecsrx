@@ -71,6 +71,9 @@ namespace EcsRx.Infrastructure.Ninject
 
             foreach (var constructorArg in configuration.WithNamedConstructorArgs)
             { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
+            
+            foreach (var constructorArg in configuration.WithTypedConstructorArgs)
+            { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
         }
 
         public void Bind<T>(BindingConfiguration configuration = null)

@@ -34,10 +34,23 @@ namespace EcsRx.Extensions
             return systems.Where(x => x.Group.RequiredComponents.All(y => componentTypes.Contains(y)));
         }
 
-        public static IEnumerable<T> OrderByPriority<T>(this IEnumerable<T> listToPrioritize)
+        public static IOrderedEnumerable<T> OrderByPriority<T>(this IEnumerable<T> listToPrioritize)
         {
             var priorityAttributeType = typeof(PriorityAttribute);
             return listToPrioritize.OrderBy(x =>
+            {
+                var priorityAttributes = x.GetType().GetCustomAttributes(priorityAttributeType, true);
+                if (priorityAttributes.Length <= 0) { return 0; }
+                
+                var priorityAttribute = priorityAttributes.FirstOrDefault() as PriorityAttribute;
+                return -priorityAttribute.Priority;
+            });
+        } 
+        
+        public static IOrderedEnumerable<T> ThenByPriority<T>(this IOrderedEnumerable<T> listToPrioritize)
+        {
+            var priorityAttributeType = typeof(PriorityAttribute);
+            return listToPrioritize.ThenBy(x =>
             {
                 var priorityAttributes = x.GetType().GetCustomAttributes(priorityAttributeType, true);
                 if (priorityAttributes.Length <= 0) { return 0; }

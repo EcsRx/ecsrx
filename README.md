@@ -4,7 +4,7 @@ EcsRx is a reactive take on the common ECS pattern with a well separated design 
 
 [![Build Status][build-status-image]][build-status-url]
 [![Nuget Version][nuget-image]][nuget-url]
-[![Join Gitter Chat][gitter-image]][gitter-url]
+[![Join Discord Chat][discord-image]][discord-url]
 
 ## Features
 
@@ -80,7 +80,7 @@ public class CheckForDeathSystem : IReactToEntitySystem
 
 Systems are conventional, so there are many built in types like `IReactToEntitySystem`, `IReactToGroupSystem`, `IManualSystem` and many others, but you can read about them in the [docs/systems](docs/systems.md), you can add your own conventional systems by extending `ISystem` and systems are handled for you by the `ISystemExecutor`.
 
-Check the examples for more use cases, and the unity flavour of ecsrx which has more examples and demo projects, and drop into the gitter channel to ask any questions.
+Check the examples for more use cases, and the unity flavour of ecsrx which has more examples and demo projects, and drop into the discord channel to ask any questions.
 
 ## Running Examples
 
@@ -96,7 +96,7 @@ We are now at a point where the underlying infrastructure module (mainly for `Ec
 
 The examples folder shows examples on how to create your own application implementations, but hopefully once things have been ironed out in the whole Rx world this area will improve more as we start to add another layer which will let you just drop in and go (like the unity version).
 
-If you want to know more about this drop into the gitter chat and we can discuss more.
+If you want to know more about this drop into the discord chat and we can discuss more.
 
 ## Docs
 
@@ -104,7 +104,7 @@ See the [docs folder](docs) for more information. (This will grow)
 
 [build-status-image]: https://ci.appveyor.com/api/projects/status/55d1256yrra6fmls/branch/master?svg=true
 [build-status-url]: https://ci.appveyor.com/project/grofit/ecsrx/branch/master
-[gitter-image]: https://badges.gitter.im/grofit/ecsrx.svg
-[gitter-url]: https://gitter.im/grofit/ecsrx
 [nuget-image]: https://img.shields.io/nuget/v/ecsrx.svg
 [nuget-url]: https://www.nuget.org/packages/EcsRx/
+[discord-image]: https://img.shields.io/discord/488609938399297536.svg
+[discord-url]: https://discord.gg/bS2rnGz

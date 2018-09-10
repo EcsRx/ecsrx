@@ -15,7 +15,7 @@ So if you know all the below points feel free to continue on to the rest of the 
 - [Intro to Unit Testing](https://grofit.gitbooks.io/development-for-winners/content/development/general/testing/intro-to-testing.html)
 - [Mocking in Unit Tests](https://grofit.gitbooks.io/development-for-winners/content/development/general/testing/mocking.html)
 
-If you want to know more on the above topics then feel free to drop into our [Gitter Channel](https://gitter.im/grofit/ecsrx) to discuss further or ask questions.
+If you want to know more on the above topics then feel free to drop into our [Discord Channel](https://discord.gg/bS2rnGz) to discuss further or ask questions.
 
 ## Project specific docs
 

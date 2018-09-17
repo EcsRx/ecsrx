@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using EcsRx.Infrastructure.Dependencies;
 using Ninject;
 
@@ -58,7 +59,7 @@ namespace EcsRx.Infrastructure.Ninject
                 return;
             }
 
-            var binding = bindingSetup.To<TFrom>();
+            var binding = bindingSetup.To<TTo>();
             
             if(configuration.AsSingleton)
             { binding.InSingletonScope(); } 
@@ -78,6 +79,9 @@ namespace EcsRx.Infrastructure.Ninject
 
         public void Bind<T>(BindingConfiguration configuration = null)
         { Bind<T,T>(configuration); }
+
+        public bool HasBinding<T>(string name = null)
+        { return _kernel.GetBindings(typeof(T)).Any(x => x.Metadata.Name == name); }
 
         public T Resolve<T>(string name = null)
         {

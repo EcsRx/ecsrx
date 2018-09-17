@@ -7,6 +7,7 @@ namespace EcsRx.Executor
     {
         IEnumerable<ISystem> Systems { get; }
 
+        bool HasSystem(ISystem system);
         void RemoveSystem(ISystem system);
         void AddSystem(ISystem system);
     }

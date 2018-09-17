@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Exceptions;
 using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Systems;
@@ -21,6 +22,9 @@ namespace EcsRx.Executor
             _systems = new List<ISystem>();
         }
        
+        public bool HasSystem(ISystem system)
+        { return _systems.Contains(system); }
+        
         public void RemoveSystem(ISystem system)
         {
             var applicableHandlers = _conventionalSystemHandlers
@@ -35,6 +39,9 @@ namespace EcsRx.Executor
 
         public void AddSystem(ISystem system)
         {
+            if(HasSystem(system))
+            { throw new SystemAlreadyRegisteredException(system); }
+            
             var applicableHandlers = _conventionalSystemHandlers
                 .Where(x => x.CanHandleSystem(system))
                 .OrderByPriority();

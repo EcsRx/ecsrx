@@ -35,6 +35,14 @@ namespace EcsRx.Infrastructure.Dependencies
         void Bind<T>(BindingConfiguration configuration = null);
 
         /// <summary>
+        /// Checks to see if a binding exists in the container
+        /// </summary>
+        /// <param name="name">Optional name of the binding</param>
+        /// <typeparam name="T">Type to check against</typeparam>
+        /// <returns>True if the type has been bound, false if not</returns>
+        bool HasBinding<T>(string name = null);
+
+        /// <summary>
         /// Gets an instance of a given type from the underlying DI container
         /// </summary>
         /// <param name="name">Optional name of the binding</param>

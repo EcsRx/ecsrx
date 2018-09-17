@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using EcsRx.Exceptions;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Systems;
@@ -41,6 +42,47 @@ namespace EcsRx.Tests.Framework
             
             fakeSetupSystemHandler.Received(1).DestroySystem(fakeSystem);
             Assert.Empty(systemExecutor.Systems);
+        }
+        
+        [Fact]
+        public void should_return_true_if_system_already_exists()
+        {
+            var fakeSystem = Substitute.For<ISystem>();
+           
+            var systemExecutor = new SystemExecutor(new IConventionalSystemHandler[0]);
+            systemExecutor._systems.Add(fakeSystem);
+            Assert.True(systemExecutor.HasSystem(fakeSystem));
+        }
+        
+        [Fact]
+        public void should_return_false_if_system_doesnt_exist()
+        {
+            var fakeSystem = Substitute.For<ISystem>();
+           
+            var systemExecutor = new SystemExecutor(new IConventionalSystemHandler[0]);
+            Assert.False(systemExecutor.HasSystem(fakeSystem));
+        }
+        
+        [Fact]
+        public void should_throw_exception_if_system_already_exists()
+        {
+            var fakeSystem = Substitute.For<ISystem>();
+           
+            var systemExecutor = new SystemExecutor(new IConventionalSystemHandler[0]);
+            systemExecutor._systems.Add(fakeSystem);
+
+            var exceptionWasRaised = false;
+            try
+            {
+                systemExecutor.AddSystem(fakeSystem);
+            }
+            catch (SystemAlreadyRegisteredException e)
+            {
+                exceptionWasRaised = true;
+            }
+            
+            Assert.Single(systemExecutor.Systems);
+            Assert.True(exceptionWasRaised);
         }
         
         [Fact]

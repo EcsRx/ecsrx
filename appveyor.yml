@@ -1,0 +1,31 @@
+version: 1.2.{build}
+branches:
+  only:
+  - master
+  - build-test
+image: Previous Visual Studio 2017
+configuration: Release
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+before_build:
+- cmd: nuget restore src/EcsRx.sln
+build:
+  project: src/EcsRx.sln
+  publish_nuget: true
+  verbosity: minimal
+artifacts:
+  - path: '**\*.nupkg'
+deploy:
+  provider: NuGet
+  server:
+  api_key:
+    secure: kQUl/1LYoAGU+rRicvEpMh+rxsner/soI2Osc6lvRUCeYDU5oh3Z9R4a94t9yqI9
+  skip_symbols: true
+  symbol_server:
+  artifact: /.*\.nupkg/

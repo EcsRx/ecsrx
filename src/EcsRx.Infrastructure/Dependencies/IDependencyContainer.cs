@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace EcsRx.Infrastructure.Dependencies
 {
@@ -18,56 +19,51 @@ namespace EcsRx.Infrastructure.Dependencies
         /// will not be cross platform, so be weary if you need it or not.
         /// </summary>
         object NativeContainer { get; }
-        
+
         /// <summary>
         /// Binds from one type to another, generally from an interface to a concrete class
         /// </summary>
+        /// <param name="fromType">Type to bind from</param>
+        /// <param name="toType">Type to bind to</param>
         /// <param name="configuration">Optional configuration</param>
-        /// <typeparam name="TFrom">Type to bind from</typeparam>
-        /// <typeparam name="TTo">Type to bind to</typeparam>
-        void Bind<TFrom, TTo>(BindingConfiguration configuration = null) where TTo : TFrom;
-        
+        void Bind(Type fromType, Type toType, BindingConfiguration configuration = null);
+               
         /// <summary>
-        /// Bind to itself, useful for concrete classes to themselves
+        /// Bind the type to itself/instance/method, useful for concrete class bindings 
         /// </summary>
+        /// <param name="type">The type to bind</param>
         /// <param name="configuration">Optional configuration</param>
-        /// <typeparam name="T">Both source and destination binding, i.e concrete class</typeparam>
-        void Bind<T>(BindingConfiguration configuration = null);
+        /// <remarks>This is useful for self binding concrete classes</remarks>
+        void Bind(Type type, BindingConfiguration configuration = null);
 
         /// <summary>
         /// Checks to see if a binding exists in the container
         /// </summary>
+        /// <param name="type">Type to check against</param>
         /// <param name="name">Optional name of the binding</param>
-        /// <typeparam name="T">Type to check against</typeparam>
-        /// <returns>True if the type has been bound, false if not</returns>
-        bool HasBinding<T>(string name = null);
+        /// <returns></returns>
+        bool HasBinding(Type type, string name = null);
 
         /// <summary>
         /// Gets an instance of a given type from the underlying DI container
         /// </summary>
+        /// <param name="type">Type of the object you want</param>
         /// <param name="name">Optional name of the binding</param>
-        /// <typeparam name="T">Type of the object you want</typeparam>
         /// <returns>An instance of the given type</returns>
-        T Resolve<T>(string name = null);
-        
+        object Resolve(Type type, string name = null);
+
         /// <summary>
-        /// Unbinds a type from the given context
+        /// Unbinds a type from the container
         /// </summary>
-        /// <typeparam name="T">The type to unbind</typeparam>
-        void Unbind<T>();
+        /// <param name="type">The type to unbind</param>
+        void Unbind(Type type);
         
         /// <summary>
         /// Gets an enumerable of a given type from the underlying DI container
         /// </summary>
-        /// <typeparam name="T">Type to resolve</typeparam>
+        /// <param name="type">Type to resolve</param>
         /// <returns>All matching instances of that type within the underlying container</returns>
-        IEnumerable<T> ResolveAll<T>();
-
-        /// <summary>
-        /// Loads the given modules bindings into the underlying di container
-        /// </summary>
-        /// <typeparam name="T">Type of module to load</typeparam>
-        void LoadModule<T>() where T : IDependencyModule, new();
+        IEnumerable<object> ResolveAll(Type type);
         
         /// <summary>
         /// Loads the given modules bindings into the underlying di container

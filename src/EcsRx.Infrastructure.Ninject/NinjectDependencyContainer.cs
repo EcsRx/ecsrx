@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Infrastructure.Dependencies;
 using Ninject;
@@ -29,19 +30,19 @@ namespace EcsRx.Infrastructure.Ninject
 
         public object NativeContainer => _kernel;
         
-        public void Bind<TFrom, TTo>(BindingConfiguration configuration = null) where TTo : TFrom
+        public void Bind(Type fromType, Type toType, BindingConfiguration configuration = null)
         {
-            var bindingSetup = _kernel.Bind<TFrom>();
+            var bindingSetup = _kernel.Bind(fromType);
             
             if (configuration == null)
             {
-                bindingSetup.To<TTo>().InSingletonScope();
+                bindingSetup.To(toType).InSingletonScope();
                 return;
             }
 
             if (configuration.ToInstance != null)
             {
-                var instanceBinding = bindingSetup.ToConstant((TFrom) configuration.ToInstance);
+                var instanceBinding = bindingSetup.ToConstant(configuration.ToInstance);
                 
                 if(configuration.AsSingleton)
                 { instanceBinding.InSingletonScope(); }
@@ -51,7 +52,7 @@ namespace EcsRx.Infrastructure.Ninject
 
             if (configuration.ToMethod != null)
             {
-                var methodBinding = bindingSetup.ToMethod(x => (TTo)configuration.ToMethod(this));
+                var methodBinding = bindingSetup.ToMethod(x => configuration.ToMethod(this));
 
                 if(configuration.AsSingleton)
                 { methodBinding.InSingletonScope(); }
@@ -59,7 +60,7 @@ namespace EcsRx.Infrastructure.Ninject
                 return;
             }
 
-            var binding = bindingSetup.To<TTo>();
+            var binding = bindingSetup.To(toType);
             
             if(configuration.AsSingleton)
             { binding.InSingletonScope(); } 
@@ -77,34 +78,33 @@ namespace EcsRx.Infrastructure.Ninject
             { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
         }
 
-        public void Bind<T>(BindingConfiguration configuration = null)
-        { Bind<T,T>(configuration); }
+        public void Bind(Type type, BindingConfiguration configuration = null)
+        { Bind(type, type, configuration); }
 
-        public bool HasBinding<T>(string name = null)
-        { return _kernel.GetBindings(typeof(T)).Any(x => x.Metadata.Name == name); }
+        public bool HasBinding(Type type, string name = null)
+        {
+            var applicableBindings = _kernel.GetBindings(type);
+             
+            if(string.IsNullOrEmpty(name))
+            { return applicableBindings.Any(); }
+            
+            return applicableBindings.Any(x => x.Metadata.Name == name);
+        }
 
-        public T Resolve<T>(string name = null)
+        public object Resolve(Type type, string name = null)
         {
             if(string.IsNullOrEmpty(name))
-            { return _kernel.Get<T>(); }
+            { return _kernel.Get(type); }
 
-            return _kernel.Get<T>(name);
+            return _kernel.Get(type, name);
         }
 
-        public void Unbind<T>()
-        {
-            _kernel.Unbind<T>();
-        }
+        public void Unbind(Type type)
+        { _kernel.Unbind(type); }
 
-        public IEnumerable<T> ResolveAll<T>()
-        { return _kernel.GetAll<T>(); }
+        public IEnumerable<object> ResolveAll(Type type)
+        { return _kernel.GetAll(type); }
 
-        public void LoadModule<T>() where T : IDependencyModule, new()
-        {
-            var module = new T();
-            LoadModule(module);
-        }
-        
         public void LoadModule(IDependencyModule module)
         { module.Setup(this); }
     }

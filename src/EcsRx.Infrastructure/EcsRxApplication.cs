@@ -5,6 +5,7 @@ using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
+using EcsRx.Infrastructure.Extensions;
 using EcsRx.Infrastructure.Modules;
 using EcsRx.Infrastructure.Plugins;
 using EcsRx.Systems;
@@ -45,10 +46,6 @@ namespace EcsRx.Infrastructure
         protected virtual void RegisterModules()
         {
             Container.LoadModule(GetFrameworkModule());
-        }
-
-        private void ResolveDependencies()
-        {
             SystemExecutor = Container.Resolve<ISystemExecutor>();
             EventSystem = Container.Resolve<IEventSystem>();
             EntityCollectionManager = Container.Resolve<IEntityCollectionManager>();

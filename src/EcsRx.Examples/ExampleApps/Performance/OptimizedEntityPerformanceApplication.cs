@@ -11,6 +11,7 @@ using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
+using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using EcsRx.Executor;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
@@ -53,6 +54,110 @@ namespace EcsRx.Infrastructure.Extensions
                 .ThenByDescending(x => x is ISetupSystem);
             
             orderedSystems.ForEachRun(application.SystemExecutor.AddSystem);
+        }
+        
+        /// <summary>
+        /// This will bind any ISystem implementations that are found within the assembly provided
+        /// </summary>
+        /// <remarks>
+        /// This can save you time but is not advised in most cases
+        /// </remarks>
+        /// <param name="application">The application to act on</param>
+        /// <param name="assemblies">The assemblies to scan for systems</param>
+        public static void BindAllSystemsInAssemblies(this IEcsRxApplication application, params Assembly[] assemblies)
+        {           
+            var systemType = typeof(ISystem);           
+            
+            var applicableSystems = assemblies.SelectMany(x => x.GetTypes())
+                .Where(x =>
+                {                   
+                    if(x.IsInterface || x.IsAbstract)
+                    { return false; }
+                                        
+                    return systemType.IsAssignableFrom(x);
+                })
+                .ToList();
+
+            if(!applicableSystems.Any())
+            { return; }
+
+            foreach (var applicableSystemType in applicableSystems)
+            {
+                var bindingConfiguration = new BindingConfiguration
+                {
+                    AsSingleton = true,
+                    WithName = applicableSystemType.Name
+                };
+                
+                application.Container.Bind(systemType, applicableSystemType,  bindingConfiguration);
+            }
+        }
+
+        /// <summary>
+        /// This will bind any ISystem implementations that are found within the namespaces provided
+        /// </summary>
+        /// <remarks>
+        /// It is also advised you wrap this method with your own conventions like BindAllSystemsWithinApplicationScope does.
+        /// </remarks>
+        /// <param name="application">The application to act on</param>
+        /// <param name="namespaces">The namespaces to be scanned for implementations</param>
+        public static void BindAllSystemsInNamespaces(this IEcsRxApplication application, params string[] namespaces)
+        {
+            var applicationNamespace = application.GetType().Namespace;
+            if(string.IsNullOrEmpty(applicationNamespace))
+            { return; }
+            
+            var applicationAssembly = application.GetType().Assembly;
+            var systemType = typeof(ISystem);           
+            
+            var applicableSystems = applicationAssembly.GetTypes()
+                .Where(x =>
+                {                   
+                    if(x.IsInterface || x.IsAbstract)
+                    { return false; }
+                    
+                    if(string.IsNullOrEmpty(x.Namespace) || !x.Namespace.Contains(applicationNamespace))
+                    { return false; }   
+                    
+                    return systemType.IsAssignableFrom(x);
+                })
+                .ToList();
+
+            if(!applicableSystems.Any())
+            { return; }
+
+            foreach (var applicableSystemType in applicableSystems)
+            {
+                var bindingConfiguration = new BindingConfiguration
+                {
+                    AsSingleton = true,
+                    WithName = applicableSystemType.Name
+                };
+                
+                application.Container.Bind(systemType, applicableSystemType,  bindingConfiguration);
+            }
+        }
+        
+        /// <summary>
+        /// This will bind any ISystem implementations found within Systems, ViewResolvers folders which are located
+        /// in a child namespace of the application.
+        /// </summary>
+        /// <remarks>
+        /// This is a conventional based binding that expects the application file to sit in the root of a directory,
+        /// and then have systems in folders within same directory,if you need other conventions then look at wrapping
+        /// BindAnySystemsInNamespace
+        /// </remarks>
+        /// <param name="application">The application to act on</param>
+        public static void BindAllSystemsWithinApplicationScope(this IEcsRxApplication application)
+        {
+            var applicationNamespace = application.GetType().Namespace;
+            var namespaces = new[]
+            {
+                $"{applicationNamespace}.Systems",
+                $"{applicationNamespace}.ViewResolvers"
+            };
+            
+            application.BindAllSystemsInNamespaces(namespaces);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
 
-            var componentRepository = DependencyContainer.Resolve<IComponentRepository>();
+            var componentRepository = Container.Resolve<IComponentRepository>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)

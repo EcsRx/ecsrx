@@ -6,6 +6,6 @@ namespace EcsRx.Examples.Application
 {
     public abstract class EcsRxConsoleApplication : EcsRxApplication
     {
-        protected override IDependencyContainer DependencyContainer { get; } = new NinjectDependencyContainer();
+        public override IDependencyContainer Container { get; } = new NinjectDependencyContainer();
     }
 }

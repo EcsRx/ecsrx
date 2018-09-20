@@ -2,6 +2,7 @@
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.HelloWorldExample.Components;
 using EcsRx.Examples.ExampleApps.HelloWorldExample.Systems;
+using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.HelloWorldExample
 {
@@ -11,12 +12,12 @@ namespace EcsRx.Examples.ExampleApps.HelloWorldExample
 
         protected override void ApplicationStarting()
         {
-            RegisterSystem<TalkingSystem>();
+            this.RegisterSystem<TalkingSystem>();
         }
 
         protected override void ApplicationStarted()
         {
-            RegisterAllBoundSystems();
+            this.RegisterAllBoundSystems();
 
             var defaultPool = EntityCollectionManager.GetCollection();
             var entity = defaultPool.CreateEntity();

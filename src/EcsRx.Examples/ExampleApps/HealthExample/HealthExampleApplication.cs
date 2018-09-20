@@ -6,6 +6,7 @@ using EcsRx.Examples.ExampleApps.HealthExample.Components;
 using EcsRx.Examples.ExampleApps.HealthExample.Events;
 using EcsRx.Examples.ExampleApps.HealthExample.Systems;
 using EcsRx.Extensions;
+using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample
 {
@@ -17,13 +18,13 @@ namespace EcsRx.Examples.ExampleApps.HealthExample
 
         protected override void ApplicationStarting()
         {
-            RegisterSystem<TakeDamageSystem>();
-            RegisterSystem<DisplayHealthChangesSystem>();
+            this.RegisterSystem<TakeDamageSystem>();
+            this.RegisterSystem<DisplayHealthChangesSystem>();
         }
 
         protected override void ApplicationStarted()
         {
-            RegisterAllBoundSystems();
+            this.RegisterAllBoundSystems();
             
             var defaultPool = EntityCollectionManager.GetCollection();
             _enemy = defaultPool.CreateEntity(new EnemyBlueprint(100));

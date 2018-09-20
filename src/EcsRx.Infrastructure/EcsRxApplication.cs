@@ -17,13 +17,15 @@ namespace EcsRx.Infrastructure
         public ISystemExecutor SystemExecutor { get; private set; }
         public IEventSystem EventSystem { get; private set; }
         public IEntityCollectionManager EntityCollectionManager { get; private set; }
-        public List<IEcsRxPlugin> Plugins { get; }
+        public IEnumerable<IEcsRxPlugin> Plugins => _plugins;
 
-        protected abstract IDependencyContainer DependencyContainer { get; }
+        private readonly List<IEcsRxPlugin> _plugins;
+
+        public abstract IDependencyContainer Container { get; }
 
         protected EcsRxApplication()
         {
-            Plugins = new List<IEcsRxPlugin>();
+            _plugins = new List<IEcsRxPlugin>();
         }
 
         public virtual void StartApplication()
@@ -42,42 +44,29 @@ namespace EcsRx.Infrastructure
 
         protected virtual void RegisterModules()
         {
-            DependencyContainer.LoadModule(GetFrameworkModule());
-            SystemExecutor = DependencyContainer.Resolve<ISystemExecutor>();
-            EventSystem = DependencyContainer.Resolve<IEventSystem>();
-            EntityCollectionManager = DependencyContainer.Resolve<IEntityCollectionManager>();
+            Container.LoadModule(GetFrameworkModule());
+        }
+
+        private void ResolveDependencies()
+        {
+            SystemExecutor = Container.Resolve<ISystemExecutor>();
+            EventSystem = Container.Resolve<IEventSystem>();
+            EntityCollectionManager = Container.Resolve<IEntityCollectionManager>();
         }
 
         protected virtual void ApplicationStarting() { }
         protected abstract void ApplicationStarted();
 
         protected virtual void RegisterAllPluginDependencies()
-        { Plugins.ForEachRun(x => x.SetupDependencies(DependencyContainer)); }
+        { Plugins.ForEachRun(x => x.SetupDependencies(Container)); }
 
         protected virtual void SetupAllPluginSystems()
         {
-            Plugins.SelectMany(x => x.GetSystemsForRegistration(DependencyContainer))
+            Plugins.SelectMany(x => x.GetSystemsForRegistration(Container))
                 .ForEachRun(x => SystemExecutor.AddSystem(x));
         }
 
         protected void RegisterPlugin(IEcsRxPlugin plugin)
-        { Plugins.Add(plugin); }
-        
-        protected virtual void RegisterAllBoundSystems()
-        {
-            var allSystems = DependencyContainer.ResolveAll<ISystem>();
-
-            var orderedSystems = allSystems
-                .OrderByDescending(x => x is ViewResolverSystem)
-                .ThenByDescending(x => x is ISetupSystem);
-            
-            orderedSystems.ForEachRun(SystemExecutor.AddSystem);
-        }
-
-        protected virtual void RegisterSystem<T>() where T : ISystem
-        {
-            var system = DependencyContainer.Resolve<T>();
-            SystemExecutor.AddSystem(system);
-        }
+        { _plugins.Add(plugin); }
     }
 }

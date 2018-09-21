@@ -9,6 +9,7 @@ using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Extensions;
+using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {
@@ -32,7 +33,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
 
-            var componentRepository = DependencyContainer.Resolve<IComponentRepository>();
+            var componentRepository = Container.Resolve<IComponentRepository>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)

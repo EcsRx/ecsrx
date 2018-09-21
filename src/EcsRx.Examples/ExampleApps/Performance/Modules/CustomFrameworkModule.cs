@@ -11,6 +11,7 @@ using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Events;
+using EcsRx.Infrastructure.Extensions;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Events;
 using EcsRx.Systems.Handlers;

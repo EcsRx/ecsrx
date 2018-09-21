@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -11,51 +12,6 @@ namespace EcsRx.Infrastructure.Extensions
 {
     public static class IEcsRxApplicationExtensions
     {
-        /// <summary>
-        /// This will bind the given system type (T) to the DI container against `ISystem`
-        /// and will then immediately register the system with the SystemExecutor.
-        /// </summary>
-        /// <param name="application">The application to act on</param>
-        /// <typeparam name="T">The implementation of ISystem to bind/register</typeparam>
-        public static void BindAndRegisterSystem<T>(this IEcsRxApplication application) where T : ISystem
-        {
-            application.Container.Bind<ISystem, T>(new BindingConfiguration{WithName = typeof(T).Name});
-            RegisterSystem<T>(application);
-        }
-
-        /// <summary>
-        /// This will resolve the given type (T) from the DI container then register it
-        /// with the SystemExecutor.
-        /// </summary>
-        /// <param name="application">The application to act on</param>
-        /// <typeparam name="T">The implementation of ISystem to register</typeparam>
-        public static void RegisterSystem<T>(this IEcsRxApplication application) where T : ISystem
-        {
-            ISystem system;
-            
-            if(application.Container.HasBinding<ISystem>(typeof(T).Name))
-            { system = application.Container.Resolve<ISystem>(typeof(T).Name); }
-            else
-            { system = application.Container.Resolve<T>(); }
-            
-            application.SystemExecutor.AddSystem(system);
-        }
-        
-        /// <summary>
-        /// Resolve all systems which have been bound and register them in order with the systems executor
-        /// </summary>
-        /// <param name="application">The application to act on</param>
-        public static void RegisterAllBoundSystems(this IEcsRxApplication application)
-        {
-            var allSystems = application.Container.ResolveAll<ISystem>();
-
-            var orderedSystems = allSystems
-                .OrderByDescending(x => x is ViewResolverSystem)
-                .ThenByDescending(x => x is ISetupSystem);
-            
-            orderedSystems.ForEachRun(application.SystemExecutor.AddSystem);
-        }
-        
         /// <summary>
         /// This will bind any ISystem implementations that are found within the assembly provided
         /// </summary>
@@ -103,23 +59,22 @@ namespace EcsRx.Infrastructure.Extensions
         /// <param name="namespaces">The namespaces to be scanned for implementations</param>
         public static void BindAllSystemsInNamespaces(this IEcsRxApplication application, params string[] namespaces)
         {
-            var applicationNamespace = application.GetType().Namespace;
-            if(string.IsNullOrEmpty(applicationNamespace))
-            { return; }
-            
-            var applicationAssembly = application.GetType().Assembly;
+            var applicationAssemblies = AppDomain.CurrentDomain.GetAssemblies();
             var systemType = typeof(ISystem);           
             
-            var applicableSystems = applicationAssembly.GetTypes()
+            var applicableSystems = applicationAssemblies.SelectMany(x => x.GetTypes())
                 .Where(x =>
                 {                   
                     if(x.IsInterface || x.IsAbstract)
                     { return false; }
                     
-                    if(string.IsNullOrEmpty(x.Namespace) || !x.Namespace.Contains(applicationNamespace))
+                    if(string.IsNullOrEmpty(x.Namespace))
                     { return false; }   
                     
-                    return systemType.IsAssignableFrom(x);
+                    if(!systemType.IsAssignableFrom(x))
+                    { return false; }
+
+                    return namespaces.Any(namespaceToVerify => x.Namespace.Contains(namespaceToVerify));
                 })
                 .ToList();
 
@@ -158,6 +113,52 @@ namespace EcsRx.Infrastructure.Extensions
             };
             
             application.BindAllSystemsInNamespaces(namespaces);
+        }
+        
+        /// <summary>
+        /// This will bind the given system type (T) to the DI container against `ISystem`
+        /// and will then immediately register the system with the SystemExecutor.
+        /// </summary>
+        /// <param name="application">The application to act on</param>
+        /// <typeparam name="T">The implementation of ISystem to bind/register</typeparam>
+        /// <remarks>This is really for runtime usage, in mose cases you will want to bind in starting and register in started</remarks>
+        public static void BindAndRegisterSystem<T>(this IEcsRxApplication application) where T : ISystem
+        {
+            application.Container.Bind<ISystem, T>(new BindingConfiguration{WithName = typeof(T).Name});
+            RegisterSystem<T>(application);
+        }
+
+        /// <summary>
+        /// This will resolve the given type (T) from the DI container then register it
+        /// with the SystemExecutor.
+        /// </summary>
+        /// <param name="application">The application to act on</param>
+        /// <typeparam name="T">The implementation of ISystem to register</typeparam>
+        public static void RegisterSystem<T>(this IEcsRxApplication application) where T : ISystem
+        {
+            ISystem system;
+            
+            if(application.Container.HasBinding<ISystem>(typeof(T).Name))
+            { system = application.Container.Resolve<ISystem>(typeof(T).Name); }
+            else
+            { system = application.Container.Resolve<T>(); }
+            
+            application.SystemExecutor.AddSystem(system);
+        }
+        
+        /// <summary>
+        /// Resolve all systems which have been bound and register them in order with the systems executor
+        /// </summary>
+        /// <param name="application">The application to act on</param>
+        public static void RegisterAllBoundSystems(this IEcsRxApplication application)
+        {
+            var allSystems = application.Container.ResolveAll<ISystem>();
+
+            var orderedSystems = allSystems
+                .OrderByDescending(x => x is ViewResolverSystem)
+                .ThenByDescending(x => x is ISetupSystem);
+            
+            orderedSystems.ForEachRun(application.SystemExecutor.AddSystem);
         }
     }
 }

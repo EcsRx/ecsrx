@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Infrastructure.Dependencies;
@@ -102,7 +103,7 @@ namespace EcsRx.Infrastructure.Ninject
         public void Unbind(Type type)
         { _kernel.Unbind(type); }
 
-        public IEnumerable<object> ResolveAll(Type type)
+        public IEnumerable ResolveAll(Type type)
         { return _kernel.GetAll(type); }
 
         public void LoadModule(IDependencyModule module)

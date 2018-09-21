@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace EcsRx.Infrastructure.Dependencies
@@ -63,7 +64,7 @@ namespace EcsRx.Infrastructure.Dependencies
         /// </summary>
         /// <param name="type">Type to resolve</param>
         /// <returns>All matching instances of that type within the underlying container</returns>
-        IEnumerable<object> ResolveAll(Type type);
+        IEnumerable ResolveAll(Type type);
         
         /// <summary>
         /// Loads the given modules bindings into the underlying di container

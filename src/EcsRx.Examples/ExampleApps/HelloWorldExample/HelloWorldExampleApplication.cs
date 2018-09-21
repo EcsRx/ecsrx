@@ -10,14 +10,9 @@ namespace EcsRx.Examples.ExampleApps.HelloWorldExample
     {
         private bool _quit;
 
-        protected override void ApplicationStarting()
-        {
-            this.RegisterSystem<TalkingSystem>();
-        }
-
         protected override void ApplicationStarted()
         {
-            this.RegisterAllBoundSystems();
+            this.StartAllBoundSystems();
 
             var defaultPool = EntityCollectionManager.GetCollection();
             var entity = defaultPool.CreateEntity();

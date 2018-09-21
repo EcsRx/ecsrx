@@ -16,15 +16,9 @@ namespace EcsRx.Examples.ExampleApps.HealthExample
         private IEntity _enemy;
         private readonly Random _random = new Random();
 
-        protected override void ApplicationStarting()
-        {
-            this.RegisterSystem<TakeDamageSystem>();
-            this.RegisterSystem<DisplayHealthChangesSystem>();
-        }
-
         protected override void ApplicationStarted()
         {
-            this.RegisterAllBoundSystems();
+            this.StartAllBoundSystems();
             
             var defaultPool = EntityCollectionManager.GetCollection();
             _enemy = defaultPool.CreateEntity(new EnemyBlueprint(100));

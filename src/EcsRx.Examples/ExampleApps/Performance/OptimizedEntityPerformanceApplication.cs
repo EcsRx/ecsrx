@@ -25,9 +25,9 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         private List<IEntity> _entities;
 
-        protected override IDependencyModule GetFrameworkModule()
-        { return new CustomFrameworkModule(); }
-        
+        protected override void LoadModules()
+        { Container.LoadModule<OptimizedFrameworkModule>(); }
+
         protected override void ApplicationStarted()
         {                       
             var componentNamespace = typeof(Component1).Namespace;

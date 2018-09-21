@@ -13,12 +13,6 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample
     {
         private bool _quit;
 
-        protected override void ApplicationStarting()
-        {
-            this.RegisterSystem<RandomlyChangeHpSystem>();
-            base.ApplicationStarting();
-        }
-
         protected override void ApplicationStarted()
         {
             var namedHealthGroup = EntityCollectionManager.GetObservableGroup(new Group(typeof(HasHealthComponent), typeof(HasNameComponent)));
@@ -27,7 +21,7 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample
                 
             SystemExecutor.AddSystem(displayHealthSystem);
             
-            this.RegisterAllBoundSystems();
+            this.StartAllBoundSystems();
 
             var defaultPool = EntityCollectionManager.GetCollection();
             defaultPool.CreateEntity(new CharacterBlueprint("Bob", 200));

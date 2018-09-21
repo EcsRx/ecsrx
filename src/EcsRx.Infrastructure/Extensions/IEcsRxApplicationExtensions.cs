@@ -122,10 +122,10 @@ namespace EcsRx.Infrastructure.Extensions
         /// <param name="application">The application to act on</param>
         /// <typeparam name="T">The implementation of ISystem to bind/register</typeparam>
         /// <remarks>This is really for runtime usage, in mose cases you will want to bind in starting and register in started</remarks>
-        public static void BindAndRegisterSystem<T>(this IEcsRxApplication application) where T : ISystem
+        public static void BindAndStartSystem<T>(this IEcsRxApplication application) where T : ISystem
         {
             application.Container.Bind<ISystem, T>(new BindingConfiguration{WithName = typeof(T).Name});
-            RegisterSystem<T>(application);
+            StartSystem<T>(application);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace EcsRx.Infrastructure.Extensions
         /// </summary>
         /// <param name="application">The application to act on</param>
         /// <typeparam name="T">The implementation of ISystem to register</typeparam>
-        public static void RegisterSystem<T>(this IEcsRxApplication application) where T : ISystem
+        public static void StartSystem<T>(this IEcsRxApplication application) where T : ISystem
         {
             ISystem system;
             
@@ -150,7 +150,7 @@ namespace EcsRx.Infrastructure.Extensions
         /// Resolve all systems which have been bound and register them in order with the systems executor
         /// </summary>
         /// <param name="application">The application to act on</param>
-        public static void RegisterAllBoundSystems(this IEcsRxApplication application)
+        public static void StartAllBoundSystems(this IEcsRxApplication application)
         {
             var allSystems = application.Container.ResolveAll<ISystem>();
 

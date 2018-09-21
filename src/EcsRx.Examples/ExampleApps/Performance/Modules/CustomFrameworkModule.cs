@@ -18,7 +18,7 @@ using EcsRx.Systems.Handlers;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Modules
 {
-    public class CustomFrameworkModule : IDependencyModule
+    public class OptimizedFrameworkModule : IDependencyModule
     {
         public void Setup(IDependencyContainer container)
         {

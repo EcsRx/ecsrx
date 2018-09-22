@@ -7,10 +7,14 @@ using EcsRx.Entities;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
+using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Infrastructure.Events;
+using EcsRx.MicroRx.Events;
 using EcsRx.Systems.Handlers;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
+using EcsRx.Views.Components;
 using EcsRx.Views.Systems;
 using NSubstitute;
 using Xunit;
@@ -25,7 +29,8 @@ namespace EcsRx.Tests.Framework
             {
                 {typeof(TestComponentOne), 0},
                 {typeof(TestComponentTwo), 1},
-                {typeof(TestComponentThree), 2}
+                {typeof(TestComponentThree), 2},
+                {typeof(ViewComponent), 3}
             };
             var componentLookupType = new ComponentTypeLookup(componentLookups);
             var componentDatabase = new ComponentDatabase(componentLookupType);
@@ -43,6 +48,7 @@ namespace EcsRx.Tests.Framework
             var reactsToDataHandler = new ReactToDataSystemHandler(entityCollectionManager);
             var manualSystemHandler = new ManualSystemHandler(entityCollectionManager);
             var setupHandler = new SetupSystemHandler(entityCollectionManager);
+            var teardownHandler = new TeardownSystemHandler(entityCollectionManager);
 
             var conventionalSystems = new List<IConventionalSystemHandler>
             {
@@ -50,7 +56,8 @@ namespace EcsRx.Tests.Framework
                 reactsToEntityHandler,
                 reactsToGroupHandler,
                 reactsToDataHandler,
-                manualSystemHandler
+                manualSystemHandler,
+                teardownHandler
             };
             
             return new SystemExecutor(conventionalSystems);
@@ -95,16 +102,40 @@ namespace EcsRx.Tests.Framework
         }
         
         [Fact]
-        public void should_run_treat_view_handler_as_setup_system_and_teardown_system()
+        public void should_treat_view_handler_as_setup_system_and_teardown_system()
         {
             var mockEntityCollectionManager = Substitute.For<IEntityCollectionManager>();
             var setupSystemHandler = new SetupSystemHandler(mockEntityCollectionManager);
-            var teardownSystemHandler = new SetupSystemHandler(mockEntityCollectionManager);
+            var teardownSystemHandler = new TeardownSystemHandler(mockEntityCollectionManager);
             
             var viewSystem = Substitute.For<IViewResolverSystem>();
             
             Assert.True(setupSystemHandler.CanHandleSystem(viewSystem));
             Assert.True(teardownSystemHandler.CanHandleSystem(viewSystem));
+        }
+        
+        [Fact]
+        public void should_trigger_both_setup_and_teardown_for_view_resolver()
+        {
+            var collectionManager = CreateCollectionManager();
+            var executor = CreateExecutor(collectionManager);
+            var viewResolverSystem = new TestViewResolverSystem(new EventSystem(new MessageBroker()),
+                new Group(typeof(TestComponentOne), typeof(ViewComponent)));
+            executor.AddSystem(viewResolverSystem);
+
+            var setupCalled = false;
+            viewResolverSystem.OnSetup = entity => { setupCalled = true; };
+            var teardownCalled = false;
+            viewResolverSystem.OnTeardown = entity => { teardownCalled = true; };
+            
+            var collection = collectionManager.GetCollection();
+            var entityOne = collection.CreateEntity();
+            entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
+
+            collection.RemoveEntity(entityOne.Id);
+            
+            Assert.True(setupCalled);
+            Assert.True(teardownCalled);
         }
     }
 }

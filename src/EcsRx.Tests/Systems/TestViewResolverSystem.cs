@@ -1,25 +1,41 @@
-﻿using EcsRx.Entities;
+﻿using System;
+using EcsRx.Entities;
+using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Tests.Models;
+using EcsRx.Views.Components;
 using EcsRx.Views.Systems;
+using EcsRx.Views.ViewHandlers;
 
 namespace EcsRx.Tests.Systems
 {
-    public class TestViewResolverSystem : IViewResolverSystem
+    public class TestViewResolverSystem : ViewResolverSystem
     {
-        public IGroup Group => new Group(typeof(TestComponentOne));
+        public override IViewHandler ViewHandler { get; }
+        public override IGroup Group { get; }
+
+        public Action<IEntity> OnSetup { get; set; }
+        public Action<IEntity> OnTeardown { get; set; }
         
-        public void Teardown(IEntity entity)
+        public TestViewResolverSystem(IEventSystem eventSystem, IGroup group) : base(eventSystem)
         {
-            var testComponent = entity.GetComponent<TestComponentOne>();
-            testComponent.Data = null;
+            Group = group;
+        }
+        
+        protected override void OnViewCreated(IEntity entity, ViewComponent viewComponent)
+        {
+            
         }
 
-        public void Setup(IEntity entity)
+        public override void Setup(IEntity entity)
         {
-            var testComponent = entity.GetComponent<TestComponentOne>();
-            testComponent.Data = "woop";
+            OnSetup?.Invoke(entity);
+        }
+        
+        public override void Teardown(IEntity entity)
+        {
+            OnTeardown?.Invoke(entity);
         }
     }
 }

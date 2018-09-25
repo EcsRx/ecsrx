@@ -11,6 +11,7 @@ using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
+using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {
@@ -24,9 +25,9 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         private List<IEntity> _entities;
 
-        protected override IDependencyModule GetFrameworkModule()
-        { return new CustomFrameworkModule(); }
-        
+        protected override void LoadModules()
+        { Container.LoadModule<OptimizedFrameworkModule>(); }
+
         protected override void ApplicationStarted()
         {                       
             var componentNamespace = typeof(Component1).Namespace;
@@ -40,7 +41,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
             _availableComponentTypeIds = Enumerable.Range(0, 20).ToArray();
             
-            var componentRepository = DependencyContainer.Resolve<IComponentRepository>();
+            var componentRepository = Container.Resolve<IComponentRepository>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)

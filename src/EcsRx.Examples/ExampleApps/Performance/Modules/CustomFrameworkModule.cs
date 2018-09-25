@@ -11,13 +11,14 @@ using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Events;
+using EcsRx.Infrastructure.Extensions;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Events;
 using EcsRx.Systems.Handlers;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Modules
 {
-    public class CustomFrameworkModule : IDependencyModule
+    public class OptimizedFrameworkModule : IDependencyModule
     {
         public void Setup(IDependencyContainer container)
         {

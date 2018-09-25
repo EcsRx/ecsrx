@@ -9,6 +9,7 @@ using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
+using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {
@@ -19,8 +20,8 @@ namespace EcsRx.Examples.ExampleApps.Performance
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         private readonly Random _random = new Random();
 
-        protected override IDependencyModule GetFrameworkModule()
-        { return new CustomFrameworkModule(); }
+        protected override void LoadModules()
+        { Container.LoadModule<OptimizedFrameworkModule>(); }
 
         protected override void ApplicationStarted()
         {

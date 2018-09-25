@@ -5,6 +5,7 @@ using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
+using EcsRx.Infrastructure.Extensions;
 using EcsRx.Infrastructure.Modules;
 using EcsRx.Infrastructure.Plugins;
 using EcsRx.Systems;
@@ -17,67 +18,91 @@ namespace EcsRx.Infrastructure
         public ISystemExecutor SystemExecutor { get; private set; }
         public IEventSystem EventSystem { get; private set; }
         public IEntityCollectionManager EntityCollectionManager { get; private set; }
-        public List<IEcsRxPlugin> Plugins { get; }
+        public IEnumerable<IEcsRxPlugin> Plugins => _plugins;
 
-        protected abstract IDependencyContainer DependencyContainer { get; }
+        private readonly List<IEcsRxPlugin> _plugins;
+
+        public abstract IDependencyContainer Container { get; }
 
         protected EcsRxApplication()
         {
-            Plugins = new List<IEcsRxPlugin>();
+            _plugins = new List<IEcsRxPlugin>();
         }
 
+        /// <summary>
+        /// This starts the process of initializing the application
+        /// </summary>
         public virtual void StartApplication()
         {
-            RegisterModules();
-            ApplicationStarting();
-            RegisterAllPluginDependencies();
-            SetupAllPluginSystems();
+            LoadModules();
+            LoadPlugins();
+            SetupPlugins();
+            ResolveApplicationDependencies();
+            BindSystems();
+            StartPluginSystems();
+            StartSystems();
             ApplicationStarted();
         }
 
-        protected virtual IDependencyModule GetFrameworkModule()
+        /// <summary>
+        /// Load any modules that your application needs
+        /// </summary>
+        /// <remarks>
+        /// If you wish to use the default setup call through to base, if you wish to stop the default framework
+        /// modules loading then do not call base and register your own internal framework module.
+        /// </remarks>
+        protected virtual void LoadModules()
         {
-            return new FrameworkModule();
+            Container.LoadModule(new FrameworkModule());
         }
 
-        protected virtual void RegisterModules()
+        /// <summary>
+        /// Load any plugins that your application needs
+        /// </summary>
+        /// <remarks>It is recommended you just call RegisterPlugin method in here for each plugin you need</remarks>
+        protected virtual void LoadPlugins(){}
+
+        /// <summary>
+        /// Resolve any dependencies the application needs
+        /// </summary>
+        /// <remarks>By default it will setup SystemExecutor, EventSystem, EntityCollectionManager</remarks>
+        protected virtual void ResolveApplicationDependencies()
         {
-            DependencyContainer.LoadModule(GetFrameworkModule());
-            SystemExecutor = DependencyContainer.Resolve<ISystemExecutor>();
-            EventSystem = DependencyContainer.Resolve<IEventSystem>();
-            EntityCollectionManager = DependencyContainer.Resolve<IEntityCollectionManager>();
+            SystemExecutor = Container.Resolve<ISystemExecutor>();
+            EventSystem = Container.Resolve<IEventSystem>();
+            EntityCollectionManager = Container.Resolve<IEntityCollectionManager>();
         }
 
-        protected virtual void ApplicationStarting() { }
+        /// <summary>
+        /// Bind any systems that the application will need
+        /// </summary>
+        /// <remarks>By default will auto bind any systems within application scope</remarks>
+        protected virtual void BindSystems()
+        { this.BindAllSystemsWithinApplicationScope(); }
+
+        /// <summary>
+        /// Start any systems that the application will need
+        /// </summary>
+        /// <remarks>By default it will auto start any systems which have been bound</remarks>
+        protected virtual void StartSystems()
+        { this.StartAllBoundSystems(); }
+        
         protected abstract void ApplicationStarted();
 
-        protected virtual void RegisterAllPluginDependencies()
-        { Plugins.ForEachRun(x => x.SetupDependencies(DependencyContainer)); }
+        protected void SetupPlugins()
+        { Plugins.ForEachRun(x => x.SetupDependencies(Container)); }
 
-        protected virtual void SetupAllPluginSystems()
+        protected void StartPluginSystems()
         {
-            Plugins.SelectMany(x => x.GetSystemsForRegistration(DependencyContainer))
+            Plugins.SelectMany(x => x.GetSystemsForRegistration(Container))
                 .ForEachRun(x => SystemExecutor.AddSystem(x));
         }
 
+        /// <summary>
+        /// Register a given plugin within the application
+        /// </summary>
+        /// <param name="plugin">The plugin to register</param>
         protected void RegisterPlugin(IEcsRxPlugin plugin)
-        { Plugins.Add(plugin); }
-        
-        protected virtual void RegisterAllBoundSystems()
-        {
-            var allSystems = DependencyContainer.ResolveAll<ISystem>();
-
-            var orderedSystems = allSystems
-                .OrderByDescending(x => x is ViewResolverSystem)
-                .ThenByDescending(x => x is ISetupSystem);
-            
-            orderedSystems.ForEachRun(SystemExecutor.AddSystem);
-        }
-
-        protected virtual void RegisterSystem<T>() where T : ISystem
-        {
-            var system = DependencyContainer.Resolve<T>();
-            SystemExecutor.AddSystem(system);
-        }
+        { _plugins.Add(plugin); }
     }
 }

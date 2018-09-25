@@ -5,18 +5,13 @@ using EcsRx.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems;
 using EcsRx.Groups;
+using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample
 {
     public class ComputedGroupExampleApplication : EcsRxConsoleApplication
     {
         private bool _quit;
-
-        protected override void ApplicationStarting()
-        {
-            RegisterSystem<RandomlyChangeHpSystem>();
-            base.ApplicationStarting();
-        }
 
         protected override void ApplicationStarted()
         {
@@ -26,7 +21,7 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample
                 
             SystemExecutor.AddSystem(displayHealthSystem);
             
-            RegisterAllBoundSystems();
+            this.StartAllBoundSystems();
 
             var defaultPool = EntityCollectionManager.GetCollection();
             defaultPool.CreateEntity(new CharacterBlueprint("Bob", 200));

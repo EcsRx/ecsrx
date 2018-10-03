@@ -17,26 +17,27 @@ public abstract class EcsRxApplication
 {
 	public ISystemExecutor SystemExecutor { get; }
 	public IEventSystem EventSystem { get; }
-	public IEntityCollectionManager EntityCollectionlManager { get; }
+	public IEntityCollectionManager EntityCollectionManager { get; }
 
 	protected EcsRxApplication()
 	{
-	    // For sending events around
+		// For sending events around
 		EventSystem = new EventSystem(new MessageBroker());
 		
 		// For mapping component types to underlying indexes
 		var componentTypeAssigner = new DefaultComponentTypeAssigner();
 		var allComponents = componentTypeAssigner.GenerateComponentLookups();
 		
+		var componentLookup = new ComponentTypeLookup(allComponents);
 		// For interacting with the component databases
 		var componentDatabase = new ComponentDatabase(componentLookup);
-        var componentRepository = new ComponentRepository(componentLookup, componentDatabase);	
+		var componentRepository = new ComponentRepository(componentLookup, componentDatabase);	
 		
 		// For creating entities, collections, observable groups and managing Ids
 		var entityFactory = new DefaultEntityFactory(new IdPool(), componentRepository);
 		var entityCollectionFactory = new DefaultEntityCollectionFactory(entityFactory);
 		var observableGroupFactory = new DefaultObservableObservableGroupFactory();
-		EntityCollectionManager = new EntityCollectionManager(poolFactory, observableGroupFactory);
+		EntityCollectionManager = new EntityCollectionManager(entityCollectionFactory, observableGroupFactory, componentLookup);
 
 		// All system handlers for the system types you want to support
 		var reactsToEntityHandler = new ReactToEntitySystemHandler(EntityCollectionManager);

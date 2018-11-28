@@ -10,8 +10,6 @@ This is where it gets interesting, so we have multiple flavours of systems depen
 
 All systems have the notion of a `Group` which describes what entities to target out of the pool, so you don't need to do much other than setup the right groupings and implement the methods for the interfaces.
 
-One other thing worth mentioning is that you can implement many of the interfaces in one class if you wish, so if you want an `ISetupSystem` and an `ITeardownSystem` implemented in the same class, you can do so and it will all just work, so implement as much or as little as you wish for your scenarios.
-
 ### ISetupSystem
 
 This interface implies that you want to setup entities, so it will match all entities via the group and will run a `Setup` method once for each of the entities. This is primarily there for doing one off setup methods on entities, such as instantiating `GameObject` or complex object types.

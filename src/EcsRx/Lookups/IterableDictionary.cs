@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using EcsRx.Entities;
+using System.Linq;
 using EcsRx.Pools;
 
 namespace EcsRx.Lookups
 {
     public class IterableDictionary<TK, TV> : IIterableDictionary<TK, TV>
     {
-        public readonly IIdPool IdPool = new IdPool(100, 1000);
+        public readonly IndexPool IndexPool = new IndexPool();
         public readonly Dictionary<TK, int> Lookups = new Dictionary<TK, int>();
         public readonly List<TV> InternalList = new List<TV>();
 
@@ -25,7 +25,7 @@ namespace EcsRx.Lookups
 
         public void Add(TK key, TV value)
         {
-            var nextIndex = IdPool.AllocateInstance();
+            var nextIndex = IndexPool.AllocateInstance();
             Lookups.Add(key, nextIndex);
 
             if (nextIndex < InternalList.Count)
@@ -42,7 +42,7 @@ namespace EcsRx.Lookups
             var index = Lookups[key];
             InternalList[index] = default(TV);
             Lookups.Remove(key);
-            IdPool.ReleaseInstance(index);
+            IndexPool.ReleaseInstance(index);
             return true;
         }
 

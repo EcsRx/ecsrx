@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EcsRx.Components
+namespace EcsRx.Components.Lookups
 {
     public interface IComponentTypeLookup
     {

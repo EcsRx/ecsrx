@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using EcsRx.Entities;
+using EcsRx.Pools;
 using Xunit;
 
 namespace EcsRx.Tests.Views

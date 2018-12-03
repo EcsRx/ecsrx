@@ -1,4 +1,4 @@
-﻿namespace EcsRx.Events
+﻿namespace EcsRx.Events.Collections
 {
     public class CollectionElementChangedEvent<T>
     {

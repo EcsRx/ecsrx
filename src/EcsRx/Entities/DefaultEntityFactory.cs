@@ -1,5 +1,6 @@
 ﻿using System;
 using EcsRx.Components.Database;
+using EcsRx.Pools;
 
 namespace EcsRx.Entities
 {

@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 using EcsRx.Collections;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
@@ -12,6 +13,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.PerformanceTests.Helper;
+using EcsRx.Pools;
 
 namespace EcsRx.PerformanceTests
 {

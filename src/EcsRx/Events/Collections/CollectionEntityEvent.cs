@@ -1,7 +1,7 @@
 ﻿using EcsRx.Collections;
 using EcsRx.Entities;
 
-namespace EcsRx.Events
+namespace EcsRx.Events.Collections
 {
     public class CollectionEntityEvent
     {

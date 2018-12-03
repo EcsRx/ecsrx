@@ -4,6 +4,7 @@ using System.Linq;
 using EcsRx.Blueprints;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;

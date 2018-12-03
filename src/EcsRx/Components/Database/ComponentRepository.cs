@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EcsRx.Components.Lookups;
 
 namespace EcsRx.Components.Database
 {

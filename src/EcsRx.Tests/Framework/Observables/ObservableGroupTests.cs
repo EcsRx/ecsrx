@@ -6,6 +6,7 @@ using System.Reactive.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using NSubstitute;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EcsRx.Blueprints;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 using EcsRx.Exceptions;
 using EcsRx.Extensions;
 using EcsRx.MicroRx;

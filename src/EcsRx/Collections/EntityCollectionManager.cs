@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using EcsRx.Components;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;

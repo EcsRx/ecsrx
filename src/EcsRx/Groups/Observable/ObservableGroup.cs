@@ -5,6 +5,7 @@ using System.Linq;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;

@@ -1,5 +1,6 @@
 ﻿using System;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 
 namespace EcsRx.Collections
 {

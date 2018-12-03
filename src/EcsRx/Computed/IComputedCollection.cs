@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 
 namespace EcsRx.Computed
 {

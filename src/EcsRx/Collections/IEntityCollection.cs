@@ -9,7 +9,7 @@ namespace EcsRx.Collections
     /// The entity collection is a container for entities, it can be seen as a Repository of sorts
     /// as it allows for CRUD based operations and querying (through extensions)
     /// </summary>
-    public interface IEntityCollection : IEnumerable<IEntity>, INotifyingEntityCollection
+    public interface IEntityCollection : IReadOnlyList<IEntity>, INotifyingEntityCollection
     {
         /// <summary>
         /// Name of the collection

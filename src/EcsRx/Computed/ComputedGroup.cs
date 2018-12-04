@@ -5,6 +5,7 @@ using System.Linq;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
+using EcsRx.Lookups;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
@@ -13,7 +14,7 @@ namespace EcsRx.Computed
 {
     public abstract class ComputedGroup : IObservableGroup, IDisposable
     {
-        public readonly IDictionary<int, IEntity> CachedEntities;
+        public readonly IterableDictionary<int, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
         
         public ObservableGroupToken Token => InternalObservableGroup.Token;
@@ -30,7 +31,7 @@ namespace EcsRx.Computed
         public ComputedGroup(IObservableGroup internalObservableGroup)
         {
             InternalObservableGroup = internalObservableGroup;
-            CachedEntities = new Dictionary<int, IEntity>();
+            CachedEntities = new IterableDictionary<int, IEntity>();
             Subscriptions = new List<IDisposable>();
             
             _onEntityAdded = new Subject<IEntity>();
@@ -112,7 +113,7 @@ namespace EcsRx.Computed
         { return entities; }
 
         public virtual IEnumerator<IEntity> GetEnumerator()
-        { return PostProcess(CachedEntities.Values).GetEnumerator(); }
+        { return PostProcess(CachedEntities).GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }
@@ -124,5 +125,9 @@ namespace EcsRx.Computed
             _onEntityRemoved.Dispose();
             _onEntityRemoving.Dispose();
         }
+
+        public int Count => CachedEntities.Count;
+
+        public IEntity this[int index] => CachedEntities[index];
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using EcsRx.Components;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
+using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Extensions;
 
@@ -15,6 +16,9 @@ namespace EcsRx.Examples.ExampleApps.Performance
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
         private readonly Random _random = new Random();
 
+        protected override void BindSystems()
+        {}
+        
         protected override void ApplicationStarted()
         {
             var componentNamespace = typeof(Component1).Namespace;

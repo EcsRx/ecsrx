@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Examples.ExampleApps.Performance.Components;
+using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Extensions;
 using EcsRx.Groups;
 

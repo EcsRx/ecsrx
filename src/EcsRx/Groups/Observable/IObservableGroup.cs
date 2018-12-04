@@ -15,7 +15,7 @@ namespace EcsRx.Groups.Observable
     /// more performant to use this rather than querying a collection directly.
     /// This can change based upon implementations though.
     /// </remarks>
-    public interface IObservableGroup : IEnumerable<IEntity>
+    public interface IObservableGroup : IReadOnlyList<IEntity>
 
     {
         /// <summary>

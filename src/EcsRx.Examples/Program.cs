@@ -17,7 +17,8 @@ namespace EcsRx.Examples
             //var application = new HealthExampleApplication();
             //var application = new HelloWorldExampleApplication();   // Comment out this and uncomment the other one to run the other example
 
-            var application = new BasicLoopApplication();
+            var application = new BasicForEachLoopApplication();
+            //var application = new BasicForLoopApplication();
             
             application.StartApplication();
         }

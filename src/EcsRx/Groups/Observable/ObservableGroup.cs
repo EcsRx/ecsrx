@@ -7,6 +7,7 @@ using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;
+using EcsRx.Lookups;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
@@ -15,7 +16,7 @@ namespace EcsRx.Groups.Observable
 {
     public class ObservableGroup : IObservableGroup, IDisposable
     {
-        public readonly IDictionary<int, IEntity> CachedEntities;
+        public readonly IterableDictionary<int, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
@@ -39,7 +40,11 @@ namespace EcsRx.Groups.Observable
             _onEntityRemoving = new Subject<IEntity>();
 
             Subscriptions = new List<IDisposable>();
-            CachedEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x)).ToDictionary(x => x.Id, x => x);
+            var applicableEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x));
+            CachedEntities = new IterableDictionary<int, IEntity>();
+
+            foreach (var applicableEntity in applicableEntities)
+            { CachedEntities.Add(applicableEntity.Id, applicableEntity); }
 
             MonitorEntityChanges();
         }
@@ -142,9 +147,13 @@ namespace EcsRx.Groups.Observable
         }
 
         public IEnumerator<IEntity> GetEnumerator()
-        { return CachedEntities.Values.GetEnumerator(); }
+        { return CachedEntities.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }
+
+        public int Count => CachedEntities.Count;
+
+        public IEntity this[int index] => CachedEntities[index];
     }
 }

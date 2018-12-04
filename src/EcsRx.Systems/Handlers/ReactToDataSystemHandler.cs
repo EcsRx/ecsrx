@@ -85,10 +85,10 @@ namespace EcsRx.Systems.Handlers
                     entitySubscriptions.RemoveAndDispose(x.Id);
                 })
                 .AddTo(entityChangeSubscriptions);
-            
-            
-            foreach (var entity in observableGroup)
+
+            for (var i = observableGroup.Count - 1; i >= 0; i--)
             {
+                var entity = observableGroup[i];
                 var subscription = processEntityFunction(entity);
                 entitySubscriptions.Add(entity.Id, subscription);
             }

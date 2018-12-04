@@ -22,7 +22,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         public float Something;
     }
     
-    public class BasicLoopApplication : EcsRxConsoleApplication
+    public class BasicForEachLoopApplication : EcsRxConsoleApplication
     {
         private static readonly int EntityCount = 1000000;
         private IEntityCollection _collection;
@@ -58,6 +58,48 @@ namespace EcsRx.Examples.ExampleApps.Performance
             Console.WriteLine($"Executed {EntityCount} entities in single thread in {totalTime}ms");
         }
     }
+    
+    public class BasicForLoopApplication : EcsRxConsoleApplication
+    {
+        private static readonly int EntityCount = 1000000;
+        private IEntityCollection _collection;
+        private IComponentTypeLookup _componentTypeLookup;
+        
+        protected override void ApplicationStarted()
+        {
+            _componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
+            _collection = EntityCollectionManager.GetCollection();
+            
+            for (var i = 0; i < EntityCount; i++)
+            {
+                var entity = _collection.CreateEntity();
+                entity.AddComponents(new BasicClassComponent());               
+            }
+           
+            RunProcess();
+        }
+
+        private void RunProcess()
+        {
+            var componentId = _componentTypeLookup.GetComponentType(typeof(BasicClassComponent));
+            var timer = Stopwatch.StartNew();
+
+            for (var i = _collection.Count - 1; i >= 0; i--)
+            {
+                var entity = _collection[i];
+                var basicComponent = (BasicClassComponent) entity.GetComponent(componentId);
+                basicComponent.Position += Vector3.One;
+                basicComponent.Something += 10;
+            }
+
+            timer.Stop();
+
+            var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
+            Console.WriteLine($"Executed {EntityCount} entities in single thread in {totalTime}ms");
+        }
+    }
+    
+    
     
     /*
     public class BasicStructLoopApplication : EcsRxConsoleApplication

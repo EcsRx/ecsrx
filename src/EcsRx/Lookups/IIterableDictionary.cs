@@ -9,5 +9,6 @@ namespace EcsRx.Lookups
         bool ContainsKey(TK key);
         bool Remove(TK key);
         bool TryGetValue(TK key, out TV value);
+        void Clear();
     }
 }

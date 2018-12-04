@@ -49,5 +49,8 @@ namespace EcsRx.Pools
             foreach(var entry in newEntries)
             { AvailableEntries.Push(entry); }
         }
+
+        public void Clear()
+        { AvailableEntries.Clear(); }
     }
 }

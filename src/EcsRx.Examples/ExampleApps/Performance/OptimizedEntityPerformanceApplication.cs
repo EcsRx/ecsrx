@@ -7,6 +7,7 @@ using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
+using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Extensions;
@@ -27,6 +28,9 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         protected override void LoadModules()
         { Container.LoadModule<OptimizedFrameworkModule>(); }
+        
+        protected override void BindSystems()
+        {}
 
         protected override void ApplicationStarted()
         {                       

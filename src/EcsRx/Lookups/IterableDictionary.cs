@@ -57,5 +57,12 @@ namespace EcsRx.Lookups
             value = InternalList[Lookups[key]];
             return true;
         }
+
+        public void Clear()
+        {
+            InternalList.Clear();
+            Lookups.Clear();
+            IndexPool.Clear();
+        }
     }
 }

@@ -7,6 +7,7 @@ using EcsRx.Components.Database;
 using EcsRx.Entities;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
+using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Extensions;
@@ -22,6 +23,9 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         private List<IEntity> _entities;
 
+        protected override void BindSystems()
+        {}
+        
         protected override void ApplicationStarted()
         {                       
             var componentNamespace = typeof(Component1).Namespace;

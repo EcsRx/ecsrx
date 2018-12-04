@@ -7,6 +7,7 @@ using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Examples.ExampleApps.Performance.Components;
+using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;

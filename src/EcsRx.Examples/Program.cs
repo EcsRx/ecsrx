@@ -8,7 +8,7 @@ namespace EcsRx.Examples
     {
         static void Main(string[] args)
         {
-            var application = new SimpleSystemApplication();
+            //var application = new SimpleSystemApplication();
             //var application = new GroupPerformanceApplication();
             //var application = new OptimizedGroupPerformanceApplication();
             //var application = new OptimizedEntityPerformanceApplication();
@@ -17,6 +17,8 @@ namespace EcsRx.Examples
             //var application = new HealthExampleApplication();
             //var application = new HelloWorldExampleApplication();   // Comment out this and uncomment the other one to run the other example
 
+            var application = new BasicLoopApplication();
+            
             application.StartApplication();
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using EcsRx.Components.Lookups;
 using EcsRx.Extensions;
 
@@ -47,6 +46,9 @@ namespace EcsRx.Components.Database
         
         public IComponent Get(int componentTypeId, int entityId)
         { return EntityComponents[componentTypeId][entityId]; }
+
+        public IReadOnlyList<IComponent> GetComponents(int componentTypeId)
+        { return EntityComponents[componentTypeId]; }
 
         public IEnumerable<IComponent> GetAll(int entityId)
         {

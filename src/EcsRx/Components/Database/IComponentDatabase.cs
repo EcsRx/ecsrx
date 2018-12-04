@@ -12,6 +12,8 @@ namespace EcsRx.Components.Database
         void Add(int componentTypeId, int entityId, IComponent component);
         void Remove(int componentTypeId, int entityId);
 
+        IReadOnlyList<IComponent> GetComponents(int componentTypeId);
+
         IEnumerable<IComponent> GetAll(int entityId);
         void RemoveAll(int entityId);
     }

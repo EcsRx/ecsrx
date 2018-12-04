@@ -19,7 +19,8 @@ namespace EcsRx.Examples
 
             //var application = new BasicForEachLoopApplication();
             //var application = new BasicForLoopApplication();
-            var application = new BatchedForLoopApplication();
+            //var application = new BatchedForLoopApplication();
+            var application = new BatchedStructForLoopApplication();
             
             application.StartApplication();
         }

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EcsRx.Entities;
-using EcsRx.Executor;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace EcsRx.Extensions
 {
@@ -17,6 +16,15 @@ namespace EcsRx.Extensions
         {
             for (var i = 0; i < amountToAdd; i++)
             { list.Add(null); }
+        }
+        
+        public static void ExpandListTo(this IList list, int amountToAdd)
+        {
+            var internalType = list.GetType().GetGenericArguments()[0];
+            var arrayType = internalType.MakeArrayType();
+            var newEntries = (IList)Activator.CreateInstance(arrayType, amountToAdd);
+            for (var i = 0; i < amountToAdd; i++)
+            { list.Add(newEntries[i]); }
         }
     }
 }

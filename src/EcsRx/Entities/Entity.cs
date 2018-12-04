@@ -41,6 +41,9 @@ namespace EcsRx.Entities
             
             _onComponentsAdded.OnNext(componentTypeIds);
         }
+
+        public T AddComponent<T>(int componentTypeId) where T : struct
+        { return ComponentRepository.Create<T>(Id, componentTypeId); }
         
         public void RemoveComponents(params Type[] componentTypes)
         {

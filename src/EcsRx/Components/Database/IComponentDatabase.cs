@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace EcsRx.Components.Database
 {
@@ -8,13 +9,18 @@ namespace EcsRx.Components.Database
         void AccommodateMoreEntities(int newMaxSize);
         
         IComponent Get(int componentTypeId, int entityId);
+        T GetStruct<T>(int componentTypeId, int entityId) where T : struct;
+        
         bool Has(int componentTypeId, int entityId);
         void Add(int componentTypeId, int entityId, IComponent component);
         void Remove(int componentTypeId, int entityId);
 
+        bool IsComponentStruct(int componentTypeId);
         IReadOnlyList<IComponent> GetComponents(int componentTypeId);
+        IReadOnlyList<T> GetComponentStructs<T>(int componentTypeId) where T : struct;
 
         IEnumerable<IComponent> GetAll(int entityId);
         void RemoveAll(int entityId);
     }
+
 }

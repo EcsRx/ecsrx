@@ -29,9 +29,9 @@ namespace EcsRx.Tests.Database
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
             
             Assert.Equal(expectedSize, database.CurrentEntityBounds);
-            Assert.Equal(fakeComponentTypes.Count, database.EntityComponents.Length);
-            Assert.Equal(expectedSize, database.EntityComponents[0].Count);
-            Assert.All(database.EntityComponents, x => x.All(y => y == null));
+            Assert.Equal(fakeComponentTypes.Count, database.EntityReferenceComponents.Length);
+            Assert.Equal(expectedSize, database.EntityReferenceComponents[0].Count);
+            Assert.All(database.EntityReferenceComponents, x => x.All(y => y == null));
         }
         
         [Fact]
@@ -53,9 +53,9 @@ namespace EcsRx.Tests.Database
             database.AccommodateMoreEntities(expectedSize);
             
             Assert.Equal(expectedSize, database.CurrentEntityBounds);
-            Assert.Equal(fakeComponentTypes.Count, database.EntityComponents.Length);
-            Assert.Equal(expectedSize, database.EntityComponents[0].Count);
-            Assert.All(database.EntityComponents, x => x.All(y => y == null));
+            Assert.Equal(fakeComponentTypes.Count, database.EntityReferenceComponents.Length);
+            Assert.Equal(expectedSize, database.EntityReferenceComponents[0].Count);
+            Assert.All(database.EntityReferenceComponents, x => x.All(y => y == null));
         }
 
         [Fact]
@@ -77,8 +77,8 @@ namespace EcsRx.Tests.Database
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
             database.Add(0, fakeEntityId, fakeComponent);
             
-            Assert.Equal(database.EntityComponents[0][1], fakeComponent);
-            var nullCount = database.EntityComponents.Sum(x => x.Count(y => y == null));
+            Assert.Equal(database.EntityReferenceComponents[0][1], fakeComponent);
+            var nullCount = database.EntityReferenceComponents.Sum(x => x.Count(y => y == null));
             Assert.Equal(29, nullCount);
         }
         

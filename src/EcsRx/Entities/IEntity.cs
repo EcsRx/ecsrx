@@ -84,6 +84,8 @@ namespace EcsRx.Entities
         /// <param name="components">instances of component to check for</param>
         /// <returns>true if all the component was found, false if one or more is missing</returns>
         void AddComponents(params IComponent[] components);
+
+        T AddComponent<T>(int componentTypeId) where T : struct;
         
         /// <summary>
         /// Checks to see if the entity contains the given component type

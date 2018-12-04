@@ -23,68 +23,64 @@ namespace EcsRx.Examples.ExampleApps.Performance
         public float Something;
     }
     
-    public class BasicForEachLoopApplication : EcsRxConsoleApplication
+    public abstract class BasicLoopApplication : EcsRxConsoleApplication
     {
-        private static readonly int EntityCount = 1000000;
-        private IEntityCollection _collection;
-        private IComponentTypeLookup _componentTypeLookup;
+        protected static readonly int EntityCount = 1000000;
+        protected IEntityCollection _collection;
+        protected IComponentTypeLookup _componentTypeLookup;
+        protected IComponentDatabase _componentDatabase;
         
         protected override void ApplicationStarted()
         {
             _componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
+            _componentDatabase = Container.Resolve<IComponentDatabase>();
             _collection = EntityCollectionManager.GetCollection();
+
+            var timer = Stopwatch.StartNew();
+            SetupEntities();
+            timer.Stop();
+            var totalSetupTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
+            Console.WriteLine($"Setting up {EntityCount} entities in {totalSetupTime}ms");
             
+            timer.Reset();
+            timer.Start();
+            RunProcess();
+            timer.Stop();
+            var totalProcessTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
+            Console.WriteLine($"Processing {EntityCount} entities in {totalProcessTime}ms");
+        }
+
+        protected virtual void SetupEntities()
+        {
             for (var i = 0; i < EntityCount; i++)
             {
                 var entity = _collection.CreateEntity();
                 entity.AddComponents(new BasicClassComponent());               
             }
-           
-            RunProcess();
         }
 
-        private void RunProcess()
+        protected abstract void RunProcess();
+    }
+    
+    public class BasicForEachLoopApplication : BasicLoopApplication
+    {
+        protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicClassComponent));
-            var timer = Stopwatch.StartNew();
             foreach (var entity in _collection)
             {
                 var basicComponent = (BasicClassComponent)entity.GetComponent(componentId);
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;
             }
-            timer.Stop();
-
-            var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
-            Console.WriteLine($"Executed {EntityCount} entities in single thread in {totalTime}ms");
         }
     }
     
-    public class BasicForLoopApplication : EcsRxConsoleApplication
+    public class BasicForLoopApplication : BasicLoopApplication
     {
-        private static readonly int EntityCount = 1000000;
-        private IEntityCollection _collection;
-        private IComponentTypeLookup _componentTypeLookup;
-        
-        protected override void ApplicationStarted()
-        {
-            _componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
-            _collection = EntityCollectionManager.GetCollection();
-            
-            for (var i = 0; i < EntityCount; i++)
-            {
-                var entity = _collection.CreateEntity();
-                entity.AddComponents(new BasicClassComponent());               
-            }
-           
-            RunProcess();
-        }
-
-        private void RunProcess()
+        protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicClassComponent));
-            var timer = Stopwatch.StartNew();
-
             for (var i = _collection.Count - 1; i >= 0; i--)
             {
                 var entity = _collection[i];
@@ -92,41 +88,15 @@ namespace EcsRx.Examples.ExampleApps.Performance
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;
             }
-
-            timer.Stop();
-
-            var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
-            Console.WriteLine($"Executed {EntityCount} entities in single thread in {totalTime}ms");
         }
     }
     
-    public class BatchedForLoopApplication : EcsRxConsoleApplication
+    public class BatchedForLoopApplication : BasicLoopApplication
     {
-        private static readonly int EntityCount = 1000000;
-        private IEntityCollection _collection;
-        private IComponentTypeLookup _componentTypeLookup;
-        private IComponentDatabase _componentDatabase;
-        
-        protected override void ApplicationStarted()
-        {
-            _componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
-            _componentDatabase = Container.Resolve<IComponentDatabase>();
-            _collection = EntityCollectionManager.GetCollection();
-            
-            for (var i = 0; i < EntityCount; i++)
-            {
-                var entity = _collection.CreateEntity();
-                entity.AddComponents(new BasicClassComponent());               
-            }
-           
-            RunProcess();
-        }
-
-        private void RunProcess()
+        protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicClassComponent));
             var componentLookup = _componentDatabase.GetComponents(componentId);
-            var timer = Stopwatch.StartNew();
 
             for (var i = _collection.Count - 1; i >= 0; i--)
             {
@@ -135,15 +105,37 @@ namespace EcsRx.Examples.ExampleApps.Performance
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;
             }
-
-            timer.Stop();
-
-            var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
-            Console.WriteLine($"Executed {EntityCount} entities in single thread in {totalTime}ms");
         }
     }
     
-    
+    public class BatchedStructForLoopApplication : BasicLoopApplication
+    {
+        protected override void SetupEntities()
+        {
+            var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
+            _componentDatabase.AccommodateMoreEntities(EntityCount);
+
+            for (var i = 0; i < EntityCount; i++)
+            {
+                var entity = _collection.CreateEntity();
+                entity.AddComponent<BasicStructComponent>(componentId);
+            }
+        }
+
+        protected override void RunProcess()
+        {
+            var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
+            var componentLookup = _componentDatabase.GetComponentStructs<BasicStructComponent>(componentId);
+
+            for (var i = 0; i < _collection.Count; i++)
+            {
+                var entity = _collection[i];
+                var basicComponent = componentLookup[entity.Id];
+                basicComponent.Position += Vector3.One;
+                basicComponent.Something += 10;
+            }
+        }
+    }
     
     /*
     public class BasicStructLoopApplication : EcsRxConsoleApplication

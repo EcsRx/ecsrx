@@ -83,7 +83,7 @@ namespace EcsRx.Entities
         public IComponent GetComponent(int componentTypeId)
         { return ComponentRepository.Get(Id, componentTypeId); }
         
-        public T GetComponentStruct<T>(int componentTypeId) where T : struct
+        public T GetComponent<T>(int componentTypeId)
         { return ComponentRepository.Get<T>(Id, componentTypeId); }
 
         public override int GetHashCode()

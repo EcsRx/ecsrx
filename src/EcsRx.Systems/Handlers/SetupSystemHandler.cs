@@ -57,9 +57,8 @@ namespace EcsRx.Systems.Handlers
                 .AddTo(entityChangeSubscriptions);
 
 
-            for (var i = observableGroup.Count - 1; i >= 0; i--)
+            foreach (var entity in observableGroup)
             {
-                var entity = observableGroup[i];
                 var possibleSubscription = ProcessEntity(castSystem, entity);
                 if (possibleSubscription != null)
                 { entitySubscriptions.Add(entity.Id, possibleSubscription); }

@@ -39,11 +39,12 @@ namespace EcsRx.Components.Database
         }
 
         public T Create<T>(int entityId, int componentTypeId) where T : struct
-        { return Database.GetStruct<T>(componentTypeId, entityId); }
+        { return Database.Get<T>(componentTypeId, entityId); }
 
         public IComponent Get(int entityId, int componentTypeId) => Database.Get(componentTypeId, entityId);
 
-        public T Get<T>(int entityId, int componentTypeId) where T : struct => Database.GetStruct<T>(componentTypeId, entityId);
+        public T Get<T>(int entityId, int componentTypeId)
+        { return Database.Get<T>(componentTypeId, entityId); }
 
         public IComponent Get(int entityId, Type componentType)
         {

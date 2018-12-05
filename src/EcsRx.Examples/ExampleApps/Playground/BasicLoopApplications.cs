@@ -138,7 +138,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
             for (var i = _collection.Count - 1; i >= 0; i--)
             {
                 var entity = _collection[i];
-                var basicComponent = entity.GetComponentStruct<BasicStructComponent>(componentId);
+                var basicComponent = entity.GetComponent<BasicStructComponent>(componentId);
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;
             }

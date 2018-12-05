@@ -14,7 +14,7 @@ namespace EcsRx.Computed
 {
     public abstract class ComputedGroup : IObservableGroup, IDisposable
     {
-        public readonly IterableDictionary<int, IEntity> CachedEntities;
+        public readonly LookupList<int, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
         
         public ObservableGroupToken Token => InternalObservableGroup.Token;
@@ -31,7 +31,7 @@ namespace EcsRx.Computed
         public ComputedGroup(IObservableGroup internalObservableGroup)
         {
             InternalObservableGroup = internalObservableGroup;
-            CachedEntities = new IterableDictionary<int, IEntity>();
+            CachedEntities = new LookupList<int, IEntity>();
             Subscriptions = new List<IDisposable>();
             
             _onEntityAdded = new Subject<IEntity>();

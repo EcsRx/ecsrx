@@ -11,21 +11,21 @@ namespace EcsRx.Pools
         private int _lastMax;
         private readonly int _increaseSize;
         
-        public readonly Stack<int> AvailableEntries;
+        public readonly Stack<int> AvailableIndexes;
 
         public IndexPool(int increaseSize = 100, int startingSize = 1000)
         {
             _lastMax = startingSize;
             _increaseSize = increaseSize;
-            AvailableEntries = new Stack<int>(Enumerable.Range(0, _lastMax).Reverse());
+            AvailableIndexes = new Stack<int>(Enumerable.Range(0, _lastMax).Reverse());
         }
 
         public int AllocateInstance()
         {
-            if(AvailableEntries.Count == 0)
+            if(AvailableIndexes.Count == 0)
             { Expand(); }
             
-            return AvailableEntries.Pop();
+            return AvailableIndexes.Pop();
         }
 
         public void ReleaseInstance(int index)
@@ -36,21 +36,24 @@ namespace EcsRx.Pools
             if (index > _lastMax)
             { Expand(index); }
             
-            AvailableEntries.Push(index);
+            AvailableIndexes.Push(index);
         }
 
-        public void Expand(int? newId = null)
+        public void Expand(int? newIndex = null)
         {
-            var increaseBy = newId -_lastMax ?? _increaseSize;
+            var increaseBy = (newIndex+1) -_lastMax ?? _increaseSize;
             
             var newEntries = Enumerable.Range(_lastMax, increaseBy).Reverse();
-            _lastMax += increaseBy + 1;
+            _lastMax += increaseBy;
             
             foreach(var entry in newEntries)
-            { AvailableEntries.Push(entry); }
+            { AvailableIndexes.Push(entry); }
         }
 
         public void Clear()
-        { AvailableEntries.Clear(); }
+        {
+            _lastMax = 0;
+            AvailableIndexes.Clear();
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace EcsRx.Groups.Observable
 {
     public class ObservableGroup : IObservableGroup, IDisposable
     {
-        public readonly IterableDictionary<int, IEntity> CachedEntities;
+        public readonly LookupList<int, IEntity> CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
@@ -41,7 +41,7 @@ namespace EcsRx.Groups.Observable
 
             Subscriptions = new List<IDisposable>();
             var applicableEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x));
-            CachedEntities = new IterableDictionary<int, IEntity>();
+            CachedEntities = new LookupList<int, IEntity>();
 
             foreach (var applicableEntity in applicableEntities)
             { CachedEntities.Add(applicableEntity.Id, applicableEntity); }

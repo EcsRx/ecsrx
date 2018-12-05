@@ -79,8 +79,12 @@ namespace EcsRx.Components.Database
         public IComponent Get(int componentTypeId, int entityId)
         { return EntityReferenceComponents[componentTypeId][entityId]; }
 
-        public T GetStruct<T>(int componentTypeId, int entityId) where T : struct
-        { return ((T[])EntityValueComponents[componentTypeId])[entityId]; }
+        public T Get<T>(int componentTypeId, int entityId)
+        {
+            if (IsComponentStruct(componentTypeId))
+            { return ((IReadOnlyList<T>) EntityValueComponents[componentTypeId])[entityId]; }
+            return (T) EntityReferenceComponents[componentTypeId][entityId];
+        }
 
         public bool IsComponentStruct(int componentTypeId)
         { return ValueTypeLookups[componentTypeId]; }
@@ -95,22 +99,32 @@ namespace EcsRx.Components.Database
         {
             for (var i = EntityReferenceComponents.Length - 1; i >= 0; i--)
             {
-                var component = EntityReferenceComponents[i][entityId];
-                if(component != null) { yield return component; }
-                
-                var valueComponent = ((IComponent[])EntityValueComponents[i])[entityId];
-                if(valueComponent != null) { yield return valueComponent; }
+                if (EntityReferenceComponents[i] != null)
+                {
+                    var component = EntityReferenceComponents[i][entityId];
+                    if(component != null) { yield return component; }                    
+                }
+                else
+                {
+                    var valueComponent = ((IList)EntityValueComponents[i])[entityId];
+                    if(!DefaultValueTypeLookups[i].Equals(valueComponent)) { yield return (IComponent)valueComponent; }
+                }
             }
         }
 
         public bool Has(int componentTypeId, int entityId)
         {
+            if (IsComponentStruct(componentTypeId))
+            {
+                if (EntityValueComponents[componentTypeId].Length <= entityId)
+                { return false; }
+                
+                return ((IList)EntityValueComponents[componentTypeId])[entityId].Equals(DefaultValueTypeLookups[componentTypeId]);
+            }
+            
             if(EntityReferenceComponents[componentTypeId].Length <= entityId)
             { return false; }
-
-            if (IsComponentStruct(componentTypeId))
-            { return !((IList)EntityValueComponents[componentTypeId])[entityId].Equals(DefaultValueTypeLookups[componentTypeId]); }
-
+            
             return EntityReferenceComponents[componentTypeId][entityId] != null;
         }
 

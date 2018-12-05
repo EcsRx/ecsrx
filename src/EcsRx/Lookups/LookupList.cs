@@ -5,23 +5,23 @@ using EcsRx.Pools;
 
 namespace EcsRx.Lookups
 {
-    public class IterableDictionary<TK, TV> : IIterableDictionary<TK, TV>
+    public class LookupList<TK, TV> : ILookupList<TK, TV>
     {
         public readonly IndexPool IndexPool = new IndexPool();
         public readonly Dictionary<TK, int> Lookups = new Dictionary<TK, int>();
         public readonly List<TV> InternalList = new List<TV>();
 
-        public IEnumerator<TV> GetEnumerator() => InternalList.GetEnumerator();
+        public IEnumerator<TV> GetEnumerator() => Values.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public int Count => InternalList.Count;
+        public int Count => Lookups.Count;
         public bool ContainsKey(TK key) => Lookups.ContainsKey(key);      
         public TV this[int index] => InternalList[index];
 
         public ICollection<TK> Keys => Lookups.Keys;
-        public ICollection<TV> Values => InternalList;
+        public IEnumerable<TV> Values => InternalList.Where(x => x != null);
 
-        public TV Get(TK key) => InternalList[Lookups[key]];
+        public TV GetByKey(TK key) => InternalList[Lookups[key]];
 
         public void Add(TK key, TV value)
         {

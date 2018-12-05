@@ -9,7 +9,7 @@ namespace EcsRx.Components.Database
         void AccommodateMoreEntities(int newMaxSize);
         
         IComponent Get(int componentTypeId, int entityId);
-        T GetStruct<T>(int componentTypeId, int entityId) where T : struct;
+        T Get<T>(int componentTypeId, int entityId);
         
         bool Has(int componentTypeId, int entityId);
         void Add(int componentTypeId, int entityId, IComponent component);

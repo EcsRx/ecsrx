@@ -21,9 +21,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         
         protected override void ApplicationStarted()
         {
-            var componentNamespace = typeof(Component1).Namespace;
             _availableComponents = _groupFactory.GetComponentTypes
-                .Where(x => x.Namespace == componentNamespace)
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
             

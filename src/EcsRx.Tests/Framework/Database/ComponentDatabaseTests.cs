@@ -83,7 +83,38 @@ namespace EcsRx.Tests.Database
         }
         
         [Fact]
-        public void should_get_all_components_for_entity()
+        public void should_get_all_value_and_reference_components_for_entity()
+        {
+            var expectedSize = 10;
+            var fakeEntityId = 1;
+            var fakeComponent1 = new TestComponentOne();
+            var fakeComponent2 = new TestComponentThree();
+            var fakeComponent3 = new TestStructComponentOne {Data = 10};
+            var fakeComponentTypes = new Dictionary<Type, int>
+            {
+                {typeof(TestComponentOne), 0},
+                {typeof(TestComponentTwo), 1},
+                {typeof(TestComponentThree), 2},
+                {typeof(TestStructComponentOne), 3}
+            };
+            
+            var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
+            mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
+            
+            var database = new ComponentDatabase(mockComponentLookup, expectedSize);
+            database.Add(0, fakeEntityId, fakeComponent1);
+            database.Add(2, fakeEntityId, fakeComponent2);
+            database.Add(3, fakeEntityId, fakeComponent3);
+
+            var allComponents = database.GetAll(fakeEntityId).ToArray();
+            Assert.Equal(allComponents.Length, 3);
+            Assert.True(allComponents.Contains(fakeComponent1));
+            Assert.True(allComponents.Contains(fakeComponent2));
+            Assert.True(allComponents.Contains(fakeComponent3));
+        }
+        
+        [Fact]
+        public void should_only_get_components_for_single_entity()
         {
             var expectedSize = 10;
             var fakeEntityId = 1;
@@ -108,9 +139,9 @@ namespace EcsRx.Tests.Database
             database.Add(2, otherEntityId, new TestComponentThree());
 
             var allComponents = database.GetAll(fakeEntityId).ToArray();
+            Assert.Equal(allComponents.Length, 2);
             Assert.True(allComponents.Contains(fakeComponent1));
             Assert.True(allComponents.Contains(fakeComponent2));
-            Assert.Equal(allComponents.Length, 2);
         }
         
         [Fact]

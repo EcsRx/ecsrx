@@ -10,5 +10,6 @@ namespace EcsRx.Components.Lookups
         int GetComponentType(Type type);
         int[] GetComponentTypes(params Type[] types);
         Type[] GetComponentTypes(params int[] typeIds);
+        bool IsComponentStruct(int componentTypeId);
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace EcsRx.Components.Database
-{
+{   
     public interface IComponentRepository
     {
         void ExpandDatabaseIfNeeded(int entityId);
@@ -11,7 +11,7 @@ namespace EcsRx.Components.Database
         
         IComponent Get(int entityId, Type componentType);
         IComponent Get(int entityId, int componentTypeId);
-        T Get<T>(int entityId, int componentTypeId) where T : struct;
+        T Get<T>(int entityId, int componentTypeId);
         IEnumerable<IComponent> GetAll(int entityId);
 
         int Add(int entityId, IComponent component);

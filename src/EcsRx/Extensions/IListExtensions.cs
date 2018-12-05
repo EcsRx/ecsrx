@@ -11,19 +11,13 @@ namespace EcsRx.Extensions
             foreach (var element in elementsToRemove)
             { list.Remove(element); }
         }
-
-        public static void ExpandListTo<T>(this List<T> list, int amountToAdd) where T : class
-        {
-            for (var i = 0; i < amountToAdd; i++)
-            { list.Add(null); }
-        }
         
-        public static void ExpandListTo<T>(ref T[] array, int amountToAdd)
+        public static T[] ExpandListTo<T>(this T[] array, int amountToAdd)
         {
             var arrayType = array.GetType();
             var newEntries = (T[])Activator.CreateInstance(arrayType, array.Length + amountToAdd);               
             array.CopyTo(newEntries, 0);
-            array = newEntries;
+            return newEntries;
         }
         
         public static void ExpandListTo(ref Array array, int amountToAdd)

@@ -16,10 +16,9 @@ namespace EcsRx.Components.Database
         void Remove(int componentTypeId, int entityId);
 
         IReadOnlyList<IComponent> GetComponents(int componentTypeId);
-        IReadOnlyList<T> GetComponentStructs<T>(int componentTypeId) where T : struct;
+        IReadOnlyList<T> GetComponents<T>(int componentTypeId);
 
         IEnumerable<IComponent> GetAll(int entityId);
         void RemoveAll(int entityId);
     }
-
 }

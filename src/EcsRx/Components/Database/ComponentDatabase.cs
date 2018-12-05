@@ -16,12 +16,12 @@ namespace EcsRx.Components.Database
                 if (EntityReferenceComponents.Length == 0)
                 { return 0; }
 
-                return EntityReferenceComponents[0].Length;
+                return EntityReferenceComponents[0].Count;
             }
         }
 
         public ValueType[] DefaultValueTypeLookups { get; private set; }
-        public IComponent[][] EntityReferenceComponents { get; private set; }
+        public IList<IComponent>[] EntityReferenceComponents { get; private set; }
         public Array[] EntityValueComponents { get; private set; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
@@ -44,7 +44,7 @@ namespace EcsRx.Components.Database
         {
             var componentTypes = ComponentTypeLookup.GetAllComponentTypes().ToArray();
             var componentCount = componentTypes.Length;
-            EntityReferenceComponents = new IComponent[componentCount][];
+            EntityReferenceComponents = new IList<IComponent>[componentCount];
             EntityValueComponents = new Array[componentCount];
             DefaultValueTypeLookups = new ValueType[componentCount];
 
@@ -65,8 +65,11 @@ namespace EcsRx.Components.Database
             var expandBy = newMaxSize - CurrentEntityBounds;
             for (var i = 0; i < EntityReferenceComponents.Length; i++)
             {
-                if(EntityReferenceComponents[i] != null)
-                { IListExtensions.ExpandListTo(ref EntityReferenceComponents[i], expandBy); }
+                if (EntityReferenceComponents[i] != null)
+                {
+                    var reference = (IComponent[]) EntityReferenceComponents[i];
+                    EntityReferenceComponents[i] = reference.ExpandListTo(expandBy);
+                }
                 else
                 { IListExtensions.ExpandListTo(ref EntityValueComponents[i], expandBy); }
             }
@@ -83,10 +86,15 @@ namespace EcsRx.Components.Database
         }
 
         public IReadOnlyList<IComponent> GetComponents(int componentTypeId)
-        { return EntityReferenceComponents[componentTypeId]; }
+        { return (IReadOnlyList<IComponent>)EntityReferenceComponents[componentTypeId]; }
 
-        public IReadOnlyList<T> GetComponentStructs<T>(int componentTypeId) where T : struct
-        { return (IReadOnlyList<T>)EntityValueComponents[componentTypeId]; }
+        public IReadOnlyList<T> GetComponents<T>(int componentTypeId)
+        {
+            if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
+            { return (IReadOnlyList<T>) EntityValueComponents[componentTypeId]; }
+            
+            return (IReadOnlyList<T>)EntityReferenceComponents[componentTypeId];
+        }
 
         public IEnumerable<IComponent> GetAll(int entityId)
         {
@@ -115,7 +123,7 @@ namespace EcsRx.Components.Database
                 return ((IList)EntityValueComponents[componentTypeId])[entityId].Equals(DefaultValueTypeLookups[componentTypeId]);
             }
             
-            if(EntityReferenceComponents[componentTypeId].Length <= entityId)
+            if(EntityReferenceComponents[componentTypeId].Count <= entityId)
             { return false; }
             
             return EntityReferenceComponents[componentTypeId][entityId] != null;

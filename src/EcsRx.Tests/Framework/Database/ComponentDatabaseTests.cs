@@ -30,7 +30,7 @@ namespace EcsRx.Tests.Database
             
             Assert.Equal(expectedSize, database.CurrentEntityBounds);
             Assert.Equal(fakeComponentTypes.Count, database.EntityReferenceComponents.Length);
-            Assert.Equal(expectedSize, database.EntityReferenceComponents[0].Length);
+            Assert.Equal(expectedSize, database.EntityReferenceComponents[0].Count);
             Assert.All(database.EntityReferenceComponents, x => x.All(y => y == null));
         }
         
@@ -54,7 +54,7 @@ namespace EcsRx.Tests.Database
             
             Assert.Equal(expectedSize, database.CurrentEntityBounds);
             Assert.Equal(fakeComponentTypes.Count, database.EntityReferenceComponents.Length);
-            Assert.Equal(expectedSize, database.EntityReferenceComponents[0].Length);
+            Assert.Equal(expectedSize, database.EntityReferenceComponents[0].Count);
             Assert.All(database.EntityReferenceComponents, x => x.All(y => y == null));
         }
 

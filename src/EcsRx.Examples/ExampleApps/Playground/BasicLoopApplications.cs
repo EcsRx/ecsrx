@@ -185,7 +185,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
-            var componentLookup = _componentDatabase.GetComponentStructs<BasicStructComponent>(componentId);
+            var componentLookup = _componentDatabase.GetComponents<BasicStructComponent>(componentId);
 
             for (var i = _collection.Count - 1; i >= 0; i--)
             {
@@ -214,7 +214,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
-            var componentLookup = _componentDatabase.GetComponentStructs<BasicStructComponent>(componentId);
+            var componentLookup = _componentDatabase.GetComponents<BasicStructComponent>(componentId);
 
             Parallel.For(0, _collection.Count, (index) =>
             {

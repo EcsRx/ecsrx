@@ -16,67 +16,71 @@ namespace EcsRx.Components.Database
                 if (EntityReferenceComponents.Length == 0)
                 { return 0; }
 
-                return EntityReferenceComponents[0].Count;
+                return EntityReferenceComponents[0].Length;
             }
         }
 
         public bool[] ValueTypeLookups { get; private set; }
-        public List<IComponent>[] EntityReferenceComponents { get; private set; }
-        public IList[] EntityValueComponents { get; private set; }
+        public ValueType[] DefaultValueTypeLookups { get; private set; }
+        public IComponent[][] EntityReferenceComponents { get; private set; }
+        public Array[] EntityValueComponents { get; private set; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
-        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int entitySetupSize = 500)
+        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int entitySetupSize = 5000)
         {
             ComponentTypeLookup = componentTypeLookup;
             Initialize(entitySetupSize);
         }
+        
+        static ValueType CreateDefaultStruct(Type type)
+        { return (ValueType)Activator.CreateInstance(type); }
 
-        public IList CreateTypeOnTheFly(Type type)
+        public Array CreateTypeOnTheFly(Type type, int size)
         {
-            var dynamicList = typeof(List<>).MakeGenericType(type);
-            return (IList)Activator.CreateInstance(dynamicList);
+            var dynamicArray = type.MakeArrayType();
+            return (Array)Activator.CreateInstance(dynamicArray, size);
         }
 
         public void Initialize(int entitySetupSize)
         {
             var componentTypes = ComponentTypeLookup.GetAllComponentTypes().ToArray();
             var componentCount = componentTypes.Length;
-            EntityReferenceComponents = new List<IComponent>[componentCount];
-            EntityValueComponents = new IList[componentCount];
+            EntityReferenceComponents = new IComponent[componentCount][];
+            EntityValueComponents = new Array[componentCount];
             ValueTypeLookups = new bool[componentCount];
+            DefaultValueTypeLookups = new ValueType[componentCount];
 
             for (var i = 0; i < EntityReferenceComponents.Length; i++)
             {
                 ValueTypeLookups[i] = componentTypes[i].Key.IsValueType;
 
                 if (ValueTypeLookups[i])
-                { EntityValueComponents[i] = CreateTypeOnTheFly(componentTypes[i].Key); }
+                {
+                    EntityValueComponents[i] = CreateTypeOnTheFly(componentTypes[i].Key, entitySetupSize);
+                    DefaultValueTypeLookups[i] = CreateDefaultStruct(componentTypes[i].Key);
+                }
                 else
-                { EntityReferenceComponents[i] = new List<IComponent>(); }
-            }
-            
-            AccommodateMoreEntities(entitySetupSize);
+                { EntityReferenceComponents[i] = new IComponent[entitySetupSize]; }
+            }            
         }
         
         public void AccommodateMoreEntities(int newMaxSize)
         {
-            Console.WriteLine("EXPANDING " + newMaxSize);
             var expandBy = newMaxSize - CurrentEntityBounds;
             for (var i = 0; i < EntityReferenceComponents.Length; i++)
             {
                 if(EntityReferenceComponents[i] != null)
-                { EntityReferenceComponents[i].ExpandListTo<IComponent>(expandBy); }
+                { IListExtensions.ExpandListTo(ref EntityReferenceComponents[i], expandBy); }
                 else
-                { EntityValueComponents[i].ExpandListTo(expandBy); }
+                { IListExtensions.ExpandListTo(ref EntityValueComponents[i], expandBy); }
             }
-            Console.WriteLine("EXPANDED");
         }
         
         public IComponent Get(int componentTypeId, int entityId)
         { return EntityReferenceComponents[componentTypeId][entityId]; }
 
         public T GetStruct<T>(int componentTypeId, int entityId) where T : struct
-        { return (T)EntityValueComponents[componentTypeId][entityId]; }
+        { return ((T[])EntityValueComponents[componentTypeId])[entityId]; }
 
         public bool IsComponentStruct(int componentTypeId)
         { return ValueTypeLookups[componentTypeId]; }
@@ -94,18 +98,18 @@ namespace EcsRx.Components.Database
                 var component = EntityReferenceComponents[i][entityId];
                 if(component != null) { yield return component; }
                 
-                var valueComponent = EntityValueComponents[i][entityId];
-                if(valueComponent != null) { yield return (IComponent)valueComponent; }
+                var valueComponent = ((IComponent[])EntityValueComponents[i])[entityId];
+                if(valueComponent != null) { yield return valueComponent; }
             }
         }
 
         public bool Has(int componentTypeId, int entityId)
         {
-            if(EntityReferenceComponents[componentTypeId].Count <= entityId)
+            if(EntityReferenceComponents[componentTypeId].Length <= entityId)
             { return false; }
 
             if (IsComponentStruct(componentTypeId))
-            { return !EntityValueComponents[componentTypeId][entityId].Equals(-1); }
+            { return !((IList)EntityValueComponents[componentTypeId])[entityId].Equals(DefaultValueTypeLookups[componentTypeId]); }
 
             return EntityReferenceComponents[componentTypeId][entityId] != null;
         }
@@ -113,7 +117,7 @@ namespace EcsRx.Components.Database
         public void Add(int componentTypeId, int entityId, IComponent component)
         {
             if(IsComponentStruct(componentTypeId))
-            { EntityValueComponents[componentTypeId][entityId] = (ValueType)component; }
+            { ((IList)EntityValueComponents[componentTypeId])[entityId] = component; }
             else
             { EntityReferenceComponents[componentTypeId][entityId] = component; }
         }
@@ -121,7 +125,7 @@ namespace EcsRx.Components.Database
         public void Remove(int componentTypeId, int entityId)
         {
             if(IsComponentStruct(componentTypeId))
-            { EntityValueComponents[componentTypeId][entityId] = -1; }
+            { ((IList)EntityValueComponents[componentTypeId])[entityId] = DefaultValueTypeLookups[componentTypeId]; }
             else
             { EntityReferenceComponents[componentTypeId][entityId] = null; }
         }

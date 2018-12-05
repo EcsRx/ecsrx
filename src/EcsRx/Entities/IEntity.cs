@@ -77,6 +77,8 @@ namespace EcsRx.Entities
         /// <param name="componentTypeId">The id of the component type</param>
         /// <returns>The component instance if found, or null if not</returns>
         IComponent GetComponent(int componentTypeId);
+
+        T GetComponentStruct<T>(int componentTypeId) where T : struct;
         
         /// <summary>
         /// Checks to see if the entity contains given components by their instances

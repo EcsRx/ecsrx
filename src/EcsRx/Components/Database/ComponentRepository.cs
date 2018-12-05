@@ -10,7 +10,7 @@ namespace EcsRx.Components.Database
         public IComponentDatabase Database { get; }
         public int DefaultExpansionSize { get; }
 
-        public ComponentRepository(IComponentTypeLookup componentLookup, IComponentDatabase database, int defaultExpansionSize = 100)
+        public ComponentRepository(IComponentTypeLookup componentLookup, IComponentDatabase database, int defaultExpansionSize = 5000)
         {
             ComponentLookup = componentLookup;
             DefaultExpansionSize = defaultExpansionSize;
@@ -41,8 +41,10 @@ namespace EcsRx.Components.Database
         public T Create<T>(int entityId, int componentTypeId) where T : struct
         { return Database.GetStruct<T>(componentTypeId, entityId); }
 
-        public IComponent Get(int entityId, int componentTypeId) => Database.Get(componentTypeId, entityId);        
-        
+        public IComponent Get(int entityId, int componentTypeId) => Database.Get(componentTypeId, entityId);
+
+        public T Get<T>(int entityId, int componentTypeId) where T : struct => Database.GetStruct<T>(componentTypeId, entityId);
+
         public IComponent Get(int entityId, Type componentType)
         {
             var componentTypeId = ComponentLookup.GetComponentType(componentType);

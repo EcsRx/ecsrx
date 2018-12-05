@@ -17,10 +17,13 @@ namespace EcsRx.Examples
             //var application = new HealthExampleApplication();
             //var application = new HelloWorldExampleApplication();   // Comment out this and uncomment the other one to run the other example
 
+            //var application = new SimplestForEachLoopApplication();
             //var application = new BasicForEachLoopApplication();
             //var application = new BasicForLoopApplication();
+            //var application = new BasicStructForLoopApplication();
             //var application = new BatchedForLoopApplication();
             var application = new BatchedStructForLoopApplication();
+            //var application = new MultithreadedBatchedStructForLoopApplication();
             
             application.StartApplication();
         }

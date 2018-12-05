@@ -11,6 +11,7 @@ namespace EcsRx.Components.Database
         
         IComponent Get(int entityId, Type componentType);
         IComponent Get(int entityId, int componentTypeId);
+        T Get<T>(int entityId, int componentTypeId) where T : struct;
         IEnumerable<IComponent> GetAll(int entityId);
 
         int Add(int entityId, IComponent component);

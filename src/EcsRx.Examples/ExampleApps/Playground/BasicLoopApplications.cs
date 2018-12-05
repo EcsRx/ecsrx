@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Numerics;
+using System.Threading.Tasks;
 using EcsRx.Collections;
 using EcsRx.Components;
 using EcsRx.Components.Database;
@@ -8,6 +9,7 @@ using EcsRx.Components.Lookups;
 using EcsRx.Examples.Application;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Extensions;
+using EcsRx.Pools;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {
@@ -62,8 +64,27 @@ namespace EcsRx.Examples.ExampleApps.Performance
         protected abstract void RunProcess();
     }
     
+    public class SimplestForEachLoopApplication : BasicLoopApplication
+    {
+        protected override void RunProcess()
+        {
+            foreach (var entity in _collection)
+            {
+                var basicComponent = entity.GetComponent<BasicClassComponent>();
+                basicComponent.Position += Vector3.One;
+                basicComponent.Something += 10;
+            }
+        }
+    }
+    
     public class BasicForEachLoopApplication : BasicLoopApplication
     {
+        protected override void SetupEntities()
+        {
+            _componentDatabase.AccommodateMoreEntities(EntityCount);
+            base.SetupEntities();
+        }
+
         protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicClassComponent));
@@ -78,6 +99,12 @@ namespace EcsRx.Examples.ExampleApps.Performance
     
     public class BasicForLoopApplication : BasicLoopApplication
     {
+        protected override void SetupEntities()
+        {
+            _componentDatabase.AccommodateMoreEntities(EntityCount);
+            base.SetupEntities();
+        }
+        
         protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicClassComponent));
@@ -91,8 +118,41 @@ namespace EcsRx.Examples.ExampleApps.Performance
         }
     }
     
+    public class BasicStructForLoopApplication : BasicLoopApplication
+    {
+        protected override void SetupEntities()
+        {
+            var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
+            _componentDatabase.AccommodateMoreEntities(EntityCount);
+            
+            for (var i = EntityCount - 1; i >= 0; i--)
+            {
+                var entity = _collection.CreateEntity();
+                entity.AddComponent<BasicStructComponent>(componentId);
+            }
+        }
+        
+        protected override void RunProcess()
+        {
+            var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
+            for (var i = _collection.Count - 1; i >= 0; i--)
+            {
+                var entity = _collection[i];
+                var basicComponent = entity.GetComponentStruct<BasicStructComponent>(componentId);
+                basicComponent.Position += Vector3.One;
+                basicComponent.Something += 10;
+            }
+        }
+    }
+    
     public class BatchedForLoopApplication : BasicLoopApplication
     {
+        protected override void SetupEntities()
+        {
+            _componentDatabase.AccommodateMoreEntities(EntityCount);
+            base.SetupEntities();
+        }
+        
         protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicClassComponent));
@@ -114,8 +174,8 @@ namespace EcsRx.Examples.ExampleApps.Performance
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
             _componentDatabase.AccommodateMoreEntities(EntityCount);
-
-            for (var i = 0; i < EntityCount; i++)
+            
+            for (var i = EntityCount - 1; i >= 0; i--)
             {
                 var entity = _collection.CreateEntity();
                 entity.AddComponent<BasicStructComponent>(componentId);
@@ -127,13 +187,42 @@ namespace EcsRx.Examples.ExampleApps.Performance
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
             var componentLookup = _componentDatabase.GetComponentStructs<BasicStructComponent>(componentId);
 
-            for (var i = 0; i < _collection.Count; i++)
+            for (var i = _collection.Count - 1; i >= 0; i--)
             {
                 var entity = _collection[i];
                 var basicComponent = componentLookup[entity.Id];
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;
             }
+        }
+    }
+    
+    public class MultithreadedBatchedStructForLoopApplication : BasicLoopApplication
+    {
+        protected override void SetupEntities()
+        {
+            var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
+            _componentDatabase.AccommodateMoreEntities(EntityCount);
+            
+            for (var i = EntityCount - 1; i >= 0; i--)
+            {
+                var entity = _collection.CreateEntity();
+                entity.AddComponent<BasicStructComponent>(componentId);
+            }
+        }
+
+        protected override void RunProcess()
+        {
+            var componentId = _componentTypeLookup.GetComponentType(typeof(BasicStructComponent));
+            var componentLookup = _componentDatabase.GetComponentStructs<BasicStructComponent>(componentId);
+
+            Parallel.For(0, _collection.Count, (index) =>
+            {
+                var entity = _collection[index];
+                var basicComponent = componentLookup[entity.Id];
+                basicComponent.Position += Vector3.One;
+                basicComponent.Something += 10;
+            });
         }
     }
     

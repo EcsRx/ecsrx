@@ -15,7 +15,6 @@ namespace EcsRx.Components.Database
         void Add(int componentTypeId, int entityId, IComponent component);
         void Remove(int componentTypeId, int entityId);
 
-        bool IsComponentStruct(int componentTypeId);
         IReadOnlyList<IComponent> GetComponents(int componentTypeId);
         IReadOnlyList<T> GetComponentStructs<T>(int componentTypeId) where T : struct;
 

@@ -20,7 +20,6 @@ namespace EcsRx.Components.Database
             }
         }
 
-        public bool[] ValueTypeLookups { get; private set; }
         public ValueType[] DefaultValueTypeLookups { get; private set; }
         public IComponent[][] EntityReferenceComponents { get; private set; }
         public Array[] EntityValueComponents { get; private set; }
@@ -47,14 +46,11 @@ namespace EcsRx.Components.Database
             var componentCount = componentTypes.Length;
             EntityReferenceComponents = new IComponent[componentCount][];
             EntityValueComponents = new Array[componentCount];
-            ValueTypeLookups = new bool[componentCount];
             DefaultValueTypeLookups = new ValueType[componentCount];
 
-            for (var i = 0; i < EntityReferenceComponents.Length; i++)
+            for (var i = 0; i < componentCount; i++)
             {
-                ValueTypeLookups[i] = componentTypes[i].Key.IsValueType;
-
-                if (ValueTypeLookups[i])
+                if (ComponentTypeLookup.IsComponentStruct(i))
                 {
                     EntityValueComponents[i] = CreateTypeOnTheFly(componentTypes[i].Key, entitySetupSize);
                     DefaultValueTypeLookups[i] = CreateDefaultStruct(componentTypes[i].Key);
@@ -81,13 +77,10 @@ namespace EcsRx.Components.Database
 
         public T Get<T>(int componentTypeId, int entityId)
         {
-            if (IsComponentStruct(componentTypeId))
+            if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
             { return ((IReadOnlyList<T>) EntityValueComponents[componentTypeId])[entityId]; }
             return (T) EntityReferenceComponents[componentTypeId][entityId];
         }
-
-        public bool IsComponentStruct(int componentTypeId)
-        { return ValueTypeLookups[componentTypeId]; }
 
         public IReadOnlyList<IComponent> GetComponents(int componentTypeId)
         { return EntityReferenceComponents[componentTypeId]; }
@@ -114,7 +107,7 @@ namespace EcsRx.Components.Database
 
         public bool Has(int componentTypeId, int entityId)
         {
-            if (IsComponentStruct(componentTypeId))
+            if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
             {
                 if (EntityValueComponents[componentTypeId].Length <= entityId)
                 { return false; }
@@ -130,7 +123,7 @@ namespace EcsRx.Components.Database
 
         public void Add(int componentTypeId, int entityId, IComponent component)
         {
-            if(IsComponentStruct(componentTypeId))
+            if(ComponentTypeLookup.IsComponentStruct(componentTypeId))
             { ((IList)EntityValueComponents[componentTypeId])[entityId] = component; }
             else
             { EntityReferenceComponents[componentTypeId][entityId] = component; }
@@ -138,7 +131,7 @@ namespace EcsRx.Components.Database
 
         public void Remove(int componentTypeId, int entityId)
         {
-            if(IsComponentStruct(componentTypeId))
+            if(ComponentTypeLookup.IsComponentStruct(componentTypeId))
             { ((IList)EntityValueComponents[componentTypeId])[entityId] = DefaultValueTypeLookups[componentTypeId]; }
             else
             { EntityReferenceComponents[componentTypeId][entityId] = null; }

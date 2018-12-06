@@ -9,21 +9,13 @@ namespace EcsRx.Components.Database
 {
     public class ComponentDatabase : IComponentDatabase
     {
-        public int CurrentEntityBounds
-        {
-            get
-            {
-                if (EntityReferenceComponents.Length == 0)
-                { return 0; }
-
-                return EntityReferenceComponents[0].Count;
-            }
-        }
+        public int CurrentEntityBounds { get; private set; }
+        
+        public IComponentTypeLookup ComponentTypeLookup { get; }
 
         public IList<IComponent>[] EntityReferenceComponents { get; private set; }
         public Array[] EntityValueComponents { get; private set; }
         public bool[][] EntityValueComponentsLookups { get; private set; }
-        public IComponentTypeLookup ComponentTypeLookup { get; }
 
         public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int entitySetupSize = 5000)
         {
@@ -44,6 +36,7 @@ namespace EcsRx.Components.Database
             EntityReferenceComponents = new IList<IComponent>[componentCount];
             EntityValueComponents = new Array[componentCount];
             EntityValueComponentsLookups = new bool[componentCount][];
+            CurrentEntityBounds = entitySetupSize;
 
             for (var i = 0; i < componentCount; i++)
             {
@@ -55,6 +48,14 @@ namespace EcsRx.Components.Database
                 else
                 { EntityReferenceComponents[i] = new IComponent[entitySetupSize]; }
             }            
+        }
+        
+        public void ExpandUntypedArray(ref Array array, int amountToAdd)
+        {
+            var arrayType = array.GetType();
+            var newEntries = (Array)Activator.CreateInstance(arrayType, array.Length + amountToAdd);               
+            array.CopyTo(newEntries, 0);
+            array = newEntries;
         }
         
         public void AccommodateMoreEntities(int newMaxSize)
@@ -69,10 +70,11 @@ namespace EcsRx.Components.Database
                 }
                 else
                 {
-                    IListExtensions.ExpandListTo(ref EntityValueComponents[i], expandBy);
+                    ExpandUntypedArray(ref EntityValueComponents[i], expandBy);
                     EntityValueComponentsLookups[i] = EntityValueComponentsLookups[i].ExpandListTo(expandBy);
                 }
             }
+            CurrentEntityBounds = newMaxSize;
         }
 
         public T Get<T>(int componentTypeId, int entityId) where T : IComponent
@@ -97,7 +99,7 @@ namespace EcsRx.Components.Database
                 if (EntityReferenceComponents[i] != null)
                 {
                     var component = EntityReferenceComponents[i][entityId];
-                    if(component != null) { yield return component; }                    
+                    if(component != null) { yield return component; }
                 }
                 else
                 {

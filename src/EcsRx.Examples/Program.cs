@@ -9,7 +9,7 @@ namespace EcsRx.Examples
         static void Main(string[] args)
         {
             //var application = new SimpleSystemApplication();
-            //var application = new GroupPerformanceApplication();
+            var application = new GroupPerformanceApplication();
             //var application = new OptimizedGroupPerformanceApplication();
             //var application = new OptimizedEntityPerformanceApplication();
             //var application = new EntityPerformanceApplication();
@@ -22,7 +22,7 @@ namespace EcsRx.Examples
             //var application = new BasicForLoopApplication();
             //var application = new BasicStructForLoopApplication();
             //var application = new BatchedForLoopApplication();
-            var application = new BatchedStructForLoopApplication();
+            //var application = new BatchedStructForLoopApplication();
             //var application = new MultithreadedBatchedStructForLoopApplication();
             
             application.StartApplication();

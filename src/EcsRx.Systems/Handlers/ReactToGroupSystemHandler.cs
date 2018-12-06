@@ -42,14 +42,14 @@ namespace EcsRx.Systems.Handlers
             }
 
             var groupPredicate = system.Group as IHasPredicate;
-            var subscription = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity), castSystem));
+            var subscription = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToList(), castSystem));
             _systemSubscriptions.Add(system, subscription);
         }
 
-        private static void ExecuteForGroup(IEnumerable<IEntity> entities, IReactToGroupSystem castSystem)
+        private static void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupSystem castSystem)
         {
-            foreach(var entity in entities)
-            { castSystem.Process(entity); }
+            for (var i = entities.Count - 1; i >= 0; i--)
+            { castSystem.Process(entities[i]); }
         }
 
         public void DestroySystem(ISystem system)

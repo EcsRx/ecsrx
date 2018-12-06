@@ -52,7 +52,7 @@ namespace EcsRx.Tests.Framework
             entityCollection.RemoveEntity(mockEntity.Id);
 
             Assert.True(wasCalled);
-            Assert.DoesNotContain(mockEntity, entityCollection.EntityLookup.Values);
+            Assert.DoesNotContain(mockEntity, entityCollection);
         }
     }
 }

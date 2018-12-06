@@ -56,12 +56,13 @@ namespace EcsRx.Systems.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
+
             foreach (var entity in observableGroup)
             {
                 var possibleSubscription = ProcessEntity(castSystem, entity);
                 if (possibleSubscription != null)
                 { entitySubscriptions.Add(entity.Id, possibleSubscription); }
-            }         
+            }
         }
 
         public void DestroySystem(ISystem system)

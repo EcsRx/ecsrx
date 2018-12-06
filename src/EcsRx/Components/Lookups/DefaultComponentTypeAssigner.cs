@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EcsRx.Components
+namespace EcsRx.Components.Lookups
 {
     public class DefaultComponentTypeAssigner : IComponentTypeAssigner
     {

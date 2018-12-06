@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx;

@@ -1,4 +1,5 @@
 ﻿using EcsRx.Entities;
+using EcsRx.Pools;
 
 namespace EcsRx.Views.Pooling
 {

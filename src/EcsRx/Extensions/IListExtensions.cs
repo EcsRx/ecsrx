@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EcsRx.Entities;
-using EcsRx.Executor;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace EcsRx.Extensions
 {
@@ -12,11 +11,13 @@ namespace EcsRx.Extensions
             foreach (var element in elementsToRemove)
             { list.Remove(element); }
         }
-
-        public static void ExpandListTo<T>(this IList<T> list, int amountToAdd) where T : class
+        
+        public static T[] ExpandListTo<T>(this T[] array, int amountToAdd)
         {
-            for (var i = 0; i < amountToAdd; i++)
-            { list.Add(null); }
+            var arrayType = array.GetType();
+            var newEntries = (T[])Activator.CreateInstance(arrayType, array.Length + amountToAdd);               
+            array.CopyTo(newEntries, 0);
+            return newEntries;
         }
     }
 }

@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EcsRx.Components
+namespace EcsRx.Components.Lookups
 {
     public class ComponentTypeLookup : IComponentTypeLookup
     {
         public IReadOnlyDictionary<Type, int> ComponentsByType { get; }
         public IReadOnlyDictionary<int, Type> ComponentsById { get; }
+        public bool[] ComponentStructLookups { get; }
 
         public ComponentTypeLookup(IReadOnlyDictionary<Type, int> componentsByType)
         {
             ComponentsByType = componentsByType;
             ComponentsById = componentsByType.ToDictionary(x => x.Value, x => x.Key);
+            ComponentStructLookups = componentsByType.Keys.Select(x => x.IsValueType).ToArray();
         }
 
         public int GetComponentType<T>() where T : IComponent
@@ -26,6 +28,18 @@ namespace EcsRx.Components
 
         public Type[] GetComponentTypes(params int[] typeIds)
         { return typeIds.Select(x => ComponentsById[x]).ToArray(); }
+
+        public bool IsComponentStruct(int componentTypeId)
+        { return ComponentStructLookups[componentTypeId]; }
+
+        public T CreateDefault<T>() where T : IComponent, new()
+        {
+            var type = typeof(T);
+            if (type.IsValueType)
+            { return default(T); }
+
+            return Activator.CreateInstance<T>();
+        }
 
         public IReadOnlyDictionary<Type, int> GetAllComponentTypes()
         { return ComponentsByType; }

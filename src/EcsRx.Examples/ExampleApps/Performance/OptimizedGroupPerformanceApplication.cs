@@ -5,6 +5,7 @@ using System.Linq;
 using EcsRx.Components;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
+using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Extensions;
@@ -15,6 +16,8 @@ namespace EcsRx.Examples.ExampleApps.Performance
 {
     public class OptimizedGroupPerformanceApplication : EcsRxConsoleApplication
     {
+        private const int ProcessCount = 100000;
+        
         private IComponent[] _availableComponents;
         private int[] _availableComponentTypeIds;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
@@ -23,23 +26,24 @@ namespace EcsRx.Examples.ExampleApps.Performance
         protected override void LoadModules()
         { Container.LoadModule<OptimizedFrameworkModule>(); }
 
+        protected override void BindSystems()
+        {}
+
         protected override void ApplicationStarted()
         {
-            _availableComponentTypeIds = Enumerable.Range(0, 20).ToArray();
-            
-            var componentNamespace = typeof(Component1).Namespace;
             _availableComponents = _groupFactory.GetComponentTypes
-                .Where(x => x.Namespace == componentNamespace)
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
+         
+            _availableComponentTypeIds = Enumerable.Range(0, _availableComponents.Length-1).ToArray();
             
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
             { EntityCollectionManager.GetObservableGroup(group); }
 
-            var firstRun = ProcessEntities(10000);
-            var secondRun = ProcessEntities(10000);
-            var thirdRun = ProcessEntities(10000);
+            var firstRun = ProcessEntities(ProcessCount);
+            var secondRun = ProcessEntities(ProcessCount);
+            var thirdRun = ProcessEntities(ProcessCount);
 
             Console.WriteLine($"Finished In: {(firstRun + secondRun + thirdRun).TotalSeconds}s");
             Console.WriteLine($"First Took: {firstRun.TotalSeconds}s");

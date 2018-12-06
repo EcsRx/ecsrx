@@ -10,7 +10,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 {
     public class SimpleSystemApplication : EcsRxConsoleApplication
     {
-        private static readonly int EntityCount = 1000;
+        private static readonly int EntityCount = 10000;
         private IEntityCollection _collection;
         private ExampleReactToGroupSystem _system;
 

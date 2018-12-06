@@ -6,6 +6,7 @@ using System.Reactive.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using NSubstitute;
@@ -87,7 +88,7 @@ namespace EcsRx.Tests.Framework
             
             entityAddedSub.OnNext(new CollectionEntityEvent(applicableEntity, mockCollection));
             Assert.Equal(1, observableGroup.CachedEntities.Count);
-            Assert.Equal(applicableEntity, observableGroup.CachedEntities[applicableEntity.Id]);
+            Assert.Equal(applicableEntity, observableGroup.CachedEntities.GetByKey(applicableEntity.Id));
             
             Assert.Equal(1, wasCalled);
         }

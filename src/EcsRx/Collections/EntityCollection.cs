@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using EcsRx.Blueprints;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 using EcsRx.Exceptions;
 using EcsRx.Extensions;
+using EcsRx.Lookups;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
@@ -15,7 +17,7 @@ namespace EcsRx.Collections
 {
     public class EntityCollection : IEntityCollection, IDisposable
     {
-        public readonly IDictionary<int, IEntity> EntityLookup;
+        public readonly LookupList<int, IEntity> EntityLookup;
         public readonly IDictionary<int, IDisposable> EntitySubscriptions;
 
         public IObservable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
@@ -35,7 +37,7 @@ namespace EcsRx.Collections
         
         public EntityCollection(string name, IEntityFactory entityFactory)
         {
-            EntityLookup = new Dictionary<int, IEntity>();
+            EntityLookup = new LookupList<int, IEntity>();
             EntitySubscriptions = new Dictionary<int, IDisposable>();
             Name = name;
             EntityFactory = entityFactory;
@@ -73,7 +75,7 @@ namespace EcsRx.Collections
         }
 
         public IEntity GetEntity(int id)
-        { return EntityLookup[id]; }
+        { return EntityLookup.GetByKey(id); }
 
         public void RemoveEntity(int id, bool disposeOnRemoval = true)
         {
@@ -120,5 +122,8 @@ namespace EcsRx.Collections
             EntityLookup.Clear();
             EntitySubscriptions.RemoveAndDisposeAll();
         }
+
+        public int Count => EntityLookup.Count;
+        public IEntity this[int index] => EntityLookup[index];
     }
 }

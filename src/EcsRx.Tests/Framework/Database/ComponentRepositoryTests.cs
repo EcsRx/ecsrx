@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
+using EcsRx.Extensions;
 using EcsRx.Tests.Models;
 using NSubstitute;
 using Xunit;
@@ -35,7 +37,7 @@ namespace EcsRx.Tests.Database
         }
         
         [Fact]
-        public void should_call_get_component()
+        public void should_call_get_component_via_extension()
         {
             var fakeEntityId = 1;
             var defaultExpansionSize = 10;
@@ -47,7 +49,39 @@ namespace EcsRx.Tests.Database
             var repository = new ComponentRepository(mockComponentLookup, mockDatabase, defaultExpansionSize);
 
             repository.Get(fakeEntityId, typeof(TestComponentOne));
-            mockDatabase.Received(1).Get(0, fakeEntityId);
+            mockDatabase.Received(1).Get<IComponent>(0, fakeEntityId);
+        }
+        
+        [Fact]
+        public void should_call_get_component()
+        {
+            var fakeEntityId = 1;
+            var defaultExpansionSize = 10;
+            
+            var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
+            mockComponentLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
+            
+            var mockDatabase = Substitute.For<IComponentDatabase>();
+            var repository = new ComponentRepository(mockComponentLookup, mockDatabase, defaultExpansionSize);
+
+            repository.Get(fakeEntityId, 0);
+            mockDatabase.Received(1).Get<IComponent>(0, fakeEntityId);
+        }
+        
+        [Fact]
+        public void should_call_has_component_via_extension()
+        {
+            var fakeEntityId = 1;
+            var defaultExpansionSize = 10;
+            
+            var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
+            mockComponentLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
+            
+            var mockDatabase = Substitute.For<IComponentDatabase>();
+            var repository = new ComponentRepository(mockComponentLookup, mockDatabase, defaultExpansionSize);
+
+            repository.Has(fakeEntityId, typeof(TestComponentOne));
+            mockDatabase.Received(1).Has(0, fakeEntityId);
         }
         
         [Fact]
@@ -62,7 +96,7 @@ namespace EcsRx.Tests.Database
             var mockDatabase = Substitute.For<IComponentDatabase>();
             var repository = new ComponentRepository(mockComponentLookup, mockDatabase, defaultExpansionSize);
 
-            repository.Has(fakeEntityId, typeof(TestComponentOne));
+            repository.Has(fakeEntityId, 0);
             mockDatabase.Received(1).Has(0, fakeEntityId);
         }
         

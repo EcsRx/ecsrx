@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Extensions;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Subjects;
 
@@ -41,10 +42,13 @@ namespace EcsRx.Entities
             
             _onComponentsAdded.OnNext(componentTypeIds);
         }
+
+        public T AddComponent<T>(int componentTypeId) where T : IComponent, new()
+        { return ComponentRepository.Create<T>(Id, componentTypeId); }
         
         public void RemoveComponents(params Type[] componentTypes)
         {
-            var componentTypeIds = ComponentRepository.GetTypesFor(componentTypes);
+            var componentTypeIds = ComponentRepository.ComponentTypeLookup.GetComponentTypes(componentTypes);
             RemoveComponents(componentTypeIds);
         }
 
@@ -64,7 +68,7 @@ namespace EcsRx.Entities
         public void RemoveAllComponents()
         {
             var componentTypes = Components.Select(x => x.GetType()).ToArray();
-            var componentTypeIds = ComponentRepository.GetTypesFor(componentTypes);
+            var componentTypeIds = ComponentRepository.ComponentTypeLookup.GetComponentTypes(componentTypes);
             RemoveComponents(componentTypeIds);
         }
        
@@ -79,6 +83,9 @@ namespace EcsRx.Entities
         
         public IComponent GetComponent(int componentTypeId)
         { return ComponentRepository.Get(Id, componentTypeId); }
+        
+        public T GetComponent<T>(int componentTypeId) where T : IComponent
+        { return ComponentRepository.Get<T>(Id, componentTypeId); }
 
         public override int GetHashCode()
         { return Id; }

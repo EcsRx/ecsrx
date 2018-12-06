@@ -151,8 +151,7 @@ namespace EcsRx.Tests.Framework
             fakeEntity2.Id.Returns(id2);
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.GetEnumerator()
-                .Returns(fakeEntities.GetEnumerator());
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             
             var removedSubject = new Subject<IEntity>();

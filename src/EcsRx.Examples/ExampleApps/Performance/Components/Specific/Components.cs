@@ -1,6 +1,6 @@
 ﻿using EcsRx.Components;
 
-namespace EcsRx.Examples.ExampleApps.Performance.Components
+namespace EcsRx.Examples.ExampleApps.Performance.Components.Specific
 {
     public class Component1: IComponent {}
     public class Component2: IComponent {}

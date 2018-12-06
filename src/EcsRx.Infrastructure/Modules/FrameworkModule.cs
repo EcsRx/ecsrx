@@ -1,6 +1,7 @@
 ﻿using EcsRx.Collections;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Executor;
@@ -11,6 +12,7 @@ using EcsRx.Infrastructure.Events;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Events;
+using EcsRx.Pools;
 using EcsRx.Systems.Handlers;
 
 namespace EcsRx.Infrastructure.Modules

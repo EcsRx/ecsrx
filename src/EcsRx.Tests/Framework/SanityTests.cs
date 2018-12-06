@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using EcsRx.Collections;
-using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
@@ -11,6 +11,7 @@ using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Events;
 using EcsRx.MicroRx.Events;
+using EcsRx.Pools;
 using EcsRx.Systems.Handlers;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;

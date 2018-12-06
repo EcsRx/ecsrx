@@ -4,6 +4,7 @@ using System.Linq;
 using EcsRx.Blueprints;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
@@ -78,7 +79,7 @@ namespace EcsRx.Tests.Framework
         }
         
         [Fact]
-        public void should_corectly_get_matching_entities()
+        public void should_correctly_get_matching_entities()
         {
             // easier to test with real stuff
             var componentLookups = new Dictionary<Type, int>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EcsRx.Components
+namespace EcsRx.Components.Lookups
 {
     public interface IComponentTypeLookup
     {
@@ -10,5 +10,7 @@ namespace EcsRx.Components
         int GetComponentType(Type type);
         int[] GetComponentTypes(params Type[] types);
         Type[] GetComponentTypes(params int[] typeIds);
+        bool IsComponentStruct(int componentTypeId);
+        T CreateDefault<T>() where T : IComponent, new();
     }
 }

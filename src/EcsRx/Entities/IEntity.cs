@@ -78,7 +78,7 @@ namespace EcsRx.Entities
         /// <returns>The component instance if found, or null if not</returns>
         IComponent GetComponent(int componentTypeId);
 
-        T GetComponent<T>(int componentTypeId);
+        T GetComponent<T>(int componentTypeId) where T : IComponent;
         
         /// <summary>
         /// Checks to see if the entity contains given components by their instances
@@ -87,7 +87,7 @@ namespace EcsRx.Entities
         /// <returns>true if all the component was found, false if one or more is missing</returns>
         void AddComponents(params IComponent[] components);
 
-        T AddComponent<T>(int componentTypeId) where T : struct;
+        T AddComponent<T>(int componentTypeId) where T : IComponent, new();
         
         /// <summary>
         /// Checks to see if the entity contains the given component type

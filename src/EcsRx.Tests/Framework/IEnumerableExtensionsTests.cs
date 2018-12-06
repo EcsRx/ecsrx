@@ -79,7 +79,7 @@ namespace EcsRx.Tests.Framework
         }
         
         [Fact]
-        public void should_corectly_get_matching_entities()
+        public void should_correctly_get_matching_entities()
         {
             // easier to test with real stuff
             var componentLookups = new Dictionary<Type, int>

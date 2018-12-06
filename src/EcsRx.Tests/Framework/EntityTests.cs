@@ -2,6 +2,7 @@
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Tests.Models;
@@ -30,11 +31,13 @@ namespace EcsRx.Tests.Framework
         public void should_raise_event_when_removing_component_that_exists()
         {
             var componentRepository = Substitute.For<IComponentRepository>();
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             var entity = new Entity(1, componentRepository);
             var dummyComponent = Substitute.For<IComponent>();
 
+            componentRepository.ComponentTypeLookup.Returns(componentTypeLookup);
             componentRepository.Has(Arg.Any<int>(), 1).Returns(true);
-            componentRepository.GetTypesFor(Arg.Any<Type>()).Returns(new []{1});
+            componentTypeLookup.GetComponentTypes(Arg.Any<Type>()).Returns(new []{1});
 
             var beforeWasCalled = false;
             var afterWasCalled = false;
@@ -52,7 +55,7 @@ namespace EcsRx.Tests.Framework
             var componentRepository = Substitute.For<IComponentRepository>();
             var entity = new Entity(1, componentRepository);
 
-            componentRepository.Has(Arg.Any<int>(), Arg.Any<Type>()).Returns(false);
+            componentRepository.Has(Arg.Any<int>(), Arg.Any<int>()).Returns(false);
             
             var beforeWasCalled = false;
             var afterWasCalled = false;
@@ -92,9 +95,16 @@ namespace EcsRx.Tests.Framework
         public void should_return_true_when_entity_has_any_components()
         {
             var fakeEntityId = 1;
+            
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
+            componentTypeLookup.GetComponentType(typeof(TestComponentTwo)).Returns(1);
+            
             var componentRepository = Substitute.For<IComponentRepository>();
-            componentRepository.Has(fakeEntityId, typeof(TestComponentOne)).Returns(true);
-            componentRepository.Has(fakeEntityId, typeof(TestComponentTwo)).Returns(false);
+            componentRepository.Has(fakeEntityId, 0).Returns(true);
+            componentRepository.Has(fakeEntityId, 1).Returns(false);
+            componentRepository.ComponentTypeLookup.Returns(componentTypeLookup);
+
             var entity = new Entity(fakeEntityId, componentRepository);
             
             Assert.True(entity.HasAnyComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
@@ -119,8 +129,11 @@ namespace EcsRx.Tests.Framework
             var fakeComponents = new IComponent[] {new TestComponentOne(), new TestComponentTwo()};
 
             var componentRepository = Substitute.For<IComponentRepository>();
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            
             componentRepository.GetAll(fakeEntityId).Returns(fakeComponents);
-            componentRepository.GetTypesFor(Arg.Any<Type[]>()).Returns(new []{1,2});
+            componentRepository.ComponentTypeLookup.Returns(componentTypeLookup);
+            componentTypeLookup.GetComponentTypes(Arg.Any<Type[]>()).Returns(new []{1,2});
             componentRepository.Has(Arg.Any<int>(), Arg.Any<int>()).Returns(true);
 
             var entity = new Entity(fakeEntityId, componentRepository);

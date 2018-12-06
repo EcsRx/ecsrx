@@ -11,5 +11,6 @@ namespace EcsRx.Components.Lookups
         int[] GetComponentTypes(params Type[] types);
         Type[] GetComponentTypes(params int[] typeIds);
         bool IsComponentStruct(int componentTypeId);
+        T CreateDefault<T>() where T : IComponent, new();
     }
 }

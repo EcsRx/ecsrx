@@ -162,6 +162,6 @@ namespace EcsRx.Extensions
             }
 
             return false;
-        }   
+        }
     }
 }

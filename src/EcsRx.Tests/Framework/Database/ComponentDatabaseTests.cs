@@ -75,7 +75,7 @@ namespace EcsRx.Tests.Database
             mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
-            database.Add(0, fakeEntityId, fakeComponent);
+            database.Set(0, fakeEntityId, fakeComponent);
             
             Assert.Equal(database.EntityReferenceComponents[0][1], fakeComponent);
             var nullCount = database.EntityReferenceComponents.Sum(x => x.Count(y => y == null));
@@ -102,9 +102,9 @@ namespace EcsRx.Tests.Database
             mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
-            database.Add(0, fakeEntityId, fakeComponent1);
-            database.Add(2, fakeEntityId, fakeComponent2);
-            database.Add(3, fakeEntityId, fakeComponent3);
+            database.Set(0, fakeEntityId, fakeComponent1);
+            database.Set(2, fakeEntityId, fakeComponent2);
+            database.Set(3, fakeEntityId, fakeComponent3);
 
             var allComponents = database.GetAll(fakeEntityId).ToArray();
             Assert.Equal(allComponents.Length, 3);
@@ -132,11 +132,11 @@ namespace EcsRx.Tests.Database
             mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
-            database.Add(0, fakeEntityId, fakeComponent1);
-            database.Add(2, fakeEntityId, fakeComponent2);
-            database.Add(0, otherEntityId, new TestComponentOne());
-            database.Add(1, otherEntityId, new TestComponentTwo());
-            database.Add(2, otherEntityId, new TestComponentThree());
+            database.Set(0, fakeEntityId, fakeComponent1);
+            database.Set(2, fakeEntityId, fakeComponent2);
+            database.Set(0, otherEntityId, new TestComponentOne());
+            database.Set(1, otherEntityId, new TestComponentTwo());
+            database.Set(2, otherEntityId, new TestComponentThree());
 
             var allComponents = database.GetAll(fakeEntityId).ToArray();
             Assert.Equal(allComponents.Length, 2);
@@ -162,10 +162,10 @@ namespace EcsRx.Tests.Database
             mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
-            database.Add(0, fakeEntityId, fakeComponent1);
-            database.Add(0, otherEntityId, new TestComponentOne());
+            database.Set(0, fakeEntityId, fakeComponent1);
+            database.Set(0, otherEntityId, new TestComponentOne());
 
-            var component = database.Get(0, fakeEntityId);
+            var component = database.Get<TestComponentOne>(0, fakeEntityId);
             Assert.Equal(fakeComponent1, component);
         }
         
@@ -187,9 +187,9 @@ namespace EcsRx.Tests.Database
             mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
-            database.Add(0, fakeEntityId, fakeComponent1);
-            database.Add(0, otherEntityId, new TestComponentOne());
-            database.Add(1, otherEntityId, new TestComponentOne());
+            database.Set(0, fakeEntityId, fakeComponent1);
+            database.Set(0, otherEntityId, new TestComponentOne());
+            database.Set(1, otherEntityId, new TestComponentOne());
 
             var hasComponent0 = database.Has(0, fakeEntityId);
             Assert.True(hasComponent0);
@@ -216,9 +216,9 @@ namespace EcsRx.Tests.Database
             mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
-            database.Add(0, fakeEntityId, fakeComponent1);
-            database.Add(0, otherEntityId, new TestComponentOne());
-            database.Add(1, otherEntityId, new TestComponentOne());
+            database.Set(0, fakeEntityId, fakeComponent1);
+            database.Set(0, otherEntityId, new TestComponentOne());
+            database.Set(1, otherEntityId, new TestComponentOne());
 
             database.Remove(0, fakeEntityId);
             Assert.False(database.Has(0, fakeEntityId));
@@ -241,11 +241,11 @@ namespace EcsRx.Tests.Database
             mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
-            database.Add(0, fakeEntityId, new TestComponentOne());
-            database.Add(0, fakeEntityId, new TestComponentTwo());
-            database.Add(0, fakeEntityId, new TestComponentThree());
-            database.Add(0, otherEntityId, new TestComponentOne());
-            database.Add(1, otherEntityId, new TestComponentOne());
+            database.Set(0, fakeEntityId, new TestComponentOne());
+            database.Set(0, fakeEntityId, new TestComponentTwo());
+            database.Set(0, fakeEntityId, new TestComponentThree());
+            database.Set(0, otherEntityId, new TestComponentOne());
+            database.Set(1, otherEntityId, new TestComponentOne());
 
             database.RemoveAll(fakeEntityId);
             Assert.False(database.Has(0, fakeEntityId));

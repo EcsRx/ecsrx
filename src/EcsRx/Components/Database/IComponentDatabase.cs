@@ -8,17 +8,14 @@ namespace EcsRx.Components.Database
         int CurrentEntityBounds { get; }
         void AccommodateMoreEntities(int newMaxSize);
         
-        IComponent Get(int componentTypeId, int entityId);
-        T Get<T>(int componentTypeId, int entityId);
-        
+        T Get<T>(int componentTypeId, int entityId) where T : IComponent;
+        void Set<T>(int componentTypeId, int entityId, T component) where T : IComponent;
         bool Has(int componentTypeId, int entityId);
-        void Add(int componentTypeId, int entityId, IComponent component);
         void Remove(int componentTypeId, int entityId);
 
-        IReadOnlyList<IComponent> GetComponents(int componentTypeId);
-        IReadOnlyList<T> GetComponents<T>(int componentTypeId);
-
+        IReadOnlyList<T> GetComponents<T>(int componentTypeId) where T : IComponent;
         IEnumerable<IComponent> GetAll(int entityId);
+
         void RemoveAll(int entityId);
     }
 }

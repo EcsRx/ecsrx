@@ -156,12 +156,12 @@ namespace EcsRx.Examples.ExampleApps.Performance
         protected override void RunProcess()
         {
             var componentId = _componentTypeLookup.GetComponentType(typeof(BasicClassComponent));
-            var componentLookup = _componentDatabase.GetComponents(componentId);
+            var componentLookup = _componentDatabase.GetComponents<BasicClassComponent>(componentId);
 
             for (var i = _collection.Count - 1; i >= 0; i--)
             {
                 var entity = _collection[i];
-                var basicComponent = componentLookup[entity.Id] as BasicClassComponent;
+                var basicComponent = componentLookup[entity.Id];
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;
             }

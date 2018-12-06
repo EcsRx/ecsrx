@@ -6,13 +6,13 @@ namespace EcsRx.Components.Database
 {
     public class ComponentRepository : IComponentRepository
     {
-        public IComponentTypeLookup ComponentLookup { get; }
+        public IComponentTypeLookup ComponentTypeLookup { get; }
         public IComponentDatabase Database { get; }
         public int DefaultExpansionSize { get; }
 
         public ComponentRepository(IComponentTypeLookup componentLookup, IComponentDatabase database, int defaultExpansionSize = 5000)
         {
-            ComponentLookup = componentLookup;
+            ComponentTypeLookup = componentLookup;
             DefaultExpansionSize = defaultExpansionSize;
             Database = database;
         }
@@ -24,54 +24,38 @@ namespace EcsRx.Components.Database
             Database.AccommodateMoreEntities(newSize);
         }
 
-        public Type[] GetTypesFor(params int[] componentTypeIds)
-        { return ComponentLookup.GetComponentTypes(componentTypeIds); }
-                
-        public int[] GetTypesFor(params Type[] componentTypeIds)
-        { return ComponentLookup.GetComponentTypes(componentTypeIds); }
-
-        public int Add(int entityId, IComponent component)
+        public int Add<T>(int entityId, T component) where T : IComponent
         {
             var underlyingType = component.GetType();
-            var componentTypeId = ComponentLookup.GetComponentType(underlyingType);
-            Database.Add(componentTypeId, entityId, component);
+            var componentTypeId = ComponentTypeLookup.GetComponentType(underlyingType);
+            
+            #if DEBUG
+            if(Database.Has(componentTypeId, entityId))
+            { throw new Exception("DEBUG ONLY ERROR: Component already exists on entity"); }
+            #endif
+            
+            Database.Set(componentTypeId, entityId, component);
             return componentTypeId;
         }
 
-        public T Create<T>(int entityId, int componentTypeId) where T : struct
+        public T Create<T>(int entityId, int componentTypeId) where T : IComponent, new()
+        {
+            #if DEBUG
+            if(Database.Has(componentTypeId, entityId))
+            { throw new Exception("DEBUG ONLY ERROR: Component already exists on entity"); }
+            #endif
+            
+            var defaultComponent = ComponentTypeLookup.CreateDefault<T>();
+            Database.Set(componentTypeId, entityId, defaultComponent);
+            return defaultComponent;
+        }       
+
+        public T Get<T>(int entityId, int componentTypeId) where T : IComponent
         { return Database.Get<T>(componentTypeId, entityId); }
 
-        public IComponent Get(int entityId, int componentTypeId) => Database.Get(componentTypeId, entityId);
-
-        public T Get<T>(int entityId, int componentTypeId)
-        { return Database.Get<T>(componentTypeId, entityId); }
-
-        public IComponent Get(int entityId, Type componentType)
-        {
-            var componentTypeId = ComponentLookup.GetComponentType(componentType);
-            return Get(entityId, componentTypeId);
-        }
-
-        public bool Has(int entityId, int componentTypeId) => Database.Has(componentTypeId, entityId);   
-        
-        public bool Has(int entityId, Type componentType)
-        {
-            var componentTypeId = ComponentLookup.GetComponentType(componentType);
-            return Has(entityId, componentTypeId);
-        }
-
-        public IEnumerable<IComponent> GetAll(int entityId)
-        { return Database.GetAll(entityId); }
-
+        public bool Has(int entityId, int componentTypeId) => Database.Has(componentTypeId, entityId);          
+        public IEnumerable<IComponent> GetAll(int entityId) => Database.GetAll(entityId);
         public void Remove(int entityId, int componentTypeId) => Database.Remove(componentTypeId, entityId);
-
-        public void Remove(int entityId, Type componentType)
-        {
-            var componentTypeId = ComponentLookup.GetComponentType(componentType);
-            Remove(entityId, componentTypeId);
-        }
-        
-        public void RemoveAll(int entityId)
-        { Database.RemoveAll(entityId); }
+        public void RemoveAll(int entityId) => Database.RemoveAll(entityId);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
@@ -15,39 +16,54 @@ namespace EcsRx.Systems.Handlers
     [Priority(6)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IEntityCollectionManager EntityCollectionManager;       
+        public readonly IEntityCollectionManager _entityCollectionManager;       
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
         public ReactToGroupSystemHandler(IEntityCollectionManager entityCollectionManager)
         {
-            EntityCollectionManager = entityCollectionManager;
+            _entityCollectionManager = entityCollectionManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
         public bool CanHandleSystem(ISystem system)
         { return system is IReactToGroupSystem; }
 
+        public bool ShouldMutliThread(ISystem system)
+        {
+            return system.GetType()
+                       .GetCustomAttributes(typeof(MultiThreadAttribute), true)
+                       .FirstOrDefault() != null;
+        }
+
         public void SetupSystem(ISystem system)
         {
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
+            var observableGroup = _entityCollectionManager.GetObservableGroup(system.Group);
             var hasEntityPredicate = system.Group is IHasPredicate;
             var castSystem = (IReactToGroupSystem)system;
             var reactObservable = castSystem.ReactToGroup(observableGroup);
-
+            var runParallel = ShouldMutliThread(system);
+                
             if (!hasEntityPredicate)
             {
-                var noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x, castSystem));
+                var noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x, castSystem, runParallel));
                 _systemSubscriptions.Add(system, noPredicateSub);
                 return;
             }
 
             var groupPredicate = system.Group as IHasPredicate;
-            var subscription = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToList(), castSystem));
+            var subscription = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToList(), castSystem, runParallel));
             _systemSubscriptions.Add(system, subscription);
         }
 
-        private static void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupSystem castSystem)
+        private static void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupSystem castSystem, bool runParallel = false)
         {
+            if (runParallel)
+            {
+                Parallel.For(0, entities.Count, i =>
+                { castSystem.Process(entities[i]); });
+                return;
+            }
+            
             for (var i = entities.Count - 1; i >= 0; i--)
             { castSystem.Process(entities[i]); }
         }

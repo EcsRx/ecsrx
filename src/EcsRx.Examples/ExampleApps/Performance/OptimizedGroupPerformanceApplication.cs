@@ -16,12 +16,11 @@ namespace EcsRx.Examples.ExampleApps.Performance
 {
     public class OptimizedGroupPerformanceApplication : EcsRxConsoleApplication
     {
-        private const int ProcessCount = 100000;
+        private const int ProcessCount = 10000;
         
         private IComponent[] _availableComponents;
         private int[] _availableComponentTypeIds;
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
-        private readonly Random _random = new Random();
 
         protected override void LoadModules()
         { Container.LoadModule<OptimizedFrameworkModule>(); }

@@ -24,6 +24,8 @@ namespace EcsRx.Collections
         private readonly IDictionary<string, IDisposable> _collectionSubscriptions;
 
         public IEnumerable<IEntityCollection> Collections => _collections.Values;
+        public IEnumerable<IObservableGroup> ObservableGroups => _observableGroups.Values;
+
         public IEntityCollectionFactory EntityCollectionFactory { get; }
         public IObservableGroupFactory ObservableGroupFactory { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
@@ -90,6 +92,15 @@ namespace EcsRx.Collections
             _onCollectionAdded.OnNext(collection);
             
             return collection;
+        }
+        
+        public IEnumerable<IObservableGroup> GetApplicableGroups(int[] componentTypeIds)
+        {
+            foreach(var groupLookup in _observableGroups)
+            {
+                if (groupLookup.Key.LookupGroup.Matches(componentTypeIds))
+                { yield return groupLookup.Value; }
+            }
         }
 
         public IEntityCollection GetCollection(string name = null)

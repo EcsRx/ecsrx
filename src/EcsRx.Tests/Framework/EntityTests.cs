@@ -126,21 +126,20 @@ namespace EcsRx.Tests.Framework
         public void should_remove_all_components_when_disposing()
         {
             var fakeEntityId = 1;
-            var fakeComponents = new IComponent[] {new TestComponentOne(), new TestComponentTwo()};
 
             var componentRepository = Substitute.For<IComponentRepository>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             
-            componentRepository.GetAll(fakeEntityId).Returns(fakeComponents);
-            componentRepository.ComponentTypeLookup.Returns(componentTypeLookup);
             componentTypeLookup.GetComponentTypes(Arg.Any<Type[]>()).Returns(new []{1,2});
             componentRepository.Has(Arg.Any<int>(), Arg.Any<int>()).Returns(true);
 
+            var expectedRange = Enumerable.Range(1, 2);
             var entity = new Entity(fakeEntityId, componentRepository);
-
+            entity.ActiveComponents.AddRange(expectedRange);
+            
             var beforeWasCalled = false;
             var afterWasCalled = false;
-            var expectedRange = Enumerable.Range(1, 2);
+            
             entity.ComponentsRemoving.Subscribe(x =>
             {
                 beforeWasCalled = true;
@@ -153,11 +152,11 @@ namespace EcsRx.Tests.Framework
             });
             
             entity.Dispose();
-            componentRepository.GetAll(fakeEntityId).Returns(new IComponent[0]);
 
             Assert.True(beforeWasCalled);
             Assert.True(afterWasCalled);
             Assert.Empty(entity.Components);
+            Assert.Empty(entity.ActiveComponents);
         }
 
         [Fact]

@@ -32,6 +32,9 @@ namespace EcsRx.Components.Lookups
         public bool IsComponentStruct(int componentTypeId)
         { return ComponentStructLookups[componentTypeId]; }
 
+        public int TotalComponentTypes()
+        { return ComponentsByType.Count; }
+
         public T CreateDefault<T>() where T : IComponent, new()
         {
             var type = typeof(T);

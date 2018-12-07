@@ -102,5 +102,8 @@ namespace EcsRx.Entities
         /// <param name="componentTypeId">Type id of component to look for</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         bool HasComponent(int componentTypeId);
+
+        void AddComponents(IReadOnlyList<IComponent> components);
+        void RemoveComponents(IReadOnlyList<int> componentsTypeIds);
     }
 }

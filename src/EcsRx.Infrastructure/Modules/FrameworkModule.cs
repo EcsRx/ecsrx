@@ -14,6 +14,7 @@ using EcsRx.MicroRx;
 using EcsRx.MicroRx.Events;
 using EcsRx.Pools;
 using EcsRx.Systems.Handlers;
+using EcsRx.Threading;
 
 namespace EcsRx.Infrastructure.Modules
 {
@@ -24,6 +25,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IMessageBroker, MessageBroker>();
             container.Bind<IEventSystem, EventSystem>();
             container.Bind<IIdPool, IdPool>();
+            container.Bind<IThreadHandler, DefaultThreadHandler>();
             container.Bind<IEntityFactory, DefaultEntityFactory>();
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();

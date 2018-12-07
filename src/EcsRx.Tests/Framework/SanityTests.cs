@@ -15,6 +15,7 @@ using EcsRx.Pools;
 using EcsRx.Systems.Handlers;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
+using EcsRx.Threading;
 using EcsRx.Views.Components;
 using EcsRx.Views.Systems;
 using NSubstitute;
@@ -44,8 +45,9 @@ namespace EcsRx.Tests.Framework
         
         private SystemExecutor CreateExecutor(IEntityCollectionManager entityCollectionManager)
         {
+            var threadHandler = new DefaultThreadHandler();
             var reactsToEntityHandler = new ReactToEntitySystemHandler(entityCollectionManager);
-            var reactsToGroupHandler = new ReactToGroupSystemHandler(entityCollectionManager);
+            var reactsToGroupHandler = new ReactToGroupSystemHandler(entityCollectionManager, threadHandler);
             var reactsToDataHandler = new ReactToDataSystemHandler(entityCollectionManager);
             var manualSystemHandler = new ManualSystemHandler(entityCollectionManager);
             var setupHandler = new SetupSystemHandler(entityCollectionManager);

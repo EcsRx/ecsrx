@@ -10,6 +10,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;
+using EcsRx.Threading;
 
 namespace EcsRx.Systems.Handlers
 {
@@ -18,10 +19,12 @@ namespace EcsRx.Systems.Handlers
     {
         public readonly IEntityCollectionManager _entityCollectionManager;       
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
+        public readonly IThreadHandler _threadHandler;
         
-        public ReactToGroupSystemHandler(IEntityCollectionManager entityCollectionManager)
+        public ReactToGroupSystemHandler(IEntityCollectionManager entityCollectionManager, IThreadHandler threadHandler)
         {
             _entityCollectionManager = entityCollectionManager;
+            _threadHandler = threadHandler;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
@@ -55,11 +58,11 @@ namespace EcsRx.Systems.Handlers
             _systemSubscriptions.Add(system, subscription);
         }
 
-        private static void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupSystem castSystem, bool runParallel = false)
+        private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupSystem castSystem, bool runParallel = false)
         {
             if (runParallel)
             {
-                Parallel.For(0, entities.Count, i =>
+                _threadHandler.For(0, entities.Count, i =>
                 { castSystem.Process(entities[i]); });
                 return;
             }

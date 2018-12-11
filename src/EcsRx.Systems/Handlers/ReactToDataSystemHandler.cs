@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using EcsRx.Attributes;
 using EcsRx.Collections;
@@ -55,7 +56,7 @@ namespace EcsRx.Systems.Handlers
                     { system.Process(entity, x);}
                 });
         }
-
+        
         public bool CanHandleSystem(ISystem system)
         { return system.IsReactiveDataSystem(); }
 
@@ -69,7 +70,8 @@ namespace EcsRx.Systems.Handlers
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
             
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
+            var affinity = system.GetGroupAffinity();
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinity);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

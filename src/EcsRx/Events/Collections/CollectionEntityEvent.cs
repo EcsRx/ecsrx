@@ -3,10 +3,10 @@ using EcsRx.Entities;
 
 namespace EcsRx.Events.Collections
 {
-    public class CollectionEntityEvent
+    public struct CollectionEntityEvent
     {
-        public IEntity Entity { get; }
-        public IEntityCollection Collection { get; }
+        public readonly IEntity Entity;
+        public readonly IEntityCollection Collection;
 
         public CollectionEntityEvent(IEntity entity, IEntityCollection collection)
         {

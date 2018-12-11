@@ -38,7 +38,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
             
             var groups = _groupFactory.CreateTestGroups().ToArray();
             foreach (var group in groups)
-            { EntityCollectionManager.GetObservableGroup(group); }
+            { EntityCollectionManager.GetObservableGroup(group, "default"); }
 
             var firstRun = ProcessEntities(ProcessCount);
             var secondRun = ProcessEntities(ProcessCount);

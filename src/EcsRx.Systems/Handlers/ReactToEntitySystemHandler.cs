@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
@@ -9,6 +10,7 @@ using EcsRx.Groups;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
+using EcsRx.Systems.Extensions;
 
 namespace EcsRx.Systems.Handlers
 {
@@ -28,10 +30,11 @@ namespace EcsRx.Systems.Handlers
 
         public bool CanHandleSystem(ISystem system)
         { return system is IReactToEntitySystem; }
-
+        
         public void SetupSystem(ISystem system)
         {
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);            
+            var affinity = system.GetGroupAffinity();
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinity);            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);

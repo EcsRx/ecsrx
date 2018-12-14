@@ -15,7 +15,7 @@ namespace EcsRx.Components.Database
 
         public IList<IComponent>[] EntityReferenceComponents { get; private set; }
         public Array[] EntityValueComponents { get; private set; }
-        public bool[][] EntityValueComponentsLookups { get; private set; }
+        public BitArray[] EntityValueComponentsLookups { get; private set; }
 
         public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int entitySetupSize = 5000)
         {
@@ -35,18 +35,17 @@ namespace EcsRx.Components.Database
             var componentCount = componentTypes.Length;
             EntityReferenceComponents = new IList<IComponent>[componentCount];
             EntityValueComponents = new Array[componentCount];
-            EntityValueComponentsLookups = new bool[componentCount][];
+            EntityValueComponentsLookups = new BitArray[componentCount];
             CurrentEntityBounds = entitySetupSize;
 
             for (var i = 0; i < componentCount; i++)
             {
                 if (ComponentTypeLookup.IsComponentStruct(i))
-                {
-                    EntityValueComponents[i] = CreateTypeOnTheFly(componentTypes[i].Key, entitySetupSize);
-                    EntityValueComponentsLookups[i] = new bool[entitySetupSize];
-                }
+                { EntityValueComponents[i] = CreateTypeOnTheFly(componentTypes[i].Key, entitySetupSize); }
                 else
                 { EntityReferenceComponents[i] = new IComponent[entitySetupSize]; }
+                
+                EntityValueComponentsLookups[i] = new BitArray(entitySetupSize);
             }            
         }
         
@@ -69,10 +68,9 @@ namespace EcsRx.Components.Database
                     EntityReferenceComponents[i] = reference.ExpandListTo(expandBy);
                 }
                 else
-                {
-                    ExpandUntypedArray(ref EntityValueComponents[i], expandBy);
-                    EntityValueComponentsLookups[i] = EntityValueComponentsLookups[i].ExpandListTo(expandBy);
-                }
+                { ExpandUntypedArray(ref EntityValueComponents[i], expandBy); }
+                
+                EntityValueComponentsLookups[i] = EntityValueComponentsLookups[i].ExpandListTo(expandBy);
             }
             CurrentEntityBounds = newMaxSize;
         }
@@ -111,37 +109,26 @@ namespace EcsRx.Components.Database
 
         public bool Has(int componentTypeId, int entityId)
         {
-            if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
-            {
-                if (EntityValueComponents[componentTypeId].Length <= entityId)
-                { return false; }
-
-                return EntityValueComponentsLookups[componentTypeId][entityId];
-            }
-            
-            if(EntityReferenceComponents[componentTypeId].Count <= entityId)
-            { return false; }
-            
-            return EntityReferenceComponents[componentTypeId][entityId] != null;
+            if (CurrentEntityBounds <= entityId) { return false; }
+            return EntityValueComponentsLookups[componentTypeId][entityId];
         }
 
         public void Set<T>(int componentTypeId, int entityId, T component) where T : IComponent
         {
             if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
-            {
-                ((IList)EntityValueComponents[componentTypeId])[entityId] = component;
-                EntityValueComponentsLookups[componentTypeId][entityId] = true;
-            }
+            { ((IList)EntityValueComponents[componentTypeId])[entityId] = component; }
             else
             { EntityReferenceComponents[componentTypeId][entityId] = component; }
+            
+            EntityValueComponentsLookups[componentTypeId][entityId] = true;
         }
 
         public void Remove(int componentTypeId, int entityId)
         {
-            if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
-            { EntityValueComponentsLookups[componentTypeId][entityId] = false; }
-            else
+            if (!ComponentTypeLookup.IsComponentStruct(componentTypeId))
             { EntityReferenceComponents[componentTypeId][entityId] = null; }
+            
+            EntityValueComponentsLookups[componentTypeId][entityId] = false;
         }
         
         public void RemoveAll(int entityId)

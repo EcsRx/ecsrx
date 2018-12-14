@@ -19,5 +19,14 @@ namespace EcsRx.Extensions
             array.CopyTo(newEntries, 0);
             return newEntries;
         }
+        
+        public static BitArray ExpandListTo(this BitArray array, int amountToAdd)
+        {
+            var newArray = new BitArray(array.Length + amountToAdd);
+            for (var i = 0; i < array.Length; i++)
+            { newArray[i] = array[i]; }
+
+            return newArray;
+        }
     }
 }

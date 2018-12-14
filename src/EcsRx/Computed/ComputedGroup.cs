@@ -91,6 +91,9 @@ namespace EcsRx.Computed
         public bool ContainsEntity(int id)
         { return CachedEntities.ContainsKey(id); }
 
+        public IEntity GetEntity(int id)
+        { return CachedEntities.GetByKey(id); }
+
         /// <summary>
         /// The method to indicate when the listings should be updated
         /// </summary>

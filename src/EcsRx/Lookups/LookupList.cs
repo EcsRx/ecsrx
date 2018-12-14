@@ -7,10 +7,10 @@ namespace EcsRx.Lookups
 {
     public class LookupList<TK, TV> : ILookupList<TK, TV>
     {
-        public readonly IndexPool IndexPool = new IndexPool();
         public readonly Dictionary<TK, int> Lookups = new Dictionary<TK, int>();
         public readonly List<TV> InternalList = new List<TV>();
-
+        public int LastIndex { get; private set; }
+        
         public IEnumerator<TV> GetEnumerator() => Values.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -19,31 +19,33 @@ namespace EcsRx.Lookups
         public TV this[int index] => InternalList[index];
 
         public ICollection<TK> Keys => Lookups.Keys;
-        public IEnumerable<TV> Values => InternalList.Where(x => x != null);
+        public ICollection<TV> Values => InternalList;
 
         public TV GetByKey(TK key) => InternalList[Lookups[key]];
 
         public void Add(TK key, TV value)
         {
-            var nextIndex = IndexPool.AllocateInstance();
-            Lookups.Add(key, nextIndex);
-
-            if (nextIndex < InternalList.Count)
-            { InternalList[nextIndex] = value; }
-            else
-            { InternalList.Add(value); }
+            Lookups.Add(key, LastIndex++);
+            InternalList.Add(value);
         }
 
         public bool Remove(TK key)
         {
             if (!Lookups.ContainsKey(key)) 
             { return false;}
-            
+
+            LastIndex--;
             var index = Lookups[key];
-            InternalList[index] = default(TV);
+            InternalList.RemoveAt(index);
             Lookups.Remove(key);
-            IndexPool.ReleaseInstance(index);
+            CompactDictionaryValuesFrom(index);
             return true;
+        }
+
+        public void CompactDictionaryValuesFrom(int startingIndex)
+        {
+            foreach (var key in Keys.Skip(startingIndex).ToArray())
+            { Lookups[key]--; }
         }
 
         public bool TryGetValue(TK key, out TV value)
@@ -62,7 +64,6 @@ namespace EcsRx.Lookups
         {
             InternalList.Clear();
             Lookups.Clear();
-            IndexPool.Clear();
         }
     }
 }

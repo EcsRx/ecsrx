@@ -30,10 +30,21 @@ namespace EcsRx.Collections
         public IObservableGroupFactory ObservableGroupFactory { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         
-       public IObservable<IEntityCollection> CollectionAdded => _onCollectionAdded;
+        public IObservable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
+        public IObservable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
+        public IObservable<ComponentsChangedEvent> EntityComponentsAdded => _onEntityComponentsAdded;
+        public IObservable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
+        public IObservable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
+        public IObservable<IEntityCollection> CollectionAdded => _onCollectionAdded;
         public IObservable<IEntityCollection> CollectionRemoved => _onCollectionRemoved;
+
         private readonly Subject<IEntityCollection> _onCollectionAdded;
         private readonly Subject<IEntityCollection> _onCollectionRemoved;
+        private readonly Subject<CollectionEntityEvent> _onEntityAdded;
+        private readonly Subject<CollectionEntityEvent> _onEntityRemoved;
+        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsAdded;
+        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoving;
+        private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoved;
 
         public EntityCollectionManager(IEntityCollectionFactory entityCollectionFactory, IObservableGroupFactory observableGroupFactory, IComponentTypeLookup componentTypeLookup)
         {
@@ -46,13 +57,25 @@ namespace EcsRx.Collections
             _collectionSubscriptions = new Dictionary<string, IDisposable>();
             _onCollectionAdded = new Subject<IEntityCollection>();
             _onCollectionRemoved = new Subject<IEntityCollection>();
+            _onEntityAdded = new Subject<CollectionEntityEvent>();
+            _onEntityRemoved = new Subject<CollectionEntityEvent>();
+            _onEntityComponentsAdded = new Subject<ComponentsChangedEvent>();
+            _onEntityComponentsRemoving = new Subject<ComponentsChangedEvent>();
+            _onEntityComponentsRemoved = new Subject<ComponentsChangedEvent>();
+
 
             CreateCollection(DefaultPoolName);
         }
 
         public void SubscribeToCollection(IEntityCollection collection)
         {
-            var collectionDisposable = new CompositeDisposable();           
+            var collectionDisposable = new CompositeDisposable();   
+            collection.EntityAdded.Subscribe(x => _onEntityAdded.OnNext(x)).AddTo(collectionDisposable);
+            collection.EntityRemoved.Subscribe(x => _onEntityRemoved.OnNext(x)).AddTo(collectionDisposable);
+            collection.EntityComponentsAdded.Subscribe(x => _onEntityComponentsAdded.OnNext(x)).AddTo(collectionDisposable);
+            collection.EntityComponentsRemoving.Subscribe(x => _onEntityComponentsRemoving.OnNext(x)).AddTo(collectionDisposable);
+            collection.EntityComponentsRemoved.Subscribe(x => _onEntityComponentsRemoved.OnNext(x)).AddTo(collectionDisposable);
+
             _collectionSubscriptions.Add(collection.Name, collectionDisposable);
         }
 
@@ -131,7 +154,10 @@ namespace EcsRx.Collections
                 InitialEntities = entityMatches
             };
 
-            configuration.NotifyingCollection = _collections[collectionName ?? DefaultPoolName];
+            if (collectionName != null)
+            { configuration.NotifyingCollection = _collections[collectionName]; }
+            else
+            { configuration.NotifyingCollection = this; }
             
             var observableGroup = ObservableGroupFactory.Create(configuration);
             _observableGroups.Add(observableGroupToken, observableGroup);
@@ -143,6 +169,12 @@ namespace EcsRx.Collections
         {
             foreach (var observableGroup in _observableGroups.Values)
             { (observableGroup as IDisposable)?.Dispose(); }
+            
+            _onEntityAdded.Dispose();
+            _onEntityRemoved.Dispose();
+            _onEntityComponentsAdded.Dispose();
+            _onEntityComponentsRemoving.Dispose();
+            _onEntityComponentsRemoved.Dispose();
             
             _collectionSubscriptions.RemoveAndDisposeAll();
         }

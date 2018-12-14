@@ -1,11 +1,20 @@
+using System;
 using System.Linq;
 using EcsRx.Lookups;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace EcsRx.Tests.Lookups
 {
     public class LookupListTests
     {
+        private readonly ITestOutputHelper output;
+
+        public LookupListTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+        
         [Fact]
         public void should_allow_iterating_of_values()
         {
@@ -59,6 +68,35 @@ namespace EcsRx.Tests.Lookups
             
             Assert.Equal(maxSize, lookup.Count);
             Assert.Equal(maxSize, lookup.InternalList.Count);
+        }
+        
+        [Fact]
+        public void should_compact_lookups_when_removing()
+        {
+            var lookup = new LookupList<int, int>();
+            var removalId = 2;
+            
+            lookup.Add(1, 1);
+            lookup.Add(removalId, 2);
+            lookup.Add(3, 3);
+            lookup.Add(4, 4);
+            lookup.Add(5, 5);
+
+            output.WriteLine($"Starts as [{string.Join(",", lookup.Lookups.Keys)}] [{string.Join(",", lookup.Lookups.Values)}] with [{string.Join(",", lookup.InternalList)}]");
+            lookup.Remove(removalId);
+            output.WriteLine($"Ends as [{string.Join(",", lookup.Lookups.Keys)}] [{string.Join(",", lookup.Lookups.Values)}] with [{string.Join(",", lookup.InternalList)}]");
+            
+            Assert.Equal(4, lookup.Count);
+            Assert.Equal(4, lookup.InternalList.Count);
+            
+            Assert.DoesNotContain(lookup.InternalList, x => x == removalId);
+            Assert.DoesNotContain(lookup.Lookups.Keys, x => x == removalId);
+            Assert.DoesNotContain(lookup.Lookups.Values, x => x == 4);
+            
+            Assert.Equal(1, lookup[0]);
+            Assert.Equal(3, lookup[1]);
+            Assert.Equal(4, lookup[2]);
+            Assert.Equal(5, lookup[3]);
         }
         
         [Fact]

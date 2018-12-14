@@ -137,6 +137,9 @@ namespace EcsRx.Groups.Observable
         
         public bool ContainsEntity(int id)
         { return CachedEntities.ContainsKey(id); }
+        
+        public IEntity GetEntity(int id)
+        { return CachedEntities.GetByKey(id); }
 
         public void Dispose()
         {

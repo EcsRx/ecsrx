@@ -158,9 +158,13 @@ namespace EcsRx.Tests.Framework
             var collection1 = collectionManager.CreateCollection("test1");
             var collection2 = collectionManager.CreateCollection("test2");
 
-            var timesCalled = 0;
+            var addedTimesCalled = 0;
+            var removingTimesCalled = 0;
+            var removedTimesCalled = 0;
             var observableGroup = collectionManager.GetObservableGroup(group, "test1", "test2");
-            observableGroup.OnEntityAdded.Subscribe(x => timesCalled++);
+            observableGroup.OnEntityAdded.Subscribe(x => addedTimesCalled++);
+            observableGroup.OnEntityRemoving.Subscribe(x => removingTimesCalled++);
+            observableGroup.OnEntityRemoved.Subscribe(x => removedTimesCalled++);
 
             var entity1 = collection1.CreateEntity();
             entity1.AddComponent<TestComponentOne>();
@@ -168,7 +172,12 @@ namespace EcsRx.Tests.Framework
             var entity2 = collection2.CreateEntity();
             entity2.AddComponent<TestComponentOne>();
             
-            Assert.Equal(2, timesCalled);
+            collection1.RemoveEntity(entity1.Id);
+            collection2.RemoveEntity(entity2.Id);
+            
+            Assert.Equal(2, addedTimesCalled);
+            Assert.Equal(2, removingTimesCalled);
+            Assert.Equal(2, removedTimesCalled);
         }
     }
 }

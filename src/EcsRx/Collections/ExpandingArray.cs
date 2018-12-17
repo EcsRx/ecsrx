@@ -23,6 +23,7 @@ namespace EcsRx.Collections
         public object GetItem(int index) => Data.GetValue(index);
         
         public void SetItem<T>(int index, T value) => GetArray<T>()[index] = value;
+        public void SetItem(int index, object value) => Data.SetValue(value, index);
 
         public void Expand(int amountToAdd)
         {
@@ -33,6 +34,8 @@ namespace EcsRx.Collections
             Data = newEntries;
             Count = newCount;
         }
+
+        public IEnumerator GetEnumerator() => Data.GetEnumerator();
     }
 }
 

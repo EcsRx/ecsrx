@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Tests.Models;
@@ -28,9 +29,9 @@ namespace EcsRx.Tests.Framework.Database
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
             
             Assert.Equal(expectedSize, database.CurrentEntityBounds);
-            Assert.Equal(fakeComponentTypes.Count, database.EntityReferenceComponents.Length);
-            Assert.Equal(expectedSize, database.EntityReferenceComponents[0].Count);
-            Assert.All(database.EntityReferenceComponents, x => x.All(y => y == null));
+            Assert.Equal(fakeComponentTypes.Count, database.EntityComponents.Length);
+            Assert.Equal(expectedSize, database.EntityComponents[0].Count);
+            Assert.Equal(expectedSize, database.EntityComponentsLookups[0].Count);
         }
         
         [Fact]
@@ -52,9 +53,9 @@ namespace EcsRx.Tests.Framework.Database
             database.AccommodateMoreEntities(expectedSize);
             
             Assert.Equal(expectedSize, database.CurrentEntityBounds);
-            Assert.Equal(fakeComponentTypes.Count, database.EntityReferenceComponents.Length);
-            Assert.Equal(expectedSize, database.EntityReferenceComponents[0].Count);
-            Assert.All(database.EntityReferenceComponents, x => x.All(y => y == null));
+            Assert.Equal(fakeComponentTypes.Count, database.EntityComponents.Length);
+            Assert.Equal(expectedSize, database.EntityComponents[0].Count);
+            Assert.Equal(expectedSize, database.EntityComponentsLookups[0].Count);
         }
 
         [Fact]
@@ -76,9 +77,9 @@ namespace EcsRx.Tests.Framework.Database
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
             database.Set(0, fakeEntityId, fakeComponent);
             
-            Assert.Equal(database.EntityReferenceComponents[0][1], fakeComponent);
-            var nullCount = database.EntityReferenceComponents.Sum(x => x.Count(y => y == null));
-            Assert.Equal(29, nullCount);
+            Assert.Equal(database.EntityComponents[0].GetItem(1), fakeComponent);
+            Assert.True(database.EntityComponentsLookups[0][1]);
+            
         }
         
         [Fact]
@@ -188,7 +189,7 @@ namespace EcsRx.Tests.Framework.Database
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
             database.Set(0, fakeEntityId, fakeComponent1);
             database.Set(0, otherEntityId, new TestComponentOne());
-            database.Set(1, otherEntityId, new TestComponentOne());
+            database.Set(1, otherEntityId, new TestComponentTwo());
 
             var hasComponent0 = database.Has(0, fakeEntityId);
             Assert.True(hasComponent0);
@@ -217,7 +218,7 @@ namespace EcsRx.Tests.Framework.Database
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
             database.Set(0, fakeEntityId, fakeComponent1);
             database.Set(0, otherEntityId, new TestComponentOne());
-            database.Set(1, otherEntityId, new TestComponentOne());
+            database.Set(1, otherEntityId, new TestComponentTwo());
 
             database.Remove(0, fakeEntityId);
             Assert.False(database.Has(0, fakeEntityId));
@@ -272,15 +273,15 @@ namespace EcsRx.Tests.Framework.Database
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
             database.Set(0, fakeEntityId, new TestComponentOne());
+            database.Set(0, otherEntityId, new TestComponentOne());
             database.Set(1, fakeEntityId, new TestStructComponentOne());
-            database.Set(0, fakeEntityId, new TestComponentOne());
             database.Set(1, otherEntityId, new TestStructComponentOne());
 
             var refComponents = database.GetComponents<TestComponentOne>(0);
             var structComponents = database.GetComponents<TestStructComponentOne>(1);
 
-            Assert.Equal(2, refComponents.Count);
-            Assert.Equal(2, structComponents.Count);
+            Assert.Equal(2, refComponents.Count(x => x != null));
+            Assert.Equal(10, structComponents.Count);
         }
     }
 }

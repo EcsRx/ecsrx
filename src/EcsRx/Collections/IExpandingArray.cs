@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace EcsRx.Collections
 {
-    public interface IExpandingArray
+    public interface IExpandingArray : IEnumerable
     {
         int Count { get; }
         
@@ -11,5 +12,6 @@ namespace EcsRx.Collections
         T GetItem<T>(int index);
         void SetItem<T>(int index, T value);
         void Expand(int amountToAdd);
+        void SetItem(int index, object value);
     }
 }

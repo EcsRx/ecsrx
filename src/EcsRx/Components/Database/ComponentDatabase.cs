@@ -14,9 +14,8 @@ namespace EcsRx.Components.Database
         
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
-        public IList<IComponent>[] EntityReferenceComponents { get; private set; }
-        public ExpandingArray[] EntityValueComponents { get; private set; }
-        public BitArray[] EntityValueComponentsLookups { get; private set; }
+        public ExpandingArray[] EntityComponents { get; private set; }
+        public BitArray[] EntityComponentsLookups { get; private set; }
 
         public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int entitySetupSize = 5000)
         {
@@ -28,99 +27,62 @@ namespace EcsRx.Components.Database
         {
             var componentTypes = ComponentTypeLookup.GetAllComponentTypes().ToArray();
             var componentCount = componentTypes.Length;
-            EntityReferenceComponents = new IList<IComponent>[componentCount];
-            EntityValueComponents = new ExpandingArray[componentCount];
-            EntityValueComponentsLookups = new BitArray[componentCount];
+            EntityComponents = new ExpandingArray[componentCount];
+            EntityComponentsLookups = new BitArray[componentCount];
             CurrentEntityBounds = entitySetupSize;
 
             for (var i = 0; i < componentCount; i++)
             {
-                if (ComponentTypeLookup.IsComponentStruct(i))
-                { EntityValueComponents[i] = new ExpandingArray(componentTypes[i].Key, entitySetupSize); }
-                else
-                { EntityReferenceComponents[i] = new IComponent[entitySetupSize]; }
-                
-                EntityValueComponentsLookups[i] = new BitArray(entitySetupSize);
+                EntityComponents[i] = new ExpandingArray(componentTypes[i].Key, entitySetupSize);
+                EntityComponentsLookups[i] = new BitArray(entitySetupSize);
             }            
         }
         
         public void AccommodateMoreEntities(int newMaxSize)
         {
             var expandBy = newMaxSize - CurrentEntityBounds;
-            for (var i = 0; i < EntityReferenceComponents.Length; i++)
+            for (var i = 0; i < EntityComponents.Length; i++)
             {
-                if (EntityReferenceComponents[i] != null)
-                {
-                    var reference = (IComponent[]) EntityReferenceComponents[i];
-                    EntityReferenceComponents[i] = reference.ExpandListTo(expandBy);
-                }
-                else
-                { EntityValueComponents[i].Expand(expandBy); }
-                
-                EntityValueComponentsLookups[i] = EntityValueComponentsLookups[i].ExpandListTo(expandBy);
+                EntityComponents[i].Expand(expandBy);
+                EntityComponentsLookups[i] = EntityComponentsLookups[i].ExpandListTo(expandBy);
             }
             CurrentEntityBounds = newMaxSize;
         }
 
         public T Get<T>(int componentTypeId, int entityId) where T : IComponent
-        {
-            if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
-            { return EntityValueComponents[componentTypeId].GetItem<T>(entityId); }
-            return (T) EntityReferenceComponents[componentTypeId][entityId];
-        }
+        { return EntityComponents[componentTypeId].GetItem<T>(entityId); }
 
         public IReadOnlyList<T> GetComponents<T>(int componentTypeId) where T : IComponent
-        {
-            if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
-            { return EntityValueComponents[componentTypeId].AsReadOnly<T>(); }
-            
-            return (IReadOnlyList<T>)EntityReferenceComponents[componentTypeId];
-        }
+        { return EntityComponents[componentTypeId].AsReadOnly<T>(); }
 
         public IEnumerable<IComponent> GetAll(int entityId)
         {
-            for (var i = EntityReferenceComponents.Length - 1; i >= 0; i--)
+            for (var i = EntityComponents.Length - 1; i >= 0; i--)
             {
-                if (EntityReferenceComponents[i] != null)
-                {
-                    var component = EntityReferenceComponents[i][entityId];
-                    if(component != null) { yield return component; }
-                }
-                else
-                {
-                    if (EntityValueComponentsLookups[i][entityId])
-                    { yield return (IComponent)EntityValueComponents[i].GetItem(entityId); }
-                }
+                if (EntityComponentsLookups[i][entityId])
+                { yield return (IComponent)EntityComponents[i].GetItem(entityId); }
             }
         }
 
         public bool Has(int componentTypeId, int entityId)
-        {
-            if (CurrentEntityBounds <= entityId) { return false; }
-            return EntityValueComponentsLookups[componentTypeId][entityId];
-        }
+        { return EntityComponentsLookups[componentTypeId][entityId]; }
 
         public void Set<T>(int componentTypeId, int entityId, T component) where T : IComponent
         {
-            if (ComponentTypeLookup.IsComponentStruct(componentTypeId))
-            { EntityValueComponents[componentTypeId].SetItem(entityId, component); }
-            else
-            { EntityReferenceComponents[componentTypeId][entityId] = component; }
-            
-            EntityValueComponentsLookups[componentTypeId][entityId] = true;
+            EntityComponents[componentTypeId].SetItem(entityId, component);
+            EntityComponentsLookups[componentTypeId][entityId] = true;
         }
 
         public void Remove(int componentTypeId, int entityId)
         {
             if (!ComponentTypeLookup.IsComponentStruct(componentTypeId))
-            { EntityReferenceComponents[componentTypeId][entityId] = null; }
-            
-            EntityValueComponentsLookups[componentTypeId][entityId] = false;
+            { EntityComponents[componentTypeId].SetItem(entityId, null); }
+            EntityComponentsLookups[componentTypeId][entityId] = false;
         }
         
         public void RemoveAll(int entityId)
         {
-            for (var i = EntityReferenceComponents.Length - 1; i >= 0; i--)
+            for (var i = EntityComponents.Length - 1; i >= 0; i--)
             { Remove(i, entityId); }
         }
     }

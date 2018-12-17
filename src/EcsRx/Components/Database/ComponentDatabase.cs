@@ -52,8 +52,8 @@ namespace EcsRx.Components.Database
         public T Get<T>(int componentTypeId, int entityId) where T : IComponent
         { return EntityComponents[componentTypeId].GetItem<T>(entityId); }
 
-        public IReadOnlyList<T> GetComponents<T>(int componentTypeId) where T : IComponent
-        { return EntityComponents[componentTypeId].AsReadOnly<T>(); }
+        public T[] GetComponents<T>(int componentTypeId) where T : IComponent
+        { return EntityComponents[componentTypeId].GetArray<T>(); }
 
         public IEnumerable<IComponent> GetAll(int entityId)
         {

@@ -281,7 +281,7 @@ namespace EcsRx.Tests.Framework.Database
             var structComponents = database.GetComponents<TestStructComponentOne>(1);
 
             Assert.Equal(2, refComponents.Count(x => x != null));
-            Assert.Equal(10, structComponents.Count);
+            Assert.Equal(10, structComponents.Length);
         }
     }
 }

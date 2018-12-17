@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace EcsRx.Components.Database
 {
@@ -13,7 +12,7 @@ namespace EcsRx.Components.Database
         bool Has(int componentTypeId, int entityId);
         void Remove(int componentTypeId, int entityId);
 
-        IReadOnlyList<T> GetComponents<T>(int componentTypeId) where T : IComponent;
+        T[] GetComponents<T>(int componentTypeId) where T : IComponent;
         IEnumerable<IComponent> GetAll(int entityId);
 
         void RemoveAll(int entityId);

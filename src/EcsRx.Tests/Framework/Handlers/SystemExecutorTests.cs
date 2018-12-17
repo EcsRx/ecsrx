@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using EcsRx.Exceptions;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
@@ -8,7 +7,7 @@ using EcsRx.Tests.Systems.Handlers;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Handlers
 {
     public class SystemExecutorTests
     {

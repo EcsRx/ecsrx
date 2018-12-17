@@ -2,7 +2,7 @@
 using EcsRx.Pools;
 using Xunit;
 
-namespace EcsRx.Tests.Views
+namespace EcsRx.Tests.Pools
 {
     public class IndexPoolTests
     {

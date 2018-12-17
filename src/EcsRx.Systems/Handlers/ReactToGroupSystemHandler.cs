@@ -10,6 +10,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;
+using EcsRx.Systems.Extensions;
 using EcsRx.Threading;
 
 namespace EcsRx.Systems.Handlers
@@ -40,7 +41,8 @@ namespace EcsRx.Systems.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var observableGroup = _entityCollectionManager.GetObservableGroup(system.Group);
+            var affinities = system.GetGroupAffinities();
+            var observableGroup = _entityCollectionManager.GetObservableGroup(system.Group, affinities);
             var hasEntityPredicate = system.Group is IHasPredicate;
             var castSystem = (IReactToGroupSystem)system;
             var reactObservable = castSystem.ReactToGroup(observableGroup);

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using EcsRx.Attributes;
 
 namespace EcsRx.Systems.Extensions
 {
@@ -31,6 +32,15 @@ namespace EcsRx.Systems.Extensions
                 .Single(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IReactToDataSystem<>));
 
             return matchingInterface;
+        }
+        
+        public static string[] GetGroupAffinities(this ISystem system)
+        {
+            var affinity = system.GetType()
+                .GetCustomAttributes(typeof(CollectionAffinityAttribute), true)
+                .FirstOrDefault();
+
+            return ((CollectionAffinityAttribute) affinity)?.CollectionNames;
         }
     }
 }

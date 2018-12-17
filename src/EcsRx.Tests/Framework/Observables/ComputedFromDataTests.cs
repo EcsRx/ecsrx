@@ -1,16 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using EcsRx.Entities;
-using EcsRx.Groups.Observable;
-using EcsRx.Tests.ComputedGroups;
-using EcsRx.Tests.Models;
-using NSubstitute;
+using EcsRx.Tests.Computeds;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Observables
 {
     public class ComputedFromDataTests
     {

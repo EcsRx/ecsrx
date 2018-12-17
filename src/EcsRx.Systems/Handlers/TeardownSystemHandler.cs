@@ -7,6 +7,7 @@ using EcsRx.Extensions;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
+using EcsRx.Systems.Extensions;
 
 namespace EcsRx.Systems.Handlers
 {
@@ -31,7 +32,8 @@ namespace EcsRx.Systems.Handlers
             SystemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ITeardownSystem) system;
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
+            var affinities = system.GetGroupAffinities();
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinities);
             
             observableGroup.OnEntityRemoving
                 .Subscribe(castSystem.Teardown)

@@ -3,11 +3,11 @@ using EcsRx.Entities;
 
 namespace EcsRx.Events.Collections
 {
-    public class ComponentsChangedEvent
+    public struct ComponentsChangedEvent
     {
-        public IEntityCollection Collection { get; }
-        public IEntity Entity { get; }
-        public int[] ComponentTypeIds { get; }
+        public readonly IEntityCollection Collection;
+        public readonly IEntity Entity;
+        public readonly int[] ComponentTypeIds;
 
         public ComponentsChangedEvent(IEntityCollection collection, IEntity entity, int[] componentTypeIds)
         {

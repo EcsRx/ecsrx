@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Lookups;
-using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
 
@@ -14,7 +14,7 @@ namespace EcsRx.Computed
 {
     public abstract class ComputedGroup : IObservableGroup, IDisposable
     {
-        public readonly LookupList<int, IEntity> CachedEntities;
+        public readonly EntityLookup CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
         
         public ObservableGroupToken Token => InternalObservableGroup.Token;
@@ -31,7 +31,7 @@ namespace EcsRx.Computed
         public ComputedGroup(IObservableGroup internalObservableGroup)
         {
             InternalObservableGroup = internalObservableGroup;
-            CachedEntities = new LookupList<int, IEntity>();
+            CachedEntities = new EntityLookup();
             Subscriptions = new List<IDisposable>();
             
             _onEntityAdded = new Subject<IEntity>();
@@ -54,13 +54,13 @@ namespace EcsRx.Computed
             if (!IsEntityApplicable(entity))
             { return; }
             
-            CachedEntities.Add(entity.Id, entity);
+            CachedEntities.Add(entity);
             _onEntityAdded.OnNext(entity);
         }
         
         public void OnEntityRemovingFromGroup(IEntity entity)
         {
-            if(!CachedEntities.ContainsKey(entity.Id))
+            if(!CachedEntities.Contains(entity.Id))
             { return; }
             
             _onEntityRemoving.OnNext(entity);
@@ -72,11 +72,11 @@ namespace EcsRx.Computed
         {
             var applicableEntities = InternalObservableGroup.Where(IsEntityApplicable).ToArray();
             var entitiesToRemove = InternalObservableGroup.Where(x => applicableEntities.All(y => y.Id != x.Id)).ToArray();
-            var entitiesToAdd = applicableEntities.Where(x => !CachedEntities.ContainsKey(x.Id)).ToArray();
+            var entitiesToAdd = applicableEntities.Where(x => !CachedEntities.Contains(x.Id)).ToArray();
             
             for (var i = entitiesToAdd.Length - 1; i >= 0; i--)
             {
-                CachedEntities.Add(entitiesToAdd[i].Id, entitiesToAdd[i]);
+                CachedEntities.Add(entitiesToAdd[i]);
                 _onEntityAdded.OnNext(entitiesToAdd[i]);
             }
 
@@ -89,10 +89,10 @@ namespace EcsRx.Computed
         }
         
         public bool ContainsEntity(int id)
-        { return CachedEntities.ContainsKey(id); }
+        { return CachedEntities.Contains(id); }
 
         public IEntity GetEntity(int id)
-        { return CachedEntities.GetByKey(id); }
+        { return CachedEntities[id]; }
 
         /// <summary>
         /// The method to indicate when the listings should be updated
@@ -131,6 +131,6 @@ namespace EcsRx.Computed
 
         public int Count => CachedEntities.Count;
 
-        public IEntity this[int index] => CachedEntities[index];
+        public IEntity this[int index] => CachedEntities.GetByIndex(index);
     }
 }

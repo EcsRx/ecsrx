@@ -29,7 +29,7 @@ namespace EcsRx.Tests.Framework
             
             var entity = entityCollection.CreateEntity();
             
-            Assert.Contains(mockEntity, entityCollection.EntityLookup.Values);
+            Assert.Contains(mockEntity, entityCollection.EntityLookup);
             Assert.Equal(mockEntity, entity);
             Assert.True(wasCalled);
         }

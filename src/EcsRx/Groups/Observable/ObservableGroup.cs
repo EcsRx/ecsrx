@@ -1,14 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using EcsRx.Collections;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Lookups;
-using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
 
@@ -16,7 +15,7 @@ namespace EcsRx.Groups.Observable
 {
     public class ObservableGroup : IObservableGroup, IDisposable
     {
-        public readonly LookupList<int, IEntity> CachedEntities;
+        public readonly EntityLookup CachedEntities;
         public readonly IList<IDisposable> Subscriptions;
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
@@ -41,10 +40,10 @@ namespace EcsRx.Groups.Observable
 
             Subscriptions = new List<IDisposable>();
             var applicableEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x));
-            CachedEntities = new LookupList<int, IEntity>();
+            CachedEntities = new EntityLookup();
 
             foreach (var applicableEntity in applicableEntities)
-            { CachedEntities.Add(applicableEntity.Id, applicableEntity); }
+            { CachedEntities.Add(applicableEntity); }
 
             MonitorEntityChanges();
         }
@@ -74,7 +73,7 @@ namespace EcsRx.Groups.Observable
 
         public void OnEntityComponentRemoved(ComponentsChangedEvent args)
         {
-            if (CachedEntities.ContainsKey(args.Entity.Id))
+            if (CachedEntities.Contains(args.Entity.Id))
             {
                 if (args.Entity.HasAllComponents(Token.LookupGroup.RequiredComponents)) 
                 { return; }
@@ -86,13 +85,13 @@ namespace EcsRx.Groups.Observable
 
             if (!Token.LookupGroup.Matches(args.Entity)) {return;}
             
-            CachedEntities.Add(args.Entity.Id, args.Entity);
+            CachedEntities.Add(args.Entity);
             _onEntityAdded.OnNext(args.Entity);
         }
 
         public void OnEntityComponentRemoving(ComponentsChangedEvent args)
         {
-            if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
+            if (!CachedEntities.Contains(args.Entity.Id)) { return; }
             
             if(Token.LookupGroup.ContainsAnyRequiredComponents(args.ComponentTypeIds))
             { _onEntityRemoving.OnNext(args.Entity); }
@@ -100,7 +99,7 @@ namespace EcsRx.Groups.Observable
 
         public void OnEntityComponentAdded(ComponentsChangedEvent args)
         {
-            if (CachedEntities.ContainsKey(args.Entity.Id))
+            if (CachedEntities.Contains(args.Entity.Id))
             {
                 if(!Token.LookupGroup.ContainsAnyExcludedComponents(args.Entity))
                 { return; }
@@ -113,33 +112,33 @@ namespace EcsRx.Groups.Observable
             
             if (!Token.LookupGroup.Matches(args.Entity)) { return; }
 
-            CachedEntities.Add(args.Entity.Id, args.Entity);
+            CachedEntities.Add(args.Entity);
             _onEntityAdded.OnNext(args.Entity);
         }
 
         public void OnEntityAddedToCollection(CollectionEntityEvent args)
         {
             // This is because you may have fired a blueprint before it is created
-            if (CachedEntities.ContainsKey(args.Entity.Id)) { return; }
+            if (CachedEntities.Contains(args.Entity.Id)) { return; }
             if (!Token.LookupGroup.Matches(args.Entity)) { return; }
             
-            CachedEntities.Add(args.Entity.Id, args.Entity);
+            CachedEntities.Add(args.Entity);
             _onEntityAdded.OnNext(args.Entity);
         }
         
         public void OnEntityRemovedFromCollection(CollectionEntityEvent args)
         {
-            if (!CachedEntities.ContainsKey(args.Entity.Id)) { return; }
+            if (!CachedEntities.Contains(args.Entity.Id)) { return; }
             
             CachedEntities.Remove(args.Entity.Id); 
             _onEntityRemoved.OnNext(args.Entity);
         }
         
         public bool ContainsEntity(int id)
-        { return CachedEntities.ContainsKey(id); }
+        { return CachedEntities.Contains(id); }
         
         public IEntity GetEntity(int id)
-        { return CachedEntities.GetByKey(id); }
+        { return CachedEntities[id]; }
 
         public void Dispose()
         {
@@ -157,6 +156,6 @@ namespace EcsRx.Groups.Observable
 
         public int Count => CachedEntities.Count;
 
-        public IEntity this[int index] => CachedEntities[index];
+        public IEntity this[int index] => CachedEntities.GetByIndex(index);
     }
 }

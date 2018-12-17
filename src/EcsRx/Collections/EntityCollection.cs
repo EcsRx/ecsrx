@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
 using EcsRx.Blueprints;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Events.Collections;
-using EcsRx.Exceptions;
 using EcsRx.Extensions;
 using EcsRx.Lookups;
-using EcsRx.MicroRx;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
@@ -17,7 +16,7 @@ namespace EcsRx.Collections
 {
     public class EntityCollection : IEntityCollection, IDisposable
     {
-        public readonly LookupList<int, IEntity> EntityLookup;
+        public readonly EntityLookup EntityLookup;
         public readonly IDictionary<int, IDisposable> EntitySubscriptions;
 
         public IObservable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
@@ -37,7 +36,7 @@ namespace EcsRx.Collections
         
         public EntityCollection(string name, IEntityFactory entityFactory)
         {
-            EntityLookup = new LookupList<int, IEntity>();
+            EntityLookup = new EntityLookup();
             EntitySubscriptions = new Dictionary<int, IDisposable>();
             Name = name;
             EntityFactory = entityFactory;
@@ -65,7 +64,7 @@ namespace EcsRx.Collections
         {
             var entity = EntityFactory.Create(null);
 
-            EntityLookup.Add(entity.Id, entity);
+            EntityLookup.Add(entity);
             _onEntityAdded.OnNext(new CollectionEntityEvent(entity, this));
             SubscribeToEntity(entity);
            
@@ -75,7 +74,7 @@ namespace EcsRx.Collections
         }
 
         public IEntity GetEntity(int id)
-        { return EntityLookup.GetByKey(id); }
+        { return EntityLookup[id]; }
 
         public void RemoveEntity(int id, bool disposeOnRemoval = true)
         {
@@ -97,16 +96,16 @@ namespace EcsRx.Collections
 
         public void AddEntity(IEntity entity)
         {
-            EntityLookup.Add(entity.Id, entity);
+            EntityLookup.Add(entity);
             _onEntityAdded.OnNext(new CollectionEntityEvent(entity, this));
             SubscribeToEntity(entity);
         }
 
         public bool ContainsEntity(int id)
-        { return EntityLookup.ContainsKey(id); }
+        { return EntityLookup.Contains(id); }
 
         public IEnumerator<IEntity> GetEnumerator()
-        { return EntityLookup.Values.GetEnumerator(); }
+        { return EntityLookup.GetEnumerator(); }
 
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }
@@ -124,6 +123,6 @@ namespace EcsRx.Collections
         }
 
         public int Count => EntityLookup.Count;
-        public IEntity this[int index] => EntityLookup[index];
+        public IEntity this[int index] => EntityLookup.GetByIndex(index);
     }
 }

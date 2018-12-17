@@ -46,9 +46,9 @@ namespace EcsRx.Tests.Framework
             var computedGroup = new TestComputedGroup(mockObservableGroup);
 
             Assert.Equal(2, computedGroup.CachedEntities.Count);
-            Assert.Contains(shouldContainEntity1, computedGroup.CachedEntities.Values);
-            Assert.Contains(shouldContainEntity2, computedGroup.CachedEntities.Values);
-            Assert.DoesNotContain(shouldNotContainEntity1, computedGroup.CachedEntities.Values);
+            Assert.Contains(shouldContainEntity1, computedGroup.CachedEntities);
+            Assert.Contains(shouldContainEntity2, computedGroup.CachedEntities);
+            Assert.DoesNotContain(shouldNotContainEntity1, computedGroup.CachedEntities);
         }
         
         [Fact]
@@ -85,8 +85,8 @@ namespace EcsRx.Tests.Framework
 
             Assert.Equal(1, computedGroup.CachedEntities.Count);
             Assert.Equal(1, firedTimes);
-            Assert.Contains(shouldContainEntity, computedGroup.CachedEntities.Values);
-            Assert.DoesNotContain(shouldNotContainEntity, computedGroup.CachedEntities.Values);
+            Assert.Contains(shouldContainEntity, computedGroup.CachedEntities);
+            Assert.DoesNotContain(shouldNotContainEntity, computedGroup.CachedEntities);
         }
 
         [Fact]

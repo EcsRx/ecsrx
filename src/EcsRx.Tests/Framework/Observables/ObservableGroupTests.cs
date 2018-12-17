@@ -5,7 +5,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
@@ -50,8 +49,8 @@ namespace EcsRx.Tests.Framework
             var observableGroup = new ObservableGroup(accessorToken, dummyEntitySnapshot, mockCollectionNotifier);
 
             Assert.Equal(2, observableGroup.CachedEntities.Count);
-            Assert.Contains(applicableEntity1, observableGroup.CachedEntities.Values);
-            Assert.Contains(applicableEntity2, observableGroup.CachedEntities.Values);
+            Assert.Contains(applicableEntity1, observableGroup.CachedEntities);
+            Assert.Contains(applicableEntity2, observableGroup.CachedEntities);
         }
 
         [Fact]
@@ -88,7 +87,7 @@ namespace EcsRx.Tests.Framework
             
             entityAddedSub.OnNext(new CollectionEntityEvent(applicableEntity, mockCollection));
             Assert.Equal(1, observableGroup.CachedEntities.Count);
-            Assert.Equal(applicableEntity, observableGroup.CachedEntities.GetByKey(applicableEntity.Id));
+            Assert.Equal(applicableEntity, observableGroup.CachedEntities[applicableEntity.Id]);
             
             Assert.Equal(1, wasCalled);
         }
@@ -121,7 +120,7 @@ namespace EcsRx.Tests.Framework
             applicableEntity.HasAnyComponents(accessorToken.LookupGroup.ExcludedComponents).Returns(false);
             componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, null));
             
-            Assert.Contains(applicableEntity, observableGroup.CachedEntities.Values);
+            Assert.Contains(applicableEntity, observableGroup.CachedEntities);
             Assert.Equal(1, wasCalled);
         }
 
@@ -156,14 +155,14 @@ namespace EcsRx.Tests.Framework
             
             componentRemoving.OnNext(new ComponentsChangedEvent(null, applicableEntity, new[]{1}));
             
-            Assert.Contains(applicableEntity, observableGroup.CachedEntities.Values);
+            Assert.Contains(applicableEntity, observableGroup.CachedEntities);
             Assert.Equal(1, wasRemovingCalled);
             Assert.Equal(0, wasRemovedCalled);
 
             wasRemovingCalled = wasRemovedCalled = 0;
             entityRemoved.OnNext(new CollectionEntityEvent(applicableEntity, null));
             
-            Assert.DoesNotContain(applicableEntity, observableGroup.CachedEntities.Values);
+            Assert.DoesNotContain(applicableEntity, observableGroup.CachedEntities);
             Assert.Equal(0, wasRemovingCalled);
             Assert.Equal(1, wasRemovedCalled);
         }
@@ -204,10 +203,9 @@ namespace EcsRx.Tests.Framework
             componentRemoving.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ 1 }));
             componentRemoved.OnNext(new ComponentsChangedEvent(mockCollection, applicableEntity, new[]{ 1 }));
             
-            Assert.DoesNotContain(applicableEntity, observableGroup.CachedEntities.Values);
+            Assert.DoesNotContain(applicableEntity, observableGroup.CachedEntities);
             Assert.Equal(1, wasRemovingCalled);
             Assert.Equal(1, wasRemovedCalled);
         }
-        
     }
 }

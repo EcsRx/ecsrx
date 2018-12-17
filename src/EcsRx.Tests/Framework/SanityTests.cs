@@ -20,11 +20,19 @@ using EcsRx.Views.Components;
 using EcsRx.Views.Systems;
 using NSubstitute;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace EcsRx.Tests.Framework
 {
     public class SanityTests
     {
+        private ITestOutputHelper _logger;
+
+        public SanityTests(ITestOutputHelper logger)
+        {
+            _logger = logger;
+        }
+
         private IEntityCollectionManager CreateCollectionManager()
         {
             var componentLookups = new Dictionary<Type, int>

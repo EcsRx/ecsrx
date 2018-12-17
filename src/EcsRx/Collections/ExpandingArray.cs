@@ -4,63 +4,34 @@ using System.Collections.Generic;
 
 namespace EcsRx.Collections
 {
-    public interface IExpandingArray<T> : IList<T> 
-    {}
-    
-    public class ExpandingArray<T> : IExpandingArray<T>
+    public class ExpandingArray : IExpandingArray
     {
-        public T[] InternalArray { get; private set; }
-
-        public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)InternalArray).GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        public void Add(T item)
+        public Array Data { get; private set; }
+        public int Count { get; private set; }
+        
+        public ExpandingArray(Type type, int size)
         {
-            throw new NotImplementedException();
+            Count = size;
+            var dynamicArray = type.MakeArrayType();
+            Data = (Array)Activator.CreateInstance(dynamicArray, size);
         }
+        
+        public IReadOnlyList<T> AsReadOnly<T>() => (IReadOnlyList<T>) Data;
+        public T[] GetArray<T>() => (T[]) Data;
+        
+        public T GetItem<T>(int index) => GetArray<T>()[index];
+        public object GetItem(int index) => Data.GetValue(index);
+        
+        public void SetItem<T>(int index, T value) => GetArray<T>()[index] = value;
 
-        public void Clear()
+        public void Expand(int amountToAdd)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool Contains(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Count { get; }
-        public bool IsReadOnly { get; }
-        public int IndexOf(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Insert(int index, T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveAt(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        public T this[int index]
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            var newCount = Data.Length + amountToAdd;
+            var arrayType = Data.GetType();
+            var newEntries = (Array)Activator.CreateInstance(arrayType, newCount);               
+            Data.CopyTo(newEntries, 0);
+            Data = newEntries;
+            Count = newCount;
         }
     }
 }

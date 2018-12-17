@@ -241,10 +241,10 @@ namespace EcsRx.Tests.Framework.Database
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);
             database.Set(0, fakeEntityId, new TestComponentOne());
-            database.Set(0, fakeEntityId, new TestComponentTwo());
-            database.Set(0, fakeEntityId, new TestComponentThree());
+            database.Set(1, fakeEntityId, new TestComponentTwo());
+            database.Set(2, fakeEntityId, new TestComponentThree());
             database.Set(0, otherEntityId, new TestComponentOne());
-            database.Set(1, otherEntityId, new TestComponentOne());
+            database.Set(1, otherEntityId, new TestComponentTwo());
 
             database.RemoveAll(fakeEntityId);
             Assert.False(database.Has(0, fakeEntityId));
@@ -253,6 +253,34 @@ namespace EcsRx.Tests.Framework.Database
 
             var allComponents = database.GetAll(fakeEntityId);
             Assert.Empty(allComponents);
+        }
+        
+        [Fact]
+        public void should_get_collection_for_components()
+        {
+            var expectedSize = 10;
+            var fakeEntityId = 1;
+            var otherEntityId = 2;
+            var fakeComponentTypes = new Dictionary<Type, int>
+            {
+                {typeof(TestComponentOne), 0},
+                {typeof(TestStructComponentOne), 1}
+            };
+            
+            var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
+            mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
+            
+            var database = new ComponentDatabase(mockComponentLookup, expectedSize);
+            database.Set(0, fakeEntityId, new TestComponentOne());
+            database.Set(1, fakeEntityId, new TestStructComponentOne());
+            database.Set(0, fakeEntityId, new TestComponentOne());
+            database.Set(1, otherEntityId, new TestStructComponentOne());
+
+            var refComponents = database.GetComponents<TestComponentOne>(0);
+            var structComponents = database.GetComponents<TestStructComponentOne>(1);
+
+            Assert.Equal(2, refComponents.Count);
+            Assert.Equal(2, structComponents.Count);
         }
     }
 }

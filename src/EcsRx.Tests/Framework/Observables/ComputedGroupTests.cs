@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using EcsRx.Tests.ComputedGroups;
+using EcsRx.Tests.Computeds;
 using EcsRx.Tests.Models;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Observables
 {
     public class ComputedGroupTests
     {

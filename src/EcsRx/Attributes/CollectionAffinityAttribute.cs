@@ -6,11 +6,12 @@ namespace EcsRx.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public class CollectionAffinityAttribute : Attribute
     {
-        public string CollectionName { get; }
+        public string[] CollectionNames { get; }
 
         public CollectionAffinityAttribute(string collectionName = EntityCollectionManager.DefaultPoolName)
-        {
-            CollectionName = collectionName;
-        }
+        { CollectionNames = new []{collectionName}; }
+
+        public CollectionAffinityAttribute(params string[] collectionNames)
+        { CollectionNames = collectionNames; }
     }
 }

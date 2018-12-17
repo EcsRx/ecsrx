@@ -38,8 +38,8 @@ namespace EcsRx.Systems.Handlers
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ISetupSystem) system;
-            var affinity = system.GetGroupAffinity();
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinity);
+            var affinities = system.GetGroupAffinities();
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinities);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

@@ -148,5 +148,27 @@ namespace EcsRx.Tests.Framework
             Assert.True(setupCalled);
             Assert.True(teardownCalled);
         }
+        
+        [Fact]
+        public void should_listen_to_multiple_collections_for_updates()
+        {
+            var collectionManager = CreateCollectionManager();
+            
+            var group = new Group(typeof(TestComponentOne));
+            var collection1 = collectionManager.CreateCollection("test1");
+            var collection2 = collectionManager.CreateCollection("test2");
+
+            var timesCalled = 0;
+            var observableGroup = collectionManager.GetObservableGroup(group, "test1", "test2");
+            observableGroup.OnEntityAdded.Subscribe(x => timesCalled++);
+
+            var entity1 = collection1.CreateEntity();
+            entity1.AddComponent<TestComponentOne>();
+
+            var entity2 = collection2.CreateEntity();
+            entity2.AddComponent<TestComponentOne>();
+            
+            Assert.Equal(2, timesCalled);
+        }
     }
 }

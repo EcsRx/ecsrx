@@ -27,12 +27,12 @@ namespace EcsRx.Groups.Observable
         private readonly Subject<IEntity> _onEntityRemoving;
         
         public ObservableGroupToken Token { get; }
-        public INotifyingEntityCollection NotifyingCollection { get; }
+        public IEnumerable<INotifyingEntityCollection> NotifyingCollections { get; }
         
-        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, INotifyingEntityCollection notifyingCollection)
+        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections)
         {
             Token = token;
-            NotifyingCollection = notifyingCollection;
+            NotifyingCollections = notifyingCollections;
 
             _onEntityAdded = new Subject<IEntity>();
             _onEntityRemoved = new Subject<IEntity>();
@@ -45,28 +45,28 @@ namespace EcsRx.Groups.Observable
             foreach (var applicableEntity in applicableEntities)
             { CachedEntities.Add(applicableEntity); }
 
-            MonitorEntityChanges();
+            NotifyingCollections.ForEachRun(MonitorEntityChanges);
         }
 
-        private void MonitorEntityChanges()
+        private void MonitorEntityChanges(INotifyingEntityCollection notifyingCollection)
         {
-            NotifyingCollection.EntityAdded
+            notifyingCollection.EntityAdded
                 .Subscribe(OnEntityAddedToCollection)
                 .AddTo(Subscriptions);
 
-            NotifyingCollection.EntityRemoved
+            notifyingCollection.EntityRemoved
                 .Subscribe(OnEntityRemovedFromCollection)
                 .AddTo(Subscriptions);
 
-            NotifyingCollection.EntityComponentsAdded
+            notifyingCollection.EntityComponentsAdded
                 .Subscribe(OnEntityComponentAdded)
                 .AddTo(Subscriptions);
 
-            NotifyingCollection.EntityComponentsRemoving
+            notifyingCollection.EntityComponentsRemoving
                 .Subscribe(OnEntityComponentRemoving)
                 .AddTo(Subscriptions);
 
-            NotifyingCollection.EntityComponentsRemoved
+            notifyingCollection.EntityComponentsRemoved
                 .Subscribe(OnEntityComponentRemoved)
                 .AddTo(Subscriptions);
         }

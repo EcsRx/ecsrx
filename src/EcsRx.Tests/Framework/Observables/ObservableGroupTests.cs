@@ -11,7 +11,7 @@ using EcsRx.Groups.Observable;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Observables
 {
     public class ObservableGroupTests
     {
@@ -46,7 +46,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionNotifier.EntityComponentsRemoving.Returns(Observable.Empty<ComponentsChangedEvent>());
             mockCollectionNotifier.EntityComponentsRemoved.Returns(Observable.Empty<ComponentsChangedEvent>());
 
-            var observableGroup = new ObservableGroup(accessorToken, dummyEntitySnapshot, mockCollectionNotifier);
+            var observableGroup = new ObservableGroup(accessorToken, dummyEntitySnapshot, new []{mockCollectionNotifier});
 
             Assert.Equal(2, observableGroup.CachedEntities.Count);
             Assert.Contains(applicableEntity1, observableGroup.CachedEntities);
@@ -78,7 +78,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionNotifier.EntityComponentsRemoving.Returns(Observable.Empty<ComponentsChangedEvent>());
             mockCollectionNotifier.EntityComponentsRemoved.Returns(Observable.Empty<ComponentsChangedEvent>());
             
-            var observableGroup = new ObservableGroup(accessorToken, new IEntity[0], mockCollectionNotifier);
+            var observableGroup = new ObservableGroup(accessorToken, new IEntity[0],  new []{mockCollectionNotifier});
             var wasCalled = 0;
             observableGroup.OnEntityAdded.Subscribe(x => wasCalled++);
             
@@ -112,7 +112,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionNotifier.EntityComponentsRemoving.Returns(Observable.Empty<ComponentsChangedEvent>());
             mockCollectionNotifier.EntityComponentsRemoved.Returns(componentRemoved);
             
-            var observableGroup = new ObservableGroup(accessorToken, new IEntity[0], mockCollectionNotifier);
+            var observableGroup = new ObservableGroup(accessorToken, new IEntity[0],  new []{mockCollectionNotifier});
             var wasCalled = 0;
             observableGroup.OnEntityAdded.Subscribe(x => wasCalled++);
 
@@ -147,7 +147,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionNotifier.EntityComponentsRemoving.Returns(componentRemoving);
             mockCollectionNotifier.EntityComponentsRemoved.Returns(Observable.Empty<ComponentsChangedEvent>());
             
-            var observableGroup = new ObservableGroup(accessorToken, new[]{applicableEntity}, mockCollectionNotifier);
+            var observableGroup = new ObservableGroup(accessorToken, new[]{applicableEntity},  new []{mockCollectionNotifier});
             var wasRemovingCalled = 0;
             observableGroup.OnEntityRemoving.Subscribe(x => wasRemovingCalled++);            
             var wasRemovedCalled = 0;
@@ -192,7 +192,7 @@ namespace EcsRx.Tests.Framework
             mockCollectionNotifier.EntityRemoved.Returns(Observable.Empty<CollectionEntityEvent>());
             mockCollectionNotifier.EntityComponentsAdded.Returns(Observable.Empty<ComponentsChangedEvent>());
             
-            var observableGroup = new ObservableGroup(accessorToken, new[]{applicableEntity}, mockCollectionNotifier);
+            var observableGroup = new ObservableGroup(accessorToken, new[]{applicableEntity},  new []{mockCollectionNotifier});
             var wasRemovingCalled = 0;
             observableGroup.OnEntityRemoving.Subscribe(x => wasRemovingCalled++);            
             var wasRemovedCalled = 0;

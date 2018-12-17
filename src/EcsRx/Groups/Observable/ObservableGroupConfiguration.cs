@@ -7,7 +7,7 @@ namespace EcsRx.Groups.Observable
     public class ObservableGroupConfiguration
     {
         public ObservableGroupToken ObservableGroupToken { get; set; }
-        public INotifyingEntityCollection NotifyingCollection { get; set; }
+        public IEnumerable<INotifyingEntityCollection> NotifyingCollections { get; set; }
         public IEnumerable<IEntity> InitialEntities { get; set; }
     }
 }

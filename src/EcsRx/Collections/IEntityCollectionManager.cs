@@ -54,9 +54,9 @@ namespace EcsRx.Collections
         /// it is created.
         /// </remarks>
         /// <param name="group">The group to match entities on</param>
-        /// <param name="collectionName">The optional collection name to use (defaults to null)</param>
+        /// <param name="collectionNames">The collection names to use (defaults to null)</param>
         /// <returns>An IObservableGroup monitoring the group passed in</returns>
-        IObservableGroup GetObservableGroup(IGroup group, string collectionName = null);
+        IObservableGroup GetObservableGroup(IGroup group, params string[] collectionNames);
 
         /// <summary>
         /// Creates a new collection within the manager

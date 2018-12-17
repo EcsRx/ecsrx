@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using EcsRx.MicroRx.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.MicroRx.Subjects;
 using EcsRx.Systems;
 using EcsRx.Systems.Handlers;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Handlers
 {
     public class TeardownSystemHandlerTests
     {
@@ -46,7 +46,7 @@ namespace EcsRx.Tests.Framework
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ITeardownSystem>();
             mockSystem.Group.Returns(fakeGroup);

@@ -6,7 +6,7 @@ using EcsRx.Systems;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Handlers
 {
     public class ManualSystemHandlerTests
     {

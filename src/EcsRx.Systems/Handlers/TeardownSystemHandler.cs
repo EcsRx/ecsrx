@@ -32,8 +32,8 @@ namespace EcsRx.Systems.Handlers
             SystemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ITeardownSystem) system;
-            var affinity = system.GetGroupAffinity();
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinity);
+            var affinities = system.GetGroupAffinities();
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinities);
             
             observableGroup.OnEntityRemoving
                 .Subscribe(castSystem.Teardown)

@@ -6,7 +6,7 @@ using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Subjects;
 using EcsRx.Tests.Models;
 
-namespace EcsRx.Tests.ComputedGroups
+namespace EcsRx.Tests.Computeds
 {
     public class TestComputedGroup : ComputedGroup
     {

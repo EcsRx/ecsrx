@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
-using EcsRx.MicroRx.Subjects;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.MicroRx.Subjects;
 using EcsRx.Systems;
 using EcsRx.Systems.Handlers;
 using EcsRx.Threading;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Handlers
 {
     public class ReactToGroupSystemHandlerTests
     {
@@ -47,7 +47,7 @@ namespace EcsRx.Tests.Framework
             var threadHandler = Substitute.For<IThreadHandler>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();
@@ -85,7 +85,7 @@ namespace EcsRx.Tests.Framework
             var threadHandler = Substitute.For<IThreadHandler>();
             
             var fakeGroup = new Group(x => x.Id == idToMatch);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();
             var mockSystem = Substitute.For<IReactToGroupSystem>();

@@ -2,7 +2,7 @@ using System;
 using EcsRx.Computed;
 using EcsRx.MicroRx.Subjects;
 
-namespace EcsRx.Tests.ComputedGroups
+namespace EcsRx.Tests.Computeds
 {
     public class DummyData
     {

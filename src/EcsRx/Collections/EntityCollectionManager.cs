@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
@@ -128,36 +129,61 @@ namespace EcsRx.Collections
             return Collections.GetAllEntities().MatchingGroup(group);
         }
         
-        public IEnumerable<IEntity> GetEntitiesFor(ILookupGroup lookupGroup, string collectionName = null)
+        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, params string[] collectionNames)
+        {
+            if(group is EmptyGroup)
+            { return new IEntity[0]; }
+
+            if (collectionNames == null || collectionNames.Length == 0)
+            { return Collections.GetAllEntities().MatchingGroup(group); }
+
+            var matchingEntities = new List<IEntity>();
+            foreach (var collectionName in collectionNames)
+            {
+                var results = _collections[collectionName].MatchingGroup(group);
+                matchingEntities.AddRange(results);
+            }
+
+            return matchingEntities;
+        }
+        
+        public IEnumerable<IEntity> GetEntitiesFor(ILookupGroup lookupGroup, params string[] collectionNames)
         {
             if(lookupGroup.RequiredComponents.Length == 0 && lookupGroup.ExcludedComponents.Length  == 0)
             { return new IEntity[0]; }
 
-            if (collectionName != null)
-            { return _collections[collectionName].MatchingGroup(lookupGroup); }
+            if (collectionNames == null || collectionNames.Length == 0)
+            { return Collections.GetAllEntities().MatchingGroup(lookupGroup); }
 
-            return Collections.GetAllEntities().MatchingGroup(lookupGroup);
+            var matchingEntities = new List<IEntity>();
+            foreach (var collectionName in collectionNames)
+            {
+                var results = _collections[collectionName].MatchingGroup(lookupGroup);
+                matchingEntities.AddRange(results);
+            }
+
+            return matchingEntities;
         }
 
-        public IObservableGroup GetObservableGroup(IGroup group, string collectionName = null)
+        public IObservableGroup GetObservableGroup(IGroup group, params string[] collectionNames)
         {
             var requiredComponents = ComponentTypeLookup.GetComponentTypes(group.RequiredComponents);
             var excludedComponents = ComponentTypeLookup.GetComponentTypes(group.ExcludedComponents);
             var lookupGroup = new LookupGroup(requiredComponents, excludedComponents);
-            var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionName);
+            var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionNames);
             if (_observableGroups.ContainsKey(observableGroupToken)) { return _observableGroups[observableGroupToken]; }
 
-            var entityMatches = GetEntitiesFor(lookupGroup, collectionName);
+            var entityMatches = GetEntitiesFor(lookupGroup, collectionNames);
             var configuration = new ObservableGroupConfiguration
             {
                 ObservableGroupToken = observableGroupToken,
                 InitialEntities = entityMatches
             };
 
-            if (collectionName != null)
-            { configuration.NotifyingCollection = _collections[collectionName]; }
+            if (collectionNames != null && collectionNames.Length > 0)
+            { configuration.NotifyingCollections = _collections.Where(x => collectionNames.Contains(x.Key)).Select(x => x.Value); }
             else
-            { configuration.NotifyingCollection = this; }
+            { configuration.NotifyingCollections = new []{this}; }
             
             var observableGroup = ObservableGroupFactory.Create(configuration);
             _observableGroups.Add(observableGroupToken, observableGroup);

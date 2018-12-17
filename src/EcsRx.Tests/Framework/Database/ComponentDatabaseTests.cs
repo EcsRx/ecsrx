@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Tests.Models;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Database
+namespace EcsRx.Tests.Framework.Database
 {
     public class ComponentDatabaseTests
     {

@@ -10,7 +10,7 @@ using EcsRx.Systems.Handlers;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Handlers
 {
     public class ReactToDataSystemHandlerTests
     {
@@ -51,7 +51,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -100,7 +100,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -160,7 +160,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -206,7 +206,7 @@ namespace EcsRx.Tests.Framework
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group(x => x.Id == id1);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup)).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();

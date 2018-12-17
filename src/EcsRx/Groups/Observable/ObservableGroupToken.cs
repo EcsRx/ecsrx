@@ -5,25 +5,25 @@ namespace EcsRx.Groups.Observable
     public class ObservableGroupToken
     {
         public ILookupGroup LookupGroup { get; }
-        public string CollectionName { get; }
+        public string[] CollectionNames { get; }
 
-        public ObservableGroupToken(int[] withComponents, int[] withoutComponents, string collectionName)
+        public ObservableGroupToken(int[] withComponents, int[] withoutComponents, params string[] collectionNames)
         {
             LookupGroup = new LookupGroup(withComponents, withoutComponents);
-            CollectionName = collectionName;
+            CollectionNames = collectionNames;
         }
         
-        public ObservableGroupToken(ILookupGroup lookupGroup, string collectionName)
+        public ObservableGroupToken(ILookupGroup lookupGroup, params string[] collectionNames)
         {
             LookupGroup = lookupGroup;
-            CollectionName = collectionName;
+            CollectionNames = collectionNames;
         }
 
         public override int GetHashCode()
         {
             var requiredHash = LookupGroup.RequiredComponents?.GetHashCode() ?? 0;
             var excludedHash = LookupGroup.ExcludedComponents?.GetHashCode() ?? 0;
-            var poolHash = CollectionName?.GetHashCode() ?? 0;
+            var poolHash = CollectionNames?.GetHashCode() ?? 0;
             return requiredHash ^ excludedHash ^ poolHash;
         }
     }

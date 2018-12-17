@@ -33,8 +33,8 @@ namespace EcsRx.Systems.Handlers
         
         public void SetupSystem(ISystem system)
         {
-            var affinity = system.GetGroupAffinity();
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinity);            
+            var affinities = system.GetGroupAffinities();
+            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinities);            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);

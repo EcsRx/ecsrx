@@ -4,7 +4,7 @@ using EcsRx.Views.ViewHandlers;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Views
+namespace EcsRx.Tests.Pools
 {
     public class ViewPoolTests
     {

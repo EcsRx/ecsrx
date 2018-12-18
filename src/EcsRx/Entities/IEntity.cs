@@ -46,18 +46,14 @@ namespace EcsRx.Entities
         /// All the components which have been applied to this entity
         /// </summary>
         IEnumerable<IComponent> Components { get; }
-       
+
+        IReadOnlyList<int> ComponentAllocations { get; }
+
         /// <summary>
         /// Removes component types from the entity
         /// </summary>
         /// <param name="componentsTypes">The component types to remove</param>
         void RemoveComponents(params Type[] componentsTypes);
-        
-        /// <summary>
-        /// Removes components from the entity based on their type ids
-        /// </summary>
-        /// <param name="componentsTypeIds">The component type ids to remove</param>
-        void RemoveComponents(params int[] componentsTypeIds);
         
         /// <summary>
         /// Removes all the components from the entity
@@ -80,13 +76,6 @@ namespace EcsRx.Entities
 
         T GetComponent<T>(int componentTypeId) where T : IComponent;
         
-        /// <summary>
-        /// Checks to see if the entity contains given components by their instances
-        /// </summary>
-        /// <param name="components">instances of component to check for</param>
-        /// <returns>true if all the component was found, false if one or more is missing</returns>
-        void AddComponents(params IComponent[] components);
-
         T AddComponent<T>(int componentTypeId) where T : IComponent, new();
         
         /// <summary>

@@ -163,5 +163,11 @@ namespace EcsRx.Extensions
 
             return false;
         }
+        
+        public static void AddComponents(this IEntity entity, params IComponent[] components)
+        { entity.AddComponents(components); }
+        
+        public static void RemoveComponents(this IEntity entity, params int[] componentsTypeIds)
+        { entity.RemoveComponents(componentsTypeIds); }
     }
 }

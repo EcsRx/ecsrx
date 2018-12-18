@@ -42,6 +42,7 @@ namespace EcsRx.Pools
         public void Expand(int? newIndex = null)
         {
             var increaseBy = (newIndex+1) -_lastMax ?? _increaseSize;
+            if (increaseBy <= 0){ return; }
             
             var newEntries = Enumerable.Range(_lastMax, increaseBy).Reverse();
             _lastMax += increaseBy;

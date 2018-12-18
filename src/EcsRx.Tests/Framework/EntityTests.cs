@@ -16,8 +16,11 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_raise_event_when_adding_component()
         {
-            var componentRepository = Substitute.For<IComponentRepository>();
-            var entity = new Entity(1, componentRepository);
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new int[1]);
+            
+            var entity = new Entity(1, componentDatabase, componentTypeLookup);
             var dummyComponent = Substitute.For<IComponent>();
 
             var wasCalled = false;
@@ -30,17 +33,17 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_raise_event_when_removing_component_that_exists()
         {
-            var componentRepository = Substitute.For<IComponentRepository>();
+            var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
-            var entity = new Entity(1, componentRepository);
-            var dummyComponent = Substitute.For<IComponent>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new int[1]);
+            componentTypeLookup.GetComponentTypes(Arg.Any<Type>()).Returns(new []{0});
 
-            componentRepository.ComponentTypeLookup.Returns(componentTypeLookup);
-            componentRepository.Has(Arg.Any<int>(), 1).Returns(true);
-            componentTypeLookup.GetComponentTypes(Arg.Any<Type>()).Returns(new []{1});
+            var entity = new Entity(1, componentDatabase, componentTypeLookup);
+            var dummyComponent = Substitute.For<IComponent>();
 
             var beforeWasCalled = false;
             var afterWasCalled = false;
+            entity.InternalComponentAllocations[0] = 1;
             entity.ComponentsRemoving.Subscribe(x => beforeWasCalled = true);
             entity.ComponentsRemoved.Subscribe(x => afterWasCalled = true);
 
@@ -52,10 +55,9 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_not_raise_events_or_throw_when_removing_non_existent_components()
         {
-            var componentRepository = Substitute.For<IComponentRepository>();
-            var entity = new Entity(1, componentRepository);
-
-            componentRepository.Has(Arg.Any<int>(), Arg.Any<int>()).Returns(false);
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            var entity = new Entity(1, componentDatabase, componentTypeLookup);
             
             var beforeWasCalled = false;
             var afterWasCalled = false;
@@ -71,11 +73,15 @@ namespace EcsRx.Tests.Framework
         public void should_return_true_when_entity_has_all_components()
         {
             var fakeEntityId = 1;
-            var componentRepository = Substitute.For<IComponentRepository>();
-            componentRepository.Has(fakeEntityId, typeof(TestComponentOne)).Returns(true);
-            componentRepository.Has(fakeEntityId, typeof(TestComponentTwo)).Returns(true);
-            var entity = new Entity(fakeEntityId, componentRepository);
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1});
+            componentTypeLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
+            componentTypeLookup.GetComponentType(typeof(TestComponentTwo)).Returns(1);
             
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            entity.InternalComponentAllocations[0] = 1;
+            entity.InternalComponentAllocations[1] = 1;
             Assert.True(entity.HasAllComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
         }
 
@@ -83,11 +89,14 @@ namespace EcsRx.Tests.Framework
         public void should_return_false_when_entity_does_not_match_all_components()
         {
             var fakeEntityId = 1;
-            var componentRepository = Substitute.For<IComponentRepository>();
-            componentRepository.Has(fakeEntityId, typeof(TestComponentOne)).Returns(true);
-            componentRepository.Has(fakeEntityId, typeof(TestComponentTwo)).Returns(false);
-            var entity = new Entity(fakeEntityId, componentRepository);
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1});
+            componentTypeLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
+            componentTypeLookup.GetComponentType(typeof(TestComponentTwo)).Returns(1);
             
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            entity.InternalComponentAllocations[0] = 1;
             Assert.False(entity.HasAllComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
         }
         
@@ -97,15 +106,14 @@ namespace EcsRx.Tests.Framework
             var fakeEntityId = 1;
             
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1});
             componentTypeLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
             componentTypeLookup.GetComponentType(typeof(TestComponentTwo)).Returns(1);
             
-            var componentRepository = Substitute.For<IComponentRepository>();
-            componentRepository.Has(fakeEntityId, 0).Returns(true);
-            componentRepository.Has(fakeEntityId, 1).Returns(false);
-            componentRepository.ComponentTypeLookup.Returns(componentTypeLookup);
-
-            var entity = new Entity(fakeEntityId, componentRepository);
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            entity.InternalComponentAllocations[0] = 1;
             
             Assert.True(entity.HasAnyComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
         }
@@ -114,10 +122,10 @@ namespace EcsRx.Tests.Framework
         public void should_return_false_when_entity_does_not_match_any_components()
         {
             var fakeEntityId = 1;
-            var componentRepository = Substitute.For<IComponentRepository>();
-            componentRepository.Has(fakeEntityId, typeof(TestComponentOne)).Returns(false);
-            componentRepository.Has(fakeEntityId, typeof(TestComponentTwo)).Returns(false);
-            var entity = new Entity(fakeEntityId, componentRepository);
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new int[1]);
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
             
             Assert.False(entity.HasAnyComponents(typeof(TestComponentOne), typeof(TestComponentTwo)));
         }
@@ -127,15 +135,15 @@ namespace EcsRx.Tests.Framework
         {
             var fakeEntityId = 1;
 
-            var componentRepository = Substitute.For<IComponentRepository>();
+            var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1, 2});
             
-            componentTypeLookup.GetComponentTypes(Arg.Any<Type[]>()).Returns(new []{1,2});
-            componentRepository.Has(Arg.Any<int>(), Arg.Any<int>()).Returns(true);
-
-            var expectedRange = Enumerable.Range(1, 2);
-            var entity = new Entity(fakeEntityId, componentRepository);
-            entity.ActiveComponents.AddRange(expectedRange);
+            var expectedRange = Enumerable.Range(0, 3);
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            entity.InternalComponentAllocations[0] = 1;
+            entity.InternalComponentAllocations[1] = 1;
+            entity.InternalComponentAllocations[2] = 1;
             
             var beforeWasCalled = false;
             var afterWasCalled = false;
@@ -156,7 +164,7 @@ namespace EcsRx.Tests.Framework
             Assert.True(beforeWasCalled);
             Assert.True(afterWasCalled);
             Assert.Empty(entity.Components);
-            Assert.Empty(entity.ActiveComponents);
+            Assert.All(entity.ComponentAllocations, i => i.Equals(Entity.NotAllocated));
         }
 
         [Fact]
@@ -165,14 +173,25 @@ namespace EcsRx.Tests.Framework
             var fakeEntityId = 1;
             var fakeComponents = new IComponent[] {new TestComponentOne(), new TestComponentTwo(), new TestComponentThree()};
 
-            var componentRepository = Substitute.For<IComponentRepository>();
-            var entity = new Entity(fakeEntityId, componentRepository);
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            componentDatabase.Allocate(Arg.Any<int>()).Returns(1);
+            
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1, 2});
+            componentTypeLookup.GetComponentType(fakeComponents[0].GetType()).Returns(0);
+            componentTypeLookup.GetComponentType(fakeComponents[1].GetType()).Returns(1);
+            componentTypeLookup.GetComponentType(fakeComponents[2].GetType()).Returns(2);
+            
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
             entity.AddComponents(fakeComponents);
             
             Received.InOrder(() => {
-                componentRepository.Add(fakeEntityId, fakeComponents[0]);
-                componentRepository.Add(fakeEntityId, fakeComponents[1]);
-                componentRepository.Add(fakeEntityId, fakeComponents[2]);
+                componentDatabase.Allocate(0);
+                componentDatabase.Set(0, 1, fakeComponents[0]);
+                componentDatabase.Allocate(1);
+                componentDatabase.Set(1, 1, fakeComponents[1]);
+                componentDatabase.Allocate(2);
+                componentDatabase.Set(2, 1, fakeComponents[2]);
             });
         }
     }

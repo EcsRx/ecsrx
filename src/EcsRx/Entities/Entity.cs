@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Extensions;
 using EcsRx.MicroRx.Subjects;
+using IComponent = EcsRx.Components.IComponent;
 
 namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
+        public const int NotAllocated = -1;
+        
         public IObservable<int[]> ComponentsAdded => _onComponentsAdded;
         public IObservable<int[]> ComponentsRemoving => _onComponentsRemoving;
         public IObservable<int[]> ComponentsRemoved => _onComponentsRemoved;
@@ -20,40 +24,54 @@ namespace EcsRx.Entities
         
         public int Id { get; }
         
-        public IComponentRepository ComponentRepository { get; }
-        public List<int> ActiveComponents { get; }
+        public IComponentTypeLookup ComponentTypeLookup { get; }
+        public IComponentDatabase ComponentDatabase { get; }
+        
+        public int[] InternalComponentAllocations { get; }
+        public IReadOnlyList<int> ComponentAllocations => InternalComponentAllocations;
 
         public IEnumerable<IComponent> Components
         {
             get
             {
-                for (var i = 0; i < ActiveComponents.Count; i++)
-                { yield return GetComponent(ActiveComponents[i]); }
+                for (var i = 0; i < InternalComponentAllocations.Length; i++)
+                {
+                    if(InternalComponentAllocations[i] != NotAllocated)
+                    { yield return GetComponent(InternalComponentAllocations[i]);}
+                }
             }
         }
         
-        public Entity(int id, IComponentRepository componentRepository)
+        public Entity(int id, IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             Id = id;
-            ComponentRepository = componentRepository;
-            ActiveComponents = new List<int>();
-            componentRepository.ExpandDatabaseIfNeeded(id);
+            ComponentDatabase = componentDatabase;
+            ComponentTypeLookup = componentTypeLookup;
+            
+            var totalComponentCount = componentTypeLookup.AllComponentTypeIds.Length;
+            InternalComponentAllocations = new int[totalComponentCount];
+            EmptyAllAllocations();
             
             _onComponentsAdded = new Subject<int[]>();
             _onComponentsRemoving = new Subject<int[]>();
             _onComponentsRemoved = new Subject<int[]>();
         }
 
-        public void AddComponents(params IComponent[] components)
-        { AddComponents((IReadOnlyList<IComponent>)components); }
+        public void EmptyAllAllocations()
+        {
+            for (var i = 0; i < InternalComponentAllocations.Length; i++)
+            { InternalComponentAllocations[i] = NotAllocated; }
+        }
         
         public void AddComponents(IReadOnlyList<IComponent> components)
         {
             var componentTypeIds = new int[components.Count];
             for (var i = 0; i < components.Count; i++)
             {
-                componentTypeIds[i] = ComponentRepository.Add(Id, components[i]);
-                ActiveComponents.Add(componentTypeIds[i]);
+                var componentTypeId = ComponentTypeLookup.GetComponentType(components[i].GetType());
+                var allocationId = ComponentDatabase.Allocate(componentTypeId);
+                InternalComponentAllocations[componentTypeId] = allocationId;
+                ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
             }
             
             _onComponentsAdded.OnNext(componentTypeIds);
@@ -61,19 +79,18 @@ namespace EcsRx.Entities
 
         public T AddComponent<T>(int componentTypeId) where T : IComponent, new()
         {
-            var component = ComponentRepository.Create<T>(Id, componentTypeId);
-            ActiveComponents.Add(componentTypeId);
-            return component;
+            var defaultComponent = ComponentTypeLookup.CreateDefault<T>();
+            var allocationId = ComponentDatabase.Allocate(componentTypeId);
+            InternalComponentAllocations[componentTypeId] = allocationId;
+            ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
+            return defaultComponent;
         }
         
         public void RemoveComponents(params Type[] componentTypes)
         {
-            var componentTypeIds = ComponentRepository.ComponentTypeLookup.GetComponentTypes(componentTypes);
+            var componentTypeIds = ComponentTypeLookup.GetComponentTypes(componentTypes);
             RemoveComponents(componentTypeIds);
         }
-
-        public void RemoveComponents(params int[] componentsTypeIds)
-        { RemoveComponents((IReadOnlyList<int>)componentsTypeIds); }
         
         public void RemoveComponents(IReadOnlyList<int> componentsTypeIds)
         {
@@ -84,36 +101,44 @@ namespace EcsRx.Entities
 
             for (var i = 0; i < sanitisedComponentsIds.Length; i++)
             {
-                ComponentRepository.Remove(Id, sanitisedComponentsIds[i]);
-                ActiveComponents.Remove(sanitisedComponentsIds[i]);
+                var componentId = sanitisedComponentsIds[i];
+                var allocationIndex = InternalComponentAllocations[componentId];
+                ComponentDatabase.Remove(componentId, allocationIndex);
+                InternalComponentAllocations[componentId] = NotAllocated;
             }
             
             _onComponentsRemoved.OnNext(sanitisedComponentsIds);
         }
 
         public void RemoveAllComponents()
-        { RemoveComponents(ActiveComponents); }
+        { RemoveComponents(ComponentTypeLookup.AllComponentTypeIds); }
 
         public bool HasComponent(Type componentType)
         {
-            var componentTypeId = ComponentRepository.ComponentTypeLookup.GetComponentType(componentType);
+            var componentTypeId = ComponentTypeLookup.GetComponentType(componentType);
             return HasComponent(componentTypeId);
         }
 
         public bool HasComponent(int componentTypeId)
-        { return ComponentRepository.Has(Id, componentTypeId); }
+        { return InternalComponentAllocations[componentTypeId] != NotAllocated; }
 
         public IComponent GetComponent(Type componentType)
         {
-            var componentTypeId = ComponentRepository.ComponentTypeLookup.GetComponentType(componentType);
+            var componentTypeId = ComponentTypeLookup.GetComponentType(componentType);
             return GetComponent(componentTypeId);
         }
-        
+
         public IComponent GetComponent(int componentTypeId)
-        { return ComponentRepository.Get(Id, componentTypeId); }
-        
+        {
+            var allocationIndex = InternalComponentAllocations[componentTypeId];
+            return ComponentDatabase.Get(allocationIndex, componentTypeId);
+        }
+
         public T GetComponent<T>(int componentTypeId) where T : IComponent
-        { return ComponentRepository.Get<T>(Id, componentTypeId); }
+        {
+            var allocationIndex = InternalComponentAllocations[componentTypeId];
+            return ComponentDatabase.Get<T>(componentTypeId, allocationIndex);
+        }
 
         public override int GetHashCode()
         { return Id; }

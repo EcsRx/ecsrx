@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
@@ -45,12 +46,13 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
             _availableComponentTypeIds = Enumerable.Range(0, 20).ToArray();
             
-            var componentRepository = Container.Resolve<IComponentRepository>();
+            var componentDatabase = Container.Resolve<IComponentDatabase>();
+            var componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, componentRepository);
+                var entity = new Entity(i, componentDatabase, componentTypeLookup);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);                
             }

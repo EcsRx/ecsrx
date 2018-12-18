@@ -44,8 +44,7 @@ namespace EcsRx.Tests.Framework
             };
             var componentLookupType = new ComponentTypeLookup(componentLookups);
             var componentDatabase = new ComponentDatabase(componentLookupType);
-            var componentRepository = new ComponentRepository(componentLookupType, componentDatabase);
-            var entityFactory = new DefaultEntityFactory(new IdPool(), componentRepository);
+            var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType);
             var collectionFactory = new DefaultEntityCollectionFactory(entityFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
             return new EntityCollectionManager(collectionFactory, observableGroupFactory, componentLookupType);

@@ -49,7 +49,6 @@ namespace EcsRx.Examples.ExampleApps.Performance.Modules
 
             container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToInstance = explicitComponentLookup});           
             container.Bind<IComponentDatabase, ComponentDatabase>();
-            container.Bind<IComponentRepository, ComponentRepository>();
         }
     }
 }

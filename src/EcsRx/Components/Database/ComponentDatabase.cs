@@ -1,89 +1,56 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using EcsRx.Collections;
 using EcsRx.Components.Lookups;
-using EcsRx.Extensions;
 
 namespace EcsRx.Components.Database
 {
     public class ComponentDatabase : IComponentDatabase
     {
-        public int CurrentEntityBounds { get; private set; }
-        
+        public int DefaultExpansionAmount { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
-        public ExpandingArray[] EntityComponents { get; private set; }
-        public BitArray[] EntityComponentsLookups { get; private set; }
+        public IExpandingArrayPool[] ComponentData { get; private set; }
 
-        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int entitySetupSize = 5000)
+        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int defaultExpansionSize = 100)
         {
             ComponentTypeLookup = componentTypeLookup;
-            Initialize(entitySetupSize);
+            DefaultExpansionAmount = defaultExpansionSize;
+            Initialize();
         }
         
-        public void Initialize(int entitySetupSize)
+        public void Initialize()
         {
             var componentTypes = ComponentTypeLookup.GetAllComponentTypes().ToArray();
             var componentCount = componentTypes.Length;
-            EntityComponents = new ExpandingArray[componentCount];
-            EntityComponentsLookups = new BitArray[componentCount];
-            CurrentEntityBounds = entitySetupSize;
+            ComponentData = new IExpandingArrayPool[componentCount];
 
             for (var i = 0; i < componentCount; i++)
-            {
-                EntityComponents[i] = new ExpandingArray(componentTypes[i].Key, entitySetupSize);
-                EntityComponentsLookups[i] = new BitArray(entitySetupSize);
-            }            
+            { ComponentData[i] = new ExpandingArrayPool(componentTypes[i].Key, DefaultExpansionAmount, DefaultExpansionAmount); }            
         }
         
-        public void AccommodateMoreEntities(int newMaxSize)
-        {
-            var expandBy = newMaxSize - CurrentEntityBounds;
-            for (var i = 0; i < EntityComponents.Length; i++)
-            {
-                EntityComponents[i].Expand(expandBy);
-                EntityComponentsLookups[i] = EntityComponentsLookups[i].ExpandListTo(expandBy);
-            }
-            CurrentEntityBounds = newMaxSize;
-        }
-
-        public T Get<T>(int componentTypeId, int entityId) where T : IComponent
-        { return EntityComponents[componentTypeId].GetItem<T>(entityId); }
+        public T Get<T>(int componentTypeId, int allocationIndex) where T : IComponent
+        { return ComponentData[componentTypeId].Get<T>(allocationIndex); }
 
         public T[] GetComponents<T>(int componentTypeId) where T : IComponent
-        { return EntityComponents[componentTypeId].GetArray<T>(); }
+        { return ComponentData[componentTypeId].AsArray<T>(); }
 
-        public IEnumerable<IComponent> GetAll(int entityId)
+        public void Set<T>(int componentTypeId, int allocationIndex, T component) where T : IComponent
+        { ComponentData[componentTypeId].Set(allocationIndex, component); }
+
+        public void Remove(int componentTypeId, int allocationIndex)
+        { ComponentData[componentTypeId].Release(allocationIndex); }
+
+        public int Allocate(int componentTypeId)
         {
-            for (var i = EntityComponents.Length - 1; i >= 0; i--)
-            {
-                if (EntityComponentsLookups[i][entityId])
-                { yield return (IComponent)EntityComponents[i].GetItem(entityId); }
-            }
+            var pool = ComponentData[componentTypeId];
+            if(pool.IndexesRemaining == 0) { pool.Expand(DefaultExpansionAmount); }
+            return pool.Allocate();
         }
 
-        public bool Has(int componentTypeId, int entityId)
-        { return EntityComponentsLookups[componentTypeId][entityId]; }
-
-        public void Set<T>(int componentTypeId, int entityId, T component) where T : IComponent
+        public void PreAllocateComponents(int componentTypeId, int allocationSize)
         {
-            EntityComponents[componentTypeId].SetItem(entityId, component);
-            EntityComponentsLookups[componentTypeId][entityId] = true;
-        }
-
-        public void Remove(int componentTypeId, int entityId)
-        {
-            if (!ComponentTypeLookup.IsComponentStruct(componentTypeId))
-            { EntityComponents[componentTypeId].SetItem(entityId, null); }
-            EntityComponentsLookups[componentTypeId][entityId] = false;
-        }
-        
-        public void RemoveAll(int entityId)
-        {
-            for (var i = EntityComponents.Length - 1; i >= 0; i--)
-            { Remove(i, entityId); }
+            var pool = ComponentData[componentTypeId];
+            pool.Expand(allocationSize);
         }
     }
 }

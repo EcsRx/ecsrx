@@ -5,6 +5,7 @@ using EcsRx.Collections;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
 using EcsRx.Examples.ExampleApps.Performance.Systems;
+using EcsRx.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {

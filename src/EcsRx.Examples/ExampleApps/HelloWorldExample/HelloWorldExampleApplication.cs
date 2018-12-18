@@ -2,6 +2,7 @@
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.HelloWorldExample.Components;
 using EcsRx.Examples.ExampleApps.HelloWorldExample.Systems;
+using EcsRx.Extensions;
 using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.HelloWorldExample

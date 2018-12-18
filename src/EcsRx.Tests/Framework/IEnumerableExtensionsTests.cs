@@ -90,18 +90,17 @@ namespace EcsRx.Tests.Framework
             };
             var componentLookupType = new ComponentTypeLookup(componentLookups);
             var componentDatabase = new ComponentDatabase(componentLookupType);
-            var componentRepository = new ComponentRepository(componentLookupType, componentDatabase);
             
-            var hasOneAndTwo = new Entity(1, componentRepository);
+            var hasOneAndTwo = new Entity(1, componentDatabase, componentLookupType);
             hasOneAndTwo.AddComponent<TestComponentOne>();
             hasOneAndTwo.AddComponent<TestComponentTwo>();
             
-            var hasAllComponents = new Entity(2, componentRepository);
+            var hasAllComponents = new Entity(2, componentDatabase, componentLookupType);
             hasAllComponents.AddComponent<TestComponentOne>();
             hasAllComponents.AddComponent<TestComponentTwo>();
             hasAllComponents.AddComponent<TestComponentThree>();
 
-            var hasOneAndThree = new Entity(3, componentRepository);
+            var hasOneAndThree = new Entity(3, componentDatabase, componentLookupType);
             hasOneAndThree.AddComponent<TestComponentOne>();
             hasOneAndThree.AddComponent<TestComponentThree>();
 

@@ -45,7 +45,6 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IComponentTypeAssigner>(new BindingConfiguration{ToInstance = componentTypeAssigner});
             container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToInstance = componentLookup});           
             container.Bind<IComponentDatabase, ComponentDatabase>();
-            container.Bind<IComponentRepository, ComponentRepository>();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using EcsRx.Blueprints;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.HealthExample.Components;
+using EcsRx.Extensions;
 using EcsRx.Reactive.Properties;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample.Blueprints

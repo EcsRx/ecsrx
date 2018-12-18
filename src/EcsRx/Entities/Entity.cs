@@ -137,7 +137,7 @@ namespace EcsRx.Entities
         public T GetComponent<T>(int componentTypeId) where T : IComponent
         {
             var allocationIndex = InternalComponentAllocations[componentTypeId];
-            return ComponentDatabase.Get<T>(allocationIndex, componentTypeId);
+            return ComponentDatabase.Get<T>(componentTypeId, allocationIndex);
         }
 
         public override int GetHashCode()

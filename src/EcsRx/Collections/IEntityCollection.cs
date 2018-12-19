@@ -14,7 +14,7 @@ namespace EcsRx.Collections
         /// <summary>
         /// Name of the collection
         /// </summary>
-        string Name { get; }
+        int Id { get; }
         
         /// <summary>
         /// This will create and return a new entity.

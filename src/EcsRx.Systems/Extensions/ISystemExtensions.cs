@@ -34,13 +34,13 @@ namespace EcsRx.Systems.Extensions
             return matchingInterface;
         }
         
-        public static string[] GetGroupAffinities(this ISystem system)
+        public static int[] GetGroupAffinities(this ISystem system)
         {
             var affinity = system.GetType()
                 .GetCustomAttributes(typeof(CollectionAffinityAttribute), true)
                 .FirstOrDefault();
 
-            return ((CollectionAffinityAttribute) affinity)?.CollectionNames;
+            return ((CollectionAffinityAttribute) affinity)?.CollectionIds;
         }
     }
 }

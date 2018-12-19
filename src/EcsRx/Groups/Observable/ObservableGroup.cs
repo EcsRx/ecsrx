@@ -16,7 +16,7 @@ namespace EcsRx.Groups.Observable
     public class ObservableGroup : IObservableGroup, IDisposable
     {
         public readonly EntityLookup CachedEntities;
-        public readonly IList<IDisposable> Subscriptions;
+        public readonly List<IDisposable> Subscriptions;
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
         public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;

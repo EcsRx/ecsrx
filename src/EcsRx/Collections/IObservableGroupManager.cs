@@ -6,7 +6,7 @@ namespace EcsRx.Collections
 {
     public interface IObservableGroupManager
     {
-        IEnumerable<IObservableGroup> ObservableGroups { get; }
+        IReadOnlyList<IObservableGroup> ObservableGroups { get; }
         IEnumerable<IObservableGroup> GetApplicableGroups(int[] componentTypeIds);
     }
 }

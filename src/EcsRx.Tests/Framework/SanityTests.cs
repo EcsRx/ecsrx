@@ -154,13 +154,13 @@ namespace EcsRx.Tests.Framework
             var collectionManager = CreateCollectionManager();
             
             var group = new Group(typeof(TestComponentOne));
-            var collection1 = collectionManager.CreateCollection("test1");
-            var collection2 = collectionManager.CreateCollection("test2");
+            var collection1 = collectionManager.CreateCollection(1);
+            var collection2 = collectionManager.CreateCollection(2);
 
             var addedTimesCalled = 0;
             var removingTimesCalled = 0;
             var removedTimesCalled = 0;
-            var observableGroup = collectionManager.GetObservableGroup(group, "test1", "test2");
+            var observableGroup = collectionManager.GetObservableGroup(group, 1, 2);
             observableGroup.OnEntityAdded.Subscribe(x => addedTimesCalled++);
             observableGroup.OnEntityRemoving.Subscribe(x => removingTimesCalled++);
             observableGroup.OnEntityRemoved.Subscribe(x => removedTimesCalled++);

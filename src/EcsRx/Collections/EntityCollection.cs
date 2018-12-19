@@ -16,6 +16,9 @@ namespace EcsRx.Collections
 {
     public class EntityCollection : IEntityCollection, IDisposable
     {
+        public int Id { get; }
+        public IEntityFactory EntityFactory { get; }
+        
         public readonly EntityLookup EntityLookup;
         public readonly IDictionary<int, IDisposable> EntitySubscriptions;
 
@@ -25,9 +28,6 @@ namespace EcsRx.Collections
         public IObservable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
         public IObservable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
         
-        public int Id { get; }
-        public IEntityFactory EntityFactory { get; }
-
         private readonly Subject<CollectionEntityEvent> _onEntityAdded;
         private readonly Subject<CollectionEntityEvent> _onEntityRemoved;
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsAdded;

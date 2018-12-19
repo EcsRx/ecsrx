@@ -17,7 +17,7 @@ namespace EcsRx.Collections
         /// <summary>
         /// All the entity collections that the manager contains
         /// </summary>
-        IEnumerable<IEntityCollection> Collections { get; }
+        IReadOnlyList<IEntityCollection> Collections { get; }
         
         /// <summary>
         /// Fired when a collection has been added

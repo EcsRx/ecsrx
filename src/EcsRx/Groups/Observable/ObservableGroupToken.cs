@@ -18,7 +18,7 @@ namespace EcsRx.Groups.Observable
             LookupGroup = lookupGroup;
             CollectionIds = collectionIds;
         }
-
+        
         public override int GetHashCode()
         {
             var requiredHash = LookupGroup.RequiredComponents?.GetHashCode() ?? 0;

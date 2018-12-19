@@ -48,7 +48,7 @@ namespace EcsRx.Tests.Framework.Handlers
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
@@ -83,7 +83,7 @@ namespace EcsRx.Tests.Framework.Handlers
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
@@ -126,7 +126,7 @@ namespace EcsRx.Tests.Framework.Handlers
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
@@ -167,7 +167,7 @@ namespace EcsRx.Tests.Framework.Handlers
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group(x => x.Id == fakeEntity1.Id);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
@@ -206,7 +206,7 @@ namespace EcsRx.Tests.Framework.Handlers
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
             var fakeGroup = new Group(x => x.Id == fakeEntity1.Id && DateTime.Now >= expectedDate);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<string[]>()).Returns(mockObservableGroup);
+            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);

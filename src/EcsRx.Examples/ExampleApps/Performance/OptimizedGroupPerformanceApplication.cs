@@ -41,7 +41,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
             var observableGroups = new List<IObservableGroup>();
             foreach (var group in groups)
             {
-                var newGroup = EntityCollectionManager.GetObservableGroup(group, "default");
+                var newGroup = EntityCollectionManager.GetObservableGroup(group);
                 observableGroups.Add(newGroup);
             }
 

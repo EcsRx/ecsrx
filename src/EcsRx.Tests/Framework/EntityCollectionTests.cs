@@ -22,7 +22,7 @@ namespace EcsRx.Tests.Framework
             var mockEntity = Substitute.For<IEntity>();
             mockEntityFactory.Create(null).Returns(mockEntity);
        
-            var entityCollection = new EntityCollection("", mockEntityFactory);
+            var entityCollection = new EntityCollection(1, mockEntityFactory);
             
             var wasCalled = false;
             entityCollection.EntityAdded.Subscribe(x => wasCalled = true);
@@ -43,7 +43,7 @@ namespace EcsRx.Tests.Framework
             
             mockEntityFactory.Create(null).Returns(mockEntity);
            
-            var entityCollection = new EntityCollection("", mockEntityFactory);
+            var entityCollection = new EntityCollection(1, mockEntityFactory);
             
             var wasCalled = false;
             entityCollection.EntityRemoved.Subscribe(x => wasCalled = true);

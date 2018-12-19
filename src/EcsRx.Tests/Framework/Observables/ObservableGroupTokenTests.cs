@@ -21,8 +21,8 @@ namespace EcsRx.Tests.Framework.Observables
             var defaultRequired = new[] {1};
             var defaultExcluded = new int[0];
             var token1 = new ObservableGroupToken(defaultRequired, defaultExcluded);
-            var token2 = new ObservableGroupToken(defaultRequired, defaultExcluded, "test1");
-            var token3 = new ObservableGroupToken(defaultRequired, defaultExcluded, "test1", "test2");
+            var token2 = new ObservableGroupToken(defaultRequired, defaultExcluded, 1);
+            var token3 = new ObservableGroupToken(defaultRequired, defaultExcluded, 1, 2);
             
             Assert.NotEqual(token1, token2);
             Assert.NotEqual(token1, token3);

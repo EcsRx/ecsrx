@@ -39,9 +39,9 @@ namespace EcsRx.Collections
         /// will update a maintained list of entities without having to enumerate the entire collection/s.
         /// </remarks>
         /// <param name="group">The group to match entities on</param>
-        /// <param name="collectionName">The optional collection name to use (defaults to null)</param>
+        /// <param name="collectionId">The optional collection name to use (defaults to null)</param>
         /// <returns>An enumerable to access the data inside the collection/s</returns>
-        IEnumerable<IEntity> GetEntitiesFor(IGroup group, string collectionName = null);
+        IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = PoolLookups.NoPoolDefined);
         
         /// <summary>
         /// Gets an ObservableGroup which will observe the given group and maintain a collection of
@@ -54,9 +54,9 @@ namespace EcsRx.Collections
         /// it is created.
         /// </remarks>
         /// <param name="group">The group to match entities on</param>
-        /// <param name="collectionNames">The collection names to use (defaults to null)</param>
+        /// <param name="collectionIds">The collection names to use (defaults to null)</param>
         /// <returns>An IObservableGroup monitoring the group passed in</returns>
-        IObservableGroup GetObservableGroup(IGroup group, params string[] collectionNames);
+        IObservableGroup GetObservableGroup(IGroup group, params int[] collectionIds);
 
         /// <summary>
         /// Creates a new collection within the manager
@@ -65,21 +65,21 @@ namespace EcsRx.Collections
         /// This is primarily useful for when you want to isolate certain entities, such as short lived ones which would
         /// be constantly being destroyed and recreated, like bullets etc. In most cases you will probably not need more than 1.
         /// </remarks>
-        /// <param name="name">The name to give the collection</param>
+        /// <param name="id">The name to give the collection</param>
         /// <returns>A newly created collection with that name</returns>
-        IEntityCollection CreateCollection(string name);
+        IEntityCollection CreateCollection(int id);
         
         /// <summary>
         /// Gets a collection by name from within the manager, if no name is provided the default pool is returned
         /// </summary>
-        /// <param name="name">The optional name of collection to return</param>
+        /// <param name="id">The optional name of collection to return</param>
         /// <returns>The located collection</returns>
-        IEntityCollection GetCollection(string name = null);
+        IEntityCollection GetCollection(int id = PoolLookups.DefaultPoolId);
         
         /// <summary>
         /// Removes a collection from the manager
         /// </summary>
-        /// <param name="name">The collection to remove</param>
-        void RemoveCollection(string name, bool disposeEntities = true);
+        /// <param name="id">The collection to remove</param>
+        void RemoveCollection(int id, bool disposeEntities = true);
     }
 }

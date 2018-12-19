@@ -6,12 +6,10 @@ namespace EcsRx.Events.Collections
     public struct CollectionEntityEvent
     {
         public readonly IEntity Entity;
-        public readonly IEntityCollection Collection;
 
-        public CollectionEntityEvent(IEntity entity, IEntityCollection collection)
+        public CollectionEntityEvent(IEntity entity)
         {
             Entity = entity;
-            Collection = collection;
         }
     }
 }

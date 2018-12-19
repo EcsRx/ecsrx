@@ -1,6 +1,6 @@
 ﻿namespace EcsRx.Groups
 {
-    public class LookupGroup : ILookupGroup
+    public struct LookupGroup
     {
         public int[] RequiredComponents { get; }
         public int[] ExcludedComponents { get; }

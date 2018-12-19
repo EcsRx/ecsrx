@@ -12,9 +12,9 @@ namespace EcsRx.Collections
             _entityFactory = entityFactory;
         }
 
-        public IEntityCollection Create(string name)
+        public IEntityCollection Create(int id)
         {
-            return new EntityCollection(name, _entityFactory);
+            return new EntityCollection(id, _entityFactory);
         }
     }
 }

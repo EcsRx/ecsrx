@@ -13,6 +13,7 @@ using EcsRx.Infrastructure.Events;
 using EcsRx.MicroRx.Events;
 using EcsRx.Pools;
 using EcsRx.Systems.Handlers;
+using EcsRx.Tests.Batches;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using EcsRx.Threading;
@@ -33,21 +34,25 @@ namespace EcsRx.Tests.Framework
             _logger = logger;
         }
 
-        private IEntityCollectionManager CreateCollectionManager()
+        private (IEntityCollectionManager collectionManager, IBatchManager batchManager) CreateFramework()
         {
             var componentLookups = new Dictionary<Type, int>
             {
                 {typeof(TestComponentOne), 0},
                 {typeof(TestComponentTwo), 1},
                 {typeof(TestComponentThree), 2},
-                {typeof(ViewComponent), 3}
+                {typeof(ViewComponent), 3},
+                {typeof(TestStructComponentOne), 4}
             };
             var componentLookupType = new ComponentTypeLookup(componentLookups);
             var componentDatabase = new ComponentDatabase(componentLookupType);
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType);
             var collectionFactory = new DefaultEntityCollectionFactory(entityFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
-            return new EntityCollectionManager(collectionFactory, observableGroupFactory, componentLookupType);
+            var collectionManager = new EntityCollectionManager(collectionFactory, observableGroupFactory, componentLookupType);
+            var batchManager = new BatchManager(componentLookupType, componentDatabase);
+
+            return (collectionManager, batchManager);
         }
         
         private SystemExecutor CreateExecutor(IEntityCollectionManager entityCollectionManager)
@@ -76,7 +81,7 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_execute_setup_for_matching_entities()
         {
-            var collectionManager = CreateCollectionManager();
+            var (collectionManager, batchManager) = CreateFramework();
             var executor = CreateExecutor(collectionManager);
             executor.AddSystem(new TestSetupSystem());
 
@@ -94,7 +99,7 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_not_freak_out_when_removing_components_during_removing_event()
         {
-            var collectionManager = CreateCollectionManager();
+            var (collectionManager, batchManager) = CreateFramework();
             var collection = collectionManager.GetCollection();
             var entityOne = collection.CreateEntity();
 
@@ -127,7 +132,7 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_trigger_both_setup_and_teardown_for_view_resolver()
         {
-            var collectionManager = CreateCollectionManager();
+            var (collectionManager, batchManager) = CreateFramework();
             var executor = CreateExecutor(collectionManager);
             var viewResolverSystem = new TestViewResolverSystem(new EventSystem(new MessageBroker()),
                 new Group(typeof(TestComponentOne), typeof(ViewComponent)));
@@ -151,7 +156,7 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_listen_to_multiple_collections_for_updates()
         {
-            var collectionManager = CreateCollectionManager();
+            var (collectionManager, batchManager) = CreateFramework();
             
             var group = new Group(typeof(TestComponentOne));
             var collection1 = collectionManager.CreateCollection(1);
@@ -177,6 +182,34 @@ namespace EcsRx.Tests.Framework
             Assert.Equal(2, addedTimesCalled);
             Assert.Equal(2, removingTimesCalled);
             Assert.Equal(2, removedTimesCalled);
+        }
+        
+        [Fact]
+        public void should_keep_state_with_batches()
+        {            
+            var (collectionManager, batchManager) = CreateFramework();
+            var collection1 = collectionManager.CreateCollection(1);
+            var entity1 = collection1.CreateEntity();
+            
+            var refComponent = entity1.AddComponent<TestComponentOne>();
+            refComponent.Data = "moo";
+            
+            var structComponent = entity1.AddComponent<TestStructComponentOne>(4);
+            structComponent.Data = 4;
+            
+            var batch = batchManager.GetBatch<TestBatch>();
+            batch.RefreshBatches(new []{entity1});
+
+            for (var index = 0; index < batch.Batches.Count; index++)
+            {
+                var batchItem = batch.Batches[index];
+                batchItem.TestComponentOne.Data = "Hello";
+                batchItem.StructComponentOne.Data = 10;
+            }
+
+            var batchData = batch.Batches[0];
+            Assert.Equal(refComponent.Data, batchData.TestComponentOne.Data);
+            Assert.Equal(structComponent.Data, batchData.StructComponentOne.Data);
         }
     }
 }

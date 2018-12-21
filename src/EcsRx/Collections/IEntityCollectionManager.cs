@@ -8,6 +8,12 @@ using EcsRx.Groups.Observable;
 
 namespace EcsRx.Collections
 {
+    public static class PoolLookups
+    {
+        public const int NoPoolDefined = -1;
+        public const int DefaultPoolId = 0;
+    }
+    
     /// <summary>
     /// This acts as the database to store all entities, rather than containing all entities directly
     /// within itself, it partitions them into collections which can contain differing amounts of entities.

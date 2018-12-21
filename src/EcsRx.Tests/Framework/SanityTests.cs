@@ -236,7 +236,7 @@ namespace EcsRx.Tests.Framework
             Assert.Equal(newString, batchData.TestComponentOne.Data);
             Assert.Equal(newValue, batchData.StructComponentOne.Data);
             Assert.Equal(newString, refComponent.Data);
-            Assert.Equal(newValue, structComponent.Data);
+            Assert.NotEqual(newValue, structComponent.Data);
             
         }
     }

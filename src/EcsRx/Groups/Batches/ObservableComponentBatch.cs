@@ -41,11 +41,12 @@ namespace EcsRx.Groups.Batches
 
             Batches = newBatch;
             
+            /*
             foreach (var field in _fieldsToSet)
             {
                 var componentTypeId = ComponentTypeLookup.GetComponentType(field.FieldType);
                 var allocationIndex = entity.ComponentAllocations[componentTypeId];
-                var component = GetComponent(field.FieldType, componentTypeId, allocationIndex);
+                var component = GetComponents(field.FieldType, componentTypeId, allocationIndex);
                 
                 field.SetValue(Batches[newIndex], component);
             }
@@ -57,7 +58,7 @@ namespace EcsRx.Groups.Batches
                 var component = GetComponent(property.PropertyType, componentTypeId, allocationIndex);               
 
                 property.SetValue(Batches[newIndex], component);
-            }
+            }*/
         }
         
         public void OnEntityRemoved(IEntity entity)

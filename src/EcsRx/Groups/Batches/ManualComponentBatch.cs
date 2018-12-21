@@ -26,6 +26,114 @@ namespace EcsRx.Groups.Batches
             AnalyzeBatch();
         }
 
+        public void InitializeBatches(IReadOnlyList<IEntity> entities)
+        {
+            if(Batches == null || Batches.Length != entities.Count)
+            { Batches = new T[entities.Count]; }
+           
+            foreach (var field in _fieldsToSet)
+            {
+                var componentTypeId = ComponentTypeLookup.GetComponentType(field.FieldType);
+                var components = GetComponent(field.FieldType, componentTypeId);
+
+                for (var i = 0; i < entities.Count; i++)
+                {
+                    ref var batchItem = ref Batches[i];
+                    var allocationIndex = entities[i].ComponentAllocations[componentTypeId];
+                    var component = components[allocationIndex];
+                    field.SetValueDirect(__makeref(batchItem), component);
+                }
+            }
+
+            foreach (var property in _propertiesToSet)
+            {
+                var componentTypeId = ComponentTypeLookup.GetComponentType(property.PropertyType);
+                var components = GetComponent(property.PropertyType, componentTypeId);
+
+                for (var i = 0; i < entities.Count; i++)
+                {
+                    ref var batchItem = ref Batches[i];
+                    var allocationIndex = entities[i].ComponentAllocations[componentTypeId];
+                    var component = components[allocationIndex];
+                    property.SetValue(batchItem, component);
+                }
+            }
+        }
+
+        public void AnalyzeBatch()
+        {
+            var databaseType = ComponentDatabase.GetType();
+            _getComponentMethod = databaseType.GetMethod("GetComponents");
+            
+            var batchType = typeof(T);
+            _fieldsToSet = batchType.GetFields(BindingFlags.Public|BindingFlags.Instance);
+            _propertiesToSet = batchType.GetProperties(BindingFlags.Public|BindingFlags.Instance).Where(x => x.Name != "EntityId").ToArray();
+        }
+       
+        public IList GetComponent(Type type, int componentTypeId)
+        {
+            var genericMethod = _getComponentMethod.MakeGenericMethod(type);
+            return (IList)genericMethod.Invoke(ComponentDatabase, new object[]{componentTypeId});
+        }
+
+        public void RefreshBatches(IReadOnlyList<IEntity> entities)
+        {
+            if(Batches == null || Batches.Length != entities.Count)
+            { InitializeBatches(entities); }
+            
+            foreach (var field in _fieldsToSet)
+            {
+                if (!field.FieldType.IsValueType) { continue; }
+                
+                var componentTypeId = ComponentTypeLookup.GetComponentType(field.FieldType);
+                var components = GetComponent(field.FieldType, componentTypeId);
+
+                for (var i = 0; i < entities.Count; i++)
+                {
+                    ref var batchItem = ref Batches[i];
+                    var allocationIndex = entities[i].ComponentAllocations[componentTypeId];
+                    var component = components[allocationIndex];
+                    field.SetValueDirect(__makeref(batchItem), component);
+                }
+            }
+
+            foreach (var property in _propertiesToSet)
+            {
+                if (!property.PropertyType.IsValueType) { continue; }
+                
+                var componentTypeId = ComponentTypeLookup.GetComponentType(property.PropertyType);
+                var components = GetComponent(property.PropertyType, componentTypeId);
+
+                for (var i = 0; i < entities.Count; i++)
+                {
+                    ref var batchItem = ref Batches[i];
+                    var allocationIndex = entities[i].ComponentAllocations[componentTypeId];
+                    var component = components[allocationIndex];
+                    property.SetValue(batchItem, component);
+                }
+            }
+        }
+    }
+
+    
+    /*
+    public class ManualComponentBatches<T> : IManualComponentBatches<T> where T : IBatchDescriptor
+    {
+        public IComponentTypeLookup ComponentTypeLookup { get; }
+        public IComponentDatabase ComponentDatabase { get; }
+        public T[] Batches { get; protected set; }
+
+        protected MethodInfo _getComponentMethod;
+        protected FieldInfo[] _fieldsToSet;
+        protected PropertyInfo[] _propertiesToSet;
+
+        public ManualComponentBatches(IComponentTypeLookup componentTypeLookup, IComponentDatabase componentDatabase)
+        {
+            ComponentTypeLookup = componentTypeLookup;
+            ComponentDatabase = componentDatabase;
+            AnalyzeBatch();
+        }
+
         public void AnalyzeBatch()
         {
             var databaseType = ComponentDatabase.GetType();
@@ -102,4 +210,5 @@ namespace EcsRx.Groups.Batches
             }
         }
     }
+    */
 }

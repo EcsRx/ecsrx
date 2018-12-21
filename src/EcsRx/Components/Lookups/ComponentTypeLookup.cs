@@ -35,13 +35,7 @@ namespace EcsRx.Components.Lookups
         { return ComponentStructLookups[componentTypeId]; }
 
         public T CreateDefault<T>() where T : IComponent, new()
-        {
-            var type = typeof(T);
-            if (type.IsValueType)
-            { return default(T); }
-
-            return Activator.CreateInstance<T>();
-        }
+        { return new T(); }
 
         public IReadOnlyDictionary<Type, int> GetAllComponentTypes()
         { return ComponentsByType; }

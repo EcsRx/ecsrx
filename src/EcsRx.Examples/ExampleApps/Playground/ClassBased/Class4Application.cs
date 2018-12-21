@@ -1,41 +1,40 @@
 using System.Numerics;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Playground.Batches;
-using EcsRx.Examples.ExampleApps.Playground.ClassBased;
 using EcsRx.Examples.ExampleApps.Playground.Components;
 using EcsRx.Groups.Batches;
 
 namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 {
-    public class Struct4Application : BasicLoopApplication
+    public class Class4Application : BasicLoopApplication
     {
-        private IComponentBatches<CustomStructBatch> _componentBatch;
+        private IComponentBatches<CustomClassBatch> _componentBatch;
         
         protected override void SetupEntities()
         {
-            _componentDatabase.PreAllocateComponents(StructComponent1TypeId, EntityCount);
-            _componentDatabase.PreAllocateComponents(StructComponent2TypeId, EntityCount);
+            _componentDatabase.PreAllocateComponents(ClassComponent1TypeId, EntityCount);
+            _componentDatabase.PreAllocateComponents(ClassComponent2TypeId, EntityCount);
             
             base.SetupEntities();
             
-            var manualBatch = _batchManager.GetBatch<CustomStructBatch>();
+            var manualBatch = _batchManager.GetBatch<CustomClassBatch>();
             manualBatch.InitializeBatches(_collection);
             _componentBatch = manualBatch;
         }
 
-        protected override string Description { get; } = "Uses auto batching to group components for quicker reads";
+        protected override string Description { get; } = "Uses auto batching to allow the data to be streamlined in memory";
 
         protected override void SetupEntity(IEntity entity)
         {
-            entity.AddComponent<StructComponent>(StructComponent1TypeId);
-            entity.AddComponent<StructComponent2>(StructComponent2TypeId);
+            entity.AddComponent<ClassComponent>(ClassComponent1TypeId);
+            entity.AddComponent<ClassComponent2>(ClassComponent2TypeId);
         }
 
         protected override void RunProcess()
         {
             for (var i = _componentBatch.Batches.Length - 1; i >= 0; i--)
             {
-                ref var batch = ref _componentBatch.Batches[i];
+                var batch = _componentBatch.Batches[i];
                 batch.Basic.Position += Vector3.One;
                 batch.Basic.Something += 10;
                 batch.Basic2.IsTrue = true;

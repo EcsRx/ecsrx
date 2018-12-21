@@ -74,9 +74,9 @@ namespace EcsRx.Entities
         /// <returns>The component instance if found, or null if not</returns>
         IComponent GetComponent(int componentTypeId);
 
-        T GetComponent<T>(int componentTypeId) where T : IComponent;
+        ref T GetComponent<T>(int componentTypeId) where T : IComponent;
         
-        T AddComponent<T>(int componentTypeId) where T : IComponent, new();
+        ref T AddComponent<T>(int componentTypeId) where T : IComponent, new();
         
         /// <summary>
         /// Checks to see if the entity contains the given component type

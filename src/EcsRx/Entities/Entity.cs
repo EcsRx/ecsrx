@@ -76,13 +76,13 @@ namespace EcsRx.Entities
             _onComponentsAdded.OnNext(componentTypeIds);
         }
 
-        public T AddComponent<T>(int componentTypeId) where T : IComponent, new()
+        public ref T AddComponent<T>(int componentTypeId) where T : IComponent, new()
         {
             var defaultComponent = ComponentTypeLookup.CreateDefault<T>();
             var allocationId = ComponentDatabase.Allocate(componentTypeId);
             InternalComponentAllocations[componentTypeId] = allocationId;
             ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
-            return defaultComponent;
+            return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         
         public void RemoveComponents(params Type[] componentTypes)
@@ -133,10 +133,10 @@ namespace EcsRx.Entities
             return ComponentDatabase.Get(allocationIndex, componentTypeId);
         }
 
-        public T GetComponent<T>(int componentTypeId) where T : IComponent
+        public ref T GetComponent<T>(int componentTypeId) where T : IComponent
         {
             var allocationIndex = InternalComponentAllocations[componentTypeId];
-            return ComponentDatabase.Get<T>(componentTypeId, allocationIndex);
+            return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationIndex);
         }
 
         public override int GetHashCode()

@@ -3,10 +3,10 @@ using EcsRx.Groups.Batches;
 
 namespace EcsRx.Examples.ExampleApps.Playground.Batches
 {
-    public struct CustomBatch : IBatchDescriptor
+    public struct CustomClassBatch : IBatchDescriptor
     {
         public int EntityId { get; set; }
-        public StructComponent Basic;
-        public StructComponent2 Basic2;
+        public ClassComponent Basic;
+        public ClassComponent2 Basic2;
     }
 }

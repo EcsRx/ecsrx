@@ -24,7 +24,7 @@ namespace EcsRx.Groups.Batches
             ObservableGroup = observableGroup;
             Subscriptions = new List<IDisposable>();
             ListenToChanges();
-            RefreshBatches(ObservableGroup);
+            InitializeBatches(ObservableGroup);
         }
 
         public void ListenToChanges()
@@ -35,35 +35,37 @@ namespace EcsRx.Groups.Batches
 
         public void OnEntityAdded(IEntity entity)
         {
-            var newIndex = Batches.Count;
+            var newIndex = Batches.Length;
             var newBatch = new T[newIndex + 1];
-            ((T[])Batches).CopyTo(newBatch, 0);
+            Batches.CopyTo(newBatch, 0);
 
             Batches = newBatch;
             
             foreach (var field in _fieldsToSet)
             {
                 var componentTypeId = ComponentTypeLookup.GetComponentType(field.FieldType);
-                var components = GetComponentArray(field.FieldType, componentTypeId);
                 var allocationIndex = entity.ComponentAllocations[componentTypeId];
-                field.SetValue(Batches[newIndex], components[allocationIndex]);
+                var component = GetComponent(field.FieldType, componentTypeId, allocationIndex);
+                
+                field.SetValue(Batches[newIndex], component);
             }
 
             foreach (var property in _propertiesToSet)
             {
                 var componentTypeId = ComponentTypeLookup.GetComponentType(property.PropertyType);
-                var components = GetComponentArray(property.PropertyType, componentTypeId);               
                 var allocationIndex = entity.ComponentAllocations[componentTypeId];
-                property.SetValue(Batches[newIndex], components[allocationIndex]);
+                var component = GetComponent(property.PropertyType, componentTypeId, allocationIndex);               
+
+                property.SetValue(Batches[newIndex], component);
             }
         }
         
         public void OnEntityRemoved(IEntity entity)
         {
             var currentIndex = 0;
-            var newBatch = new T[Batches.Count - 1];
+            var newBatch = new T[Batches.Length - 1];
 
-            for (var i = 0; i < Batches.Count; i++)
+            for (var i = 0; i < Batches.Length; i++)
             {
                 if (Batches[i].EntityId == entity.Id) { continue; }
                 newBatch[currentIndex++] = Batches[i];

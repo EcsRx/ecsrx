@@ -11,6 +11,7 @@ namespace EcsRx.Collections
         IReadOnlyList<T> AsReadOnly<T>();
         T[] AsArray<T>();
         
+        ref T GetRef<T>(int index);
         T Get<T>(int index);
         void Set<T>(int index, T value);
         void Expand(int amountToAdd);

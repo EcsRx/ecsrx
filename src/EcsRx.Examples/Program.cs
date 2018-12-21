@@ -20,8 +20,7 @@ namespace EcsRx.Examples
             //var application = new HelloWorldExampleApplication();   // Comment out this and uncomment the other one to run the other example
 
             //application.StartApplication();
-
-            
+           
             // Playground examples
             new Class1Application().StartApplication();
             new Struct1Application().StartApplication();
@@ -29,6 +28,7 @@ namespace EcsRx.Examples
             new Struct2Application().StartApplication();
             new Class3Application().StartApplication();
             new Struct3Application().StartApplication();
+            new Class4Application().StartApplication();
             new Struct4Application().StartApplication();
             new Struct5Application().StartApplication();
         }

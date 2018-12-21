@@ -30,6 +30,9 @@ namespace EcsRx.Components.Database
         
         public T Get<T>(int componentTypeId, int allocationIndex) where T : IComponent
         { return ComponentData[componentTypeId].Get<T>(allocationIndex); }
+        
+        public ref T GetRef<T>(int componentTypeId, int allocationIndex) where T : IComponent
+        { return ref ComponentData[componentTypeId].GetRef<T>(allocationIndex); }
 
         public T[] GetComponents<T>(int componentTypeId) where T : IComponent
         { return ComponentData[componentTypeId].AsArray<T>(); }

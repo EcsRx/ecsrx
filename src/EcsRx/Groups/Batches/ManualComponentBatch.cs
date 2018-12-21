@@ -13,7 +13,7 @@ namespace EcsRx.Groups.Batches
     {
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public IComponentDatabase ComponentDatabase { get; }
-        public IReadOnlyList<T> Batches { get; protected set; }
+        public T[] Batches { get; protected set; }
 
         protected MethodInfo _getComponentMethod;
         protected FieldInfo[] _fieldsToSet;
@@ -29,46 +29,75 @@ namespace EcsRx.Groups.Batches
         public void AnalyzeBatch()
         {
             var databaseType = ComponentDatabase.GetType();
-            _getComponentMethod = databaseType.GetMethod("GetComponents");
+            _getComponentMethod = databaseType.GetMethod("Get");
             
             var batchType = typeof(T);
             _fieldsToSet = batchType.GetFields(BindingFlags.Public|BindingFlags.Instance);
             _propertiesToSet = batchType.GetProperties(BindingFlags.Public|BindingFlags.Instance).Where(x => x.Name != "EntityId").ToArray();
         }
        
-        public IList GetComponentArray(Type type, int componentTypeId)
+        public object GetComponent(Type type, int componentTypeId, int allocationId)
         {
             var genericMethod = _getComponentMethod.MakeGenericMethod(type);
-            return (IList)genericMethod.Invoke(ComponentDatabase, new object[]{componentTypeId});
+            return genericMethod.Invoke(ComponentDatabase, new object[]{componentTypeId, allocationId});
         }
 
-        public void RefreshBatches(IReadOnlyList<IEntity> entities)
+        public void InitializeBatches(IReadOnlyList<IEntity> entities)
         {
             Batches = new T[entities.Count];
-            
+           
             foreach (var field in _fieldsToSet)
             {
                 var componentTypeId = ComponentTypeLookup.GetComponentType(field.FieldType);
-                var components = GetComponentArray(field.FieldType, componentTypeId);
 
                 for (var i = 0; i < entities.Count; i++)
                 {
                     var allocationIndex = entities[i].ComponentAllocations[componentTypeId];
-                    var component = components[allocationIndex];
-                    var batchItem = Batches[i];
-                    field.SetValue(batchItem, component);
+                    var component = GetComponent(field.FieldType, componentTypeId, allocationIndex);
+                    field.SetValueDirect(__makeref(Batches[i]), component);
                 }
             }
 
             foreach (var property in _propertiesToSet)
             {
                 var componentTypeId = ComponentTypeLookup.GetComponentType(property.PropertyType);
-                var components = GetComponentArray(property.PropertyType, componentTypeId);
 
                 for (var i = 0; i < entities.Count; i++)
                 {
                     var allocationIndex = entities[i].ComponentAllocations[componentTypeId];
-                    property.SetValue(Batches[i], components[allocationIndex]);
+                    var component = GetComponent(property.PropertyType, componentTypeId, allocationIndex);
+                    property.SetValue(Batches[i], component);
+                }
+            }
+        }
+
+        public void RefreshBatches(IReadOnlyList<IEntity> entities)
+        {
+            foreach (var field in _fieldsToSet)
+            {
+                if (!field.FieldType.IsValueType) { continue; }
+                
+                var componentTypeId = ComponentTypeLookup.GetComponentType(field.FieldType);
+
+                for (var i = 0; i < Batches.Length; i++)
+                {
+                    var allocationIndex = entities[i].ComponentAllocations[componentTypeId];
+                    var component = GetComponent(field.FieldType, componentTypeId, allocationIndex);
+                    field.SetValueDirect(__makeref(Batches[i]), component);
+                }
+            }
+
+            foreach (var property in _propertiesToSet)
+            {
+                if (!property.PropertyType.IsValueType) { continue; }
+                
+                var componentTypeId = ComponentTypeLookup.GetComponentType(property.PropertyType);
+
+                for (var i = 0; i < Batches.Length; i++)
+                {
+                    var allocationIndex = entities[i].ComponentAllocations[componentTypeId];
+                    var component = GetComponent(property.PropertyType, componentTypeId, allocationIndex);
+                    property.SetValue(Batches[i], component);
                 }
             }
         }

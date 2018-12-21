@@ -32,6 +32,7 @@ namespace EcsRx.Collections
         public int Allocate() => IndexPool.AllocateInstance();
         public void Release(int index) => IndexPool.ReleaseInstance(index);
         
+        public ref T GetRef<T>(int index) => ref AsArray<T>()[index];
         public T Get<T>(int index) => AsArray<T>()[index];
         public object Get(int index) => Data.GetValue(index);
         

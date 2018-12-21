@@ -1,15 +1,13 @@
 using System.Numerics;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Playground.Batches;
-using EcsRx.Examples.ExampleApps.Playground.ClassBased;
 using EcsRx.Examples.ExampleApps.Playground.Components;
-using EcsRx.Groups.Batches;
 
 namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 {
     public class Struct5Application : BasicLoopApplication
     {
-        private IComponentBatches<CustomBatch> _componentBatch;
+        private CustomStructBatch[] Batches;        
         
         protected override void SetupEntities()
         {
@@ -18,12 +16,24 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             
             base.SetupEntities();
             
-            var manualBatch = _batchManager.GetBatch<CustomBatch>();
-            manualBatch.RefreshBatches(_collection);
-            _componentBatch = manualBatch;
+            var BasicArray = _componentDatabase.GetComponents<StructComponent>(StructComponent1TypeId);
+            var BasicArray2 = _componentDatabase.GetComponents<StructComponent2>(StructComponent2TypeId);
+
+            Batches = new CustomStructBatch[_collection.Count];
+            for (var i = 0; i < _collection.Count; i++)
+            {
+                var entity = _collection[i];
+                var batch = new CustomStructBatch
+                {
+                    EntityId = entity.Id,
+                    Basic = BasicArray[entity.ComponentAllocations[StructComponent1TypeId]],
+                    Basic2 = BasicArray2[entity.ComponentAllocations[StructComponent2TypeId]]
+                };
+                Batches[i] = batch;
+            }
         }
 
-        protected override string Description { get; } = "Uses auto batching to achieve same results as previous with less code";
+        protected override string Description { get; } = "Same as previous example but with a manual form of batching";
 
         protected override void SetupEntity(IEntity entity)
         {
@@ -33,9 +43,9 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 
         protected override void RunProcess()
         {
-            for (var i = _componentBatch.Batches.Count - 1; i >= 0; i--)
+            for (var i = Batches.Length - 1; i >= 0; i--)
             {
-                var batch = _componentBatch.Batches[i];
+                var batch = Batches[i];
                 batch.Basic.Position += Vector3.One;
                 batch.Basic.Something += 10;
                 batch.Basic2.IsTrue = true;

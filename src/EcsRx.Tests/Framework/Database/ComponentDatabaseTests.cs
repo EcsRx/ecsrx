@@ -100,6 +100,39 @@ namespace EcsRx.Tests.Framework.Database
         }
         
         [Fact]
+        public void should_correctly_get_ref_instance()
+        {
+            var startingComponent = new TestStructComponentOne { Data = 10};
+            var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
+            mockComponentLookup.GetAllComponentTypes().Returns(new Dictionary<Type, int>
+            {
+                {typeof(TestStructComponentOne), 0}
+            });
+            
+            var database = new ComponentDatabase(mockComponentLookup);
+            var underlyingStore = database.ComponentData[0];
+            underlyingStore.Set(0, startingComponent);
+            
+            ref var actualComponent = ref database.GetRef<TestStructComponentOne>(0, 0);
+
+            Assert.Equal(10, startingComponent.Data);
+            Assert.Equal(10, underlyingStore.Get<TestStructComponentOne>(0).Data);
+            Assert.Equal(10, actualComponent.Data);
+            
+            actualComponent.Data = 50;
+            
+            Assert.Equal(10, startingComponent.Data);
+            Assert.Equal(50, actualComponent.Data);
+            Assert.Equal(50, underlyingStore.Get<TestStructComponentOne>(0).Data);
+            
+            actualComponent = new TestStructComponentOne {Data = 25};
+            
+            Assert.Equal(10, startingComponent.Data);
+            Assert.Equal(25, actualComponent.Data);
+            Assert.Equal(25, underlyingStore.Get<TestStructComponentOne>(0).Data);
+        }
+        
+        [Fact]
         public void should_correctly_get_components()
         {
             var expectedComponents = new[]

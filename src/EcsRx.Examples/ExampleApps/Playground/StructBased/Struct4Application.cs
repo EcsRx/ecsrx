@@ -23,7 +23,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             _componentBatch = manualBatch;
         }
 
-        protected override string Description { get; } = "Uses auto batching to group components for quicker reads";
+        protected override string Description { get; } = "Uses auto batching to group components for quicker reads, but larger overhead in sync structs";
 
         protected override void SetupEntity(IEntity entity)
         {
@@ -40,6 +40,10 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
                 batch.Basic.Something += 10;
                 batch.Basic2.IsTrue = true;
                 batch.Basic2.Value += 10;
+                
+                var entity = _collection.GetEntity(batch.EntityId);
+                entity.UpdateComponent(StructComponent1TypeId, batch.Basic);
+                entity.UpdateComponent(StructComponent2TypeId, batch.Basic2);
             }
         }
     }

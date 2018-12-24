@@ -78,6 +78,8 @@ namespace EcsRx.Entities
         
         ref T AddComponent<T>(int componentTypeId) where T : IComponent, new();
         
+        void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, IComponent;
+        
         /// <summary>
         /// Checks to see if the entity contains the given component type
         /// </summary>

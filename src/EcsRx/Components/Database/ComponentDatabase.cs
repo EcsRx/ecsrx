@@ -39,7 +39,7 @@ namespace EcsRx.Components.Database
 
         public void Set<T>(int componentTypeId, int allocationIndex, T component) where T : IComponent
         { ComponentData[componentTypeId].Set(allocationIndex, component); }
-
+        
         public void Remove(int componentTypeId, int allocationIndex)
         { ComponentData[componentTypeId].Release(allocationIndex); }
 

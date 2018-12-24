@@ -22,7 +22,6 @@ namespace EcsRx.Examples
             //application.StartApplication();
            
             // Playground examples
-            /*
             new Class1Application().StartApplication();
             new Struct1Application().StartApplication();
             new Class2Application().StartApplication();
@@ -32,9 +31,9 @@ namespace EcsRx.Examples
             new Class4Application().StartApplication();
             new Struct4Application().StartApplication();
             new Struct5Application().StartApplication();
-            */
             
-            new Struct4Application().StartApplication();
+            
+            //new Struct4Application().StartApplication();
         }
     }
 }

@@ -33,7 +33,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             }
         }
 
-        protected override string Description { get; } = "Same as previous example but with a manual form of batching";
+        protected override string Description { get; } = "Same as previous example but with a manual form of batching, slower for writes";
 
         protected override void SetupEntity(IEntity entity)
         {
@@ -45,11 +45,15 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
         {
             for (var i = Batches.Length - 1; i >= 0; i--)
             {
-                var batch = Batches[i];
+                ref var batch = ref Batches[i];
                 batch.Basic.Position += Vector3.One;
                 batch.Basic.Something += 10;
                 batch.Basic2.IsTrue = true;
                 batch.Basic2.Value += 10;
+
+                var entity = _collection.GetEntity(batch.EntityId);
+                entity.UpdateComponent(StructComponent1TypeId, batch.Basic);
+                entity.UpdateComponent(StructComponent2TypeId, batch.Basic2);
             }
         }
     }

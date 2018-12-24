@@ -22,7 +22,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             _componentBatch = manualBatch;
         }
 
-        protected override string Description { get; } = "Uses auto batching to allow the data to be streamlined in memory";
+        protected override string Description { get; } = "Uses auto batching to allow the components to be clustered better in memory";
 
         protected override void SetupEntity(IEntity entity)
         {

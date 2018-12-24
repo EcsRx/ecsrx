@@ -37,6 +37,7 @@ namespace EcsRx.Collections
         public object Get(int index) => Data.GetValue(index);
         
         public void Set<T>(int index, T value) => AsArray<T>()[index] = value;
+        public void SetRef<T>(int index, ref T value) => AsArray<T>()[index] = value;
         public void Set(int index, object value) => Data.SetValue(value, index);
 
         public void Expand(int amountToAdd)

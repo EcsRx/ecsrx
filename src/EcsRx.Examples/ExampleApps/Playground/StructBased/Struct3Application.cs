@@ -34,11 +34,12 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             for (var i = _collection.Count - 1; i >= 0; i--)
             {
                 var entity = _collection[i];
-                var basicComponent = Components1[entity.ComponentAllocations[StructComponent1TypeId]];
+                
+                ref var basicComponent = ref Components1[entity.ComponentAllocations[StructComponent1TypeId]];
                 basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;
                 
-                var basicComponent2 = Components2[entity.ComponentAllocations[StructComponent2TypeId]];
+                ref var basicComponent2 = ref Components2[entity.ComponentAllocations[StructComponent2TypeId]];
                 basicComponent2.Value += 10;
                 basicComponent2.IsTrue = true;
             }

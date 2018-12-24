@@ -85,6 +85,12 @@ namespace EcsRx.Entities
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         
+        public void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, IComponent
+        {
+            var allocationId = InternalComponentAllocations[componentTypeId];
+            ComponentDatabase.Set(componentTypeId, allocationId, newValue);
+        }
+        
         public void RemoveComponents(params Type[] componentTypes)
         {
             var componentTypeIds = ComponentTypeLookup.GetComponentTypes(componentTypes);

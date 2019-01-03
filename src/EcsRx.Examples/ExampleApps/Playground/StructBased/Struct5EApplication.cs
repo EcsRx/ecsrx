@@ -24,11 +24,11 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             entityIds = _collection.Select(x => x.Id).ToArray();
 
             var cd = (ComponentDatabase) _componentDatabase;
-            var a = (ComponentPool)cd.ComponentData[StructComponent1TypeId];
-            var b = (ComponentPool)cd.ComponentData[StructComponent2TypeId];
+            var a = (ComponentPool<StructComponent>)cd.ComponentData[StructComponent1TypeId];
+            var b = (ComponentPool<StructComponent2>)cd.ComponentData[StructComponent2TypeId];
             
-            basic1 = new ProxyArray2<StructComponent>(_collection.Count, entityIds, (StructComponent[])a.Data);
-            basic2 = new ProxyArray2<StructComponent2>(_collection.Count, entityIds, (StructComponent2[])b.Data);
+            basic1 = new ProxyArray2<StructComponent>(_collection.Count, entityIds, a.Components);
+            basic2 = new ProxyArray2<StructComponent2>(_collection.Count, entityIds, b.Components);
         }
 
         protected override string Description { get; } = "Same as previous, using unsafe pointers for quicker access read/writes";

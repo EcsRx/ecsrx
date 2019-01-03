@@ -18,6 +18,7 @@ namespace EcsRx.Groups.Batches
         protected MethodInfo _getComponentMethod;
         protected FieldInfo[] _fieldsToSet;
         protected PropertyInfo[] _propertiesToSet;
+        protected PropertyInfo _entityIdSetter;
 
         public ManualComponentBatches(IComponentTypeLookup componentTypeLookup, IComponentDatabase componentDatabase)
         {
@@ -58,6 +59,11 @@ namespace EcsRx.Groups.Batches
                     property.SetValue(batchItem, component);
                 }
             }
+            
+            for (var i = 0; i < entities.Count; i++)
+            {
+                _entityIdSetter.SetValue(Batches[i], entities[i].Id, null);
+            }
         }
 
         public void AnalyzeBatch()
@@ -66,8 +72,10 @@ namespace EcsRx.Groups.Batches
             _getComponentMethod = databaseType.GetMethod("GetComponents");
             
             var batchType = typeof(T);
-            _fieldsToSet = batchType.GetFields(BindingFlags.Public|BindingFlags.Instance);
-            _propertiesToSet = batchType.GetProperties(BindingFlags.Public|BindingFlags.Instance).Where(x => x.Name != "EntityId").ToArray();
+            _fieldsToSet = batchType.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            _propertiesToSet = batchType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(x => x.Name != "EntityId").ToArray();
+
+            _entityIdSetter = batchType.GetProperty("EntityId", BindingFlags.Public | BindingFlags.Instance);
         }
        
         public IList GetComponent(Type type, int componentTypeId)

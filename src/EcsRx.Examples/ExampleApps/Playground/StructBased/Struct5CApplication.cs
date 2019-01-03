@@ -39,7 +39,8 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
     public class Struct5CApplication : BasicLoopApplication
     {
         private int[] entityIds;
-        private ComponentPool basic1, basic2;
+        private ComponentPool<StructComponent> basic1;
+        private ComponentPool<StructComponent2> basic2;
         
         protected override void SetupEntities()
         {
@@ -50,8 +51,8 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             entityIds = _collection.Select(x => x.Id).ToArray();
 
             var cd = (ComponentDatabase) _componentDatabase;
-            basic1 = (ComponentPool)cd.ComponentData[StructComponent1TypeId];
-            basic2 = (ComponentPool)cd.ComponentData[StructComponent2TypeId];
+            basic1 = (ComponentPool<StructComponent>)cd.ComponentData[StructComponent1TypeId];
+            basic2 = (ComponentPool<StructComponent2>)cd.ComponentData[StructComponent2TypeId];
         }
 
         protected override string Description { get; } = "Same as previous, using unsafe pointers for quicker access read/writes";
@@ -64,8 +65,8 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 
         protected override void RunProcess()
         {
-            var basicProxy = new ProxyArray2<StructComponent>(_collection.Count, entityIds, (StructComponent[])basic1.Data);
-            var basicProxy2 = new ProxyArray2<StructComponent2>(_collection.Count, entityIds, (StructComponent2[])basic2.Data);
+            var basicProxy = new ProxyArray2<StructComponent>(_collection.Count, entityIds, basic1.Components);
+            var basicProxy2 = new ProxyArray2<StructComponent2>(_collection.Count, entityIds, basic2.Components);
             
             for (var i = entityIds.Length - 1; i >= 0; i--)
             {

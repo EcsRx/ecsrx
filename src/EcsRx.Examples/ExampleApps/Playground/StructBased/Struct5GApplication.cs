@@ -30,16 +30,13 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
         protected void RebuildBatch()
         {
             var cd = (ComponentDatabase) _componentDatabase;
-            var a = (ComponentPool)cd.ComponentData[StructComponent1TypeId];
-            var b = (ComponentPool)cd.ComponentData[StructComponent2TypeId];
-
-            var a1 = (StructComponent[]) a.Data;
-            var b1 = (StructComponent2[]) b.Data;
+            var a = (ComponentPool<StructComponent>)cd.ComponentData[StructComponent1TypeId];
+            var b = (ComponentPool<StructComponent2>)cd.ComponentData[StructComponent2TypeId];
             
             basic3 = new A<StructComponent, StructComponent2>[entityIds.Length];
 
-            fixed (StructComponent* a2 = a1)
-            fixed (StructComponent2* b2 = b1)
+            fixed (StructComponent* a2 = a.Components)
+            fixed (StructComponent2* b2 = b.Components)
             {
                 for (var i = 0; i < _collection.Count; i++)
                 {

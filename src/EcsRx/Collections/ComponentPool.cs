@@ -23,9 +23,8 @@ namespace EcsRx.Collections
         {
             Count = initialSize;
             IndexPool = new IndexPool(expansionSize, initialSize);
-            Components = new T[expansionSize];
+            Components = new T[initialSize];
         }
-        
 
         public int Allocate() => IndexPool.AllocateInstance();
         public void Release(int index) => IndexPool.ReleaseInstance(index);
@@ -35,10 +34,10 @@ namespace EcsRx.Collections
         public void Expand(int amountToAdd)
         {
             var newCount = Components.Length + amountToAdd;
-            var newEntries = new T[newCount];            
-            Components.CopyTo(newEntries, 0);
+            var memory = Components.AsSpan();
+            Components = new T[newCount];
+            memory.CopyTo(Components);
             IndexPool.Expand(newCount-1);
-            Components = newEntries;
             Count = newCount;
         }
 

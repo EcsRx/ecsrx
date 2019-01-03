@@ -12,14 +12,14 @@ namespace EcsRx.Examples
         {
             //var application = new SimpleSystemApplication();
             //var application = new GroupPerformanceApplication();
-            var application = new OptimizedGroupPerformanceApplication();
+            //var application = new OptimizedGroupPerformanceApplication();
             //var application = new OptimizedEntityPerformanceApplication();
             //var application = new EntityPerformanceApplication();
             //var application = new ComputedGroupExampleApplication();
             //var application = new HealthExampleApplication();
             //var application = new HelloWorldExampleApplication();   // Comment out this and uncomment the other one to run the other example
 
-            application.StartApplication();
+            //application.StartApplication();
            
             // Playground examples
             /*
@@ -35,8 +35,8 @@ namespace EcsRx.Examples
             */
             
             
-            //new Struct4Application().StartApplication();
-            //new Struct5FApplication().StartApplication();
+            //new Struct1Application().StartApplication();
+            new Struct5FApplication().StartApplication();
         }
     }
 }

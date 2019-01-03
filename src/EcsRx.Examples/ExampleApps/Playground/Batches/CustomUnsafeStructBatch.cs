@@ -5,7 +5,7 @@ using EcsRx.Groups.Batches;
 namespace EcsRx.Examples.ExampleApps.Playground.Batches
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct CustomStructBatch : IBatchDescriptor
+    public struct CustomUnsafeStructBatch : IBatchDescriptor
     {
         public int EntityId { get; set; }
         public StructComponent Basic;

@@ -49,11 +49,12 @@ namespace EcsRx.Entities
             
             var totalComponentCount = componentTypeLookup.AllComponentTypeIds.Length;
             InternalComponentAllocations = new int[totalComponentCount];
-            EmptyAllAllocations();
             
             _onComponentsAdded = new Subject<int[]>();
             _onComponentsRemoving = new Subject<int[]>();
             _onComponentsRemoved = new Subject<int[]>();
+            
+            EmptyAllAllocations();
         }
 
         public void EmptyAllAllocations()

@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using EcsRx.Components;
 using EcsRx.Pools;
 
 namespace EcsRx.Collections
 {
-    public class ExpandingArrayPool : IExpandingArrayPool
+    public struct ComponentPool : IComponentPool
     {
         public IndexPool IndexPool { get; }
         public Array Data { get; private set; }
@@ -13,7 +14,7 @@ namespace EcsRx.Collections
         
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
 
-        public ExpandingArrayPool(Type type, int expansionSize, int initialSize)
+        public ComponentPool(Type type, int expansionSize, int initialSize)
         {
             Count = initialSize;
             IndexPool = new IndexPool(expansionSize, initialSize);
@@ -26,18 +27,17 @@ namespace EcsRx.Collections
             return (Array)Activator.CreateInstance(dynamicArray, size);
         }
         
-        public IReadOnlyList<T> AsReadOnly<T>() => (IReadOnlyList<T>) Data;
-        public T[] AsArray<T>() => (T[]) Data;
+        public IReadOnlyList<T> AsReadOnly<T>() where T : IComponent => (IReadOnlyList<T>) Data;
+        public T[] AsArray<T>()  where T : IComponent => (T[]) Data;
 
         public int Allocate() => IndexPool.AllocateInstance();
         public void Release(int index) => IndexPool.ReleaseInstance(index);
         
-        public ref T GetRef<T>(int index) => ref AsArray<T>()[index];
-        public T Get<T>(int index) => AsArray<T>()[index];
+        public ref T GetRef<T>(int index) where T : IComponent => ref AsArray<T>()[index];
+        public T Get<T>(int index) where T : IComponent => AsArray<T>()[index];
         public object Get(int index) => Data.GetValue(index);
         
-        public void Set<T>(int index, T value) => AsArray<T>()[index] = value;
-        public void SetRef<T>(int index, ref T value) => AsArray<T>()[index] = value;
+        public void Set<T>(int index, T value) where T : IComponent => AsArray<T>()[index] = value;
         public void Set(int index, object value) => Data.SetValue(value, index);
 
         public void Expand(int amountToAdd)

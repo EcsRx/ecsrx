@@ -70,7 +70,7 @@ namespace EcsRx.Tests.Framework.Database
                 {typeof(TestComponentOne), 0}
             });
 
-            var mockExpandingArray = Substitute.For<IExpandingArrayPool>();
+            var mockExpandingArray = Substitute.For<IComponentPool>();
             
             var database = new ComponentDatabase(mockComponentLookup);
             database.ComponentData.SetValue(mockExpandingArray, 0);
@@ -89,7 +89,7 @@ namespace EcsRx.Tests.Framework.Database
                 {typeof(TestComponentOne), 0}
             });
 
-            var mockExpandingArray = Substitute.For<IExpandingArrayPool>();
+            var mockExpandingArray = Substitute.For<IComponentPool>();
             mockExpandingArray.Get<TestComponentOne>(Arg.Is(0)).Returns(expectedComponent);
                 
             var database = new ComponentDatabase(mockComponentLookup);
@@ -145,7 +145,7 @@ namespace EcsRx.Tests.Framework.Database
                 {typeof(TestComponentOne), 0}
             });
 
-            var mockExpandingArray = Substitute.For<IExpandingArrayPool>();
+            var mockExpandingArray = Substitute.For<IComponentPool>();
             mockExpandingArray.AsArray<TestComponentOne>().Returns(expectedComponents);
                 
             var database = new ComponentDatabase(mockComponentLookup);

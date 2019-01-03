@@ -9,7 +9,7 @@ namespace EcsRx.Components.Database
         public int DefaultExpansionAmount { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
-        public IExpandingArrayPool[] ComponentData { get; private set; }
+        public IComponentPool[] ComponentData { get; private set; }
 
         public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int defaultExpansionSize = 100)
         {
@@ -22,10 +22,10 @@ namespace EcsRx.Components.Database
         {
             var componentTypes = ComponentTypeLookup.GetAllComponentTypes().ToArray();
             var componentCount = componentTypes.Length;
-            ComponentData = new IExpandingArrayPool[componentCount];
+            ComponentData = new IComponentPool[componentCount];
 
             for (var i = 0; i < componentCount; i++)
-            { ComponentData[i] = new ExpandingArrayPool(componentTypes[i].Key, DefaultExpansionAmount, DefaultExpansionAmount); }            
+            { ComponentData[i] = new ComponentPool(componentTypes[i].Key, DefaultExpansionAmount, DefaultExpansionAmount); }            
         }
         
         public T Get<T>(int componentTypeId, int allocationIndex) where T : IComponent

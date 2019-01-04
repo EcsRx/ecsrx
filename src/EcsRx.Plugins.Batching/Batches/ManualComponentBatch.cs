@@ -7,7 +7,7 @@ using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 
-namespace EcsRx.Groups.Batches
+namespace EcsRx.Plugins.Batching.Batches
 {
     public class ManualComponentBatches<T> : IManualComponentBatches<T> where T : IBatchDescriptor
     {

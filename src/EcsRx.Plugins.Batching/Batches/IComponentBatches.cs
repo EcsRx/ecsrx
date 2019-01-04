@@ -1,4 +1,4 @@
-namespace EcsRx.Groups.Batches
+namespace EcsRx.Plugins.Batching.Batches
 {
     public interface IComponentBatches
     {}

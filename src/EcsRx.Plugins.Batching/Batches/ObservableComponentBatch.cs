@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
@@ -10,7 +7,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Extensions;
 
-namespace EcsRx.Groups.Batches
+namespace EcsRx.Plugins.Batching.Batches
 {
     public class ObservableComponentBatches<T> : ManualComponentBatches<T>, IObservableComponentBatches<T> where T : IBatchDescriptor
     {

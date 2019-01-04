@@ -14,6 +14,8 @@
       <Project>{AD7EB200-BF3C-433B-96D2-D114DBE5B1E2}</Project>
       <Name>EcsRx.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EcsRx.Plugins.Batching\EcsRx.Plugins.Batching.csproj" />
+    <ProjectReference Include="..\EcsRx.Plugins.Views\EcsRx.Plugins.Views.csproj" />
     <ProjectReference Include="..\EcsRx.ReactiveData\EcsRx.ReactiveData.csproj" />
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
   </ItemGroup>

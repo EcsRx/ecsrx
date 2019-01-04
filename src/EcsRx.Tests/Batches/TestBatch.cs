@@ -1,4 +1,4 @@
-using EcsRx.Groups.Batches;
+using EcsRx.Plugins.Batching.Batches;
 using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.Batches

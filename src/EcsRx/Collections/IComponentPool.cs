@@ -8,7 +8,6 @@ namespace EcsRx.Collections
         where T : IComponent
     {
         T[] Components { get; }
-        IReadOnlyList<T> ReadOnlyComponents { get; }
     }
     
     public interface IComponentPool : IEnumerable

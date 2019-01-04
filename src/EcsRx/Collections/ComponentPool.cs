@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using EcsRx.Components;
 using EcsRx.Pools;
 
@@ -11,7 +9,6 @@ namespace EcsRx.Collections
     {
         public IndexPool IndexPool { get; }
         public T[] Components { get; private set; }
-        public IReadOnlyList<T> ReadOnlyComponents => Components;
         
         public int Count { get; private set; }
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
@@ -34,10 +31,10 @@ namespace EcsRx.Collections
         public void Expand(int amountToAdd)
         {
             var newCount = Components.Length + amountToAdd;
-            var memory = Components.AsSpan();
-            Components = new T[newCount];
-            memory.CopyTo(Components);
+            var newEntries = new T[newCount];            
+            Components.CopyTo(newEntries, 0);
             IndexPool.Expand(newCount-1);
+            Components = newEntries;
             Count = newCount;
         }
 

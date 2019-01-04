@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
 using EcsRx.Attributes;
+using EcsRx.Systems;
 
-namespace EcsRx.Systems.Extensions
+namespace EcsRx.Plugins.ReactiveSystems.Extensions
 {
     public static class ISystemExtensions
     {

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
-using EcsRx.Groups.Batches;
+using EcsRx.Plugins.Batching.Batches;
 
-namespace EcsRx.Lookups
+namespace EcsRx.Plugins.Batching.Lookups
 {
     public class BatchLookup : KeyedCollection<Type, IComponentBatches>
     {

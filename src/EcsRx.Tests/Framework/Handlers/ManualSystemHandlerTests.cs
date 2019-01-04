@@ -2,6 +2,7 @@ using EcsRx.Collections;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Plugins.ReactiveSystems;
 using EcsRx.Systems;
 using NSubstitute;
 using Xunit;

@@ -1,6 +1,7 @@
 ﻿using EcsRx.Entities;
+using EcsRx.Systems;
 
-namespace EcsRx.Systems
+namespace EcsRx.Plugins.ReactiveSystems
 {
     /// <summary>
     /// Teardown systems are run ONCE when an entity is ABOUT TO LEAVE a given group,

@@ -13,7 +13,6 @@ using EcsRx.Infrastructure.Events;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.MicroRx.Events;
 using EcsRx.Pools;
-using EcsRx.Systems.Handlers;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Modules
 {
@@ -28,13 +27,7 @@ namespace EcsRx.Examples.ExampleApps.Performance.Modules
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
             container.Bind<IEntityCollectionManager, EntityCollectionManager>();
-            container.Bind<IConventionalSystemHandler, ReactToEntitySystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToGroupSystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToDataSystemHandler>();
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
-            container.Bind<IConventionalSystemHandler, SetupSystemHandler>();
-            container.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
-            container.Bind<IBatchManager, BatchManager>();
             container.Bind<ISystemExecutor, SystemExecutor>();
             
             var componentNamespace = typeof(Component1).Namespace;

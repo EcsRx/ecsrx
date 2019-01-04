@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
-using EcsRx.Groups.Batches;
 using EcsRx.Groups.Observable;
-using EcsRx.Lookups;
+using EcsRx.Plugins.Batching.Batches;
+using EcsRx.Plugins.Batching.Lookups;
 
-namespace EcsRx.Collections
+namespace EcsRx.Plugins.Batching.Collections
 {
     public class BatchManager : IBatchManager
     {

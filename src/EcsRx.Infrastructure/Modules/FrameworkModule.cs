@@ -1,5 +1,4 @@
 ﻿using EcsRx.Collections;
-using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
@@ -10,10 +9,8 @@ using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Events;
 using EcsRx.Infrastructure.Extensions;
-using EcsRx.MicroRx;
 using EcsRx.MicroRx.Events;
 using EcsRx.Pools;
-using EcsRx.Systems.Handlers;
 using EcsRx.Threading;
 
 namespace EcsRx.Infrastructure.Modules
@@ -30,13 +27,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
             container.Bind<IEntityCollectionManager, EntityCollectionManager>();
-            container.Bind<IBatchManager, BatchManager>();
-            container.Bind<IConventionalSystemHandler, ReactToEntitySystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToGroupSystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToDataSystemHandler>();
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
-            container.Bind<IConventionalSystemHandler, SetupSystemHandler>();
-            container.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
             
             var componentTypeAssigner = new DefaultComponentTypeAssigner();

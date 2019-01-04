@@ -3,15 +3,17 @@
     <PropertyGroup>
         <Version>0.0.0</Version>
         <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
-        <Title>EcsRx.Plugins.ReactiveSystems</Title>
+        <Title>EcsRx.Plugins.Views</Title>
         <Authors>Grofit (LP)</Authors>
         <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/ecsrx/ecsrx</PackageProjectUrl>
-        <Description>A set of convention based systems to speed up the setup of projects using EcsRx</Description>
-        <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
+        <Description>A set of view based conventions to assist with separating view from logic/data</Description>
+        <PackageTags>ecs rx reactive patterns ioc game-development view-separation xna monogame unity</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj" />
+      <ProjectReference Include="..\EcsRx.Plugins.ReactiveSystems\EcsRx.Plugins.ReactiveSystems.csproj" />
       <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
     </ItemGroup>
 

@@ -5,6 +5,7 @@ using EcsRx.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Plugins.ReactiveSystems;
 using EcsRx.Systems;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems

@@ -1,6 +1,7 @@
 ﻿using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using EcsRx.Plugins.ReactiveSystems;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
 

@@ -2,10 +2,10 @@
 using EcsRx.Events;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;
+using EcsRx.Systems;
 
-namespace EcsRx.Systems.Custom
+namespace EcsRx.Plugins.ReactiveSystems.Custom
 {
     /// <summary>
     /// Event Reaction Systems are specifically made to act as event handlers,

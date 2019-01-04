@@ -1,8 +1,9 @@
 using System;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
+using EcsRx.Systems;
 
-namespace EcsRx.Systems
+namespace EcsRx.Plugins.ReactiveSystems
 {
     /// <summary>
     /// React To LookupGroup systems are the more common ECS style system,

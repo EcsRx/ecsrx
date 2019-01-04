@@ -12,6 +12,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj" />
       <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
     </ItemGroup>
 

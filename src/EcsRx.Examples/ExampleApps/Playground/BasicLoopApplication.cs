@@ -7,6 +7,7 @@ using EcsRx.Entities;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Playground.Components;
 using EcsRx.Infrastructure.Extensions;
+using EcsRx.Plugins.Batching.Collections;
 
 namespace EcsRx.Examples.ExampleApps.Playground
 {

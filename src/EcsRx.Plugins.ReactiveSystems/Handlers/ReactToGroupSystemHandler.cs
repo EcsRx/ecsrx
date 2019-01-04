@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using EcsRx.Attributes;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.MicroRx;
 using EcsRx.MicroRx.Extensions;
-using EcsRx.Systems.Extensions;
+using EcsRx.Plugins.ReactiveSystems.Extensions;
+using EcsRx.Systems;
 using EcsRx.Threading;
 
-namespace EcsRx.Systems.Handlers
+namespace EcsRx.Plugins.ReactiveSystems.Handlers
 {
     [Priority(6)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler

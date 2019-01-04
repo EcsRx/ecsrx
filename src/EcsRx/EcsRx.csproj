@@ -22,7 +22,4 @@
   <ItemGroup>
     <ProjectReference Include="..\EcsRx.MicroRx\EcsRx.MicroRx.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Memory" Version="4.5.1" />
-  </ItemGroup>
 </Project>

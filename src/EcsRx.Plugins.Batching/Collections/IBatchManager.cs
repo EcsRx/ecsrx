@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using EcsRx.Groups.Batches;
 using EcsRx.Groups.Observable;
+using EcsRx.Plugins.Batching.Batches;
 
-namespace EcsRx.Collections
+namespace EcsRx.Plugins.Batching.Collections
 {
     public interface IBatchManager
     {

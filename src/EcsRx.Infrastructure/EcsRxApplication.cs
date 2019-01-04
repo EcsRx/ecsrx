@@ -8,8 +8,6 @@ using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.Infrastructure.Modules;
 using EcsRx.Infrastructure.Plugins;
-using EcsRx.Systems;
-using EcsRx.Views.Systems;
 
 namespace EcsRx.Infrastructure
 {

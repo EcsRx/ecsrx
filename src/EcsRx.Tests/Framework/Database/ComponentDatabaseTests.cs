@@ -46,20 +46,6 @@ namespace EcsRx.Tests.Framework.Database
             Assert.Equal(0, allocation);
         }
         
-        [Fact]
-        public void should_correctly_set_instance()
-        {
-            var expectedComponent = new TestComponentOne();
-            var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
-            mockComponentLookup.GetAllComponentTypes().Returns(new Dictionary<Type, int>
-            {
-                {typeof(TestComponentOne), 0}
-            });
-            var database = new ComponentDatabase(mockComponentLookup);
-            database.Set(0, 0, expectedComponent);
-            
-            Assert.Equal(database.ComponentData[0].Get<TestComponentOne>(0), expectedComponent);
-        }
         
         [Fact]
         public void should_correctly_remove_instance()
@@ -70,56 +56,13 @@ namespace EcsRx.Tests.Framework.Database
                 {typeof(TestComponentOne), 0}
             });
 
-            var mockExpandingArray = Substitute.For<IExpandingArrayPool>();
+            var mockExpandingArray = Substitute.For<IComponentPool>();
             
             var database = new ComponentDatabase(mockComponentLookup);
             database.ComponentData.SetValue(mockExpandingArray, 0);
             database.Remove(0, 0);
             
             mockExpandingArray.Received(1).Release(0);
-        }
-        
-        [Fact]
-        public void should_correctly_get_instance()
-        {
-            var expectedComponent = new TestComponentOne();
-            var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
-            mockComponentLookup.GetAllComponentTypes().Returns(new Dictionary<Type, int>
-            {
-                {typeof(TestComponentOne), 0}
-            });
-
-            var mockExpandingArray = Substitute.For<IExpandingArrayPool>();
-            mockExpandingArray.Get<TestComponentOne>(Arg.Is(0)).Returns(expectedComponent);
-                
-            var database = new ComponentDatabase(mockComponentLookup);
-            database.ComponentData.SetValue(mockExpandingArray, 0);
-            var actualComponent = database.Get<TestComponentOne>(0, 0);
-            
-            Assert.Equal(expectedComponent, actualComponent);
-        }
-        
-        [Fact]
-        public void should_correctly_get_components()
-        {
-            var expectedComponents = new[]
-            {
-                new TestComponentOne(), new TestComponentOne()
-            };
-            var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
-            mockComponentLookup.GetAllComponentTypes().Returns(new Dictionary<Type, int>
-            {
-                {typeof(TestComponentOne), 0}
-            });
-
-            var mockExpandingArray = Substitute.For<IExpandingArrayPool>();
-            mockExpandingArray.AsArray<TestComponentOne>().Returns(expectedComponents);
-                
-            var database = new ComponentDatabase(mockComponentLookup);
-            database.ComponentData.SetValue(mockExpandingArray, 0);
-            var actualComponents = database.GetComponents<TestComponentOne>(0);
-            
-            Assert.Equal(expectedComponents, actualComponents);
         }
     }
 }

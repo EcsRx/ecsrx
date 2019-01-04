@@ -74,7 +74,7 @@ namespace EcsRx.Extensions
         /// <typeparam name="T">Type of component to check for</typeparam>
         /// <param name="entity">entity to use</param>
         /// <returns>true if the component was found, false if it was not</returns>
-        public static bool HasComponent<T>(this IEntity entity) where T : class, IComponent
+        public static bool HasComponent<T>(this IEntity entity) where T : IComponent
         { return entity.HasComponent(typeof(T)); }
         
         /// <summary>

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EcsRx.Pools
 {   
-    public class IndexPool : IPool<int>
+    public struct IndexPool : IPool<int>
     {
         public int IncrementSize => _increaseSize;
         

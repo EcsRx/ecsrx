@@ -16,13 +16,7 @@ using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Collections
-{
-    public static class PoolLookups
-    {
-        public const int NoPoolDefined = -1;
-        public const int DefaultPoolId = 0;
-    }
-    
+{   
     public class EntityCollectionManager : IEntityCollectionManager, IDisposable
     {
         private readonly ObservableGroupLookup _observableGroups;

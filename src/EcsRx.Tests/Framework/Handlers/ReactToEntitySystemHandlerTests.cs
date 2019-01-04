@@ -5,8 +5,9 @@ using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Subjects;
+using EcsRx.Plugins.ReactiveSystems;
+using EcsRx.Plugins.ReactiveSystems.Handlers;
 using EcsRx.Systems;
-using EcsRx.Systems.Handlers;
 using NSubstitute;
 using Xunit;
 

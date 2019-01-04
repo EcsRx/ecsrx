@@ -10,7 +10,6 @@
     <PackageTags>ecs rx reactive patterns ioc game-development view-separation xna monogame unity</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EcsRx.Views\EcsRx.Views.csproj" />
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
   </ItemGroup>
 </Project>

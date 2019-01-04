@@ -1,6 +1,6 @@
 ﻿using EcsRx.Events;
 using EcsRx.Examples.ExampleApps.HealthExample.Events;
-using EcsRx.Systems.Custom;
+using EcsRx.Plugins.ReactiveSystems.Custom;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample.Systems
 {

@@ -34,9 +34,8 @@ namespace EcsRx.Examples
             new Struct5Application().StartApplication();
             */
             
-            
             //new Struct1Application().StartApplication();
-            new Struct5FApplication().StartApplication();
+            new Struct4Application().StartApplication();
         }
     }
 }

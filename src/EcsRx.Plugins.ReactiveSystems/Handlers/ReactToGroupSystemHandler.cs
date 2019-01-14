@@ -31,13 +31,6 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
         public bool CanHandleSystem(ISystem system)
         { return system is IReactToGroupSystem; }
 
-        public bool ShouldMutliThread(ISystem system)
-        {
-            return system.GetType()
-                       .GetCustomAttributes(typeof(MultiThreadAttribute), true)
-                       .FirstOrDefault() != null;
-        }
-
         public void SetupSystem(ISystem system)
         {
             var affinities = system.GetGroupAffinities();
@@ -45,7 +38,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             var hasEntityPredicate = system.Group is IHasPredicate;
             var castSystem = (IReactToGroupSystem)system;
             var reactObservable = castSystem.ReactToGroup(observableGroup);
-            var runParallel = ShouldMutliThread(system);
+            var runParallel = system.ShouldMutliThread();
                 
             if (!hasEntityPredicate)
             {

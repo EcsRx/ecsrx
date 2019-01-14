@@ -11,10 +11,9 @@ using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Events;
 using EcsRx.MicroRx.Events;
-using EcsRx.Plugins.Batching.Collections;
+using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Plugins.ReactiveSystems.Handlers;
 using EcsRx.Pools;
-using EcsRx.Tests.Batches;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using EcsRx.Threading;
@@ -35,7 +34,7 @@ namespace EcsRx.Tests.Framework
             _logger = logger;
         }
 
-        private (IEntityCollectionManager collectionManager, IBatchManager batchManager) CreateFramework()
+        private (IEntityCollectionManager, IComponentDatabase, IComponentTypeLookup) CreateFramework()
         {
             var componentLookups = new Dictionary<Type, int>
             {
@@ -43,7 +42,8 @@ namespace EcsRx.Tests.Framework
                 {typeof(TestComponentTwo), 1},
                 {typeof(TestComponentThree), 2},
                 {typeof(ViewComponent), 3},
-                {typeof(TestStructComponentOne), 4}
+                {typeof(TestStructComponentOne), 4},
+                {typeof(TestStructComponentTwo), 5}
             };
             var componentLookupType = new ComponentTypeLookup(componentLookups);
             var componentDatabase = new ComponentDatabase(componentLookupType);
@@ -51,9 +51,8 @@ namespace EcsRx.Tests.Framework
             var collectionFactory = new DefaultEntityCollectionFactory(entityFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
             var collectionManager = new EntityCollectionManager(collectionFactory, observableGroupFactory, componentLookupType);
-            var batchManager = new BatchManager(componentLookupType, componentDatabase);
 
-            return (collectionManager, batchManager);
+            return (collectionManager, componentDatabase, componentLookupType);
         }
         
         private SystemExecutor CreateExecutor(IEntityCollectionManager entityCollectionManager)
@@ -82,7 +81,7 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_execute_setup_for_matching_entities()
         {
-            var (collectionManager, batchManager) = CreateFramework();
+            var (collectionManager, _, _) = CreateFramework();
             var executor = CreateExecutor(collectionManager);
             executor.AddSystem(new TestSetupSystem());
 
@@ -100,7 +99,7 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_not_freak_out_when_removing_components_during_removing_event()
         {
-            var (collectionManager, batchManager) = CreateFramework();
+            var (collectionManager, _,_) = CreateFramework();
             var collection = collectionManager.GetCollection();
             var entityOne = collection.CreateEntity();
 
@@ -133,7 +132,7 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_trigger_both_setup_and_teardown_for_view_resolver()
         {
-            var (collectionManager, batchManager) = CreateFramework();
+            var (collectionManager, _,_) = CreateFramework();
             var executor = CreateExecutor(collectionManager);
             var viewResolverSystem = new TestViewResolverSystem(new EventSystem(new MessageBroker()),
                 new Group(typeof(TestComponentOne), typeof(ViewComponent)));
@@ -157,7 +156,7 @@ namespace EcsRx.Tests.Framework
         [Fact]
         public void should_listen_to_multiple_collections_for_updates()
         {
-            var (collectionManager, batchManager) = CreateFramework();
+            var (collectionManager, _,_) = CreateFramework();
             
             var group = new Group(typeof(TestComponentOne));
             var collection1 = collectionManager.CreateCollection(1);
@@ -186,59 +185,86 @@ namespace EcsRx.Tests.Framework
         }
         
         [Fact]
-        public void should_keep_state_with_batches()
+        public unsafe void should_keep_state_with_batches()
         {            
-            var (collectionManager, batchManager) = CreateFramework();
+            var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
             var collection1 = collectionManager.CreateCollection(1);
             var entity1 = collection1.CreateEntity();
 
-            var startingString = "moo";
-            var startingValue = 2;
-            var intermediateString = "woop";
-            var intermediateValue = 5;
-            var newString = "Hello";
-            var newValue = 10;
+            var startingInt = 2;
+            var finalInt = 10;
+            var startingFloat = 5.0f;
+            var finalFloat = 20.0f;
+
+            ref var structComponent1 = ref entity1.AddComponent<TestStructComponentOne>(4);
+            var component1Allocation = entity1.ComponentAllocations[4];
+            structComponent1.Data = startingInt;
             
-            var refComponent = entity1.AddComponent<TestComponentOne>();
-            refComponent.Data = startingString;
-            
-            ref var structComponent = ref entity1.AddComponent<TestStructComponentOne>(4);
-            structComponent.Data = startingValue;
+            ref var structComponent2 = ref entity1.AddComponent<TestStructComponentTwo>(5);
+            var component2Allocation = entity1.ComponentAllocations[5];
+            structComponent2.Data = startingFloat;
 
             var entities = new[] {entity1};
-            var batch = batchManager.GetBatch<TestBatch>();
-            batch.InitializeBatches(entities);
+            var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
+            var batch = batchBuilder.Build(entities);
             
-            ref var initialBatchData = ref batch.Batches[0];
-            Assert.Equal(startingString, initialBatchData.TestComponentOne.Data);
-            Assert.Equal(startingValue, initialBatchData.StructComponentOne.Data);
+            ref var initialBatchData = ref batch[0];
+            ref var component1 = ref *initialBatchData.Component1;
+            ref var component2 = ref *initialBatchData.Component2;
+            Assert.Equal(startingInt, component1.Data);
+            Assert.Equal(startingFloat, component2.Data);
             
-            refComponent.Data = intermediateString;
-            structComponent.Data = intermediateValue;
+            component1.Data = finalInt;
+            component2.Data = finalFloat;
             
-            Assert.Equal(intermediateString, initialBatchData.TestComponentOne.Data);
-            Assert.NotEqual(intermediateValue, initialBatchData.StructComponentOne.Data);
-            
-            batch.RefreshBatches(entities);
-            
-            Assert.Equal(intermediateString, initialBatchData.TestComponentOne.Data);
-            Assert.Equal(intermediateValue, initialBatchData.StructComponentOne.Data);
+            Assert.Equal(finalInt, (*batch[0].Component1).Data);
+            Assert.Equal(finalInt, structComponent1.Data);
+            Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
+            Assert.Equal(finalFloat, (*batch[0].Component2).Data);
+            Assert.Equal(finalFloat, structComponent2.Data);
+            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);        
+        }
+        
+        [Fact]
+        public unsafe void should_retain_pointer_through_new_struct()
+        {            
+            var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
+            var collection1 = collectionManager.CreateCollection(1);
+            var entity1 = collection1.CreateEntity();
 
-            for (var index = 0; index < batch.Batches.Length; index++)
-            {
-                ref var batchItem = ref batch.Batches[index];
-                ref var valueComponent = ref batchItem.StructComponentOne;
-                
-                batchItem.TestComponentOne.Data = newString;
-                valueComponent.Data = newValue;
-            }
+            var startingInt = 2;
+            var finalInt = 10;
+            var startingFloat = 5.0f;
+            var finalFloat = 20.0f;
 
-            ref var batchData = ref batch.Batches[0];
-            Assert.Equal(newString, batchData.TestComponentOne.Data);
-            Assert.Equal(newValue, batchData.StructComponentOne.Data);
-            Assert.Equal(newString, refComponent.Data);
-            Assert.NotEqual(newValue, structComponent.Data);
+            ref var structComponent1 = ref entity1.AddComponent<TestStructComponentOne>(4);
+            var component1Allocation = entity1.ComponentAllocations[4];
+            structComponent1.Data = startingInt;
             
+            ref var structComponent2 = ref entity1.AddComponent<TestStructComponentTwo>(5);
+            var component2Allocation = entity1.ComponentAllocations[5];
+            structComponent2.Data = startingFloat;
+
+            var entities = new[] {entity1};
+            var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
+            var batch = batchBuilder.Build(entities);
+            
+            ref var initialBatchData = ref batch[0];
+            ref var component1 = ref *initialBatchData.Component1;
+            ref var component2 = ref *initialBatchData.Component2;
+
+            Assert.Equal(startingInt, component1.Data);
+            Assert.Equal(startingFloat, component2.Data);
+            
+            component1 = new TestStructComponentOne {Data = finalInt};
+            component2 = new TestStructComponentTwo {Data = finalFloat};
+
+            Assert.Equal(finalInt, (*batch[0].Component1).Data);
+            Assert.Equal(finalInt, structComponent1.Data);
+            Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
+            Assert.Equal(finalFloat, (*batch[0].Component2).Data);
+            Assert.Equal(finalFloat, structComponent2.Data);
+            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);        
         }
     }
 }

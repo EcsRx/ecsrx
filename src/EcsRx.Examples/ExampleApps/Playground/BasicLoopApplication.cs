@@ -7,7 +7,7 @@ using EcsRx.Entities;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Playground.Components;
 using EcsRx.Infrastructure.Extensions;
-using EcsRx.Plugins.Batching.Collections;
+using EcsRx.Plugins.Batching.Factories;
 
 namespace EcsRx.Examples.ExampleApps.Playground
 {
@@ -18,7 +18,7 @@ namespace EcsRx.Examples.ExampleApps.Playground
         protected IEntityCollection _collection;
         protected IComponentTypeLookup _componentTypeLookup;
         protected IComponentDatabase _componentDatabase;
-        protected IBatchManager _batchManager;
+        protected IBatchBuilderFactory _batchBuilderFactory;
 
         protected int ClassComponent1TypeId;
         protected int ClassComponent2TypeId;
@@ -29,7 +29,7 @@ namespace EcsRx.Examples.ExampleApps.Playground
         {
             _componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
             _componentDatabase = Container.Resolve<IComponentDatabase>();
-            _batchManager = Container.Resolve<IBatchManager>();
+            _batchBuilderFactory = Container.Resolve<IBatchBuilderFactory>();
             _collection = EntityCollectionManager.GetCollection();
 
             ClassComponent1TypeId = _componentTypeLookup.GetComponentType(typeof(ClassComponent));

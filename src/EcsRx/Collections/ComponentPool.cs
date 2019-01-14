@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using EcsRx.Components;
 using EcsRx.Pools;
@@ -12,7 +13,7 @@ namespace EcsRx.Collections
         
         public int Count { get; private set; }
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
-
+        
         public ComponentPool(int expansionSize) : this(expansionSize, expansionSize)
         {}
         

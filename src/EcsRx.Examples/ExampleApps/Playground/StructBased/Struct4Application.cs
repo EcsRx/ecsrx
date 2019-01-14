@@ -2,13 +2,14 @@ using System.Numerics;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Playground.Batches;
 using EcsRx.Examples.ExampleApps.Playground.Components;
-using EcsRx.Plugins.Batching.Batches;
+using EcsRx.Plugins.Batching.Builders;
+using EcsRx.Plugins.Batching.Descriptors;
 
 namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 {
     public class Struct4Application : BasicLoopApplication
     {
-        private IComponentBatches<CustomStructBatch> _componentBatch;
+        private Batch<StructComponent, StructComponent2>[] _componentBatch;
         
         protected override void SetupEntities()
         {
@@ -17,9 +18,8 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             
             base.SetupEntities();
             
-            var manualBatch = _batchManager.GetBatch<CustomStructBatch>();
-            manualBatch.InitializeBatches(_collection);
-            _componentBatch = manualBatch;
+            var batchBuilder = _batchBuilderFactory.Create<StructComponent, StructComponent2>();
+            _componentBatch = batchBuilder.Build(_collection);
         }
 
         protected override string Description { get; } = "Uses auto batching to group components for quicker reads, but larger overhead in sync structs";
@@ -32,18 +32,17 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 
         protected override void RunProcess()
         {
-            for (var i = _componentBatch.Batches.Length - 1; i >= 0; i--)
-            {
-                ref var batch = ref _componentBatch.Batches[i];
-                batch.Basic.Position += Vector3.One;
-                batch.Basic.Something += 10;
-                batch.Basic2.IsTrue = true;
-                batch.Basic2.Value += 10;
-                
-                var entity = _collection.GetEntity(batch.EntityId);
-                entity.UpdateComponent(StructComponent1TypeId, batch.Basic);
-                entity.UpdateComponent(StructComponent2TypeId, batch.Basic2);
-            }
+            for (var i = _componentBatch.Length - 1; i >= 0; i--)
+                unsafe
+                {
+                    ref var batch = ref _componentBatch[i];
+                    ref var basic = ref *batch.Component1;
+                    ref var basic2 = ref *batch.Component2;
+                    basic.Position += Vector3.One;
+                    basic.Something += 10;
+                    basic2.IsTrue = true;
+                    basic2.Value += 10;
+                }
         }
     }
 }

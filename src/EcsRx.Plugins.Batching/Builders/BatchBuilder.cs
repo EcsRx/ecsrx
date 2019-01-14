@@ -16,7 +16,6 @@ namespace EcsRx.Plugins.Batching.Builders
         public BatchBuilder(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ComponentDatabase = componentDatabase;
-
             _componentTypeId1 = componentTypeLookup.GetComponentType(typeof(T1));
         }
 

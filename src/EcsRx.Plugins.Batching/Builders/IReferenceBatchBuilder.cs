@@ -5,20 +5,22 @@ using EcsRx.Plugins.Batching.Descriptors;
 
 namespace EcsRx.Plugins.Batching.Builders
 {
-    public interface IReferenceBatchBuilder<T1>
+    public interface IReferenceBatchBuilder : IBatchBuilder {}
+    
+    public interface IReferenceBatchBuilder<T1> : IReferenceBatchBuilder
         where T1 : class, IComponent
     {
         ReferenceBatch<T1>[] Build(IReadOnlyList<IEntity> entities);
     }
     
-    public interface IReferenceBatchBuilder<T1, T2>
+    public interface IReferenceBatchBuilder<T1, T2> : IReferenceBatchBuilder
         where T1 : class, IComponent
         where T2 : class, IComponent
     {
         ReferenceBatch<T1, T2>[] Build(IReadOnlyList<IEntity> entities);
     }
     
-    public interface IReferenceBatchBuilder<T1, T2, T3>
+    public interface IReferenceBatchBuilder<T1, T2, T3> : IReferenceBatchBuilder
         where T1 : class, IComponent
         where T2 : class, IComponent
         where T3 : class, IComponent
@@ -26,7 +28,7 @@ namespace EcsRx.Plugins.Batching.Builders
         ReferenceBatch<T1, T2, T3>[] Build(IReadOnlyList<IEntity> entities);
     }
     
-    public interface IReferenceBatchBuilder<T1, T2, T3, T4>
+    public interface IReferenceBatchBuilder<T1, T2, T3, T4> : IReferenceBatchBuilder
         where T1 : class, IComponent
         where T2 : class, IComponent
         where T3 : class, IComponent
@@ -35,7 +37,7 @@ namespace EcsRx.Plugins.Batching.Builders
         ReferenceBatch<T1, T2, T3, T4>[] Build(IReadOnlyList<IEntity> entities);
     }
     
-    public interface IReferenceBatchBuilder<T1, T2, T3, T4, T5>
+    public interface IReferenceBatchBuilder<T1, T2, T3, T4, T5> : IReferenceBatchBuilder
         where T1 : class, IComponent
         where T2 : class, IComponent
         where T3 : class, IComponent
@@ -45,7 +47,7 @@ namespace EcsRx.Plugins.Batching.Builders
         ReferenceBatch<T1, T2, T3, T4, T5>[] Build(IReadOnlyList<IEntity> entities);
     }
     
-    public interface IReferenceBatchBuilder<T1, T2, T3, T4, T5, T6>
+    public interface IReferenceBatchBuilder<T1, T2, T3, T4, T5, T6> : IReferenceBatchBuilder
         where T1 : class, IComponent
         where T2 : class, IComponent
         where T3 : class, IComponent

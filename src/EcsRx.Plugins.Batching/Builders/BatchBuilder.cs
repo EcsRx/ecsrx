@@ -7,7 +7,8 @@ using EcsRx.Plugins.Batching.Descriptors;
 
 namespace EcsRx.Plugins.Batching.Builders
 {
-    public unsafe class BatchBuilder<T1> : IBatchBuilder<T1> where T1 : unmanaged, IComponent
+    public unsafe class BatchBuilder<T1> : IBatchBuilder<T1> 
+        where T1 : unmanaged, IComponent
     {
         public IComponentDatabase ComponentDatabase { get; }
         

@@ -1,4 +1,6 @@
-﻿namespace EcsRx.Components.Database
+﻿using EcsRx.Collections;
+
+namespace EcsRx.Components.Database
 {
     public interface IComponentDatabase
     {
@@ -10,5 +12,6 @@
         int Allocate(int componentTypeId);
 
         void PreAllocateComponents(int componentTypeId, int allocationSize);
+        IComponentPool<T> GetPoolFor<T>(int componentTypeId) where T : IComponent;
     }
 }

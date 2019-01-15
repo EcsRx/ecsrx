@@ -1,46 +1,12 @@
-using System;
 using EcsRx.Collections;
 using EcsRx.Components;
-using EcsRx.Components.Database;
-using EcsRx.Extensions;
-using EcsRx.Groups.Observable;
-using EcsRx.MicroRx.Disposables;
-using EcsRx.MicroRx.Extensions;
-using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Plugins.Batching.Descriptors;
 
 namespace EcsRx.Plugins.Batching.Accessors
 {
-    public abstract class BatchAccessor : IBatchAccessor
-    {
-        public IObservableGroup ObservableGroup { get; }
-        public IComponentPool ComponentPool { get; }
-        public IBatchBuilder BatchBuilder { get; }
-
-        protected IDisposable Subscriptions;
-        
-        protected BatchAccessor(IObservableGroup observableGroup, IComponentPool componentPool, IBatchBuilder batchBuilder)
-        {
-            ObservableGroup = observableGroup;
-            ComponentPool = componentPool;
-            BatchBuilder = batchBuilder;
-        }
-
-        protected void SetupAccessor()
-        {
-            var subscriptions = new CompositeDisposable();
-            ObservableGroup.OnEntityAdded.Subscribe(_ => Refresh()).AddTo(subscriptions);
-            ObservableGroup.OnEntityRemoved.Subscribe(_ => Refresh()).AddTo(subscriptions);
-        }
-
-        protected void Refresh()
-        {
-            
-        }
-    }
-    
     public interface IBatchAccessor
     {
+        void Refresh();
     }
 
     public interface IBatchAccessor<T1> : IBatchAccessor

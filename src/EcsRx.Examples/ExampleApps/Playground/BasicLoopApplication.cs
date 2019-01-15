@@ -42,8 +42,7 @@ namespace EcsRx.Examples.ExampleApps.Playground
             var timer = Stopwatch.StartNew();
             SetupEntities();
             timer.Stop();
-            var totalSetupTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
-            Console.WriteLine($"{name} - Setting up {EntityCount} entities in {totalSetupTime}ms");
+            Console.WriteLine($"{name} - Setting up {EntityCount} entities in {timer.ElapsedMilliseconds}ms");
             
             timer.Reset();
             timer.Start();
@@ -51,7 +50,7 @@ namespace EcsRx.Examples.ExampleApps.Playground
             { RunProcess(); }
             timer.Stop();
             var totalProcessTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
-            Console.WriteLine($"{name} - Simulating {SimulatedUpdates} updates - Processing {EntityCount} entities in {totalProcessTime:G}ms");
+            Console.WriteLine($"{name} - Simulating {SimulatedUpdates} updates - Processing {EntityCount} entities in {totalProcessTime.TotalMilliseconds}ms");
             Console.WriteLine();
         }
 

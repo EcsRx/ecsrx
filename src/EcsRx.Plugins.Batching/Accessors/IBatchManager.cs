@@ -5,12 +5,6 @@ namespace EcsRx.Plugins.Batching.Accessors
 {
     public interface IBatchManager
     {
-        IBatchAccessor<T1> GetAccessorFor<T1>(IObservableGroup observableGroup)
-            where T1 : unmanaged, IComponent;
-        
-        IReferenceBatchAccessor<T1> GetReferenceAccessorFor<T1>(IObservableGroup observableGroup)
-            where T1 : class, IComponent;
-        
         IBatchAccessor<T1,T2> GetAccessorFor<T1, T2>(IObservableGroup observableGroup)
             where T1 : unmanaged, IComponent
             where T2 : unmanaged, IComponent;

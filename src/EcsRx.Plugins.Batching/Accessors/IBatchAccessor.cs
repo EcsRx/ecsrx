@@ -9,12 +9,6 @@ namespace EcsRx.Plugins.Batching.Accessors
         void Refresh();
     }
 
-    public interface IBatchAccessor<T1> : IBatchAccessor
-        where T1 : unmanaged, IComponent
-    {
-        Batch<T1>[] Batch { get; }
-    }
-       
     public interface IBatchAccessor<T1, T2> : IBatchAccessor
         where T1 : unmanaged, IComponent
         where T2 : unmanaged, IComponent

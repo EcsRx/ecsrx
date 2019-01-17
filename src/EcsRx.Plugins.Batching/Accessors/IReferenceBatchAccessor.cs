@@ -4,12 +4,6 @@ using EcsRx.Plugins.Batching.Descriptors;
 namespace EcsRx.Plugins.Batching.Accessors
 {
     public interface IReferenceBatchAccessor : IBatchAccessor { }
-    
-    public interface IReferenceBatchAccessor<T1> : IReferenceBatchAccessor
-        where T1 : class, IComponent
-    {
-        ReferenceBatch<T1>[] Batch { get; }
-    }
        
     public interface IReferenceBatchAccessor<T1, T2> : IReferenceBatchAccessor
         where T1 : class, IComponent

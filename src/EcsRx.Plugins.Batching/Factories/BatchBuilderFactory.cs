@@ -16,10 +16,6 @@ namespace EcsRx.Plugins.Batching.Factories
             ComponentTypeLookup = componentTypeLookup;
         }
 
-        public IBatchBuilder<T1> Create<T1>() 
-            where T1 : unmanaged, IComponent
-        { return new BatchBuilder<T1>(ComponentDatabase, ComponentTypeLookup); }
-
         public IBatchBuilder<T1, T2> Create<T1, T2>() 
             where T1 : unmanaged, IComponent 
             where T2 : unmanaged, IComponent

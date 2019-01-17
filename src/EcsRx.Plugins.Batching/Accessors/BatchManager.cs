@@ -27,38 +27,6 @@ namespace EcsRx.Plugins.Batching.Accessors
             ReferenceBatchBuilderFactory = referenceBatchBuilderFactory;
         }
 
-        public IBatchAccessor<T1> GetAccessorFor<T1>(IObservableGroup observableGroup) 
-            where T1 : unmanaged, IComponent
-        {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1));
-            var token = new AccessorToken(componentTypes, observableGroup);
-            
-            if (BatchAccessors.ContainsKey(token))
-            { return (IBatchAccessor<T1>) BatchAccessors[token]; }
-
-            var batchBuilder = BatchBuilderFactory.Create<T1>();
-            var batchAccessor = new BatchAccessor<T1>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
-            BatchAccessors.Add(token, batchAccessor);
-
-            return batchAccessor;
-        }
-
-        public IReferenceBatchAccessor<T1> GetReferenceAccessorFor<T1>(IObservableGroup observableGroup) 
-            where T1 : class, IComponent
-        {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1));
-            var token = new AccessorToken(componentTypes, observableGroup);
-            
-            if (BatchAccessors.ContainsKey(token))
-            { return (IReferenceBatchAccessor<T1>) BatchAccessors[token]; }
-
-            var batchBuilder = ReferenceBatchBuilderFactory.Create<T1>();
-            var batchAccessor = new ReferenceBatchAccessor<T1>(observableGroup, ComponentDatabase, batchBuilder, ComponentTypeLookup);
-            BatchAccessors.Add(token, batchAccessor);
-
-            return batchAccessor;
-        }
-
         public IBatchAccessor<T1,T2> GetAccessorFor<T1, T2>(IObservableGroup observableGroup) 
             where T1 : unmanaged, IComponent 
             where T2 : unmanaged, IComponent

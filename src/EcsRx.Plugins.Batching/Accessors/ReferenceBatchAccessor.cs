@@ -11,26 +11,6 @@ using EcsRx.Plugins.Batching.Descriptors;
 
 namespace EcsRx.Plugins.Batching.Accessors
 {
-    public class ReferenceBatchAccessor<T1> : BatchAccessor, IReferenceBatchAccessor<T1>
-        where T1 : class, IComponent
-    {
-        public ReferenceBatch<T1>[] Batch { get; private set;  }
-
-        public ReferenceBatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
-        {
-        }
-
-        protected override IDisposable ReactToPools()
-        {
-            var componentType1 = ComponentTypeLookup.GetComponentType(typeof(T1));
-            var pool1 = ComponentDatabase.GetPoolFor<T1>(componentType1);
-            return pool1.OnPoolExtending.Subscribe(_ => Refresh());
-        }
-
-        public override void Refresh()
-        { Batch = ((IReferenceBatchBuilder<T1>) BatchBuilder).Build(ObservableGroup); }
-    }
-    
     public class ReferenceBatchAccessor<T1, T2> : BatchAccessor, IReferenceBatchAccessor<T1, T2>
         where T1 : class, IComponent
         where T2 : class, IComponent

@@ -7,12 +7,6 @@ namespace EcsRx.Plugins.Batching.Builders
 {
     public interface IReferenceBatchBuilder : IBatchBuilder {}
     
-    public interface IReferenceBatchBuilder<T1> : IReferenceBatchBuilder
-        where T1 : class, IComponent
-    {
-        ReferenceBatch<T1>[] Build(IReadOnlyList<IEntity> entities);
-    }
-    
     public interface IReferenceBatchBuilder<T1, T2> : IReferenceBatchBuilder
         where T1 : class, IComponent
         where T2 : class, IComponent

@@ -11,9 +11,7 @@ namespace EcsRx.Plugins.Views
         public string Name => "Views Plugin";
         public Version Version { get; } = new Version("1.0.0");
         
-        public void SetupDependencies(IDependencyContainer container)
-        {}
-
+        public void SetupDependencies(IDependencyContainer container) {}
         public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => new ISystem[0];
     }
 }

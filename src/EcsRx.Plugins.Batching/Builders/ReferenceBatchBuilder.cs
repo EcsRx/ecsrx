@@ -7,36 +7,6 @@ using EcsRx.Plugins.Batching.Descriptors;
 
 namespace EcsRx.Plugins.Batching.Builders
 {
-    public class ReferenceBatchBuilder<T1> : IReferenceBatchBuilder<T1> 
-        where T1 : class, IComponent
-    {
-        public IComponentDatabase ComponentDatabase { get; }
-        
-        private readonly int _componentTypeId1;
-
-        public ReferenceBatchBuilder(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
-        {
-            ComponentDatabase = componentDatabase;
-
-            _componentTypeId1 = componentTypeLookup.GetComponentType(typeof(T1));
-        }
-
-        public ReferenceBatch<T1>[] Build(IReadOnlyList<IEntity> entities)
-        {
-            var componentArray1 = ComponentDatabase.GetComponents<T1>(_componentTypeId1);
-            var batches = new ReferenceBatch<T1>[entities.Count];
-
-            for (var i = 0; i < entities.Count; i++)
-            {
-                var entity = entities[i];
-                var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
-                batches[i] = new ReferenceBatch<T1>(entity.Id, componentArray1[component1Allocation]);
-            }
-
-            return batches;
-        }
-    }
-    
     public class ReferenceBatchBuilder<T1, T2> : IReferenceBatchBuilder<T1, T2> 
         where T1 : class, IComponent
         where T2 : class, IComponent

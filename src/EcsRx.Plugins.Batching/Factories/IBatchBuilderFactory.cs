@@ -5,9 +5,6 @@ namespace EcsRx.Plugins.Batching.Factories
 {
     public interface IBatchBuilderFactory
     {
-        IBatchBuilder<T1> Create<T1>() 
-            where T1 : unmanaged, IComponent;
-
         IBatchBuilder<T1, T2> Create<T1, T2>()
             where T1 : unmanaged, IComponent
             where T2 : unmanaged, IComponent;

@@ -7,12 +7,6 @@ namespace EcsRx.Plugins.Batching.Builders
 {
     public interface IBatchBuilder {}
     
-    public interface IBatchBuilder<T1> : IBatchBuilder
-        where T1 : unmanaged, IComponent
-    {
-        Batch<T1>[] Build(IReadOnlyList<IEntity> entities);
-    }
-    
     public interface IBatchBuilder<T1, T2> : IBatchBuilder
         where T1 : unmanaged, IComponent
         where T2 : unmanaged, IComponent

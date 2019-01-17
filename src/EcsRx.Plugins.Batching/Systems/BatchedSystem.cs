@@ -9,46 +9,6 @@ using EcsRx.Threading;
 
 namespace EcsRx.Plugins.Batching.Systems
 {
-    public abstract unsafe class BatchedSystem<T1> : ManualBatchedSystem
-        where T1 : unmanaged, IComponent
-    {
-        public override IGroup Group { get; } = new Group(typeof(T1));
-
-        private IBatchBuilder<T1> _batchBuilder;
-        private Batch<T1>[] _batches;
-
-        protected abstract void Process(int entityId, ref T1 component1);
-
-        protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase,
-            componentTypeLookup, threadHandler)
-        {
-            _batchBuilder = batchBuilderFactory.Create<T1>();
-        }
-
-        protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup); }
-
-        protected override void ProcessBatch()
-        {
-            if (ShouldParallelize)
-            {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
-                {
-                    ref var batch = ref _batches[i];
-                    Process(batch.EntityId, ref *batch.Component1);
-                });
-                return;
-            }
-
-            for (var i = 0; i < ObservableGroup.Count; i++)
-            {
-                ref var batch = ref _batches[i];
-                Process(batch.EntityId, ref *batch.Component1);
-            }
-        }
-    }
-    
     public abstract unsafe class BatchedSystem<T1, T2> : ManualBatchedSystem
         where T1 : unmanaged, IComponent
         where T2 : unmanaged, IComponent

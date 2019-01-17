@@ -5,9 +5,6 @@ namespace EcsRx.Plugins.Batching.Factories
 {
     public interface IReferenceBatchBuilderFactory
     {
-        IReferenceBatchBuilder<T1> Create<T1>() 
-            where T1 : class, IComponent;
-
         IReferenceBatchBuilder<T1, T2> Create<T1, T2>()
             where T1 : class, IComponent
             where T2 : class, IComponent;

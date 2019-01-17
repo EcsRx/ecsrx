@@ -3,19 +3,6 @@ using EcsRx.Components;
 
 namespace EcsRx.Plugins.Batching.Descriptors
 {   
-    public class ReferenceBatch<T1>
-        where T1 : class, IComponent
-    {
-        public readonly int EntityId;
-        public readonly T1 Component1;
-
-        public ReferenceBatch(int entityId, T1 component1)
-        {
-            EntityId = entityId;
-            Component1 = component1;
-        }
-    }
-    
     public class ReferenceBatch<T1, T2>
         where T1 : class, IComponent
         where T2 : class, IComponent

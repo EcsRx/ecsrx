@@ -2,21 +2,7 @@ using System.Runtime.InteropServices;
 using EcsRx.Components;
 
 namespace EcsRx.Plugins.Batching.Descriptors
-{   
-    [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct Batch<T1>
-        where T1 : unmanaged, IComponent
-    {
-        public readonly int EntityId;
-        public readonly T1* Component1;
-
-        public Batch(int entityId, T1* component1)
-        {
-            EntityId = entityId;
-            Component1 = component1;
-        }
-    }
-    
+{      
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct Batch<T1, T2>
         where T1 : unmanaged, IComponent

@@ -6,40 +6,7 @@ using EcsRx.Entities;
 using EcsRx.Plugins.Batching.Descriptors;
 
 namespace EcsRx.Plugins.Batching.Builders
-{
-    public unsafe class BatchBuilder<T1> : IBatchBuilder<T1> 
-        where T1 : unmanaged, IComponent
-    {
-        public IComponentDatabase ComponentDatabase { get; }
-        
-        private readonly int _componentTypeId1;
-
-        public BatchBuilder(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
-        {
-            ComponentDatabase = componentDatabase;
-            _componentTypeId1 = componentTypeLookup.GetComponentType(typeof(T1));
-        }
-
-        public Batch<T1>[] Build(IReadOnlyList<IEntity> entities)
-        {
-            var componentArray1 = ComponentDatabase.GetComponents<T1>(_componentTypeId1);
-            
-            var batches = new Batch<T1>[entities.Count];
-
-            fixed (T1* component1Handle = componentArray1)
-            {
-                for (var i = 0; i < entities.Count; i++)
-                {
-                    var entity = entities[i];
-                    var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
-                    batches[i] = new Batch<T1>(entity.Id, &component1Handle[component1Allocation]);
-                }
-            }
-
-            return batches;
-        }
-    }
-    
+{   
     public unsafe class BatchBuilder<T1, T2> : IBatchBuilder<T1, T2> 
         where T1 : unmanaged, IComponent
         where T2 : unmanaged, IComponent

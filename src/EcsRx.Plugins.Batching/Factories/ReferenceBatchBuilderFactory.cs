@@ -16,10 +16,6 @@ namespace EcsRx.Plugins.Batching.Factories
             ComponentTypeLookup = componentTypeLookup;
         }
 
-        public IReferenceBatchBuilder<T1> Create<T1>() 
-            where T1 : class, IComponent
-        { return new ReferenceBatchBuilder<T1>(ComponentDatabase, ComponentTypeLookup); }
-
         public IReferenceBatchBuilder<T1, T2> Create<T1, T2>() 
             where T1 : class, IComponent 
             where T2 : class, IComponent

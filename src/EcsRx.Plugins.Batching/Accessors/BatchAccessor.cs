@@ -48,26 +48,6 @@ namespace EcsRx.Plugins.Batching.Accessors
         { Subscriptions?.Dispose(); }
     }
 
-    public class BatchAccessor<T1> : BatchAccessor, IBatchAccessor<T1> 
-        where T1 : unmanaged, IComponent
-    {
-        public Batch<T1>[] Batch { get; private set; }
-
-        public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
-            : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
-        {}
-
-        protected override IDisposable ReactToPools()
-        {
-            var componentType1 = ComponentTypeLookup.GetComponentType(typeof(T1));
-            var pool1 = ComponentDatabase.GetPoolFor<T1>(componentType1);
-            return pool1.OnPoolExtending.Subscribe(_ => Refresh());
-        }
-
-        public override void Refresh()
-        { Batch = ((IBatchBuilder<T1>) BatchBuilder).Build(ObservableGroup); }
-    }
-    
     public class BatchAccessor<T1, T2> : BatchAccessor, IBatchAccessor<T1, T2> 
         where T1 : unmanaged, IComponent
         where T2 : unmanaged, IComponent

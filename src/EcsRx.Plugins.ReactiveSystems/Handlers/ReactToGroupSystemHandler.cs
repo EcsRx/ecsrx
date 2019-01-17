@@ -9,6 +9,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Extensions;
+using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using EcsRx.Threading;
 

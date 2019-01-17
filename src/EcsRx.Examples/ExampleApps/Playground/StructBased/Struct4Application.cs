@@ -22,7 +22,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             _componentBatch = batchBuilder.Build(_collection);
         }
 
-        protected override string Description { get; } = "Uses auto batching to group components for quicker reads, but larger overhead in sync structs";
+        protected override string Description { get; } = "Uses auto batching to group components for cached lookups and quicker reads/writes";
 
         protected override void SetupEntity(IEntity entity)
         {

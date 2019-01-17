@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using EcsRx.Attributes;
+using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 
 namespace EcsRx.Plugins.ReactiveSystems.Extensions

@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Plugins.ReactiveSyste
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Plugins.Views", "EcsRx.Plugins.Views\EcsRx.Plugins.Views.csproj", "{F7B3C0BA-F801-4667-A46A-CDB8887BE08B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Plugins.Computeds", "EcsRx.Plugins.Computeds\EcsRx.Plugins.Computeds.csproj", "{5CB6728F-7537-4C73-9557-52B4C6F9791A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{F7B3C0BA-F801-4667-A46A-CDB8887BE08B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7B3C0BA-F801-4667-A46A-CDB8887BE08B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7B3C0BA-F801-4667-A46A-CDB8887BE08B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CB6728F-7537-4C73-9557-52B4C6F9791A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CB6728F-7537-4C73-9557-52B4C6F9791A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CB6728F-7537-4C73-9557-52B4C6F9791A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CB6728F-7537-4C73-9557-52B4C6F9791A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +98,7 @@ Global
 		{D238EA0D-7A84-42FB-9E74-B56E463011F0} = {48050703-1E4C-4179-9539-90212854B3F7}
 		{92E2383A-2386-47DF-A0D7-83348ADBFBDB} = {48050703-1E4C-4179-9539-90212854B3F7}
 		{F7B3C0BA-F801-4667-A46A-CDB8887BE08B} = {48050703-1E4C-4179-9539-90212854B3F7}
+		{5CB6728F-7537-4C73-9557-52B4C6F9791A} = {48050703-1E4C-4179-9539-90212854B3F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9292D27-B07F-42D9-94D7-38263CA662DB}

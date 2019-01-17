@@ -1,4 +1,5 @@
 using EcsRx.Plugins.ReactiveSystems;
+using EcsRx.Plugins.ReactiveSystems.Systems;
 
 namespace EcsRx.Views.Systems
 {

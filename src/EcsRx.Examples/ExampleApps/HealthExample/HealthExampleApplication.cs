@@ -18,8 +18,6 @@ namespace EcsRx.Examples.ExampleApps.HealthExample
 
         protected override void ApplicationStarted()
         {
-            this.StartAllBoundSystems();
-            
             var defaultPool = EntityCollectionManager.GetCollection();
             _enemy = defaultPool.CreateEntity(new EnemyBlueprint(100));
 

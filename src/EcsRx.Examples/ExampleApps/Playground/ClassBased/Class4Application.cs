@@ -2,13 +2,14 @@ using System.Numerics;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Playground.Batches;
 using EcsRx.Examples.ExampleApps.Playground.Components;
+using EcsRx.Plugins.Batching.Descriptors;
 
-/*
+
 namespace EcsRx.Examples.ExampleApps.Playground.ClassBased
 {
     public class Class4Application : BasicLoopApplication
     {
-        private IComponentBatches<CustomClassBatch> _componentBatch;
+        private ReferenceBatch<ClassComponent, ClassComponent2>[] _componentBatch;
         
         protected override void SetupEntities()
         {
@@ -17,9 +18,8 @@ namespace EcsRx.Examples.ExampleApps.Playground.ClassBased
             
             base.SetupEntities();
             
-            var manualBatch = _batchManager.GetBatch<CustomClassBatch>();
-            manualBatch.InitializeBatches(_collection);
-            _componentBatch = manualBatch;
+            var batchBuilder = _referenceBatchBuilderFactory.Create<ClassComponent, ClassComponent2>();
+            _componentBatch = batchBuilder.Build(_collection);
         }
 
         protected override string Description { get; } = "Uses auto batching to allow the components to be clustered better in memory";
@@ -32,14 +32,16 @@ namespace EcsRx.Examples.ExampleApps.Playground.ClassBased
 
         protected override void RunProcess()
         {
-            for (var i = _componentBatch.Batches.Length - 1; i >= 0; i--)
+            for (var i = _componentBatch.Length - 1; i >= 0; i--)
             {
-                var batch = _componentBatch.Batches[i];
-                batch.Basic.Position += Vector3.One;
-                batch.Basic.Something += 10;
-                batch.Basic2.IsTrue = true;
-                batch.Basic2.Value += 10;
+                var batch = _componentBatch[i];
+                var basic = batch.Component1;
+                var basic2 = batch.Component2;
+                basic.Position += Vector3.One;
+                basic.Something += 10;
+                basic2.IsTrue = true;
+                basic2.Value += 10;
             }
         }
     }
-}*/
+}

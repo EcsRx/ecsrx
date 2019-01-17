@@ -13,8 +13,6 @@ namespace EcsRx.Examples.ExampleApps.HelloWorldExample
 
         protected override void ApplicationStarted()
         {
-            this.StartAllBoundSystems();
-
             var defaultPool = EntityCollectionManager.GetCollection();
             var entity = defaultPool.CreateEntity();
 

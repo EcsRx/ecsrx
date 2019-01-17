@@ -19,6 +19,7 @@ namespace EcsRx.Examples.ExampleApps.Playground
         protected IComponentTypeLookup _componentTypeLookup;
         protected IComponentDatabase _componentDatabase;
         protected IBatchBuilderFactory _batchBuilderFactory;
+        protected IReferenceBatchBuilderFactory _referenceBatchBuilderFactory;
 
         protected int ClassComponent1TypeId;
         protected int ClassComponent2TypeId;
@@ -30,6 +31,7 @@ namespace EcsRx.Examples.ExampleApps.Playground
             _componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
             _componentDatabase = Container.Resolve<IComponentDatabase>();
             _batchBuilderFactory = Container.Resolve<IBatchBuilderFactory>();
+            _referenceBatchBuilderFactory = Container.Resolve<IReferenceBatchBuilderFactory>();
             _collection = EntityCollectionManager.GetCollection();
 
             ClassComponent1TypeId = _componentTypeLookup.GetComponentType(typeof(ClassComponent));

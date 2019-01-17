@@ -7,6 +7,7 @@ using EcsRx.Extensions;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Extensions;
+using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 
 namespace EcsRx.Plugins.ReactiveSystems.Handlers

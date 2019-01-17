@@ -3,6 +3,7 @@ using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Blueprints;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
+using EcsRx.Examples.ExampleApps.ComputedGroupExample.Modules;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems;
 using EcsRx.Groups;
 using EcsRx.Infrastructure.Extensions;
@@ -13,16 +14,14 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample
     {
         private bool _quit;
 
+        protected override void LoadModules()
+        {
+            base.LoadModules();
+            Container.LoadModule<ComputedModule>();
+        }
+
         protected override void ApplicationStarted()
         {
-            var namedHealthGroup = EntityCollectionManager.GetObservableGroup(new Group(typeof(HasHealthComponent), typeof(HasNameComponent)));
-            var computedGroup = new LowestHealthComputedGroup(namedHealthGroup);
-            var displayHealthSystem = new DisplayLowestHealthSystem(computedGroup);
-                
-            SystemExecutor.AddSystem(displayHealthSystem);
-            
-            this.StartAllBoundSystems();
-
             var defaultPool = EntityCollectionManager.GetCollection();
             defaultPool.CreateEntity(new CharacterBlueprint("Bob", 200));
             defaultPool.CreateEntity(new CharacterBlueprint("Tom", 150));

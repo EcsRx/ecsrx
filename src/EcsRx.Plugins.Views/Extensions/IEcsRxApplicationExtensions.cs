@@ -3,6 +3,7 @@ using EcsRx.Extensions;
 using EcsRx.Infrastructure;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.ReactiveSystems;
+using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using EcsRx.Views.Systems;
 

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Extensions;
-using EcsRx.Views.ViewHandlers;
+using EcsRx.Plugins.Views.ViewHandlers;
 
-namespace EcsRx.Views.Pooling
+namespace EcsRx.Plugins.Views.Pooling
 {
     public class ViewPool : IViewPool
     {

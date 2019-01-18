@@ -1,7 +1,6 @@
-﻿using EcsRx.Entities;
-using EcsRx.Pools;
+﻿using EcsRx.Pools;
 
-namespace EcsRx.Views.Pooling
+namespace EcsRx.Plugins.Views.Pooling
 {
     public interface IViewPool : IPool<object>
     {

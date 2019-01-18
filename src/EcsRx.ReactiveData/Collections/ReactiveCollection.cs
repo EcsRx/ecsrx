@@ -9,7 +9,7 @@ using System.Reactive.Subjects;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Reactive.Collections
+namespace EcsRx.ReactiveData.Collections
 {
     [Serializable]
     public class ReactiveCollection<T> : Collection<T>, IReactiveCollection<T>, IDisposable

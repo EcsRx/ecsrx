@@ -1,7 +1,6 @@
-using System.Runtime.InteropServices;
 using EcsRx.Components;
 
-namespace EcsRx.Plugins.Batching.Descriptors
+namespace EcsRx.Plugins.Batching.Batches
 {   
     public class ReferenceBatch<T1, T2>
         where T1 : class, IComponent

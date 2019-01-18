@@ -3,10 +3,10 @@ using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using EcsRx.Plugins.Views.Components;
+using EcsRx.Plugins.Views.Systems;
+using EcsRx.Plugins.Views.ViewHandlers;
 using EcsRx.Tests.Models;
-using EcsRx.Views.Components;
-using EcsRx.Views.Systems;
-using EcsRx.Views.ViewHandlers;
 
 namespace EcsRx.Tests.Systems
 {

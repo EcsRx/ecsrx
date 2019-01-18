@@ -1,5 +1,5 @@
 using EcsRx.Components;
-using EcsRx.Plugins.Batching.Descriptors;
+using EcsRx.Plugins.Batching.Batches;
 
 namespace EcsRx.Plugins.Batching.Accessors
 {

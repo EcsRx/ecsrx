@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using EcsRx.Components;
 
-namespace EcsRx.Plugins.Batching.Descriptors
+namespace EcsRx.Plugins.Batching.Batches
 {      
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct Batch<T1, T2>

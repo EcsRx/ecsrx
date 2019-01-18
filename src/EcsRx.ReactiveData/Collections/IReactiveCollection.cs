@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EcsRx.Reactive.Collections
+namespace EcsRx.ReactiveData.Collections
 {
     public interface IReactiveCollection<T> : IList<T>, IReadOnlyReactiveCollection<T>
     {

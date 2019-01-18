@@ -1,6 +1,4 @@
-﻿using EcsRx.Entities;
-
-namespace EcsRx.Views.ViewHandlers
+﻿namespace EcsRx.Plugins.Views.ViewHandlers
 {
     public interface IViewHandler
     {

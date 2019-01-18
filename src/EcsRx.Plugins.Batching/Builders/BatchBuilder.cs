@@ -3,7 +3,7 @@ using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
-using EcsRx.Plugins.Batching.Descriptors;
+using EcsRx.Plugins.Batching.Batches;
 
 namespace EcsRx.Plugins.Batching.Builders
 {   

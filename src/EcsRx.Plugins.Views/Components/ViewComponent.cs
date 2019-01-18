@@ -1,6 +1,6 @@
 ﻿using EcsRx.Components;
 
-namespace EcsRx.Views.Components
+namespace EcsRx.Plugins.Views.Components
 {
     public class ViewComponent : IComponent
     {

@@ -2,8 +2,8 @@ using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Groups;
+using EcsRx.Plugins.Batching.Batches;
 using EcsRx.Plugins.Batching.Builders;
-using EcsRx.Plugins.Batching.Descriptors;
 using EcsRx.Plugins.Batching.Factories;
 using EcsRx.Threading;
 

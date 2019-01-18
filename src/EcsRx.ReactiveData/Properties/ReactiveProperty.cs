@@ -7,7 +7,7 @@ using System.Reactive.Subjects;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Reactive.Properties
+namespace EcsRx.ReactiveData.Properties
 {
     /// <summary>
     /// Lightweight property broker.

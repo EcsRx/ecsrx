@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EcsRx.Reactive.Dictionaries
+namespace EcsRx.ReactiveData.Dictionaries
 {
     public static partial class ReactiveDictionaryExtensions
     {

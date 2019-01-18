@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using EcsRx.Views.Pooling;
-using EcsRx.Views.ViewHandlers;
+using EcsRx.Plugins.Views.Pooling;
+using EcsRx.Plugins.Views.ViewHandlers;
 using NSubstitute;
 using Xunit;
 

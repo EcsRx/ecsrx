@@ -1,4 +1,4 @@
-﻿namespace EcsRx.Views.Pooling
+﻿namespace EcsRx.Plugins.Views.Pooling
 {
     public class ViewObjectContainer
     {

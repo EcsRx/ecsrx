@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reactive;
 
-namespace EcsRx.Reactive.Collections
+namespace EcsRx.ReactiveData.Collections
 {
     public interface IReadOnlyReactiveCollection<T> : IReadOnlyList<T>
     {

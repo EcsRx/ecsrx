@@ -2,11 +2,10 @@
 using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Systems;
-using EcsRx.Views.Components;
-using EcsRx.Views.ViewHandlers;
+using EcsRx.Plugins.Views.Components;
+using EcsRx.Plugins.Views.ViewHandlers;
 
-namespace EcsRx.Views.Systems
+namespace EcsRx.Plugins.Views.Systems
 {
     public abstract class ViewResolverSystem : IViewResolverSystem
     {

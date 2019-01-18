@@ -4,8 +4,8 @@ using EcsRx.Infrastructure;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.ReactiveSystems;
 using EcsRx.Plugins.ReactiveSystems.Systems;
+using EcsRx.Plugins.Views.Systems;
 using EcsRx.Systems;
-using EcsRx.Views.Systems;
 
 namespace EcsRx.Plugins.Views.Extensions
 {

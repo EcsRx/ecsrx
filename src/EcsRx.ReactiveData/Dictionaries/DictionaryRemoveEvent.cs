@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EcsRx.Reactive.Dictionaries
+namespace EcsRx.ReactiveData.Dictionaries
 {
     public struct DictionaryRemoveEvent<TKey, TValue> : IEquatable<DictionaryRemoveEvent<TKey, TValue>>
     {

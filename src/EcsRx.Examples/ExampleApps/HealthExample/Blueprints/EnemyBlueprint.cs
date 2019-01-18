@@ -2,7 +2,7 @@
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.HealthExample.Components;
 using EcsRx.Extensions;
-using EcsRx.Reactive.Properties;
+using EcsRx.ReactiveData.Properties;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample.Blueprints
 {

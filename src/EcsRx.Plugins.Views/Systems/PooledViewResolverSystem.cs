@@ -3,11 +3,11 @@ using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Plugins.Views.Components;
+using EcsRx.Plugins.Views.Pooling;
 using EcsRx.Systems;
-using EcsRx.Views.Components;
-using EcsRx.Views.Pooling;
 
-namespace EcsRx.Views.Systems
+namespace EcsRx.Plugins.Views.Systems
 {
     public abstract class PooledViewResolverSystem : IViewResolverSystem, IManualSystem
     {

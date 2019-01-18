@@ -6,8 +6,8 @@ using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
+using EcsRx.Plugins.Batching.Batches;
 using EcsRx.Plugins.Batching.Builders;
-using EcsRx.Plugins.Batching.Descriptors;
 
 namespace EcsRx.Plugins.Batching.Accessors
 {

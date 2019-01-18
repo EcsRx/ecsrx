@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EcsRx.Reactive.Collections
+namespace EcsRx.ReactiveData.Collections
 {
     public struct CollectionReplaceEvent<T> : IEquatable<CollectionReplaceEvent<T>>
     {

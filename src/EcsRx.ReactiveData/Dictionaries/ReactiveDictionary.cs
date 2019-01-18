@@ -9,7 +9,7 @@ using System.Reactive.Subjects;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.Reactive.Dictionaries
+namespace EcsRx.ReactiveData.Dictionaries
 {
     [Serializable]
     public class ReactiveDictionary<TKey, TValue> : IReactiveDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary, IDisposable

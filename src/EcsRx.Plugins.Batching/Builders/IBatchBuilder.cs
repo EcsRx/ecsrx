@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using EcsRx.Components;
 using EcsRx.Entities;
-using EcsRx.Plugins.Batching.Descriptors;
+using EcsRx.Plugins.Batching.Batches;
 
 namespace EcsRx.Plugins.Batching.Builders
 {

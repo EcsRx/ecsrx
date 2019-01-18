@@ -2,7 +2,7 @@ using System.Numerics;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Playground.Batches;
 using EcsRx.Examples.ExampleApps.Playground.Components;
-using EcsRx.Plugins.Batching.Descriptors;
+using EcsRx.Plugins.Batching.Batches;
 
 
 namespace EcsRx.Examples.ExampleApps.Playground.ClassBased

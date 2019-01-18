@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EcsRx.Reactive.Properties
+namespace EcsRx.ReactiveData.Properties
 {
     public interface IReadOnlyReactiveProperty<T> : IObservable<T>
     {

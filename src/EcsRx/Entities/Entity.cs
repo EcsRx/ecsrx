@@ -83,6 +83,9 @@ namespace EcsRx.Entities
             var allocationId = ComponentDatabase.Allocate(componentTypeId);
             InternalComponentAllocations[componentTypeId] = allocationId;
             ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
+            
+            _onComponentsAdded.OnNext(new []{componentTypeId});
+            
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         

@@ -14,7 +14,7 @@ namespace EcsRx.Tests.Framework
     public class EntityTests
     {
         [Fact]
-        public void should_raise_event_when_adding_component()
+        public void should_raise_event_when_adding_components()
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
@@ -29,6 +29,24 @@ namespace EcsRx.Tests.Framework
             entity.AddComponents(dummyComponent);
             Assert.True(wasCalled);
         }
+        
+        /* NSubstitute doesnt support ref returns currently
+        [Fact]
+        public void should_raise_event_when_adding_explicit_component()
+        {
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            componentDatabase.GetRef<TestStructComponentOne>(Arg.Any<int>(), Arg.Any<int>()).Returns(new TestStructComponentOne());
+            
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            
+            var entity = new Entity(1, componentDatabase, componentTypeLookup);
+
+            var wasCalled = false;
+            entity.ComponentsAdded.Subscribe(x => wasCalled = true);
+
+            entity.AddComponent<TestStructComponentOne>(0);
+            Assert.True(wasCalled);
+        }*/
 
         [Fact]
         public void should_raise_event_when_removing_component_that_exists()

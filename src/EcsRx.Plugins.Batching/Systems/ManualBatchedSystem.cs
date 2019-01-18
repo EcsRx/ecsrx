@@ -33,8 +33,11 @@ namespace EcsRx.Plugins.Batching.Systems
         }
 
         protected abstract void RebuildBatch();
+        protected abstract IObservable<bool> ReactWhen();
+
+        protected virtual void BeforeProcessing(){}
+        protected virtual void AfterProcessing(){}
         protected abstract void ProcessBatch();
-        protected abstract IObservable<int> ReactWhen();
 
         public virtual void StartSystem(IObservableGroup observableGroup)
         {
@@ -46,9 +49,16 @@ namespace EcsRx.Plugins.Batching.Systems
             ObservableGroup.OnEntityRemoved.Subscribe(_ => RebuildBatch()).AddTo(subscriptions);
             
             RebuildBatch();
-            ReactWhen().Subscribe(_ => ProcessBatch()).AddTo(subscriptions);
+            ReactWhen().Subscribe(_ => RunBatch()).AddTo(subscriptions);
             
             Subscriptions = subscriptions;
+        }
+
+        private void RunBatch()
+        {
+            BeforeProcessing();
+            ProcessBatch();
+            AfterProcessing();
         }
 
         public virtual void StopSystem(IObservableGroup observableGroup)

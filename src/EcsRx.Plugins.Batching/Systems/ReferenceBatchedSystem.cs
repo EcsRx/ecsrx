@@ -15,8 +15,8 @@ namespace EcsRx.Plugins.Batching.Systems
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2));
         
-        private IReferenceBatchBuilder<T1, T2> _batchBuilder;
-        private ReferenceBatch<T1, T2>[] _batches;
+        private readonly IReferenceBatchBuilder<T1, T2> _batchBuilder;
+        protected ReferenceBatch<T1, T2>[] _batches;
         
         protected abstract void Process(int EntityId, T1 component1, T2 component2);
 
@@ -57,8 +57,8 @@ namespace EcsRx.Plugins.Batching.Systems
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3));
         
-        private IReferenceBatchBuilder<T1, T2, T3> _batchBuilder;
-        private ReferenceBatch<T1, T2, T3>[] _batches;
+        private readonly IReferenceBatchBuilder<T1, T2, T3> _batchBuilder;
+        protected ReferenceBatch<T1, T2, T3>[] _batches;
         
         protected abstract void Process(int EntityId, T1 component1, T2 component2, T3 component3);
 
@@ -100,8 +100,8 @@ namespace EcsRx.Plugins.Batching.Systems
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
         
-        private IReferenceBatchBuilder<T1, T2, T3, T4> _batchBuilder;
-        private ReferenceBatch<T1, T2, T3, T4>[] _batches;
+        private readonly IReferenceBatchBuilder<T1, T2, T3, T4> _batchBuilder;
+        protected ReferenceBatch<T1, T2, T3, T4>[] _batches;
         
         protected abstract void Process(int EntityId, T1 component1, T2 component2, T3 component3, T4 component4);
 
@@ -146,8 +146,8 @@ namespace EcsRx.Plugins.Batching.Systems
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
         
-        private IReferenceBatchBuilder<T1, T2, T3, T4, T5> _batchBuilder;
-        private ReferenceBatch<T1, T2, T3, T4, T5>[] _batches;
+        private readonly IReferenceBatchBuilder<T1, T2, T3, T4, T5> _batchBuilder;
+        protected ReferenceBatch<T1, T2, T3, T4, T5>[] _batches;
         
         protected abstract void Process(int EntityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5);
 
@@ -193,8 +193,8 @@ namespace EcsRx.Plugins.Batching.Systems
     {
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
         
-        private IReferenceBatchBuilder<T1, T2, T3, T4, T5, T6> _batchBuilder;
-        private ReferenceBatch<T1, T2, T3, T4, T5, T6>[] _batches;
+        private readonly IReferenceBatchBuilder<T1, T2, T3, T4, T5, T6> _batchBuilder;
+        protected ReferenceBatch<T1, T2, T3, T4, T5, T6>[] _batches;
         
         protected abstract void Process(int EntityId, T1 component1, T2 component2, T3 component3, T4 component4, T5 component5, T6 component6);
 

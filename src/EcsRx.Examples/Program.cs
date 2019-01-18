@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsRx.Examples.ExampleApps.BatchedGroupExample;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample;
 using EcsRx.Examples.ExampleApps.HealthExample;
 using EcsRx.Examples.ExampleApps.HelloWorldExample;
@@ -13,9 +14,10 @@ namespace EcsRx.Examples
         static void Main(string[] args)
         {
             // Sample examples
-            new HelloWorldExampleApplication().StartApplication();
+            //new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
+            new BatchedGroupExampleApplication().StartApplication();
             
             // Performance examples
             //new SimpleSystemApplication().StartApplication();

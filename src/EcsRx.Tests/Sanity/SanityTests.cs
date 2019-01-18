@@ -23,7 +23,7 @@ using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Sanity
 {
     public class SanityTests
     {

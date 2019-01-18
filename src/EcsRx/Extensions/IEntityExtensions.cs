@@ -49,6 +49,19 @@ namespace EcsRx.Extensions
         /// </summary>
         /// <typeparam name="T">The type of component to apply</typeparam>
         /// <param name="entity">entity to use</param>
+        /// <param name="component">The component to add</param>
+        /// <returns>The created component</returns>
+        public static T AddComponent<T>(this IEntity entity, T component) where T : class, IComponent, new()
+        {
+            entity.AddComponents(component);
+            return component;
+        }
+        
+        /// <summary>
+        /// Adds a component to the entity based on its type with default setup
+        /// </summary>
+        /// <typeparam name="T">The type of component to apply</typeparam>
+        /// <param name="entity">entity to use</param>
         /// <returns>The created component</returns>
         public static T AddComponent<T>(this IEntity entity) where T : class, IComponent, new()
         {

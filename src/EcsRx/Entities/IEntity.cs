@@ -46,18 +46,14 @@ namespace EcsRx.Entities
         /// All the components which have been applied to this entity
         /// </summary>
         IEnumerable<IComponent> Components { get; }
-       
+
+        IReadOnlyList<int> ComponentAllocations { get; }
+
         /// <summary>
         /// Removes component types from the entity
         /// </summary>
         /// <param name="componentsTypes">The component types to remove</param>
         void RemoveComponents(params Type[] componentsTypes);
-        
-        /// <summary>
-        /// Removes components from the entity based on their type ids
-        /// </summary>
-        /// <param name="componentsTypeIds">The component type ids to remove</param>
-        void RemoveComponents(params int[] componentsTypeIds);
         
         /// <summary>
         /// Removes all the components from the entity
@@ -77,13 +73,12 @@ namespace EcsRx.Entities
         /// <param name="componentTypeId">The id of the component type</param>
         /// <returns>The component instance if found, or null if not</returns>
         IComponent GetComponent(int componentTypeId);
+
+        ref T GetComponent<T>(int componentTypeId) where T : IComponent;
         
-        /// <summary>
-        /// Checks to see if the entity contains given components by their instances
-        /// </summary>
-        /// <param name="components">instances of component to check for</param>
-        /// <returns>true if all the component was found, false if one or more is missing</returns>
-        void AddComponents(params IComponent[] components);
+        ref T AddComponent<T>(int componentTypeId) where T : IComponent, new();
+        
+        void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, IComponent;
         
         /// <summary>
         /// Checks to see if the entity contains the given component type
@@ -98,5 +93,8 @@ namespace EcsRx.Entities
         /// <param name="componentTypeId">Type id of component to look for</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         bool HasComponent(int componentTypeId);
+
+        void AddComponents(IReadOnlyList<IComponent> components);
+        void RemoveComponents(IReadOnlyList<int> componentsTypeIds);
     }
 }

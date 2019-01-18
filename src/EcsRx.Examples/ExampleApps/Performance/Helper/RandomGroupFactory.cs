@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using EcsRx.Examples.ExampleApps.Performance.Components;
+using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Extensions;
 using EcsRx.Groups;
 
@@ -21,51 +23,20 @@ namespace EcsRx.Examples.ExampleApps.Performance.Helper
         
         private void PopulateComponentList()
         {
-            _componentTypes = new List<Type>
-            {
-                typeof(Component1),
-                typeof(Component2),
-                typeof(Component3),
-                typeof(Component4),
-                typeof(Component5),
-                typeof(Component6),
-                typeof(Component7),
-                typeof(Component8),
-                typeof(Component9),
-                typeof(Component10),
-                typeof(Component11),
-                typeof(Component12),
-                typeof(Component13),
-                typeof(Component14),
-                typeof(Component15),
-                typeof(Component16),
-                typeof(Component17),
-                typeof(Component18),
-                typeof(Component19),
-                typeof(Component20)
-            };
-        }
-
-        public IGroup CreateRandomGroup()
-        {
-            var randomSize = _random.Next(_componentTypes.Count / 2);
-            return new Group(_componentTypes.Random(randomSize).ToArray());
+            var componentNamespace = typeof(Component1).Namespace;
+            var componentTypes = typeof(Component1).Assembly.GetTypes().Where(x => x.Namespace == componentNamespace);
+            _componentTypes = componentTypes.ToList();
         }
 
         public IEnumerable<IGroup> CreateTestGroups(int cycles = 5)
         {
             for (var i = 1; i < cycles; i++)
             {
-                for (var j = i; j < _componentTypes.Count; j+= i)
+                for (var j = 0; j < _componentTypes.Count; j++)
                 {
-                    yield return new Group(_componentTypes.Skip(j-i).Take(j).ToArray());
+                    yield return new Group(_componentTypes.Skip(i).Take(j).ToArray());
                 }
             }
-            /*
-            foreach (var component in _componenTypes)
-            {
-                yield return new LookupGroup(component);
-            }*/
         }
     }
 }

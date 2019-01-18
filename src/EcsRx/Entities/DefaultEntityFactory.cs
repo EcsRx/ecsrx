@@ -1,17 +1,21 @@
 ﻿using System;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
+using EcsRx.Pools;
 
 namespace EcsRx.Entities
 {
     public class DefaultEntityFactory : IEntityFactory
     {
         public IIdPool IdPool { get; }
-        public IComponentRepository ComponentRepository { get; }
+        public IComponentDatabase ComponentDatabase { get; }
+        public IComponentTypeLookup ComponentTypeLookup { get; }
 
-        public DefaultEntityFactory(IIdPool idPool, IComponentRepository componentRepository)
+        public DefaultEntityFactory(IIdPool idPool, IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             IdPool = idPool;
-            ComponentRepository = componentRepository;
+            ComponentDatabase = componentDatabase;
+            ComponentTypeLookup = componentTypeLookup;
         }
 
         public int GetId(int? id = null)
@@ -29,7 +33,7 @@ namespace EcsRx.Entities
             { throw new ArgumentException("id must be null or > 0"); }
             
             var usedId = GetId(id);
-            return new Entity(usedId, ComponentRepository);
+            return new Entity(usedId, ComponentDatabase, ComponentTypeLookup);
         }
 
         public void Destroy(int entityId)

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
-using EcsRx.Computed;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Extensions;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Plugins.Computeds.Groups;
 using EcsRx.Systems;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
@@ -32,8 +32,8 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
 
         public void UpdateListings(long _)
         {
-            Console.Clear();
             Console.SetCursorPosition(0,0);
+            Console.Clear();
 
             Console.WriteLine(" == All Characters HP == ");
             foreach (var entity in ((ComputedGroup)_lowestHealthGroup).InternalObservableGroup)

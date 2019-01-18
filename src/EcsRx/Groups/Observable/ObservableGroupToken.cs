@@ -2,28 +2,28 @@
 
 namespace EcsRx.Groups.Observable
 {
-    public class ObservableGroupToken
+    public struct ObservableGroupToken
     {
-        public ILookupGroup LookupGroup { get; }
-        public string CollectionName { get; }
+        public LookupGroup LookupGroup { get; }
+        public int[] CollectionIds { get; }
 
-        public ObservableGroupToken(int[] withComponents, int[] withoutComponents, string collectionName)
+        public ObservableGroupToken(int[] withComponents, int[] withoutComponents, params int[] collectionIds)
         {
             LookupGroup = new LookupGroup(withComponents, withoutComponents);
-            CollectionName = collectionName;
+            CollectionIds = collectionIds;
         }
         
-        public ObservableGroupToken(ILookupGroup lookupGroup, string collectionName)
+        public ObservableGroupToken(LookupGroup lookupGroup, params int[] collectionIds)
         {
             LookupGroup = lookupGroup;
-            CollectionName = collectionName;
+            CollectionIds = collectionIds;
         }
-
+        
         public override int GetHashCode()
         {
             var requiredHash = LookupGroup.RequiredComponents?.GetHashCode() ?? 0;
             var excludedHash = LookupGroup.ExcludedComponents?.GetHashCode() ?? 0;
-            var poolHash = CollectionName?.GetHashCode() ?? 0;
+            var poolHash = CollectionIds?.GetHashCode() ?? 0;
             return requiredHash ^ excludedHash ^ poolHash;
         }
     }

@@ -4,9 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Database;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
+using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Extensions;
@@ -22,6 +24,9 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         private List<IEntity> _entities;
 
+        protected override void BindSystems()
+        {}
+        
         protected override void ApplicationStarted()
         {                       
             var componentNamespace = typeof(Component1).Namespace;
@@ -33,12 +38,13 @@ namespace EcsRx.Examples.ExampleApps.Performance
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
 
-            var componentRepository = Container.Resolve<IComponentRepository>();
+            var componentDatabase = Container.Resolve<IComponentDatabase>();
+            var componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)
             {
-                var entity = new Entity(i, componentRepository);
+                var entity = new Entity(i, componentDatabase, componentTypeLookup);
                 entity.AddComponents(_availableComponents);
                 _entities.Add(entity);                
             }

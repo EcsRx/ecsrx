@@ -2,11 +2,13 @@ using EcsRx.Collections;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Plugins.ReactiveSystems;
+using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.Framework
+namespace EcsRx.Tests.Framework.Handlers
 {
     public class ManualSystemHandlerTests
     {

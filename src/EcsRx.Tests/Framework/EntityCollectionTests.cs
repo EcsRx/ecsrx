@@ -22,14 +22,14 @@ namespace EcsRx.Tests.Framework
             var mockEntity = Substitute.For<IEntity>();
             mockEntityFactory.Create(null).Returns(mockEntity);
        
-            var entityCollection = new EntityCollection("", mockEntityFactory);
+            var entityCollection = new EntityCollection(1, mockEntityFactory);
             
             var wasCalled = false;
             entityCollection.EntityAdded.Subscribe(x => wasCalled = true);
             
             var entity = entityCollection.CreateEntity();
             
-            Assert.Contains(mockEntity, entityCollection.EntityLookup.Values);
+            Assert.Contains(mockEntity, entityCollection.EntityLookup);
             Assert.Equal(mockEntity, entity);
             Assert.True(wasCalled);
         }
@@ -43,7 +43,7 @@ namespace EcsRx.Tests.Framework
             
             mockEntityFactory.Create(null).Returns(mockEntity);
            
-            var entityCollection = new EntityCollection("", mockEntityFactory);
+            var entityCollection = new EntityCollection(1, mockEntityFactory);
             
             var wasCalled = false;
             entityCollection.EntityRemoved.Subscribe(x => wasCalled = true);
@@ -52,7 +52,7 @@ namespace EcsRx.Tests.Framework
             entityCollection.RemoveEntity(mockEntity.Id);
 
             Assert.True(wasCalled);
-            Assert.DoesNotContain(mockEntity, entityCollection.EntityLookup.Values);
+            Assert.DoesNotContain(mockEntity, entityCollection);
         }
     }
 }

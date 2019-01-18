@@ -49,6 +49,19 @@ namespace EcsRx.Extensions
         /// </summary>
         /// <typeparam name="T">The type of component to apply</typeparam>
         /// <param name="entity">entity to use</param>
+        /// <param name="component">The component to add</param>
+        /// <returns>The created component</returns>
+        public static T AddComponent<T>(this IEntity entity, T component) where T : class, IComponent, new()
+        {
+            entity.AddComponents(component);
+            return component;
+        }
+        
+        /// <summary>
+        /// Adds a component to the entity based on its type with default setup
+        /// </summary>
+        /// <typeparam name="T">The type of component to apply</typeparam>
+        /// <param name="entity">entity to use</param>
         /// <returns>The created component</returns>
         public static T AddComponent<T>(this IEntity entity) where T : class, IComponent, new()
         {
@@ -74,7 +87,7 @@ namespace EcsRx.Extensions
         /// <typeparam name="T">Type of component to check for</typeparam>
         /// <param name="entity">entity to use</param>
         /// <returns>true if the component was found, false if it was not</returns>
-        public static bool HasComponent<T>(this IEntity entity) where T : class, IComponent
+        public static bool HasComponent<T>(this IEntity entity) where T : IComponent
         { return entity.HasComponent(typeof(T)); }
         
         /// <summary>
@@ -162,6 +175,12 @@ namespace EcsRx.Extensions
             }
 
             return false;
-        }   
+        }
+        
+        public static void AddComponents(this IEntity entity, params IComponent[] components)
+        { entity.AddComponents(components); }
+        
+        public static void RemoveComponents(this IEntity entity, params int[] componentsTypeIds)
+        { entity.RemoveComponents(componentsTypeIds); }
     }
 }

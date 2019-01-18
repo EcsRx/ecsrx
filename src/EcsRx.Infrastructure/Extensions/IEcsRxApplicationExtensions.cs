@@ -1,12 +1,9 @@
 using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using EcsRx.Executor;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Systems;
-using EcsRx.Views.Systems;
 
 namespace EcsRx.Infrastructure.Extensions
 {
@@ -153,12 +150,7 @@ namespace EcsRx.Infrastructure.Extensions
         public static void StartAllBoundSystems(this IEcsRxApplication application)
         {
             var allSystems = application.Container.ResolveAll<ISystem>();
-
-            var orderedSystems = allSystems
-                .OrderByDescending(x => x is ViewResolverSystem)
-                .ThenByDescending(x => x is ISetupSystem);
-            
-            orderedSystems.ForEachRun(application.SystemExecutor.AddSystem);
+            allSystems.ForEachRun(application.SystemExecutor.AddSystem);
         }
     }
 }

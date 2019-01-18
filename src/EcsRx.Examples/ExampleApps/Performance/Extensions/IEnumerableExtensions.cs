@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using EcsRx.Components;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Extensions
 {

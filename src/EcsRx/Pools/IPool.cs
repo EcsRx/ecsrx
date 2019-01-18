@@ -1,4 +1,4 @@
-﻿namespace EcsRx.Entities
+﻿namespace EcsRx.Pools
 {
     public interface IPool<T>
     {

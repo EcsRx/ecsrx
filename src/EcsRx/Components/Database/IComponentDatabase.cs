@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using EcsRx.Collections;
 
 namespace EcsRx.Components.Database
 {
     public interface IComponentDatabase
     {
-        int CurrentEntityBounds { get; }
-        void AccommodateMoreEntities(int newMaxSize);
-        
-        IComponent Get(int componentTypeId, int entityId);
-        bool Has(int componentTypeId, int entityId);
-        void Add(int componentTypeId, int entityId, IComponent component);
-        void Remove(int componentTypeId, int entityId);
+        T Get<T>(int componentTypeId, int allocationIndex) where T : IComponent;
+        ref T GetRef<T>(int componentTypeId, int allocationIndex) where T : IComponent;
+        T[] GetComponents<T>(int componentTypeId) where T : IComponent;
+        void Set<T>(int componentTypeId, int allocationIndex, T component) where T : IComponent;
+        void Remove(int componentTypeId, int allocationIndex);
+        int Allocate(int componentTypeId);
 
-        IEnumerable<IComponent> GetAll(int entityId);
-        void RemoveAll(int entityId);
+        void PreAllocateComponents(int componentTypeId, int allocationSize);
+        IComponentPool<T> GetPoolFor<T>(int componentTypeId) where T : IComponent;
     }
 }

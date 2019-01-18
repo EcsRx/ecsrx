@@ -1,9 +1,9 @@
-﻿namespace EcsRx.Events
+﻿namespace EcsRx.Events.Collections
 {
-    public class CollectionElementChangedEvent<T>
+    public struct CollectionElementChangedEvent<T>
     {
-        public int Index { get; set; }
-        public T OldValue { get; set; }
-        public T NewValue { get; set; }        
+        public int Index;
+        public T OldValue;
+        public T NewValue;
     }
 }

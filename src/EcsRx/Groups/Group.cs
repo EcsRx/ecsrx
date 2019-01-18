@@ -22,6 +22,6 @@ namespace EcsRx.Groups
 	    }
 
 		public bool CanProcessEntity (IEntity entity)
-		{ return EntityPredicate == null || EntityPredicate(entity); }	    
+		{ return EntityPredicate == null || EntityPredicate(entity); }
     }
 }

@@ -30,7 +30,7 @@ namespace EcsRx.Infrastructure.Dependencies
             return this;
         }
         
-        public BindingBuilder WithConstructorArg<T>(string argValue)
+        public BindingBuilder WithConstructorArg<T>(T argValue)
         {
             _configuration.WithTypedConstructorArgs.Add(typeof(T), argValue);
             return this;

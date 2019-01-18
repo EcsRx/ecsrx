@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EcsRx.Entities
+namespace EcsRx.Pools
 {
     public class IdPool : IIdPool
     {
@@ -13,7 +13,7 @@ namespace EcsRx.Entities
         
         public readonly List<int> AvailableIds;
 
-        public IdPool(int increaseSize = 1000, int startingSize = 10000)
+        public IdPool(int increaseSize = 10000, int startingSize = 10000)
         {
             _lastMax = startingSize;
             _increaseSize = increaseSize;
@@ -39,7 +39,7 @@ namespace EcsRx.Entities
             if(id > _lastMax)
             { Expand(id); }
 
-            AvailableIds.Remove(id);            
+            AvailableIds.Remove(id);
         }
 
         public void ReleaseInstance(int id)

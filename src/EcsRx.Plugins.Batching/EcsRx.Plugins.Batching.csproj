@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>0.0.0</Version>
+        <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+        <Title>EcsRx.Plugins.Batching</Title>
+        <Authors>Grofit (LP)</Authors>
+        <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ecsrx/ecsrx</PackageProjectUrl>
+        <Description>EcsRx plugin to allow batching of components in systems</Description>
+        <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>7.3</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj" />
+      <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
+    </ItemGroup>
+
+</Project>

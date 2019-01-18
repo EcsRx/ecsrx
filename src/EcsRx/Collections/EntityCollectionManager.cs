@@ -1,27 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using EcsRx.Components;
+using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Events;
+using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Lookups;
 using EcsRx.MicroRx;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Collections
-{
+{   
     public class EntityCollectionManager : IEntityCollectionManager, IDisposable
     {
-        public const string DefaultPoolName = "default";
-        
-        private readonly IDictionary<ObservableGroupToken, IObservableGroup> _observableGroups;
-        private readonly IDictionary<string, IEntityCollection> _collections;
-        private readonly IDictionary<string, IDisposable> _collectionSubscriptions;
+        private readonly ObservableGroupLookup _observableGroups;
+        private readonly CollectionLookup _collections;
+        private readonly IDictionary<int, IDisposable> _collectionSubscriptions;
 
-        public IEnumerable<IEntityCollection> Collections => _collections.Values;
+        public IReadOnlyList<IEntityCollection> Collections => _collections;
+        public IReadOnlyList<IObservableGroup> ObservableGroups => _observableGroups;
+
         public IEntityCollectionFactory EntityCollectionFactory { get; }
         public IObservableGroupFactory ObservableGroupFactory { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
@@ -33,14 +37,14 @@ namespace EcsRx.Collections
         public IObservable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
         public IObservable<IEntityCollection> CollectionAdded => _onCollectionAdded;
         public IObservable<IEntityCollection> CollectionRemoved => _onCollectionRemoved;
-        
+
+        private readonly Subject<IEntityCollection> _onCollectionAdded;
+        private readonly Subject<IEntityCollection> _onCollectionRemoved;
         private readonly Subject<CollectionEntityEvent> _onEntityAdded;
         private readonly Subject<CollectionEntityEvent> _onEntityRemoved;
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsAdded;
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoving;
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoved;
-        private readonly Subject<IEntityCollection> _onCollectionAdded;
-        private readonly Subject<IEntityCollection> _onCollectionRemoved;
 
         public EntityCollectionManager(IEntityCollectionFactory entityCollectionFactory, IObservableGroupFactory observableGroupFactory, IComponentTypeLookup componentTypeLookup)
         {
@@ -48,114 +52,149 @@ namespace EcsRx.Collections
             ObservableGroupFactory = observableGroupFactory;
             ComponentTypeLookup = componentTypeLookup;
 
-            _observableGroups = new Dictionary<ObservableGroupToken, IObservableGroup>();
-            _collections = new Dictionary<string, IEntityCollection>();
-            _collectionSubscriptions = new Dictionary<string, IDisposable>();
-            
+            _observableGroups = new ObservableGroupLookup();
+            _collections = new CollectionLookup();
+            _collectionSubscriptions = new Dictionary<int, IDisposable>();
+            _onCollectionAdded = new Subject<IEntityCollection>();
+            _onCollectionRemoved = new Subject<IEntityCollection>();
             _onEntityAdded = new Subject<CollectionEntityEvent>();
             _onEntityRemoved = new Subject<CollectionEntityEvent>();
             _onEntityComponentsAdded = new Subject<ComponentsChangedEvent>();
             _onEntityComponentsRemoving = new Subject<ComponentsChangedEvent>();
             _onEntityComponentsRemoved = new Subject<ComponentsChangedEvent>();
-            _onCollectionAdded = new Subject<IEntityCollection>();
-            _onCollectionRemoved = new Subject<IEntityCollection>();
 
-            CreateCollection(DefaultPoolName);
+
+            CreateCollection(PoolLookups.DefaultPoolId);
         }
 
         public void SubscribeToCollection(IEntityCollection collection)
         {
-            var collectionDisposable = new CompositeDisposable();
-
+            var collectionDisposable = new CompositeDisposable();   
             collection.EntityAdded.Subscribe(x => _onEntityAdded.OnNext(x)).AddTo(collectionDisposable);
             collection.EntityRemoved.Subscribe(x => _onEntityRemoved.OnNext(x)).AddTo(collectionDisposable);
             collection.EntityComponentsAdded.Subscribe(x => _onEntityComponentsAdded.OnNext(x)).AddTo(collectionDisposable);
             collection.EntityComponentsRemoving.Subscribe(x => _onEntityComponentsRemoving.OnNext(x)).AddTo(collectionDisposable);
             collection.EntityComponentsRemoved.Subscribe(x => _onEntityComponentsRemoved.OnNext(x)).AddTo(collectionDisposable);
-            
-            _collectionSubscriptions.Add(collection.Name, collectionDisposable);
+
+            _collectionSubscriptions.Add(collection.Id, collectionDisposable);
         }
 
-        public void UnsubscribeFromCollection(string collectionName)
-        { _collectionSubscriptions.RemoveAndDispose(collectionName); }
+        public void UnsubscribeFromCollection(int id)
+        { _collectionSubscriptions.RemoveAndDispose(id); }
         
-        public IEntityCollection CreateCollection(string name)
+        public IEntityCollection CreateCollection(int id)
         {
-            var collection = EntityCollectionFactory.Create(name);
-            _collections.Add(name, collection);
+            var collection = EntityCollectionFactory.Create(id);
+            _collections.Add(collection);
             SubscribeToCollection(collection);
 
             _onCollectionAdded.OnNext(collection);
             
             return collection;
         }
-
-        public IEntityCollection GetCollection(string name = null)
-        { return _collections[name ?? DefaultPoolName]; }
-
-        public void RemoveCollection(string name, bool disposeEntities = true)
+        
+        public IEnumerable<IObservableGroup> GetApplicableGroups(int[] componentTypeIds)
         {
-            if(!_collections.ContainsKey(name)) { return; }
+            for (var i = _observableGroups.Count - 1; i >= 0; i--)
+            {
+                if (_observableGroups[i].Token.LookupGroup.Matches(componentTypeIds))
+                { yield return _observableGroups[i]; }
+            }
+        }
 
-            var collection = _collections[name];
-            _collections.Remove(name);
+        public IEntityCollection GetCollection(int id = PoolLookups.DefaultPoolId)
+        { return _collections[id]; }
+
+        public void RemoveCollection(int id, bool disposeEntities = true)
+        {
+            if(!_collections.Contains(id)) { return; }
+
+            var collection = _collections[id];
+            _collections.Remove(id);
             
-            UnsubscribeFromCollection(name);
+            UnsubscribeFromCollection(id);
 
             _onCollectionRemoved.OnNext(collection);
         }
         
-        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, string collectionName = null)
+        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = PoolLookups.NoPoolDefined)
         {
             if(group is EmptyGroup)
             { return new IEntity[0]; }
 
-            if (collectionName != null)
-            { return _collections[collectionName].MatchingGroup(group); }
+            if (collectionId == PoolLookups.NoPoolDefined)
+            { return _collections[collectionId].MatchingGroup(group); }
 
             return Collections.GetAllEntities().MatchingGroup(group);
         }
         
-        public IEnumerable<IEntity> GetEntitiesFor(ILookupGroup lookupGroup, string collectionName = null)
+        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, params int[] collectionIds)
+        {
+            if(group is EmptyGroup)
+            { return new IEntity[0]; }
+
+            if (collectionIds == null || collectionIds.Length == 0)
+            { return Collections.GetAllEntities().MatchingGroup(group); }
+
+            var matchingEntities = new List<IEntity>();
+            foreach (var collectionName in collectionIds)
+            {
+                var results = _collections[collectionName].MatchingGroup(group);
+                matchingEntities.AddRange(results);
+            }
+
+            return matchingEntities;
+        }
+        
+        public IEnumerable<IEntity> GetEntitiesFor(LookupGroup lookupGroup, params int[] collectionIds)
         {
             if(lookupGroup.RequiredComponents.Length == 0 && lookupGroup.ExcludedComponents.Length  == 0)
             { return new IEntity[0]; }
 
-            if (collectionName != null)
-            { return _collections[collectionName].MatchingGroup(lookupGroup); }
+            if (collectionIds == null || collectionIds.Length == 0)
+            { return Collections.GetAllEntities().MatchingGroup(lookupGroup); }
 
-            return Collections.GetAllEntities().MatchingGroup(lookupGroup);
+            var matchingEntities = new List<IEntity>();
+            foreach (var collectionName in collectionIds)
+            {
+                var results = _collections[collectionName].MatchingGroup(lookupGroup);
+                matchingEntities.AddRange(results);
+            }
+
+            return matchingEntities;
         }
 
-        public IObservableGroup GetObservableGroup(IGroup group, string collectionName = null)
+        public IObservableGroup GetObservableGroup(IGroup group, params int[] collectionIds)
         {
             var requiredComponents = ComponentTypeLookup.GetComponentTypes(group.RequiredComponents);
             var excludedComponents = ComponentTypeLookup.GetComponentTypes(group.ExcludedComponents);
             var lookupGroup = new LookupGroup(requiredComponents, excludedComponents);
-            var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionName);
-            if (_observableGroups.ContainsKey(observableGroupToken)) { return _observableGroups[observableGroupToken]; }
+            
+            var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionIds);
+            if (_observableGroups.Contains(observableGroupToken)) 
+            { return _observableGroups[observableGroupToken]; }
 
-            var entityMatches = GetEntitiesFor(lookupGroup, collectionName);
+            var entityMatches = GetEntitiesFor(lookupGroup, collectionIds);
             var configuration = new ObservableGroupConfiguration
             {
                 ObservableGroupToken = observableGroupToken,
                 InitialEntities = entityMatches
             };
 
-            if (collectionName != null)
-            { configuration.NotifyingCollection = _collections[collectionName]; }
+            if (collectionIds != null && collectionIds.Length > 0)
+            { configuration.NotifyingCollections = _collections.Where(x => collectionIds.Contains(x.Id)); }
             else
-            { configuration.NotifyingCollection = this; }
+            { configuration.NotifyingCollections = new []{this}; }
             
             var observableGroup = ObservableGroupFactory.Create(configuration);
-            _observableGroups.Add(observableGroupToken, observableGroup);
+            _observableGroups.Add(observableGroup);
 
             return _observableGroups[observableGroupToken];
         }
 
         public void Dispose()
         {
-            foreach (var observableGroup in _observableGroups.Values)
+            foreach (var observableGroup in _observableGroups)
             { (observableGroup as IDisposable)?.Dispose(); }
             
             _onEntityAdded.Dispose();

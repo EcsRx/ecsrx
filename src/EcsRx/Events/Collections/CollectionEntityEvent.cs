@@ -1,17 +1,15 @@
 ﻿using EcsRx.Collections;
 using EcsRx.Entities;
 
-namespace EcsRx.Events
+namespace EcsRx.Events.Collections
 {
-    public class CollectionEntityEvent
+    public struct CollectionEntityEvent
     {
-        public IEntity Entity { get; }
-        public IEntityCollection Collection { get; }
+        public readonly IEntity Entity;
 
-        public CollectionEntityEvent(IEntity entity, IEntityCollection collection)
+        public CollectionEntityEvent(IEntity entity)
         {
             Entity = entity;
-            Collection = collection;
         }
     }
 }

@@ -1,79 +1,71 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using EcsRx.Extensions;
+using EcsRx.Collections;
+using EcsRx.Components.Lookups;
 
 namespace EcsRx.Components.Database
 {
     public class ComponentDatabase : IComponentDatabase
     {
-        public int CurrentEntityBounds
-        {
-            get
-            {
-                if (EntityComponents.Length == 0)
-                { return 0; }
-
-                return EntityComponents[0].Count;
-            }
-        }
-
-        public List<IComponent>[] EntityComponents { get; private set; }
+        public int DefaultExpansionAmount { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
-        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int entitySetupSize = 500)
+        public IComponentPool[] ComponentData { get; private set; }
+
+        public ComponentDatabase(IComponentTypeLookup componentTypeLookup, int defaultExpansionSize = 100)
         {
             ComponentTypeLookup = componentTypeLookup;
-            Initialize(entitySetupSize);
+            DefaultExpansionAmount = defaultExpansionSize;
+            Initialize();
         }
 
-        public void Initialize(int entitySetupSize)
+        public IComponentPool CreatePoolFor(Type type, int expansionAmount)
         {
-            var componentCount = ComponentTypeLookup.GetAllComponentTypes().Count;
-            EntityComponents = new List<IComponent>[componentCount];
-            
-            for(var i=0;i<EntityComponents.Length;i++)
-            { EntityComponents[i] = new List<IComponent>(); }
-            
-            AccommodateMoreEntities(entitySetupSize);
+            var componentPoolType = typeof(ComponentPool<>);
+            Type[] typeArgs = { type };
+            var genericComponentPoolType = componentPoolType.MakeGenericType(typeArgs);
+            return (IComponentPool)Activator.CreateInstance(genericComponentPoolType, expansionAmount);
         }
         
-        public void AccommodateMoreEntities(int newMaxSize)
+        public void Initialize()
         {
-            var expandBy = newMaxSize - CurrentEntityBounds;
-            for (var i=0;i<EntityComponents.Length;i++)
-            { EntityComponents[i].ExpandListTo(expandBy); }
+            var componentTypes = ComponentTypeLookup.GetAllComponentTypes().ToArray();
+            var componentCount = componentTypes.Length;
+            ComponentData = new IComponentPool[componentCount];
+
+            for (var i = 0; i < componentCount; i++)
+            { ComponentData[i] = CreatePoolFor(componentTypes[i].Key, DefaultExpansionAmount); }            
         }
+
+        public IComponentPool<T> GetPoolFor<T>(int componentTypeId) where T : IComponent
+        { return (IComponentPool<T>) ComponentData[componentTypeId]; }
         
-        public IComponent Get(int componentTypeId, int entityId)
-        { return EntityComponents[componentTypeId][entityId]; }
-
-        public IEnumerable<IComponent> GetAll(int entityId)
-        {
-            for (var i = EntityComponents.Length - 1; i >= 0; i--)
-            {
-                var component = EntityComponents[i][entityId];
-                if(component != null) { yield return component; }
-            }
-        }
-
-        public bool Has(int componentTypeId, int entityId)
-        {
-            if(EntityComponents[componentTypeId].Count <= entityId)
-            { return false; }
-            
-            return EntityComponents[componentTypeId][entityId] != null;
-        }
-
-        public void Add(int componentTypeId, int entityId, IComponent component)
-        { EntityComponents[componentTypeId][entityId] = component; }
-
-        public void Remove(int componentTypeId, int entityId)
-        { EntityComponents[componentTypeId][entityId] = null; }
+        public T Get<T>(int componentTypeId, int allocationIndex) where T : IComponent
+        { return GetPoolFor<T>(componentTypeId).Components[allocationIndex]; }
         
-        public void RemoveAll(int entityId)
+        public ref T GetRef<T>(int componentTypeId, int allocationIndex) where T : IComponent
+        { return ref GetPoolFor<T>(componentTypeId).Components[allocationIndex]; }
+
+        public T[] GetComponents<T>(int componentTypeId) where T : IComponent
+        { return GetPoolFor<T>(componentTypeId).Components; }
+
+        public void Set<T>(int componentTypeId, int allocationIndex, T component) where T : IComponent
+        { GetPoolFor<T>(componentTypeId).Components[allocationIndex] = component; }
+        
+        public void Remove(int componentTypeId, int allocationIndex)
+        { ComponentData[componentTypeId].Release(allocationIndex); }
+
+        public int Allocate(int componentTypeId)
         {
-            for (var i = EntityComponents.Length - 1; i >= 0; i--)
-            { Remove(i, entityId); }
+            var pool = ComponentData[componentTypeId];
+            if(pool.IndexesRemaining == 0) { pool.Expand(DefaultExpansionAmount); }
+            return pool.Allocate();
+        }
+
+        public void PreAllocateComponents(int componentTypeId, int allocationSize)
+        {
+            var pool = ComponentData[componentTypeId];
+            pool.Expand(allocationSize);
         }
     }
 }

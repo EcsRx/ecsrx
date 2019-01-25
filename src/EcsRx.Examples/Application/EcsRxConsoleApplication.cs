@@ -4,8 +4,8 @@ using EcsRx.Infrastructure.Ninject;
 using EcsRx.Plugins.Batching;
 using EcsRx.Plugins.Computeds;
 using EcsRx.Plugins.ReactiveSystems;
+using EcsRx.Plugins.ReactiveSystems.Extensions;
 using EcsRx.Plugins.Views;
-using EcsRx.Plugins.Views.Extensions;
 
 namespace EcsRx.Examples.Application
 {
@@ -23,7 +23,7 @@ namespace EcsRx.Examples.Application
 
         protected override void StartSystems()
         {
-            this.StartAllBoundSystems();
+            this.StartAllBoundReactiveSystems();
         }
     }
 }

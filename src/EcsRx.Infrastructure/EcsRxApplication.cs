@@ -8,6 +8,7 @@ using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.Infrastructure.Modules;
 using EcsRx.Infrastructure.Plugins;
+using EcsRx.Systems;
 
 namespace EcsRx.Infrastructure
 {
@@ -41,6 +42,9 @@ namespace EcsRx.Infrastructure
             StartSystems();
             ApplicationStarted();
         }
+
+        public virtual void StopApplication()
+        { StopAndUnbindAllSystems(); }
 
         /// <summary>
         /// Load any modules that your application needs
@@ -77,6 +81,13 @@ namespace EcsRx.Infrastructure
         /// <remarks>By default will auto bind any systems within application scope</remarks>
         protected virtual void BindSystems()
         { this.BindAllSystemsWithinApplicationScope(); }
+
+        protected virtual void StopAndUnbindAllSystems()
+        {
+            var allSystems = SystemExecutor.Systems.ToList();
+            allSystems.ForEachRun(SystemExecutor.RemoveSystem);
+            Container.Unbind<ISystem>();
+        }
 
         /// <summary>
         /// Start any systems that the application will need

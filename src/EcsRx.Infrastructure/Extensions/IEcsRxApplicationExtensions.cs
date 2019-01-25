@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EcsRx.Extensions;
@@ -144,12 +145,24 @@ namespace EcsRx.Infrastructure.Extensions
         }
         
         /// <summary>
+        /// Resolve all systems which have been bound in the order they should be registered
+        /// </summary>
+        /// <param name="application">The application to act on</param>
+        /// <remarks>This ordering will be purely by priority</remarks>
+        public static IEnumerable<ISystem> GetAllBoundSystems(this IEcsRxApplication application)
+        {
+            var allSystems = application.Container.ResolveAll<ISystem>();
+            return allSystems.OrderByPriority();
+        }
+        
+        /// <summary>
         /// Resolve all systems which have been bound and register them in order with the systems executor
         /// </summary>
         /// <param name="application">The application to act on</param>
+        /// <remarks>Will be purely</remarks>
         public static void StartAllBoundSystems(this IEcsRxApplication application)
         {
-            var allSystems = application.Container.ResolveAll<ISystem>();
+            var allSystems = GetAllBoundSystems(application);
             allSystems.ForEachRun(application.SystemExecutor.AddSystem);
         }
     }

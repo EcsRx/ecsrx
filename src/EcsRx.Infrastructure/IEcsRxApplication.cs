@@ -42,5 +42,10 @@ namespace EcsRx.Infrastructure
         /// This starts the application initialization process
         /// </summary>
         void StartApplication();
+
+        /// <summary>
+        /// This stops the application process
+        /// </summary>
+        void StopApplication();
     }
 }

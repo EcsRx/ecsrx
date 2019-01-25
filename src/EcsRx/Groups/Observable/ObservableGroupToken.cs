@@ -2,7 +2,7 @@
 
 namespace EcsRx.Groups.Observable
 {
-    public struct ObservableGroupToken
+    public struct ObservableGroupToken : IEquatable<ObservableGroupToken>
     {
         public LookupGroup LookupGroup { get; }
         public int[] CollectionIds { get; }
@@ -18,6 +18,13 @@ namespace EcsRx.Groups.Observable
             LookupGroup = lookupGroup;
             CollectionIds = collectionIds;
         }
+
+        public bool Equals(ObservableGroupToken other)
+        {
+            return LookupGroup.RequiredComponents == other.LookupGroup.RequiredComponents
+                   && LookupGroup.ExcludedComponents == other.LookupGroup.ExcludedComponents
+                   && CollectionIds == other.CollectionIds;
+        }
         
         public override int GetHashCode()
         {
@@ -26,5 +33,6 @@ namespace EcsRx.Groups.Observable
             var poolHash = CollectionIds?.GetHashCode() ?? 0;
             return requiredHash ^ excludedHash ^ poolHash;
         }
+        
     }
 }

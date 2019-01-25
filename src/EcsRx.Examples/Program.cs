@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsRx.Examples.Custom;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample;
 using EcsRx.Examples.ExampleApps.HealthExample;
@@ -17,7 +18,7 @@ namespace EcsRx.Examples
             //new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
-            new BatchedGroupExampleApplication().StartApplication();
+            //new BatchedGroupExampleApplication().StartApplication();
             
             // Performance examples
             //new SimpleSystemApplication().StartApplication();
@@ -36,6 +37,8 @@ namespace EcsRx.Examples
             //new Class4Application().StartApplication();
             //new Struct4Application().StartApplication();            
             //new Struct4BApplication().StartApplication();
+
+            new SetupSystemPriorityApplication().StartApplication();
         }
     }
 }

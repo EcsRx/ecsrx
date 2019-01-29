@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EcsRx.Pools
 {   
-    public struct IndexPool : IPool<int>
+    public class IndexPool : IPool<int>
     {
         public int IncrementSize => _increaseSize;
         
@@ -45,10 +45,11 @@ namespace EcsRx.Pools
             if (increaseBy <= 0){ return; }
             
             var newEntries = Enumerable.Range(_lastMax, increaseBy).Reverse();
-            _lastMax += increaseBy;
             
             foreach(var entry in newEntries)
             { AvailableIndexes.Push(entry); }
+            
+            _lastMax += increaseBy;
         }
 
         public void Clear()

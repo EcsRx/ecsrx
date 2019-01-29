@@ -17,6 +17,7 @@ namespace EcsRx.Collections
         
         IObservable<bool> OnPoolExtending { get; }
         
+        void Expand();
         void Expand(int amountToAdd);
         void Set(int index, object value);
         

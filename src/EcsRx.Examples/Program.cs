@@ -15,11 +15,12 @@ namespace EcsRx.Examples
         static void Main(string[] args)
         {
             // Sample examples
-            //new HelloWorldExampleApplication().StartApplication();
+            new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
             //new BatchedGroupExampleApplication().StartApplication();
-            
+            //new SetupSystemPriorityApplication().StartApplication();
+
             // Performance examples
             //new SimpleSystemApplication().StartApplication();
             //new GroupPerformanceApplication().StartApplication();
@@ -38,7 +39,6 @@ namespace EcsRx.Examples
             //new Struct4Application().StartApplication();            
             //new Struct4BApplication().StartApplication();
 
-            new SetupSystemPriorityApplication().StartApplication();
         }
     }
 }

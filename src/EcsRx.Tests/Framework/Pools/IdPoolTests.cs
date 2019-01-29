@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EcsRx.Pools;
 using Xunit;
 
@@ -79,6 +80,24 @@ namespace EcsRx.Tests.Framework.Pools
 
             var expectedIdEntries = Enumerable.Range(1, explicitNewId - 2).ToArray();
             Assert.All(idPool.AvailableIds, x => expectedIdEntries.Contains(x));
+        }
+
+        [Fact]
+        public void should_correctly_keep_expanding_when_continually_allocating()
+        {
+            var expectedSize = 5000;
+            var idPool = new IdPool();
+            var expectedAllocations = Enumerable.Range(1, expectedSize).ToList();
+            var actualAllocations = new List<int>();
+            
+            for (var i = 0; i < expectedSize; i++)
+            {
+                var allocation = idPool.AllocateInstance(); 
+                actualAllocations.Add(allocation);
+            }
+
+            Assert.Equal(expectedSize, actualAllocations.Count);
+            Assert.All(actualAllocations, x => expectedAllocations.Contains(x));
         }
     }
 }

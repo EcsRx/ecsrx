@@ -14,7 +14,8 @@ namespace EcsRx.Collections
         
         public int Count { get; private set; }
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
-
+        public int ExpansionSize { get; private set; }
+        
         public IObservable<bool> OnPoolExtending => _onPoolExtending;
         private readonly Subject<bool> _onPoolExtending;
 
@@ -24,16 +25,26 @@ namespace EcsRx.Collections
         public ComponentPool(int expansionSize, int initialSize)
         {
             Count = initialSize;
+            ExpansionSize = expansionSize;
             IndexPool = new IndexPool(expansionSize, initialSize);
             Components = new T[initialSize];
             _onPoolExtending = new Subject<bool>();
         }
 
-        public int Allocate() => IndexPool.AllocateInstance();
+        public int Allocate()
+        {
+            if(IndexesRemaining == 0) 
+            { Expand(); }
+            return IndexPool.AllocateInstance();
+        }
+
         public void Release(int index) => IndexPool.ReleaseInstance(index);
         
         public void Set(int index, object value) => Components.SetValue(value, index);
 
+        public void Expand()
+        { Expand(ExpansionSize); }
+        
         public void Expand(int amountToAdd)
         {
             var newCount = Components.Length + amountToAdd;

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EcsRx.Pools;
 using Xunit;
 
@@ -42,6 +43,44 @@ namespace EcsRx.Tests.Framework.Pools
 
             var expectedIdEntries = Enumerable.Range(1, expectedSize).ToArray();
             Assert.All(indexPool.AvailableIndexes, x => expectedIdEntries.Contains(x));
+        }
+        
+        [Fact]
+        public void should_continually_expand_correctly_with_auto_expansion()
+        {
+            var expectedExpansions = 5;
+            var defaultExpansionAmount = 30;
+            var originalSize = 10;
+            var expectedSize = (defaultExpansionAmount * expectedExpansions) + originalSize;
+            var expectedIndexEntries = Enumerable.Range(0, expectedSize).ToArray();
+            var indexPool = new IndexPool(defaultExpansionAmount, originalSize);
+
+            for (var i = 0; i < expectedExpansions; i++)
+            { indexPool.Expand(); }
+
+            Assert.Equal(expectedSize, indexPool.AvailableIndexes.Count);
+            Assert.All(indexPool.AvailableIndexes, x => expectedIndexEntries.Contains(x));
+        }
+        
+        [Fact]
+        public void should_continually_expand_correctly_when_allocating_over_count()
+        {
+            var expectedAllocations = 200;
+            var defaultExpansionAmount = 5;
+            var originalSize = 10;
+            var expectedIndexEntries = Enumerable.Range(0, expectedAllocations).ToArray();
+            var actualIndexEntries = new List<int>();
+            var indexPool = new IndexPool(defaultExpansionAmount, originalSize);
+
+            for (var i = 0; i < expectedAllocations; i++)
+            {
+                var index = indexPool.AllocateInstance();
+                actualIndexEntries.Add(index);
+            }
+
+            Assert.Equal(0, indexPool.AvailableIndexes.Count);
+            Assert.Equal(expectedAllocations, actualIndexEntries.Count);
+            Assert.All(indexPool.AvailableIndexes, x => expectedIndexEntries.Contains(x));
         }
         
         [Fact]

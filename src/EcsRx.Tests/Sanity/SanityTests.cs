@@ -266,5 +266,29 @@ namespace EcsRx.Tests.Sanity
             Assert.Equal(finalFloat, structComponent2.Data);
             Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);        
         }
+        
+        [Fact]
+        public void should_allocate_entities_correctly()
+        {
+            var expectedSize = 5000;
+            var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
+            var collection = collectionManager.GetCollection();
+            var observableGroup = collectionManager.GetObservableGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
+            
+            for (var i = 0; i < expectedSize; i++)
+            {
+                var entity = collection.CreateEntity();
+                entity.AddComponents(new ViewComponent(), new TestComponentOne());
+            }
+
+            Assert.Equal(expectedSize, collection.Count);
+            Assert.Equal(expectedSize, observableGroup.Count);
+
+            var viewComponentPool = componentDatabase.GetPoolFor<ViewComponent>(componentLookup.GetComponentType(typeof(ViewComponent)));
+            Assert.Equal(expectedSize, viewComponentPool.Components.Length);
+            
+            var testComponentPool = componentDatabase.GetPoolFor<TestComponentOne>(componentLookup.GetComponentType(typeof(TestComponentOne)));
+            Assert.Equal(expectedSize, testComponentPool.Components.Length);
+        }
     }
 }

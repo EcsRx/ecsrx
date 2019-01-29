@@ -19,12 +19,12 @@ namespace EcsRx.Components.Database
             Initialize();
         }
 
-        public IComponentPool CreatePoolFor(Type type, int expansionAmount)
+        public IComponentPool CreatePoolFor(Type type, int initialSize)
         {
             var componentPoolType = typeof(ComponentPool<>);
             Type[] typeArgs = { type };
             var genericComponentPoolType = componentPoolType.MakeGenericType(typeArgs);
-            return (IComponentPool)Activator.CreateInstance(genericComponentPoolType, expansionAmount);
+            return (IComponentPool)Activator.CreateInstance(genericComponentPoolType, initialSize);
         }
         
         public void Initialize()
@@ -58,7 +58,6 @@ namespace EcsRx.Components.Database
         public int Allocate(int componentTypeId)
         {
             var pool = ComponentData[componentTypeId];
-            if(pool.IndexesRemaining == 0) { pool.Expand(DefaultExpansionAmount); }
             return pool.Allocate();
         }
 

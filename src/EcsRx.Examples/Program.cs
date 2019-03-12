@@ -15,7 +15,7 @@ namespace EcsRx.Examples
         static void Main(string[] args)
         {
             // Sample examples
-            new HelloWorldExampleApplication().StartApplication();
+            //new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
             //new BatchedGroupExampleApplication().StartApplication();
@@ -27,6 +27,7 @@ namespace EcsRx.Examples
             //new OptimizedGroupPerformanceApplication().StartApplication();
             //new OptimizedEntityPerformanceApplication().StartApplication();
             //new EntityPerformanceApplication().StartApplication();
+            new MakingLotsOfEntitiesApplication().StartApplication();
            
             // Playground examples
             //new Class1Application().StartApplication();

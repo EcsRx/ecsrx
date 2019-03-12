@@ -1,6 +1,7 @@
 using System;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
+using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
@@ -24,6 +25,7 @@ namespace EcsRx.Plugins.Batching.Systems
         protected IObservableGroup ObservableGroup { get; set; }
         protected bool ShouldParallelize { get; private set; }
         protected IDisposable Subscriptions;
+        public bool isRebuilding { get; protected set; }
 
         protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler)
         {
@@ -32,6 +34,13 @@ namespace EcsRx.Plugins.Batching.Systems
             ThreadHandler = threadHandler;
         }
 
+        private void RebuildWrapper()
+        {
+            isRebuilding = true;
+            RebuildBatch();
+            isRebuilding = false;
+        }
+        
         protected abstract void RebuildBatch();
         protected abstract IObservable<bool> ReactWhen();
 
@@ -45,17 +54,21 @@ namespace EcsRx.Plugins.Batching.Systems
             ShouldParallelize = this.ShouldMutliThread();
             
             var subscriptions = new CompositeDisposable();
-            ObservableGroup.OnEntityAdded.Subscribe(_ => RebuildBatch()).AddTo(subscriptions);
-            ObservableGroup.OnEntityRemoved.Subscribe(_ => RebuildBatch()).AddTo(subscriptions);
+            ProcessGroupSubscription(ObservableGroup.OnEntityAdded).Subscribe(_ => RebuildWrapper()).AddTo(subscriptions);
+            ProcessGroupSubscription(ObservableGroup.OnEntityRemoved).Subscribe(_ => RebuildWrapper()).AddTo(subscriptions);
             
-            RebuildBatch();
+            RebuildWrapper();
             ReactWhen().Subscribe(_ => RunBatch()).AddTo(subscriptions);
             
             Subscriptions = subscriptions;
         }
 
+        protected virtual IObservable<IEntity> ProcessGroupSubscription(IObservable<IEntity> groupChange)
+        { return groupChange; }
+
         private void RunBatch()
         {
+            if (isRebuilding) { return; }
             BeforeProcessing();
             ProcessBatch();
             AfterProcessing();

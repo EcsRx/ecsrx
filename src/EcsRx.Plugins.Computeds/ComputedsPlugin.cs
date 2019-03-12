@@ -11,7 +11,11 @@ namespace EcsRx.Plugins.Computeds
         public string Name => "Computeds";
         public Version Version { get; } = new Version("1.0.0");
         
-        public void SetupDependencies(IDependencyContainer container){}
+        public void SetupDependencies(IDependencyContainer container)
+        {
+            // Nothing needs registering
+        }
+        
         public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => new ISystem[0];
     }
 }

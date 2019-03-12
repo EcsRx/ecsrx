@@ -27,7 +27,7 @@ namespace EcsRx.Plugins.Computeds.Groups
         
         public IObservableGroup InternalObservableGroup { get; }
 
-        public ComputedGroup(IObservableGroup internalObservableGroup)
+        protected ComputedGroup(IObservableGroup internalObservableGroup)
         {
             InternalObservableGroup = internalObservableGroup;
             CachedEntities = new EntityLookup();

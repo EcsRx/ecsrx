@@ -18,7 +18,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj)) {return false;}
             return obj is Batch<T1, T2> other && Equals(other);
         }
 
@@ -60,7 +60,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj)) {return false;}
             return obj is Batch<T1, T2, T3> other && Equals(other);
         }
 
@@ -107,7 +107,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj)) {return false;}
             return obj is Batch<T1, T2, T3, T4> other && Equals(other);
         }
 
@@ -158,7 +158,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj)) {return false;}
             return obj is Batch<T1, T2, T3, T4, T5> other && Equals(other);
         }
 
@@ -213,7 +213,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj)) {return false;}
             return obj is Batch<T1, T2, T3, T4, T5, T6> other && Equals(other);
         }
 

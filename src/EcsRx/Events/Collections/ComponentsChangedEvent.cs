@@ -21,7 +21,7 @@ namespace EcsRx.Events.Collections
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(null, obj)) {return false;}
             return obj is ComponentsChangedEvent other && Equals(other);
         }
 

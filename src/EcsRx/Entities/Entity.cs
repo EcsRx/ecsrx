@@ -11,7 +11,7 @@ namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
-        public const int NotAllocated = -1;
+        public static readonly int NotAllocated = -1;
         
         public IObservable<int[]> ComponentsAdded => _onComponentsAdded;
         public IObservable<int[]> ComponentsRemoving => _onComponentsRemoving;

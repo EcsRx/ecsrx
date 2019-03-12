@@ -3,6 +3,7 @@
 EcsRx is a reactive take on the common ECS pattern with a well separated design using rx and adhering to IoC and other sensible design patterns.
 
 [![Build Status][build-status-image]][build-status-url]
+[![Code Quality Status][codacy-image]][codacy-url]
 [![Nuget Version][nuget-image]][nuget-url]
 [![Join Discord Chat][discord-image]][discord-url]
 
@@ -108,3 +109,5 @@ See the [docs folder](docs) for more information. (This will grow)
 [nuget-url]: https://www.nuget.org/packages/EcsRx/
 [discord-image]: https://img.shields.io/discord/488609938399297536.svg
 [discord-url]: https://discord.gg/bS2rnGz
+[codacy-image]: https://api.codacy.com/project/badge/Grade/750972bd01be48e983ef7eec3fcb5a93
+[codacy-url]: https://www.codacy.com/app/grofit/ecsrx?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EcsRx/ecsrx&amp;utm_campaign=Badge_Grade

@@ -9,7 +9,8 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Extensions
         public static int GetHealthPercentile(this IEntity entity)
         {
             var healthComponent = entity.GetComponent<HasHealthComponent>();
-            var percentage = ((float)healthComponent.CurrentHealth / (float)healthComponent.MaxHealth) * 100;
+            var percentile = healthComponent.CurrentHealth / (float) healthComponent.MaxHealth;
+            var percentage = percentile * 100;
             return (int) percentage;
         }
         

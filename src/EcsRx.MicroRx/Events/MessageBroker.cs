@@ -15,7 +15,7 @@ namespace EcsRx.MicroRx.Events
         /// </summary>
         public static readonly IMessageBroker Default = new MessageBroker();
 
-        bool isDisposed = false;
+        bool isDisposed;
         readonly Dictionary<Type, object> notifiers = new Dictionary<Type, object>();
 
         public void Publish<T>(T message)

@@ -32,6 +32,8 @@ namespace EcsRx.Executor.Handlers
         }
 
         public void Dispose()
-        {}
+        {
+            // Nothing to dispose
+        }
     }
 }

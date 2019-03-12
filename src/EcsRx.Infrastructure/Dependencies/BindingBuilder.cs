@@ -1,4 +1,5 @@
 ﻿using System;
+using EcsRx.Infrastructure.Exceptions;
 
 namespace EcsRx.Infrastructure.Dependencies
 {
@@ -53,7 +54,7 @@ namespace EcsRx.Infrastructure.Dependencies
         public BindingBuilder<TFrom> ToInstance<TTo>(TTo instance) where TTo : TFrom
         {
             if(_configuration.ToMethod != null)
-            { throw new Exception("Cannot use instance when a method has been provided already"); }
+            { throw new BindingException("Cannot use instance when a method has been provided already"); }
             
             _configuration.ToInstance = instance;
             return this;
@@ -62,7 +63,7 @@ namespace EcsRx.Infrastructure.Dependencies
         public BindingBuilder<TFrom> ToMethod<TTo>(Func<IDependencyContainer, TTo> method) where TTo : TFrom
         {
             if(_configuration.ToInstance != null)
-            { throw new Exception("Cannot use method when an instance has been provided already"); }
+            { throw new BindingException("Cannot use method when an instance has been provided already"); }
             
             _configuration.ToMethod = container => method(container);
             return this;

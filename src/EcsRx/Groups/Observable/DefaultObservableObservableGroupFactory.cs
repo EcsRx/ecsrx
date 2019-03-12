@@ -1,6 +1,4 @@
-﻿using EcsRx.Events;
-
-namespace EcsRx.Groups.Observable
+﻿namespace EcsRx.Groups.Observable
 {
     public class DefaultObservableObservableGroupFactory : IObservableGroupFactory
     {

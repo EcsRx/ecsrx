@@ -86,7 +86,7 @@ namespace EcsRx.MicroRx.Disposables
             if (item == null)
                 throw new ArgumentNullException("item");
 
-            var shouldDispose = false;
+            bool shouldDispose;
             lock (_gate)
             {
                 shouldDispose = _disposed;

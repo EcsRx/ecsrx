@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using EcsRx.Entities;
 
 namespace EcsRx.Groups

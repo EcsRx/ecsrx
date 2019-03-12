@@ -1,5 +1,4 @@
-﻿using System;
-using EcsRx.Entities;
+﻿using EcsRx.Entities;
 
 namespace EcsRx.Groups
 {

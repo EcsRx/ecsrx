@@ -4,9 +4,7 @@ using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.HealthExample.Blueprints;
 using EcsRx.Examples.ExampleApps.HealthExample.Components;
 using EcsRx.Examples.ExampleApps.HealthExample.Events;
-using EcsRx.Examples.ExampleApps.HealthExample.Systems;
 using EcsRx.Extensions;
-using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample
 {

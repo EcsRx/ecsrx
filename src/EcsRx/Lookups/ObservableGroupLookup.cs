@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using EcsRx.Collections;
 using EcsRx.Groups.Observable;
 
 namespace EcsRx.Lookups

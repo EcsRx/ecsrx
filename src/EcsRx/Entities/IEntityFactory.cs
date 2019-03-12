@@ -1,5 +1,4 @@
-﻿using System;
-using EcsRx.Factories;
+﻿using EcsRx.Factories;
 
 namespace EcsRx.Entities
 {

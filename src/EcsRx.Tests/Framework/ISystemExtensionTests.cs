@@ -1,5 +1,4 @@
-﻿using EcsRx.Plugins.ReactiveSystems;
-using EcsRx.Plugins.ReactiveSystems.Extensions;
+﻿using EcsRx.Plugins.ReactiveSystems.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using NSubstitute;
 using Xunit;

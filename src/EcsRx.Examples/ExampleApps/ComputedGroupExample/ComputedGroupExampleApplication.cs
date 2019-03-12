@@ -1,11 +1,7 @@
 ﻿using System;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Blueprints;
-using EcsRx.Examples.ExampleApps.ComputedGroupExample.Components;
-using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Modules;
-using EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems;
-using EcsRx.Groups;
 using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample

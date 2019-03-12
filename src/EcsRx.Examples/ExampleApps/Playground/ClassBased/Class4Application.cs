@@ -1,6 +1,5 @@
 using System.Numerics;
 using EcsRx.Entities;
-using EcsRx.Examples.ExampleApps.Playground.Batches;
 using EcsRx.Examples.ExampleApps.Playground.Components;
 using EcsRx.Plugins.Batching.Batches;
 

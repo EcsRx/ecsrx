@@ -1,6 +1,5 @@
 using System;
 using System.Reactive.Linq;
-using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Lookups;

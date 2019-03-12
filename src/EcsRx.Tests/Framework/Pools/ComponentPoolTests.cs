@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Collections;
-using EcsRx.Pools;
 using EcsRx.Tests.Models;
 using Xunit;
 

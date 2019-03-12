@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using EcsRx.Collections;
-using EcsRx.Entities;
-using EcsRx.Events.Collections;
-using EcsRx.Extensions;
-using EcsRx.Groups.Observable;
-using NSubstitute;
+﻿using EcsRx.Groups.Observable;
 using Xunit;
 
 namespace EcsRx.Tests.Framework.Observables

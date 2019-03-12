@@ -1,9 +1,7 @@
 ﻿using System;
 using EcsRx.Attributes;
 using EcsRx.Entities;
-using EcsRx.Examples.Custom.Components;
 using EcsRx.Examples.Custom.Groups;
-using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 

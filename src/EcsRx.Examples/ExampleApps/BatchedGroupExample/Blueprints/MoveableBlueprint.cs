@@ -1,6 +1,5 @@
 using System;
 using EcsRx.Blueprints;
-using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Components;

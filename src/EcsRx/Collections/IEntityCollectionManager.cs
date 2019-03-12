@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 
@@ -86,6 +84,7 @@ namespace EcsRx.Collections
         /// Removes a collection from the manager
         /// </summary>
         /// <param name="id">The collection to remove</param>
+        /// <param name="disposeEntities">if the entities should all be disposed too</param>
         void RemoveCollection(int id, bool disposeEntities = true);
     }
 }

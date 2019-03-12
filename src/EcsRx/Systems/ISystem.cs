@@ -1,4 +1,3 @@
-using EcsRx.Entities;
 using EcsRx.Groups;
 
 namespace EcsRx.Systems

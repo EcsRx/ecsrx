@@ -1,7 +1,6 @@
 using System.Numerics;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Playground.Components;
-using EcsRx.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 {

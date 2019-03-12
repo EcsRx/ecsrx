@@ -6,9 +6,7 @@ using EcsRx.Examples.ExampleApps.HealthExample.Components;
 using EcsRx.Examples.Extensions;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Plugins.ReactiveSystems;
 using EcsRx.Plugins.ReactiveSystems.Systems;
-using EcsRx.Systems;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample.Systems
 {

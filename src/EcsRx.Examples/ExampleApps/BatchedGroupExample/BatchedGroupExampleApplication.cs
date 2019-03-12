@@ -1,11 +1,7 @@
 ﻿using System;
-using EcsRx.Components.Lookups;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Blueprints;
-using EcsRx.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Modules;
-using EcsRx.Examples.ExampleApps.HelloWorldExample.Components;
-using EcsRx.Extensions;
 using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.BatchedGroupExample

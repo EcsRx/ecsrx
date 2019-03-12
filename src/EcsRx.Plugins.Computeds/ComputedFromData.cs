@@ -32,7 +32,7 @@ namespace EcsRx.Plugins.Computeds
 
         public TOutput Value => GetData();
 
-        public virtual void MonitorChanges()
+        public void MonitorChanges()
         {
             RefreshWhen().Subscribe(x => RequestUpdate()).AddTo(Subscriptions);
         }

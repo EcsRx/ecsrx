@@ -11,7 +11,7 @@ namespace EcsRx.Plugins.ReactiveSystems
 {
     public class ReactiveSystemsPlugin : IEcsRxPlugin
     {
-        public string Name => "Batching";
+        public string Name => "Reactive Systems";
         public Version Version { get; } = new Version("1.0.0");
         
         public void SetupDependencies(IDependencyContainer container)

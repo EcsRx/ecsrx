@@ -8,11 +8,11 @@ Now some common things you will probably want to ask/know:
 
 ## Generic Queries
 
-### How Performant is it?
+### How performant is it?
 
-Seems ok, it is built to be functional and that is the first and foremost focus of the library, to make your life easier and put some pattern in place for interaction with things. 
+It's pretty good, it is built to be functional and extensible and that is the first and foremost focus of the library, to make your life easier and put some pattern in place for interaction with things in a sane way. 
 
-Although performance is not the primary focus efforts have been made to make the framework peformant without sacrificing functionality or ease of use.
+Although performance is not the primary focus efforts have been made to make the framework peformant without sacrificing functionality or ease of use, such as adding the ability to batch your components together and use `structs` and optimized type lookups.
 
 As everything adheres to IoC and is easily changed with custom implementations you can performance tweak the code how you see fit for your specific scenarios.
 
@@ -30,7 +30,13 @@ However you look at it, it's whatever you are used to. Believe it or not before 
 
 ### How is this any better than uFrame ECS, Entitas, Some other ECS system?
 
-Chances are it is not, its just different. Like Entitas is great and is very similar to this project, however it doesn't really have a complex reaction system, so anything you want to do reactively is a bit of a pain. Other than that this is pretty much the same sort of thing as Entitas. Compared to uFrame ECS it doesnt have the entity == gameobject/etc convention mentioned elsewhere but it has all the reactive stuff and it also works nicely with the notion of models, which uFrame ECS requires type references for which loses a good part of the benefit of using the framework.
+Chances are it is not, its just different. 
+
+Like Entitas is great and is very similar to this project, however it doesn't really have a complex reaction system, so anything you want to do reactively is a bit of a pain. Other than that this is pretty much the same sort of thing as Entitas. 
+
+Compared to uFrame ECS it doesnt have the entity == gameobject/etc convention mentioned elsewhere but it has all the reactive stuff and it also works nicely with the notion of models, which uFrame ECS requires type references for which loses a good part of the benefit of using the framework.
+
+There will be a lot of comparisons with UnityECS (which never existed when this was first created), and there is no doubt in my mind that UnityECS is far more performant, however it can be a bit tricky to use if you are wanting to keep design patterns and have more control over your architecture, but now that unity does have its own build in ECS system I advise people to give that a try and see if it fits your needs.
 
 So ultimately this is not marketed as the one ECS system to rule them all, its just got what I would deem the nice bits of a few existing ones.
 

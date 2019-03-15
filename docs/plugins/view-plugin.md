@@ -1,4 +1,4 @@
-# Views & View Resolvers
+# Views Plugin
 
 Most games have the notion of a view, in **Unity** this may be your Scene (GameObjects), in **Monogame** it may be your sprites or 3d objects, in **Godot** it would be your nodes, it could even be text written out to a console app.
 

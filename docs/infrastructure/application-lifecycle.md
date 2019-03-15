@@ -1,17 +1,6 @@
-# Infrastructure
+# Application Lifecycle
 
-As part of EcsRx there is some basic infrastructure provided for you (if you choose to use `EcsRx.Infrastructure`), this contains:
-
-- A dependency injection abstraction system (So you can consume DI on any platform with any DI framework)
-- An `IEcsRxApplication` interface as well as a default implementation `EcsRxApplication` (So you can start your app in a consistent way)
-- A plugin framework via `IEcsRxPlugin` (so you can write your own plugins which can be re-used accross many projects and shared with others)
-- A default `EventSystem` (So you can send events around your application, which implements `IEventSystem`)
-
-All of this combined basically provides you an entry point to start creating your applications.
-
-## Application Lifecycle
-
-The default application class should be inherited from and overidden as needed, here is the default lifecycle:
+The infrastructure aspect of the library provides a default application class that should be inherited from and overidden as needed. This provides a way to keep applications consistent and to make sure that things load when you expect. Here is the default lifecycle methods and when they will run in the process of an application starting.
 
 1. `LoadModules`
 This is where you should load your own modules, the base.LoadModules() will load the default framework so if you do not want this and want to load your own optimized framework components just dont call the base version. An example of this is shown in the optimized performance tests where we are manually assigning the component type ids so we do not want the default loader.

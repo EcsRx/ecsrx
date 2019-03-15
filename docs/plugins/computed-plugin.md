@@ -1,4 +1,4 @@
-# Computeds
+# Computeds Plugin
 
 Computed values are basically read only values which are updated on changes, much like `IObservable` instances which notify you on data changing, computed objects also let you see what the value of the object is as well.
 

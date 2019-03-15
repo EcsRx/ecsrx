@@ -2,33 +2,20 @@
 
 Welcome etc!
 
-## Stuff to know before diving in
+> If you are viewing this in github you can view the book version of it [HERE](https://ecsrx.gitbook.io/project/)
 
-There are a few things I recommend you know before you start using this framework. You don't **HAVE** to know them, but it will help.
+This is an attempt to document most of the important stuff around how to use the library, it is recommended that you follow the order of the TOC, however if you are not using the gitbook version then just look at the summary.md file and follow that order.
 
-So if you know all the below points feel free to continue on to the rest of the docs, if not then I suggest you have a quick look at the links and google the subject and try to get an understanding of it
+The flow is generally:
 
-- [ECS Pattern](https://grofit.gitbooks.io/development-for-winners/content/development/game-dev/patterns/ecs.html)
-- [Inversion Of Control](https://grofit.gitbooks.io/development-for-winners/content/development/general/dependency-patterns/inversion-of-control.html)
-- [Dependency Injection](https://grofit.gitbooks.io/development-for-winners/content/development/general/dependency-patterns/dependency-injection.html)
-- [Reactive Extensions (RX)](https://grofit.gitbooks.io/development-for-winners/content/development/general/data-patterns/reactive-extensions.html)
-- [Intro to Unit Testing](https://grofit.gitbooks.io/development-for-winners/content/development/general/testing/intro-to-testing.html)
-- [Mocking in Unit Tests](https://grofit.gitbooks.io/development-for-winners/content/development/general/testing/mocking.html)
+- Stuff you should ideally know before using the framework
+- About the framework and how to use it
+- The bits which make up the framework and how to use them
+- Making larger applications with the framework
+- How the underlying architecture fits together
+- How you can extend the framework and use plugins
+- How to use the framework in a more performance oriented manner
+- Other guff
 
-If you want to know more on the above topics then feel free to drop into our [Discord Channel](https://discord.gg/bS2rnGz) to discuss further or ask questions.
+Feel free to add to the docs or come on the [Discord Channel](https://discord.gg/bS2rnGz) if you need help!
 
-## Project specific docs
-
-There have been requests for a reading order, and while there is not really a specific route through the docs it is recommended that you tackle the ECS implementation bit first.
-
-- [entities](entities.md)
-- [components](components.md)
-- [groups](groups.md)
-- [systems](systems.md)
-
-Once you have covered the ECS specific bits and how the reactive approach lends itself to systems and processing of entities, then it is probably beneficial to look at:
-
-- [blueprints](blueprints.md)
-- [views and resolving](views-and-resolving.md)
-- [Observable Groups](observable-groups.md)
-- [Computeds](computeds.md)

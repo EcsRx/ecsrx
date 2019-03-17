@@ -33,10 +33,10 @@ namespace EcsRx.Entities
         {
             get
             {
-                for (var i = 0; i < InternalComponentAllocations.Length; i++)
+                for (var componentTypeId = 0; componentTypeId < InternalComponentAllocations.Length; componentTypeId++)
                 {
-                    if(InternalComponentAllocations[i] != NotAllocated)
-                    { yield return GetComponent(InternalComponentAllocations[i]);}
+                    if(InternalComponentAllocations[componentTypeId] != NotAllocated)
+                    { yield return GetComponent(componentTypeId);}
                 }
             }
         }

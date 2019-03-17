@@ -212,5 +212,25 @@ namespace EcsRx.Tests.Framework
                 componentDatabase.Set(2, 1, fakeComponents[2]);
             });
         }
+
+        [Fact]
+        public void should_entity_components_returns_not_one_same_component()
+        {
+            var fakeEntityId = 1;
+            var components = new IComponent[] {new TestComponentOne(), new TestComponentTwo(), new TestComponentThree()};
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            componentDatabase.Allocate(Arg.Any<int>()).Returns(0);
+            componentDatabase.Get<IComponent>(Arg.Any<int>(), Arg.Any<int>()).Returns(info => components[info.ArgAt<int>(0)]);
+                
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1, 2});
+            componentTypeLookup.GetComponentType(components[0].GetType()).Returns(0);
+            componentTypeLookup.GetComponentType(components[1].GetType()).Returns(1);
+            componentTypeLookup.GetComponentType(components[2].GetType()).Returns(2);
+            
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            entity.AddComponents(components);
+            Assert.Equal(components, entity.Components);
+        }
     }
 }

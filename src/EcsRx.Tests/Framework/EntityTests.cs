@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
@@ -18,16 +19,23 @@ namespace EcsRx.Tests.Framework
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
-            componentTypeLookup.AllComponentTypeIds.Returns(new int[1]);
+            componentTypeLookup.AllComponentTypeIds.Returns(new []{0,1});
+            componentTypeLookup.GetComponentType(Arg.Any<Type>()).Returns(1);
             
             var entity = new Entity(1, componentDatabase, componentTypeLookup);
             var dummyComponent = Substitute.For<IComponent>();
 
             var wasCalled = false;
-            entity.ComponentsAdded.Subscribe(x => wasCalled = true);
+            int[] eventData = null;
+            entity.ComponentsAdded.Subscribe(x =>
+            {
+                eventData = x;
+                wasCalled = true;
+            });
 
             entity.AddComponents(dummyComponent);
             Assert.True(wasCalled);
+            Assert.Equal(new []{1},eventData);
         }
         
         /* NSubstitute doesnt support ref returns currently

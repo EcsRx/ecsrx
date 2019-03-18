@@ -214,7 +214,7 @@ namespace EcsRx.Tests.Framework
         }
 
         [Fact]
-        public void should_entity_components_returns_not_one_same_component()
+        public void should_return_all_components_allocated_to_the_entity()
         {
             var fakeEntityId = 1;
             var components = new IComponent[] {new TestComponentOne(), new TestComponentTwo(), new TestComponentThree()};

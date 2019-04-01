@@ -2,7 +2,6 @@
 using EcsRx.Exceptions;
 using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
-using EcsRx.Plugins.ReactiveSystems;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using EcsRx.Tests.Systems.Handlers;

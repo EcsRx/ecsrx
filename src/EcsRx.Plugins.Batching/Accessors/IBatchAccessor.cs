@@ -1,4 +1,3 @@
-using EcsRx.Collections;
 using EcsRx.Components;
 using EcsRx.Plugins.Batching.Batches;
 

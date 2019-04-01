@@ -28,7 +28,7 @@ namespace EcsRx.Extensions
             return new Group(null, group.RequiredComponents, excludedComponents);
         }
         
-        public static IGroup WithoutComponent<T>(this IGroup group, params Type[] excludedComponents)
+        public static IGroup WithoutComponent(this IGroup group, params Type[] excludedComponents)
         {
             var newComponents = new List<Type>(group.ExcludedComponents);
             newComponents.AddRange(excludedComponents);

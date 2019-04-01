@@ -3,8 +3,11 @@
 EcsRx is a reactive take on the common ECS pattern with a well separated design using rx and adhering to IoC and other sensible design patterns.
 
 [![Build Status][build-status-image]][build-status-url]
+[![Code Quality Status][codacy-image]][codacy-url]
+[![License][license-image]][license-url]
 [![Nuget Version][nuget-image]][nuget-url]
 [![Join Discord Chat][discord-image]][discord-url]
+[![Documentation][gitbook-image]][gitbook-url]
 
 ## Features
 
@@ -100,7 +103,11 @@ If you want to know more about this drop into the discord chat and we can discus
 
 ## Docs
 
-See the [docs folder](docs) for more information. (This will grow)
+There is a book available which covers the main parts which can be found here:
+
+[![Documentation][gitbook-image]][gitbook-url]
+
+> This is basically just the [docs folder](docs) in a fancy viewer
 
 [build-status-image]: https://ci.appveyor.com/api/projects/status/55d1256yrra6fmls/branch/master?svg=true
 [build-status-url]: https://ci.appveyor.com/project/grofit/ecsrx/branch/master
@@ -108,3 +115,9 @@ See the [docs folder](docs) for more information. (This will grow)
 [nuget-url]: https://www.nuget.org/packages/EcsRx/
 [discord-image]: https://img.shields.io/discord/488609938399297536.svg
 [discord-url]: https://discord.gg/bS2rnGz
+[codacy-image]: https://api.codacy.com/project/badge/Grade/750972bd01be48e983ef7eec3fcb5a93
+[codacy-url]: https://www.codacy.com/app/grofit/ecsrx?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EcsRx/ecsrx&amp;utm_campaign=Badge_Grade
+[license-image]: https://img.shields.io/github/license/ecsrx/ecsrx.svg
+[license-url]: https://github.com/EcsRx/ecsrx/blob/master/LICENSE
+[gitbook-image]: https://img.shields.io/static/v1.svg?label=Documentation&message=Read%20Now&color=Green&style=flat
+[gitbook-url]: https://ecsrx.gitbook.io/project/

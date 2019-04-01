@@ -1,18 +1,13 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
 using EcsRx.Collections;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
-using EcsRx.Events.Collections;
-using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Subjects;
 using EcsRx.Plugins.Batching.Accessors;
 using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Tests.Models;
-using EcsRx.Tests.Plugins.Computeds.Models;
 using NSubstitute;
 using Xunit;
 

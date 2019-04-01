@@ -47,7 +47,7 @@ namespace EcsRx.Plugins.Computeds.Collections
         public IDisposable Subscribe(IObserver<IEnumerable<TOutput>> observer)
         { return onDataChanged.Subscribe(observer); }
         
-        public virtual void MonitorChanges()
+        public void MonitorChanges()
         {            
             RefreshWhen().Subscribe(x => RequestUpdate()).AddTo(Subscriptions);
         }

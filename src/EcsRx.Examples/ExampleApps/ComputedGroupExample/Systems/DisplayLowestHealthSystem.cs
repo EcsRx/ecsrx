@@ -16,8 +16,8 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
         public IGroup Group { get; } = new EmptyGroup();
         
         private readonly IList<IDisposable> _subscriptions = new List<IDisposable>();
-        
-        private ILowestHealthComputedGroup _lowestHealthGroup { get; }
+
+        private readonly ILowestHealthComputedGroup _lowestHealthGroup;
 
         public DisplayLowestHealthSystem(ILowestHealthComputedGroup lowestHealthGroup)
         {

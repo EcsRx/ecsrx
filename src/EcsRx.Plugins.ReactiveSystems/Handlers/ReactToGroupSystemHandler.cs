@@ -7,7 +7,6 @@ using EcsRx.Entities;
 using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
@@ -37,7 +36,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
         {
             var affinities = system.GetGroupAffinities();
             var observableGroup = _entityCollectionManager.GetObservableGroup(system.Group, affinities);
-            var hasEntityPredicate = system.Group is IHasPredicate predicate;
+            var hasEntityPredicate = system.Group is IHasPredicate;
             var isExtendedSystem = system is IReactToGroupExSystem;
             var castSystem = (IReactToGroupSystem)system;
             var reactObservable = castSystem.ReactToGroup(observableGroup);

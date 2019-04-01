@@ -43,7 +43,7 @@ namespace EcsRx.Extensions
                 if (priorityAttributes.Length <= 0) { return 0; }
                 
                 var priorityAttribute = priorityAttributes.FirstOrDefault() as PriorityAttribute;
-                return -priorityAttribute.Priority;
+                return -priorityAttribute?.Priority;
             });
         } 
         
@@ -56,7 +56,7 @@ namespace EcsRx.Extensions
                 if (priorityAttributes.Length <= 0) { return 0; }
                 
                 var priorityAttribute = priorityAttributes.FirstOrDefault() as PriorityAttribute;
-                return -priorityAttribute.Priority;
+                return -priorityAttribute?.Priority;
             });
         } 
     }

@@ -7,7 +7,6 @@ using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Examples.Application;
-using EcsRx.Examples.ExampleApps.Performance.Components;
 using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Extensions;

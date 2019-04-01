@@ -6,9 +6,7 @@ using EcsRx.Examples.ExampleApps.Performance.Components;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using EcsRx.Plugins.ReactiveSystems;
 using EcsRx.Plugins.ReactiveSystems.Systems;
-using EcsRx.Systems;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Systems
 {

@@ -112,10 +112,11 @@ namespace EcsRx.Extensions
             var componentType = typeof(T);
             return (T)entity.GetComponent(componentType);
         }
-        
+
         /// <summary>
         /// Checks to see if the entity contains all of the given components
         /// </summary>
+        /// <param name="entity">The entity to action on</param>
         /// <param name="componentTypes">Types of components to check for</param>
         /// <returns>true if all the component was found, false if one or more is missing</returns>
         public static bool HasAllComponents(this IEntity entity, params Type[] componentTypes)
@@ -132,6 +133,7 @@ namespace EcsRx.Extensions
         /// <summary>
         /// Checks to see if the entity contains all of the given components
         /// </summary>
+        /// <param name="entity">The entity to action on</param>
         /// <param name="componentTypeIds">Type ids of components to check for</param>
         /// <returns>true if all the component was found, false if one or more is missing</returns>
         public static bool HasAllComponents(this IEntity entity, params int[] componentTypeIds)
@@ -148,6 +150,7 @@ namespace EcsRx.Extensions
         /// <summary>
         /// Checks to see if the entity contains any of the given components
         /// </summary>
+        /// <param name="entity">The entity to action on</param>
         /// <param name="componentTypes">Types of the components to check for</param>
         /// <returns>true if any components were found, false if no matching components were found</returns>
         public static bool HasAnyComponents(this IEntity entity, params Type[] componentTypes)
@@ -164,6 +167,7 @@ namespace EcsRx.Extensions
         /// <summary>
         /// Checks to see if the entity contains any of the given components
         /// </summary>
+        /// <param name="entity">The entity to action on</param>
         /// <param name="componentTypeIds">Type ids of the components to check for</param>
         /// <returns>true if any components were found, false if no matching components were found</returns>
         public static bool HasAnyComponents(this IEntity entity, params int[] componentTypeIds)

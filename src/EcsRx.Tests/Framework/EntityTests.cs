@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
@@ -18,16 +19,23 @@ namespace EcsRx.Tests.Framework
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
-            componentTypeLookup.AllComponentTypeIds.Returns(new int[1]);
+            componentTypeLookup.AllComponentTypeIds.Returns(new []{0,1});
+            componentTypeLookup.GetComponentType(Arg.Any<Type>()).Returns(1);
             
             var entity = new Entity(1, componentDatabase, componentTypeLookup);
             var dummyComponent = Substitute.For<IComponent>();
 
             var wasCalled = false;
-            entity.ComponentsAdded.Subscribe(x => wasCalled = true);
+            int[] eventData = null;
+            entity.ComponentsAdded.Subscribe(x =>
+            {
+                eventData = x;
+                wasCalled = true;
+            });
 
             entity.AddComponents(dummyComponent);
             Assert.True(wasCalled);
+            Assert.Equal(new []{1},eventData);
         }
         
         /* NSubstitute doesnt support ref returns currently
@@ -211,6 +219,26 @@ namespace EcsRx.Tests.Framework
                 componentDatabase.Allocate(2);
                 componentDatabase.Set(2, 1, fakeComponents[2]);
             });
+        }
+
+        [Fact]
+        public void should_return_all_components_allocated_to_the_entity()
+        {
+            var fakeEntityId = 1;
+            var components = new IComponent[] {new TestComponentOne(), new TestComponentTwo(), new TestComponentThree()};
+            var componentDatabase = Substitute.For<IComponentDatabase>();
+            componentDatabase.Allocate(Arg.Any<int>()).Returns(0);
+            componentDatabase.Get<IComponent>(Arg.Any<int>(), Arg.Any<int>()).Returns(info => components[info.ArgAt<int>(0)]);
+                
+            var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1, 2});
+            componentTypeLookup.GetComponentType(components[0].GetType()).Returns(0);
+            componentTypeLookup.GetComponentType(components[1].GetType()).Returns(1);
+            componentTypeLookup.GetComponentType(components[2].GetType()).Returns(2);
+            
+            var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
+            entity.AddComponents(components);
+            Assert.Equal(components, entity.Components);
         }
     }
 }

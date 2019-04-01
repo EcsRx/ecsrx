@@ -4,9 +4,9 @@ using EcsRx.Entities;
 
 namespace EcsRx.Groups.Observable
 {
-    /// </summary>
-    /// A maintained collection of entities which match a given group
     /// <summary>
+    /// A maintained collection of entities which match a given group
+    /// </summary>
     /// <remarks>
     /// Implements IEnumerable so you can just enumerate the entities within the group.
     /// 

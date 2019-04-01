@@ -11,7 +11,7 @@ namespace EcsRx.Entities
 {
     public class Entity : IEntity
     {
-        public const int NotAllocated = -1;
+        public static readonly int NotAllocated = -1;
         
         public IObservable<int[]> ComponentsAdded => _onComponentsAdded;
         public IObservable<int[]> ComponentsRemoving => _onComponentsRemoving;
@@ -33,10 +33,10 @@ namespace EcsRx.Entities
         {
             get
             {
-                for (var i = 0; i < InternalComponentAllocations.Length; i++)
+                for (var componentTypeId = 0; componentTypeId < InternalComponentAllocations.Length; componentTypeId++)
                 {
-                    if(InternalComponentAllocations[i] != NotAllocated)
-                    { yield return GetComponent(InternalComponentAllocations[i]);}
+                    if(InternalComponentAllocations[componentTypeId] != NotAllocated)
+                    { yield return GetComponent(componentTypeId);}
                 }
             }
         }
@@ -72,6 +72,7 @@ namespace EcsRx.Entities
                 var allocationId = ComponentDatabase.Allocate(componentTypeId);
                 InternalComponentAllocations[componentTypeId] = allocationId;
                 ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
+                componentTypeIds[i] = componentTypeId;
             }
             
             _onComponentsAdded.OnNext(componentTypeIds);

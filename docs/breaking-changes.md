@@ -1,5 +1,17 @@
 # Breaking Changes
 
+## 2.0.0 -> 3.0.0
+
+- Some extension methods around groups have been removed
+- Reactive Systems moved to plugin
+- Views moved to plugin
+- Computeds moved to plugin
+
+## 1.0.0 -> 2.0.0
+
+- Lifecycle changes in application
+- Dependency injection contract changes
+
 ## 0.*.* -> 1.0.0
 
 ### Groups & Collections

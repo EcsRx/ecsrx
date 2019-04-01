@@ -1,9 +1,7 @@
 using System.Numerics;
 using EcsRx.Entities;
-using EcsRx.Examples.ExampleApps.Playground.Batches;
 using EcsRx.Examples.ExampleApps.Playground.Components;
 using EcsRx.Plugins.Batching.Batches;
-using EcsRx.Plugins.Batching.Builders;
 
 namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 {

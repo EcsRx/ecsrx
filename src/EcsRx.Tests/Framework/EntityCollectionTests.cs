@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using EcsRx.Collections;
-using EcsRx.Components;
-using EcsRx.Components.Database;
 using EcsRx.Entities;
-using EcsRx.Events;
 using NSubstitute;
-using NSubstitute.Extensions;
 using Xunit;
 
 namespace EcsRx.Tests.Framework

@@ -7,8 +7,6 @@ using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
-using EcsRx.Plugins.Batching.Builders;
-using EcsRx.Plugins.Batching.Factories;
 using EcsRx.Systems;
 using EcsRx.Threading;
 

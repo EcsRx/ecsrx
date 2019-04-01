@@ -34,7 +34,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     var batch = _batches[i];
                     Process(batch.EntityId, batch.Component1, batch.Component2);
@@ -42,7 +42,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 var batch = _batches[i];
                 Process(batch.EntityId, batch.Component1, batch.Component2);
@@ -76,7 +76,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     var batch = _batches[i];
                     Process(batch.EntityId, batch.Component1, batch.Component2, batch.Component3);
@@ -84,7 +84,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 var batch = _batches[i];
                 Process(batch.EntityId, batch.Component1, batch.Component2, batch.Component3);
@@ -119,7 +119,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     var batch = _batches[i];
                     Process(batch.EntityId, batch.Component1, batch.Component2, 
@@ -128,7 +128,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 var batch = _batches[i];
                 Process(batch.EntityId, batch.Component1, batch.Component2, 
@@ -165,7 +165,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     var batch = _batches[i];
                     Process(batch.EntityId, batch.Component1, batch.Component2, 
@@ -174,7 +174,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 var batch = _batches[i];
                 Process(batch.EntityId, batch.Component1, batch.Component2, 
@@ -212,7 +212,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     var batch = _batches[i];
                     Process(batch.EntityId, batch.Component1, batch.Component2, 
@@ -222,7 +222,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 var batch = _batches[i];
                 Process(batch.EntityId, batch.Component1, batch.Component2, 

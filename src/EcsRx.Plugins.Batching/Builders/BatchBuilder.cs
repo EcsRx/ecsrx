@@ -34,6 +34,9 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 for (var i = 0; i < entities.Count; i++)
                 {
+                    if (entities.Count != batches.Length)
+                    { return new Batch<T1, T2>[0]; }
+                    
                     var entity = entities[i];
                     var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
                     var component2Allocation = entity.ComponentAllocations[_componentTypeId2];
@@ -76,6 +79,9 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 for (var i = 0; i < entities.Count; i++)
                 {
+                    if (entities.Count != batches.Length)
+                    { return new Batch<T1, T2, T3>[0]; }
+                    
                     var entity = entities[i];
                     var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
                     var component2Allocation = entity.ComponentAllocations[_componentTypeId2];
@@ -125,6 +131,9 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 for (var i = 0; i < entities.Count; i++)
                 {
+                    if (entities.Count != batches.Length)
+                    { return new Batch<T1, T2, T3, T4>[0]; }
+                    
                     var entity = entities[i];
                     var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
                     var component2Allocation = entity.ComponentAllocations[_componentTypeId2];
@@ -180,6 +189,9 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 for (var i = 0; i < entities.Count; i++)
                 {
+                    if (entities.Count != batches.Length)
+                    { return new Batch<T1, T2, T3, T4, T5>[0]; }
+                    
                     var entity = entities[i];
                     var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
                     var component2Allocation = entity.ComponentAllocations[_componentTypeId2];
@@ -241,6 +253,9 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 for (var i = 0; i < entities.Count; i++)
                 {
+                    if (entities.Count != batches.Length)
+                    { return new Batch<T1, T2, T3, T4, T5, T6>[0]; }
+                    
                     var entity = entities[i];
                     var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
                     var component2Allocation = entity.ComponentAllocations[_componentTypeId2];

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
@@ -34,7 +35,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     ref var batch = ref _batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2);
@@ -42,7 +43,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 ref var batch = ref _batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2);
@@ -76,7 +77,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     ref var batch = ref _batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, ref *batch.Component3);
@@ -84,7 +85,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 ref var batch = ref _batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, ref *batch.Component3);
@@ -119,7 +120,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     ref var batch = ref _batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
@@ -128,7 +129,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 ref var batch = ref _batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
@@ -165,7 +166,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     ref var batch = ref _batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
@@ -174,7 +175,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 ref var batch = ref _batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
@@ -212,7 +213,7 @@ namespace EcsRx.Plugins.Batching.Systems
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, ObservableGroup.Count, i =>
+                ThreadHandler.For(0, _batches.Length, i =>
                 {
                     ref var batch = ref _batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
@@ -222,7 +223,7 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < ObservableGroup.Count; i++)
+            for (var i = 0; i < _batches.Length; i++)
             {
                 ref var batch = ref _batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 

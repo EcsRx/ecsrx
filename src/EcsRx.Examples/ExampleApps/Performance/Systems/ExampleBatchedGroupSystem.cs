@@ -1,4 +1,5 @@
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
@@ -18,8 +19,9 @@ namespace EcsRx.Examples.ExampleApps.Performance.Systems
         protected override IObservable<bool> ReactWhen()
         { return Observable.Never<bool>(); }
 
+        // This shows that every time the group changes, it should throttle (actually debounce) and run after 10ms
         protected override IObservable<IEntity> ProcessGroupSubscription(IObservable<IEntity> groupChange)
-        { return groupChange.Throttle(TimeSpan.FromMilliseconds(1)); }
+        { return groupChange.Throttle(TimeSpan.FromMilliseconds(10)); }
 
         protected override void Process(int EntityId, SimpleReadComponent component1, SimpleWriteComponent component2)
         {}

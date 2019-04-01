@@ -22,7 +22,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 {
     public class MakingLotsOfEntitiesApplication : EcsRxConsoleApplication
     {
-        private static readonly int EntityCount = 10000;
+        private static readonly int EntityCount = 100000;
 
         protected override void BindSystems()
         {

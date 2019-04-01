@@ -23,20 +23,12 @@ namespace EcsRx.Plugins.Batching.Systems
         protected IObservableGroup ObservableGroup { get; set; }
         protected bool ShouldParallelize { get; private set; }
         protected IDisposable Subscriptions;
-        public bool isRebuilding { get; protected set; }
 
         protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler)
         {
             ComponentDatabase = componentDatabase;
             ComponentTypeLookup = componentTypeLookup;
             ThreadHandler = threadHandler;
-        }
-
-        private void RebuildWrapper()
-        {
-            isRebuilding = true;
-            RebuildBatch();
-            isRebuilding = false;
         }
         
         protected abstract void RebuildBatch();
@@ -52,21 +44,27 @@ namespace EcsRx.Plugins.Batching.Systems
             ShouldParallelize = this.ShouldMutliThread();
             
             var subscriptions = new CompositeDisposable();
-            ProcessGroupSubscription(ObservableGroup.OnEntityAdded).Subscribe(_ => RebuildWrapper()).AddTo(subscriptions);
-            ProcessGroupSubscription(ObservableGroup.OnEntityRemoved).Subscribe(_ => RebuildWrapper()).AddTo(subscriptions);
+            ProcessGroupSubscription(ObservableGroup.OnEntityAdded).Subscribe(_ => RebuildBatch()).AddTo(subscriptions);
+            ProcessGroupSubscription(ObservableGroup.OnEntityRemoved).Subscribe(_ => RebuildBatch()).AddTo(subscriptions);
             
-            RebuildWrapper();
+            RebuildBatch();
             ReactWhen().Subscribe(_ => RunBatch()).AddTo(subscriptions);
             
             Subscriptions = subscriptions;
         }
 
+        /// <summary>
+        /// This processes the group level subscription, allowing you to change how the change of a group should be run 
+        /// </summary>
+        /// <param name="groupChange"></param>
+        /// <returns></returns>
+        /// <remarks>Out the box it will just pass through the observable but in a lot of cases you may want to
+        /// throttle the group changes so multiple ones within a single frame would be run once.</remarks>
         protected virtual IObservable<IEntity> ProcessGroupSubscription(IObservable<IEntity> groupChange)
         { return groupChange; }
 
         private void RunBatch()
         {
-            if (isRebuilding) { return; }
             BeforeProcessing();
             ProcessBatch();
             AfterProcessing();

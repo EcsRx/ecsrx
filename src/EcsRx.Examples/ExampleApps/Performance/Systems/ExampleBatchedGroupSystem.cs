@@ -16,12 +16,10 @@ namespace EcsRx.Examples.ExampleApps.Performance.Systems
         {}
 
         protected override IObservable<bool> ReactWhen()
-        {
-            return Observable.Never<bool>();
-        }
+        { return Observable.Never<bool>(); }
 
         protected override IObservable<IEntity> ProcessGroupSubscription(IObservable<IEntity> groupChange)
-        { return groupChange.Throttle(TimeSpan.FromMilliseconds(10)); }
+        { return groupChange.Throttle(TimeSpan.FromMilliseconds(1)); }
 
         protected override void Process(int EntityId, SimpleReadComponent component1, SimpleWriteComponent component2)
         {}

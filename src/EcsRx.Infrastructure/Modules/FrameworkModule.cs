@@ -9,6 +9,7 @@ using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Events;
 using EcsRx.Infrastructure.Extensions;
+using EcsRx.Infrastructure.Scheduling;
 using EcsRx.MicroRx.Events;
 using EcsRx.Pools;
 using EcsRx.Threading;
@@ -30,6 +31,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IObservableGroupManager>(x => x.ToMethod(y => y.Resolve<IEntityCollectionManager>()));
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
+            container.Bind<IObservableScheduler, DefaultObservableScheduler>();
             
             var componentTypeAssigner = new DefaultComponentTypeAssigner();
             var allComponents = componentTypeAssigner.GenerateComponentLookups();

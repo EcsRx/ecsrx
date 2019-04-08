@@ -7,13 +7,13 @@ using System.Reactive.Subjects;
  *    This code was taken from UniRx project by neuecc
  *    https://github.com/neuecc/UniRx
  */
-namespace EcsRx.ReactiveData.Properties
+namespace EcsRx.ReactiveData
 {
     /// <summary>
     /// Lightweight property broker.
     /// </summary>
     [Serializable]
-    public class ReactiveProperty<T> : IReactiveProperty<T>, IDisposable
+    public class ReactiveProperty<T> : IReactiveProperty<T>
     {
         static readonly IEqualityComparer<T> defaultEqualityComparer = EqualityComparer<T>.Default;
 

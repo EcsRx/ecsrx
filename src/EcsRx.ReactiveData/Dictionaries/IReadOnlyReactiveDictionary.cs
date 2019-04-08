@@ -4,7 +4,7 @@ using System.Reactive;
 
 namespace EcsRx.ReactiveData.Dictionaries
 {
-    public interface IReadOnlyReactiveDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
+    public interface IReadOnlyReactiveDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>, IDisposable
     {
         int Count { get; }
         TValue this[TKey index] { get; }

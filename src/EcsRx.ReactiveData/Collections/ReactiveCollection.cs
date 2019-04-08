@@ -12,7 +12,7 @@ using System.Reactive.Subjects;
 namespace EcsRx.ReactiveData.Collections
 {
     [Serializable]
-    public class ReactiveCollection<T> : Collection<T>, IReactiveCollection<T>, IDisposable
+    public class ReactiveCollection<T> : Collection<T>, IReactiveCollection<T>
     {
         [NonSerialized]
         bool isDisposed = false;

@@ -1,4 +1,4 @@
-﻿namespace EcsRx.ReactiveData.Properties
+﻿namespace EcsRx.ReactiveData
 {
     public interface IReactiveProperty<T> : IReadOnlyReactiveProperty<T>
     {

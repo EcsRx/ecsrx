@@ -12,7 +12,7 @@ using System.Reactive.Subjects;
 namespace EcsRx.ReactiveData.Dictionaries
 {
     [Serializable]
-    public class ReactiveDictionary<TKey, TValue> : IReactiveDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary, IDisposable
+    public class ReactiveDictionary<TKey, TValue> : IReactiveDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary
     {
         [NonSerialized]
         bool isDisposed = false;

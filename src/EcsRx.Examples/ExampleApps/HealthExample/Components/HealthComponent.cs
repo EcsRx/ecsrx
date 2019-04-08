@@ -1,6 +1,6 @@
 ﻿using System;
 using EcsRx.Components;
-using EcsRx.ReactiveData.Properties;
+using EcsRx.ReactiveData;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample.Components
 {

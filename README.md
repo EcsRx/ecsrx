@@ -28,7 +28,7 @@ The library was built to support .net standard 2.0, so you can just reference th
 
 ## Quick Start
 
-It is advised to look at the [setup docs](https://github.com/EcsRx/ecsrx/blob/master/docs/setup.md), this covers the 2 avenues to setup the application using it without the helper libraries, or with the helper libraries which offer you dependency injection and other benefits.
+It is advised to look at the [setup docs](./docs/introduction/setup.md), this covers the 2 avenues to setup the application using it without the helper libraries, or with the helper libraries which offer you dependency injection and other benefits.
 
 If you are using unity it is recommended you just ignore everything here and use the instructions on the [ecsrx.unity repository](ttps://github.com/ecsrx/ecsrx.unity) as that has not been fully mapped over to use this core version yet so is its own eco system until that jump is made.
 

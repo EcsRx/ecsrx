@@ -119,7 +119,7 @@ namespace EcsRx.Collections
             if(group is EmptyGroup)
             { return new IEntity[0]; }
 
-            if (collectionId == PoolLookups.NoPoolDefined)
+            if (collectionId != PoolLookups.NoPoolDefined)
             { return _collections[collectionId].MatchingGroup(group); }
 
             return Collections.GetAllEntities().MatchingGroup(group);

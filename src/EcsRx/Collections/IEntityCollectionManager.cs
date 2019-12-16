@@ -6,10 +6,10 @@ using EcsRx.Groups.Observable;
 
 namespace EcsRx.Collections
 {
-    public static class PoolLookups
+    public static class EntityCollectionLookups
     {
-        public const int NoPoolDefined = -1;
-        public const int DefaultPoolId = 0;
+        public const int NoCollectionDefined = -1;
+        public const int DefaultCollectionId = 0;
     }
     
     /// <summary>
@@ -45,7 +45,7 @@ namespace EcsRx.Collections
         /// <param name="group">The group to match entities on</param>
         /// <param name="collectionId">The optional collection name to use (defaults to null)</param>
         /// <returns>An enumerable to access the data inside the collection/s</returns>
-        IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = PoolLookups.NoPoolDefined);
+        IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = EntityCollectionLookups.NoCollectionDefined);
         
         /// <summary>
         /// Gets an ObservableGroup which will observe the given group and maintain a collection of
@@ -78,7 +78,7 @@ namespace EcsRx.Collections
         /// </summary>
         /// <param name="id">The optional name of collection to return</param>
         /// <returns>The located collection</returns>
-        IEntityCollection GetCollection(int id = PoolLookups.DefaultPoolId);
+        IEntityCollection GetCollection(int id = EntityCollectionLookups.DefaultCollectionId);
         
         /// <summary>
         /// Removes a collection from the manager

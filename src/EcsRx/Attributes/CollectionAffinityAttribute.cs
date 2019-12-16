@@ -8,7 +8,7 @@ namespace EcsRx.Attributes
     {
         public int[] CollectionIds { get; }
 
-        public CollectionAffinityAttribute(int collectionId = PoolLookups.DefaultPoolId)
+        public CollectionAffinityAttribute(int collectionId = EntityCollectionLookups.DefaultCollectionId)
         { CollectionIds = new []{collectionId}; }
 
         public CollectionAffinityAttribute(params int[] collectionIds)

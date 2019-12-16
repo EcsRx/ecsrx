@@ -61,7 +61,7 @@ namespace EcsRx.Collections
             _onEntityComponentsRemoved = new Subject<ComponentsChangedEvent>();
 
 
-            CreateCollection(PoolLookups.DefaultPoolId);
+            CreateCollection(EntityCollectionLookups.DefaultCollectionId);
         }
 
         public void SubscribeToCollection(IEntityCollection collection)
@@ -99,7 +99,7 @@ namespace EcsRx.Collections
             }
         }
 
-        public IEntityCollection GetCollection(int id = PoolLookups.DefaultPoolId)
+        public IEntityCollection GetCollection(int id = EntityCollectionLookups.DefaultCollectionId)
         { return _collections[id]; }
 
         public void RemoveCollection(int id, bool disposeEntities = true)
@@ -114,12 +114,12 @@ namespace EcsRx.Collections
             _onCollectionRemoved.OnNext(collection);
         }
         
-        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = PoolLookups.NoPoolDefined)
+        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = EntityCollectionLookups.NoCollectionDefined)
         {
             if(group is EmptyGroup)
             { return new IEntity[0]; }
 
-            if (collectionId != PoolLookups.NoPoolDefined)
+            if (collectionId != EntityCollectionLookups.NoCollectionDefined)
             { return _collections[collectionId].MatchingGroup(group); }
 
             return Collections.GetAllEntities().MatchingGroup(group);

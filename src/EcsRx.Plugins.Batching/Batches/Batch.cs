@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using EcsRx.Components;
 
 namespace EcsRx.Plugins.Batching.Batches
-{      
+{
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct Batch<T1, T2> : IEquatable<Batch<T1, T2>> 
         where T1 : unmanaged, IComponent

@@ -8,7 +8,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 {
     public class Struct4BApplication : BasicLoopApplication
     {
-        private Batch<StructComponent, StructComponent2>[] _componentBatch;
+        private PinnedBatch<StructComponent, StructComponent2> _componentBatch;
         
         protected override void SetupEntities()
         {
@@ -31,11 +31,11 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 
         protected override void RunProcess()
         {
-            Parallel.For(0, _componentBatch.Length, i =>
+            Parallel.For(0, _componentBatch.Batches.Length, i =>
             {
                 unsafe
                 {
-                    ref var batch = ref _componentBatch[i];
+                    ref var batch = ref _componentBatch.Batches[i];
                     ref var basic = ref *batch.Component1;
                     ref var basic2 = ref *batch.Component2;
                     basic.Position += Vector3.One;

@@ -208,7 +208,7 @@ namespace EcsRx.Tests.Sanity
             var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
             var batch = batchBuilder.Build(entities);
             
-            ref var initialBatchData = ref batch[0];
+            ref var initialBatchData = ref batch.Batches[0];
             ref var component1 = ref *initialBatchData.Component1;
             ref var component2 = ref *initialBatchData.Component2;
             Assert.Equal(startingInt, component1.Data);
@@ -217,10 +217,10 @@ namespace EcsRx.Tests.Sanity
             component1.Data = finalInt;
             component2.Data = finalFloat;
             
-            Assert.Equal(finalInt, (*batch[0].Component1).Data);
+            Assert.Equal(finalInt, (*batch.Batches[0].Component1).Data);
             Assert.Equal(finalInt, structComponent1.Data);
             Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
-            Assert.Equal(finalFloat, (*batch[0].Component2).Data);
+            Assert.Equal(finalFloat, (*batch.Batches[0].Component2).Data);
             Assert.Equal(finalFloat, structComponent2.Data);
             Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);        
         }
@@ -249,7 +249,7 @@ namespace EcsRx.Tests.Sanity
             var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
             var batch = batchBuilder.Build(entities);
             
-            ref var initialBatchData = ref batch[0];
+            ref var initialBatchData = ref batch.Batches[0];
             ref var component1 = ref *initialBatchData.Component1;
             ref var component2 = ref *initialBatchData.Component2;
 
@@ -259,10 +259,10 @@ namespace EcsRx.Tests.Sanity
             component1 = new TestStructComponentOne {Data = finalInt};
             component2 = new TestStructComponentTwo {Data = finalFloat};
 
-            Assert.Equal(finalInt, (*batch[0].Component1).Data);
+            Assert.Equal(finalInt, (*batch.Batches[0].Component1).Data);
             Assert.Equal(finalInt, structComponent1.Data);
             Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
-            Assert.Equal(finalFloat, (*batch[0].Component2).Data);
+            Assert.Equal(finalFloat, (*batch.Batches[0].Component2).Data);
             Assert.Equal(finalFloat, structComponent2.Data);
             Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);        
         }

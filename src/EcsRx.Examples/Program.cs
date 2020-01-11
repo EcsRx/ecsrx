@@ -27,7 +27,7 @@ namespace EcsRx.Examples
             //new OptimizedGroupPerformanceApplication().StartApplication();
             //new OptimizedEntityPerformanceApplication().StartApplication();
             //new EntityPerformanceApplication().StartApplication();
-            new MakingLotsOfEntitiesApplication().StartApplication();
+            //new MakingLotsOfEntitiesApplication().StartApplication();
            
             // Playground examples
             //new Class1Application().StartApplication();
@@ -37,7 +37,7 @@ namespace EcsRx.Examples
             //new Class3Application().StartApplication();
             //new Struct3Application().StartApplication();
             //new Class4Application().StartApplication();
-            //new Struct4Application().StartApplication();            
+            new Struct4Application().StartApplication();            
             //new Struct4BApplication().StartApplication();
 
         }

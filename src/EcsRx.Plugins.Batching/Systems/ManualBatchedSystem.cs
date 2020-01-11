@@ -60,8 +60,13 @@ namespace EcsRx.Plugins.Batching.Systems
             ShouldParallelize = this.ShouldMutliThread();
             
             var subscriptions = new CompositeDisposable();
-            ProcessGroupSubscription(ObservableGroup.OnEntityAdded).Subscribe(_ => RebuildBatch()).AddTo(subscriptions);
-            ProcessGroupSubscription(ObservableGroup.OnEntityRemoved).Subscribe(_ => RebuildBatch()).AddTo(subscriptions);
+            ProcessGroupSubscription(ObservableGroup.OnEntityAdded)
+                .Subscribe(_ => RebuildBatch())
+                .AddTo(subscriptions);
+           
+            ProcessGroupSubscription(ObservableGroup.OnEntityRemoved)
+                .Subscribe(_ => RebuildBatch())
+                .AddTo(subscriptions);
             
             RebuildBatch();
             ReactWhen().Subscribe(_ => RunBatch()).AddTo(subscriptions);

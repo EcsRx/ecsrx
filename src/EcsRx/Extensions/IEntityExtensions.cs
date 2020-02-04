@@ -66,7 +66,7 @@ namespace EcsRx.Extensions
         public static T AddComponent<T>(this IEntity entity) where T : class, IComponent, new()
         {
             var component = new T();
-            entity.AddComponents(component);
+            entity.AddComponent(component);
             return component;
         }
         

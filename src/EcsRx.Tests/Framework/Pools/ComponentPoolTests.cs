@@ -16,7 +16,7 @@ namespace EcsRx.Tests.Framework.Pools
             
             var componentPool = new ComponentPool<TestComponentOne>(initialSize);
             Assert.Equal(componentPool.Count, initialSize);
-            Assert.Equal(componentPool.Components.Length, initialSize);
+            Assert.Equal(componentPool._components.Length, initialSize);
         }
         
         [Fact]
@@ -34,7 +34,7 @@ namespace EcsRx.Tests.Framework.Pools
                 newSize += expansionSize;
 
                 Assert.Equal(componentPool.Count, newSize);
-                Assert.Equal(componentPool.Components.Length, newSize);
+                Assert.Equal(componentPool._components.Length, newSize);
             }            
         }
         
@@ -53,7 +53,7 @@ namespace EcsRx.Tests.Framework.Pools
                 newSize += expansionSize;
 
                 Assert.Equal(componentPool.Count, newSize);
-                Assert.Equal(componentPool.Components.Length, newSize);
+                Assert.Equal(componentPool._components.Length, newSize);
             }            
         }
 
@@ -86,7 +86,7 @@ namespace EcsRx.Tests.Framework.Pools
             
             Assert.Equal(expectedAllocationCount, actualAllocations.Count);
             Assert.All(actualAllocations, x => expectedAllocations.Contains(x));
-            Assert.Equal(expectedAllocationCount, componentPool.Components.Length);
+            Assert.Equal(expectedAllocationCount, componentPool._components.Length);
             Assert.Equal(expectedAllocationCount, componentPool.Count);
         }
     }

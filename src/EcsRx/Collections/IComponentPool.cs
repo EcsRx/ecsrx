@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 using EcsRx.Components;
 
 namespace EcsRx.Collections
@@ -9,20 +10,22 @@ namespace EcsRx.Collections
     /// </summary>
     /// <remarks>This helps speed up access when you want components of the same type</remarks>
     /// <typeparam name="T">Type of component</typeparam>
-    public interface IComponentPool<out T> : IComponentPool, IDisposable
+    public interface IComponentPool<T> : IComponentPool, IDisposable
         where T : IComponent
     {
         /// <summary>
         /// Contiguous block of memory for components 
         /// </summary>
-        T[] Components { get; }
+        Span<T> Components { get; }
+
+        GCHandle Pin();
     }
     
     /// <summary>
     /// Acts as a basic memory block for components of a specific type
     /// </summary>
     /// <remarks>This helps speed up access for components of the same type</remarks>
-    public interface IComponentPool : IEnumerable
+    public interface IComponentPool
     {
         /// <summary>
         /// Amount of components within the pool

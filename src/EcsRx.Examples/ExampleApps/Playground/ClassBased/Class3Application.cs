@@ -7,17 +7,12 @@ namespace EcsRx.Examples.ExampleApps.Playground.ClassBased
 {
     public class Class3Application : BasicLoopApplication
     {
-        protected ClassComponent[] Basic1Components;
-        protected ClassComponent2[] Basic2Components;
-        
         protected override void SetupEntities()
         {
             _componentDatabase.PreAllocateComponents(ClassComponent1TypeId, EntityCount);
             _componentDatabase.PreAllocateComponents(ClassComponent2TypeId, EntityCount);
             base.SetupEntities();
 
-            Basic1Components = _componentDatabase.GetComponents<ClassComponent>(ClassComponent1TypeId);
-            Basic2Components = _componentDatabase.GetComponents<ClassComponent2>(ClassComponent2TypeId);
         }
 
         protected override string Description { get; } =
@@ -31,6 +26,9 @@ namespace EcsRx.Examples.ExampleApps.Playground.ClassBased
         
         protected override void RunProcess()
         {
+            var Basic1Components = _componentDatabase.GetComponents<ClassComponent>(ClassComponent1TypeId);
+            var Basic2Components = _componentDatabase.GetComponents<ClassComponent2>(ClassComponent2TypeId);
+
             for (var i = _collection.Count - 1; i >= 0; i--)
             {
                 var entity = _collection[i];

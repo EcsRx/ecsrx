@@ -36,9 +36,9 @@ namespace EcsRx.Examples
             //new Struct2Application().StartApplication();
             //new Class3Application().StartApplication();
             //new Struct3Application().StartApplication();
-            //new Class4Application().StartApplication();
-            new Struct4Application().StartApplication();            
-            //new Struct4BApplication().StartApplication();
+            new Class4Application().StartApplication();
+            new Struct4Application().StartApplication();
+            new Struct4BApplication().StartApplication();
 
         }
     }

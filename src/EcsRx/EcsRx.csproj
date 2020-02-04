@@ -9,6 +9,7 @@
     <Description>A reactive take on the ECS pattern for .net game developers</Description>
     <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Properties\**" />
@@ -18,6 +19,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Properties\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx.MicroRx\EcsRx.MicroRx.csproj" />

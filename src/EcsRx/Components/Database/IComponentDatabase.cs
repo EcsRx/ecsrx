@@ -1,4 +1,6 @@
-﻿using EcsRx.Collections;
+﻿using System;
+using System.Runtime.InteropServices;
+using EcsRx.Collections;
 
 namespace EcsRx.Components.Database
 {
@@ -6,7 +8,8 @@ namespace EcsRx.Components.Database
     {
         T Get<T>(int componentTypeId, int allocationIndex) where T : IComponent;
         ref T GetRef<T>(int componentTypeId, int allocationIndex) where T : IComponent;
-        T[] GetComponents<T>(int componentTypeId) where T : IComponent;
+        Span<T> GetComponents<T>(int componentTypeId) where T : IComponent;
+        GCHandle Pin<T>(int componentTypeId) where T : IComponent;
         void Set<T>(int componentTypeId, int allocationIndex, T component) where T : IComponent;
         void Remove(int componentTypeId, int allocationIndex);
         int Allocate(int componentTypeId);

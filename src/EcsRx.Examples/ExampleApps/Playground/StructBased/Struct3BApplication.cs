@@ -6,17 +6,12 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 {
     public class Struct3BApplication : BasicLoopApplication
     {
-        protected StructComponent[] Components1;
-        protected StructComponent2[] Components2;
-        
         protected override void SetupEntities()
         {
             _componentDatabase.PreAllocateComponents(StructComponent1TypeId, EntityCount);
             _componentDatabase.PreAllocateComponents(StructComponent2TypeId, EntityCount);
             base.SetupEntities();
 
-            Components1 = _componentDatabase.GetComponents<StructComponent>(StructComponent1TypeId);
-            Components2 = _componentDatabase.GetComponents<StructComponent2>(StructComponent2TypeId);
         }
 
         protected override string Description { get; } =
@@ -30,6 +25,9 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
         
         protected override void RunProcess()
         {
+            var Components1 = _componentDatabase.GetComponents<StructComponent>(StructComponent1TypeId);
+            var Components2 = _componentDatabase.GetComponents<StructComponent2>(StructComponent2TypeId);
+
             for (var i = _collection.Count - 1; i >= 0; i--)
             {
                 var entity = _collection[i];

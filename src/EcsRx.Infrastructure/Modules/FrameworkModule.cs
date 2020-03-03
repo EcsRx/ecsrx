@@ -32,14 +32,16 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
             container.Bind<IObservableScheduler, DefaultObservableScheduler>();
-            
-            var componentTypeAssigner = new DefaultComponentTypeAssigner();
-            var allComponents = componentTypeAssigner.GenerateComponentLookups();
-            var componentLookup = new ComponentTypeLookup(allComponents);
-            
-            container.Bind<IComponentTypeAssigner>(new BindingConfiguration{ToInstance = componentTypeAssigner});
-            container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToInstance = componentLookup});           
+            container.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
+            container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             container.Bind<IComponentDatabase, ComponentDatabase>();
+        }
+
+        private object CreateDefaultTypeLookup(IDependencyContainer container)
+        {
+            var componentTypeAssigner = container.Resolve<IComponentTypeAssigner>();
+            var allComponents = componentTypeAssigner.GenerateComponentLookups();
+            return new ComponentTypeLookup(allComponents);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IComponentDatabase, ComponentDatabase>();
         }
 
-        private object CreateDefaultTypeLookup(IDependencyContainer container)
+        private static object CreateDefaultTypeLookup(IDependencyContainer container)
         {
             var componentTypeAssigner = container.Resolve<IComponentTypeAssigner>();
             var allComponents = componentTypeAssigner.GenerateComponentLookups();

@@ -2,7 +2,7 @@ using System;
 using System.Timers;
 using EcsRx.MicroRx.Subjects;
 
-namespace EcsRx.Infrastructure.Scheduling
+namespace EcsRx.Scheduling
 {
     public class DefaultObservableScheduler : IObservableScheduler
     {

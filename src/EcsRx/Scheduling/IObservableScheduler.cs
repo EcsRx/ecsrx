@@ -1,6 +1,6 @@
 using System;
 
-namespace EcsRx.Infrastructure.Scheduling
+namespace EcsRx.Scheduling
 {
     public interface IObservableScheduler : IDisposable
     {

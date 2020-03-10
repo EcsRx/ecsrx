@@ -17,5 +17,14 @@ namespace EcsRx.Extensions
                        .GetCustomAttributes(typeof(MultiThreadAttribute), true)
                        .FirstOrDefault() != null;
         }
+        
+        public static int[] GetGroupAffinities(this ISystem system)
+        {
+            var affinity = system.GetType()
+                .GetCustomAttributes(typeof(CollectionAffinityAttribute), true)
+                .FirstOrDefault();
+
+            return ((CollectionAffinityAttribute) affinity)?.CollectionIds;
+        }
     }
 }

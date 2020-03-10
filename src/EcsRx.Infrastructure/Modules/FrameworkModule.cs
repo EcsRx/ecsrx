@@ -9,9 +9,9 @@ using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Events;
 using EcsRx.Infrastructure.Extensions;
-using EcsRx.Infrastructure.Scheduling;
 using EcsRx.MicroRx.Events;
 using EcsRx.Pools;
+using EcsRx.Scheduling;
 using EcsRx.Threading;
 
 namespace EcsRx.Infrastructure.Modules

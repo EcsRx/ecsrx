@@ -28,11 +28,12 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
             container.Bind<IEntityCollectionManager, EntityCollectionManager>();
-            container.Bind<IObservableGroupManager>(x => x.ToMethod(y => y.Resolve<IEntityCollectionManager>()));
+            container.Bind<IObservableGroupManager>(x => x.ToBoundType<IEntityCollectionManager>());
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
             container.Bind<IConventionalSystemHandler, BasicSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
-            container.Bind<IObservableScheduler, DefaultObservableScheduler>();
+            container.Bind<IUpdateScheduler, DefaultUpdateScheduler>();
+            container.Bind<ITimeTracker>(x => x.ToBoundType(typeof(IUpdateScheduler)));
             container.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             container.Bind<IComponentDatabase, ComponentDatabase>();

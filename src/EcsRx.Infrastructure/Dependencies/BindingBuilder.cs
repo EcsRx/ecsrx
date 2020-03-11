@@ -68,5 +68,20 @@ namespace EcsRx.Infrastructure.Dependencies
             _configuration.ToMethod = container => method(container);
             return this;
         }
+
+        public BindingBuilder<TFrom> ToBoundType<TTo>() where TTo : TFrom
+        { return ToBoundType(typeof(TTo));  }
+        
+        public BindingBuilder<TFrom> ToBoundType(Type boundType)
+        {
+            if(_configuration.ToMethod != null)
+            { throw new BindingException("Cannot use bound type when a method has been provided already"); }
+            
+            if(_configuration.ToInstance != null)
+            { throw new BindingException("Cannot use bound type when an instance has been provided already"); }
+            
+            _configuration.ToMethod = container => container.Resolve(boundType);
+            return this;
+        }
     }
 }

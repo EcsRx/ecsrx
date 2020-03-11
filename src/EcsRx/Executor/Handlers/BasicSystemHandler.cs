@@ -17,15 +17,15 @@ namespace EcsRx.Executor.Handlers
     public class BasicSystemHandler : IConventionalSystemHandler
     {
         public readonly IEntityCollectionManager _entityCollectionManager;
-        public readonly IObservableScheduler _observableScheduler;
+        public readonly IUpdateScheduler UpdateScheduler;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
-        public BasicSystemHandler(IEntityCollectionManager entityCollectionManager, IThreadHandler threadHandler, IObservableScheduler observableScheduler)
+        public BasicSystemHandler(IEntityCollectionManager entityCollectionManager, IThreadHandler threadHandler, IUpdateScheduler updateScheduler)
         {
             _entityCollectionManager = entityCollectionManager;
             _threadHandler = threadHandler;
-            _observableScheduler = observableScheduler;
+            UpdateScheduler = updateScheduler;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
@@ -43,13 +43,13 @@ namespace EcsRx.Executor.Handlers
             
             if (!hasEntityPredicate)
             {
-                subscription = _observableScheduler.OnUpdate
+                subscription = UpdateScheduler.OnUpdate
                     .Subscribe(x => ExecuteForGroup(observableGroup, castSystem, runParallel));
             }
             else
             {
                 var groupPredicate = system.Group as IHasPredicate;
-                subscription = _observableScheduler.OnUpdate
+                subscription = UpdateScheduler.OnUpdate
                     .Subscribe(x => ExecuteForGroup(observableGroup
                         .Where(groupPredicate.CanProcessEntity).ToList(), castSystem, runParallel));
             }

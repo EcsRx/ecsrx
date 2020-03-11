@@ -21,7 +21,7 @@ namespace EcsRx.Tests.Framework.Handlers
         {
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
-            var observableScheduler = Substitute.For<IObservableScheduler>();
+            var observableScheduler = Substitute.For<IUpdateScheduler>();
             var reactToEntitySystemHandler = new BasicSystemHandler(mockCollectionManager, threadHandler, observableScheduler);
             
             var fakeMatchingSystem = Substitute.For<IBasicSystem>();
@@ -49,8 +49,8 @@ namespace EcsRx.Tests.Framework.Handlers
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
-            var observableScheduler = Substitute.For<IObservableScheduler>();
-            var observableSubject = new Subject<TimeSpan>();
+            var observableScheduler = Substitute.For<IUpdateScheduler>();
+            var observableSubject = new Subject<ElapsedTime>();
             observableScheduler.OnUpdate.Returns(observableSubject);
             
             var fakeGroup = new Group();
@@ -62,7 +62,7 @@ namespace EcsRx.Tests.Framework.Handlers
             var systemHandler = new BasicSystemHandler(mockCollectionManager, threadHandler, observableScheduler);
             systemHandler.SetupSystem(mockSystem);
             
-            observableSubject.OnNext(TimeSpan.Zero);
+            observableSubject.OnNext(new ElapsedTime());
             
             mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntity>());
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
@@ -90,8 +90,8 @@ namespace EcsRx.Tests.Framework.Handlers
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
-            var observableScheduler = Substitute.For<IObservableScheduler>();
-            var observableSubject = new Subject<TimeSpan>();
+            var observableScheduler = Substitute.For<IUpdateScheduler>();
+            var observableSubject = new Subject<ElapsedTime>();
             observableScheduler.OnUpdate.Returns(observableSubject);
             
             var fakeGroup = new GroupWithPredicate(x => x.Id == idToMatch);
@@ -103,7 +103,7 @@ namespace EcsRx.Tests.Framework.Handlers
             var systemHandler = new BasicSystemHandler(mockCollectionManager, threadHandler, observableScheduler);
             systemHandler.SetupSystem(mockSystem);
             
-            observableSubject.OnNext(TimeSpan.Zero);
+            observableSubject.OnNext(new ElapsedTime());
             
             mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Is(entityToMatch));
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
@@ -115,7 +115,7 @@ namespace EcsRx.Tests.Framework.Handlers
         {
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
-            var observableScheduler = Substitute.For<IObservableScheduler>();
+            var observableScheduler = Substitute.For<IUpdateScheduler>();
             var mockSystem = Substitute.For<IBasicSystem>();
             var mockDisposable = Substitute.For<IDisposable>();
             

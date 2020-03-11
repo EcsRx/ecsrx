@@ -105,8 +105,8 @@ namespace EcsRx.Tests.Framework
             var entityGroup = new [] {hasOneAndTwo, hasAllComponents, hasOneAndThree};
             
             var matchGroup1 = new Group(typeof(TestComponentOne), typeof(TestComponentTwo));
-            var matchGroup2 = new Group(null, new [] {typeof(TestComponentOne), typeof(TestComponentTwo)}, new[] {typeof(TestComponentThree)});
-            var matchGroup3 = new Group(null, new Type[0], new[] {typeof(TestComponentTwo)});
+            var matchGroup2 = new Group(new [] {typeof(TestComponentOne), typeof(TestComponentTwo)}, new[] {typeof(TestComponentThree)});
+            var matchGroup3 = new Group(new Type[0], new[] {typeof(TestComponentTwo)});
 
 
             var group1Results1 = entityGroup.MatchingGroup(matchGroup1).ToArray();

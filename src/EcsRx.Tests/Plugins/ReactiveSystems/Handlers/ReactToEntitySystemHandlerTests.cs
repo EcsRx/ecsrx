@@ -204,7 +204,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
-            var fakeGroup = new Group(x => x.Id == id1);
+            var fakeGroup = new GroupWithPredicate(x => x.Id == id1);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<IEntity>();

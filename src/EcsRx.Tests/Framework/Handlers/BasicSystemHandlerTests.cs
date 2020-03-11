@@ -43,7 +43,6 @@ namespace EcsRx.Tests.Framework.Handlers
             };
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             mockObservableGroup[0].Returns(fakeEntities[0]);
             mockObservableGroup[1].Returns(fakeEntities[1]);
             mockObservableGroup.Count.Returns(fakeEntities.Count);
@@ -95,7 +94,7 @@ namespace EcsRx.Tests.Framework.Handlers
             var observableSubject = new Subject<TimeSpan>();
             observableScheduler.OnUpdate.Returns(observableSubject);
             
-            var fakeGroup = new Group(x => x.Id == idToMatch);
+            var fakeGroup = new GroupWithPredicate(x => x.Id == idToMatch);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var mockSystem = Substitute.For<IBasicSystem>();

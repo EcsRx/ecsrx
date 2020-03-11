@@ -44,7 +44,9 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             };
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            mockObservableGroup[0].Returns(fakeEntities[0]);
+            mockObservableGroup[1].Returns(fakeEntities[1]);
+            mockObservableGroup.Count.Returns(fakeEntities.Count);
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
@@ -78,6 +80,9 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             
             var mockObservableGroup = Substitute.For<IObservableGroup>();
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            mockObservableGroup[0].Returns(fakeEntities[0]);
+            mockObservableGroup[1].Returns(fakeEntities[1]);
+            mockObservableGroup.Count.Returns(fakeEntities.Count);
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
@@ -122,7 +127,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
             
-            var fakeGroup = new Group(x => x.Id == idToMatch);
+            var fakeGroup = new GroupWithPredicate(x => x.Id == idToMatch);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();

@@ -2,7 +2,7 @@ using System;
 
 namespace EcsRx.Scheduling
 {
-    public struct ElapsedTime
+    public struct ElapsedTime : IEquatable<ElapsedTime>
     {
         public TimeSpan DeltaTime;
         public TimeSpan TotalTime;
@@ -12,5 +12,24 @@ namespace EcsRx.Scheduling
             DeltaTime = deltaTime;
             TotalTime = totalTime;
         }
+        
+        public bool Equals(ElapsedTime other)
+        {
+            return DeltaTime.Equals(other.DeltaTime) && TotalTime.Equals(other.TotalTime);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ElapsedTime other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (DeltaTime.GetHashCode() * 397) ^ TotalTime.GetHashCode();
+            }
+        }
+
     }
 }

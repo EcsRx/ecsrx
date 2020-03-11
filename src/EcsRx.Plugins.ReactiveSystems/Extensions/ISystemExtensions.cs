@@ -35,14 +35,5 @@ namespace EcsRx.Plugins.ReactiveSystems.Extensions
 
             return matchingInterface;
         }
-        
-        public static int[] GetGroupAffinities(this ISystem system)
-        {
-            var affinity = system.GetType()
-                .GetCustomAttributes(typeof(CollectionAffinityAttribute), true)
-                .FirstOrDefault();
-
-            return ((CollectionAffinityAttribute) affinity)?.CollectionIds;
-        }
     }
 }

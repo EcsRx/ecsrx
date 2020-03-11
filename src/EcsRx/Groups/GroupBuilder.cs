@@ -44,6 +44,10 @@ namespace EcsRx.Groups
         }
 
         public IGroup Build()
-        { return new Group(_predicate, _withComponents, _withoutComponents); }
+        {
+            return _predicate != null ? 
+                new GroupWithPredicate(_predicate, _withComponents, _withoutComponents) : 
+                new Group(_withComponents, _withoutComponents);
+        }
     }
 }

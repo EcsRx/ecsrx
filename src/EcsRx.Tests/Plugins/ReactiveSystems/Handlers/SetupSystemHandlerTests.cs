@@ -167,7 +167,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
-            var fakeGroup = new Group(x => x.Id == fakeEntity1.Id);
+            var fakeGroup = new GroupWithPredicate(x => x.Id == fakeEntity1.Id);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
@@ -206,7 +206,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             
             var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
 
-            var fakeGroup = new Group(x => x.Id == fakeEntity1.Id && DateTime.Now >= expectedDate);
+            var fakeGroup = new GroupWithPredicate(x => x.Id == fakeEntity1.Id && DateTime.Now >= expectedDate);
             mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();

@@ -12,7 +12,7 @@ namespace EcsRx.Tests.Framework
         public void should_correctly_verify_group_contains_all_required_components()
         {
             var requiredComponents = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
-            var dummyGroup = new Group(null, requiredComponents, new Type[0]);
+            var dummyGroup = new Group(requiredComponents, new Type[0]);
 
             var dummyComponents1 = new[] {typeof(TestComponentOne)};
             var dummyComponents2 = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
@@ -31,7 +31,7 @@ namespace EcsRx.Tests.Framework
         public void should_correctly_verify_group_contains_any_required_components()
         {
             var requiredComponents = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
-            var dummyGroup = new Group(null, requiredComponents, new Type[0]);
+            var dummyGroup = new Group(requiredComponents, new Type[0]);
 
             var dummyComponents1 = new[] {typeof(TestComponentOne)};
             var dummyComponents2 = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
@@ -50,7 +50,7 @@ namespace EcsRx.Tests.Framework
         public void should_correctly_verify_group_contains_any_excluded_components()
         {
             var excludedComponents = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
-            var dummyGroup = new Group(null, new Type[0], excludedComponents);
+            var dummyGroup = new Group(new Type[0], excludedComponents);
 
             var dummyComponents1 = new[] {typeof(TestComponentOne)};
             var dummyComponents2 = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
@@ -70,7 +70,7 @@ namespace EcsRx.Tests.Framework
         {
             var requiredComponents = new[] {typeof(TestComponentOne)};
             var excludedComponents = new[] {typeof(TestComponentTwo)};
-            var dummyGroup = new Group(null, requiredComponents, excludedComponents);
+            var dummyGroup = new Group(requiredComponents, excludedComponents);
 
             var dummyComponents1 = new[] {typeof(TestComponentOne)};
             var dummyComponents2 = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};

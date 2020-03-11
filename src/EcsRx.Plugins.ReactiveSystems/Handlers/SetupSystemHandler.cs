@@ -8,7 +8,6 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
-using EcsRx.Plugins.ReactiveSystems.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 

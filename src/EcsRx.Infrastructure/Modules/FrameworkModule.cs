@@ -30,6 +30,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IEntityCollectionManager, EntityCollectionManager>();
             container.Bind<IObservableGroupManager>(x => x.ToMethod(y => y.Resolve<IEntityCollectionManager>()));
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
+            container.Bind<IConventionalSystemHandler, BasicSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
             container.Bind<IObservableScheduler, DefaultObservableScheduler>();
             container.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();

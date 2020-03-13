@@ -1,4 +1,6 @@
 using EcsRx.Infrastructure.Dependencies;
+using EcsRx.Infrastructure.Extensions;
+using EcsRx.Plugins.Persistence.Transformers;
 
 namespace EcsRx.Plugins.Persistence.Modules
 {
@@ -6,7 +8,8 @@ namespace EcsRx.Plugins.Persistence.Modules
     {
         public void Setup(IDependencyContainer container)
         {
-            
+            container.Bind<IEntityDataTransformer, EntityDataTransformer>();
+            container.Bind<IEntityCollectionDataTransformer, EntityCollectionDataTransformer>();
         }
     }
 }

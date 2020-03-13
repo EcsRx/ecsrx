@@ -31,7 +31,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         protected override void ApplicationStarted()
         {
-            var collection = EntityCollectionManager.GetCollection();
+            var collection = EntityCollectionManager.EntityDatabase.GetCollection();
             
            
             var stopwatch = new Stopwatch();

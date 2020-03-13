@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using EcsRx.Collections;
+using EcsRx.Collections.Database;
+using EcsRx.Collections.Entity;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
@@ -49,8 +51,9 @@ namespace EcsRx.Tests.Sanity
             var componentDatabase = new ComponentDatabase(componentLookupType);
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType);
             var collectionFactory = new DefaultEntityCollectionFactory(entityFactory);
+            var entityDatabase = new EntityDatabase(collectionFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
-            var collectionManager = new EntityCollectionManager(collectionFactory, observableGroupFactory, componentLookupType);
+            var collectionManager = new EntityCollectionManager(observableGroupFactory, entityDatabase, componentLookupType);
 
             return (collectionManager, componentDatabase, componentLookupType);
         }
@@ -85,7 +88,7 @@ namespace EcsRx.Tests.Sanity
             var executor = CreateExecutor(collectionManager);
             executor.AddSystem(new TestSetupSystem());
 
-            var collection = collectionManager.GetCollection();
+            var collection = collectionManager.EntityDatabase.GetCollection();
             var entityOne = collection.CreateEntity();
             var entityTwo = collection.CreateEntity();
 
@@ -100,7 +103,7 @@ namespace EcsRx.Tests.Sanity
         public void should_not_freak_out_when_removing_components_during_removing_event()
         {
             var (collectionManager, _,_) = CreateFramework();
-            var collection = collectionManager.GetCollection();
+            var collection = collectionManager.EntityDatabase.GetCollection();
             var entityOne = collection.CreateEntity();
 
             var timesCalled = 0;
@@ -143,7 +146,7 @@ namespace EcsRx.Tests.Sanity
             var teardownCalled = false;
             viewResolverSystem.OnTeardown = entity => { teardownCalled = true; };
             
-            var collection = collectionManager.GetCollection();
+            var collection = collectionManager.EntityDatabase.GetCollection();
             var entityOne = collection.CreateEntity();
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
 
@@ -159,8 +162,8 @@ namespace EcsRx.Tests.Sanity
             var (collectionManager, _,_) = CreateFramework();
             
             var group = new Group(typeof(TestComponentOne));
-            var collection1 = collectionManager.CreateCollection(1);
-            var collection2 = collectionManager.CreateCollection(2);
+            var collection1 = collectionManager.EntityDatabase.CreateCollection(1);
+            var collection2 = collectionManager.EntityDatabase.CreateCollection(2);
 
             var addedTimesCalled = 0;
             var removingTimesCalled = 0;
@@ -188,7 +191,7 @@ namespace EcsRx.Tests.Sanity
         public unsafe void should_keep_state_with_batches()
         {            
             var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
-            var collection1 = collectionManager.CreateCollection(1);
+            var collection1 = collectionManager.EntityDatabase.CreateCollection(1);
             var entity1 = collection1.CreateEntity();
 
             var startingInt = 2;
@@ -229,7 +232,7 @@ namespace EcsRx.Tests.Sanity
         public unsafe void should_retain_pointer_through_new_struct()
         {            
             var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
-            var collection1 = collectionManager.CreateCollection(1);
+            var collection1 = collectionManager.EntityDatabase.CreateCollection(1);
             var entity1 = collection1.CreateEntity();
 
             var startingInt = 2;
@@ -272,7 +275,7 @@ namespace EcsRx.Tests.Sanity
         {
             var expectedSize = 5000;
             var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
-            var collection = collectionManager.GetCollection();
+            var collection = collectionManager.EntityDatabase.GetCollection();
             var observableGroup = collectionManager.GetObservableGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
             
             for (var i = 0; i < expectedSize; i++)

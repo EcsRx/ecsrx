@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
-using EcsRx.Components;
 
-namespace EcsRx.Collections
+namespace EcsRx.Components
 {
     /// <summary>
     /// Acts as a basic memory block for components of a specific type

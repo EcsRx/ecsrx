@@ -2,7 +2,7 @@ using Persistity.Transformers;
 
 namespace EcsRx.Plugins.Persistence.Transformers
 {
-    public interface IEntityCollectionDataTransformer : ITransformer
+    public interface IEntityTransformer : ITransformer
     {
     }
 }

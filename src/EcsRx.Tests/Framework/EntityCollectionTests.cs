@@ -1,5 +1,6 @@
 ﻿using System;
 using EcsRx.Collections;
+using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using NSubstitute;
 using Xunit;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Collections;
+using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;

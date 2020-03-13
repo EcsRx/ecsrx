@@ -2,7 +2,7 @@
 using EcsRx.Blueprints;
 using EcsRx.Entities;
 
-namespace EcsRx.Collections
+namespace EcsRx.Collections.Entity
 {
     /// <summary>
     /// The entity collection is a container for entities, it can be seen as a Repository of sorts

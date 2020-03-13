@@ -1,5 +1,6 @@
 using System.Linq;
 using EcsRx.Collections;
+using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
@@ -7,13 +8,13 @@ using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers
 {
-    public class EntityCollectionDataTransformer : IEntityCollectionDataTransformer
+    public class EntityCollectionTransformer : IEntityCollectionTransformer
     {
-        public IEntityDataTransformer EntityTransformer { get; }
+        public IEntityTransformer EntityTransformer { get; }
         public IEventSystem EventSystem { get; }
         public IEntityFactory EntityFactory { get; }
 
-        public EntityCollectionDataTransformer(IEntityDataTransformer entityTransformer, IEventSystem eventSystem, IEntityFactory entityFactory)
+        public EntityCollectionTransformer(IEntityTransformer entityTransformer, IEventSystem eventSystem, IEntityFactory entityFactory)
         {
             EntityTransformer = entityTransformer;
             EventSystem = eventSystem;

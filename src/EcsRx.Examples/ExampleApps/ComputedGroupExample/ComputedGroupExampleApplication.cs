@@ -18,7 +18,7 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample
 
         protected override void ApplicationStarted()
         {
-            var defaultPool = EntityCollectionManager.GetCollection();
+            var defaultPool = EntityCollectionManager.EntityDatabase.GetCollection();
             defaultPool.CreateEntity(new CharacterBlueprint("Bob", 200));
             defaultPool.CreateEntity(new CharacterBlueprint("Tom", 150));
             defaultPool.CreateEntity(new CharacterBlueprint("Rolf", 150));

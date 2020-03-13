@@ -7,12 +7,12 @@ using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers
 {
-    public class EntityDataTransformer : IEntityDataTransformer
+    public class EntityTransformer : IEntityTransformer
     {
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
 
-        public EntityDataTransformer(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
+        public EntityTransformer(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ComponentDatabase = componentDatabase;
             ComponentTypeLookup = componentTypeLookup;

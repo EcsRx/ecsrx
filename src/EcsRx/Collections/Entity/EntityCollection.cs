@@ -10,7 +10,7 @@ using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
 
-namespace EcsRx.Collections
+namespace EcsRx.Collections.Entity
 {
     public class EntityCollection : IEntityCollection, IDisposable
     {

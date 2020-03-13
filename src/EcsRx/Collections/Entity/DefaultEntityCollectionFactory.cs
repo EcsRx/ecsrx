@@ -1,6 +1,6 @@
 ﻿using EcsRx.Entities;
 
-namespace EcsRx.Collections
+namespace EcsRx.Collections.Entity
 {
     public class DefaultEntityCollectionFactory : IEntityCollectionFactory
     {

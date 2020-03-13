@@ -1,6 +1,6 @@
 ﻿using EcsRx.Factories;
 
-namespace EcsRx.Collections
+namespace EcsRx.Collections.Entity
 {
     /// <summary>
     /// Creates an entity collection for a given name

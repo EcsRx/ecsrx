@@ -1,5 +1,6 @@
 using System.Reactive.Linq;
 using EcsRx.Collections;
+using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;

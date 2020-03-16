@@ -16,8 +16,12 @@
     </ProjectReference>
     <ProjectReference Include="..\EcsRx.Plugins.Batching\EcsRx.Plugins.Batching.csproj" />
     <ProjectReference Include="..\EcsRx.Plugins.Computeds\EcsRx.Plugins.Computeds.csproj" />
+    <ProjectReference Include="..\EcsRx.Plugins.Persistence\EcsRx.Plugins.Persistence.csproj" />
     <ProjectReference Include="..\EcsRx.Plugins.Views\EcsRx.Plugins.Views.csproj" />
     <ProjectReference Include="..\EcsRx.ReactiveData\EcsRx.ReactiveData.csproj" />
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ExampleApps\PersistData\Components" />
   </ItemGroup>
 </Project>

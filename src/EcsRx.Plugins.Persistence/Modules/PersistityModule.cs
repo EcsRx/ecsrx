@@ -1,13 +1,15 @@
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
+using EcsRx.Plugins.Persistence.Builders;
+using EcsRx.Plugins.Persistence.Pipelines;
 using EcsRx.Plugins.Persistence.Transformers;
 using LazyData.Binary;
 using LazyData.Binary.Handlers;
 using LazyData.Mappings.Mappers;
+using LazyData.Mappings.Types;
 using LazyData.Registries;
+using LazyData.Serialization;
 using Persistity.Endpoints.Files;
-using Persistity.Pipelines;
-using Persistity.Pipelines.Builders;
 
 namespace EcsRx.Plugins.Persistence.Modules
 {
@@ -20,28 +22,60 @@ namespace EcsRx.Plugins.Persistence.Modules
             container.Bind<IEntityTransformer, EntityTransformer>();
             container.Bind<IEntityCollectionTransformer, EntityCollectionTransformer>();
             container.Bind<IEntityDatabaseTransformer, EntityDatabaseTransformer>();
+            container.Bind<EcsRxPipelineBuilder>(builder => builder.ToMethod(x =>
+                new EcsRxPipelineBuilder(x)).AsSingleton());
 
-            // These are defaults, you can override these in your own app
-            container.Bind<ISendDataPipeline>(builder =>
-                builder.ToMethod(x =>
-                {
-                    var mappingRegistry = new MappingRegistry(x.Resolve<EverythingTypeMapper>());
-                    var primitiveTypeMappings = x.ResolveAll<IBinaryPrimitiveHandler>();
-                    var everythingSerializer = new BinarySerializer(mappingRegistry, primitiveTypeMappings);
-                    return new PipelineBuilder()
-                        .SerializeWith(everythingSerializer)
-                        .TransformWith(x.Resolve<IEntityDatabaseTransformer>())
-                        .SendTo(new FileEndpoint(DefaultEntityDatabaseFile))
-                        .Build();
-                }));
+            // These are defaults, you can override these in your own app/plugin
+            container.Bind<ISaveEntityDatabasePipeline>(builder =>
+                builder.ToMethod(CreateDefaultSavePipeline).AsSingleton());
             
-            // These are defaults, you can override these in your own app
-            container.Bind<IReceiveDataPipeline>(builder =>
-                builder.ToMethod(x => new PipelineBuilder()
-                    .RecieveFrom(new FileEndpoint(DefaultEntityDatabaseFile))
-                    .DeserializeWith(x.Resolve<IBinaryDeserializer>())
-                    .TransformWith(x.Resolve<IEntityDatabaseTransformer>())
-                    .Build()));
+            container.Bind<ILoadEntityDatabasePipeline>(builder =>
+                builder.ToMethod(CreateDefaultLoadPipeline).AsSingleton());
+        }
+
+        public ISaveEntityDatabasePipeline CreateDefaultSavePipeline(IDependencyContainer container)
+        {
+            var mappingRegistry = new MappingRegistry(container.Resolve<EverythingTypeMapper>());
+            var primitiveTypeMappings = container.ResolveAll<IBinaryPrimitiveHandler>();
+            var everythingSerializer = new BinarySerializer(mappingRegistry, primitiveTypeMappings);
+            return CreateSavePipeline(container, everythingSerializer, DefaultEntityDatabaseFile);
+        }
+
+        public ILoadEntityDatabasePipeline CreateDefaultLoadPipeline(IDependencyContainer container)
+        {
+            var mappingRegistry = new MappingRegistry(container.Resolve<EverythingTypeMapper>());
+            var typeCreator = container.Resolve<ITypeCreator>();
+            var primitiveTypeMappings = container.ResolveAll<IBinaryPrimitiveHandler>();
+            var everythingDeserializer = new BinaryDeserializer(mappingRegistry, typeCreator, primitiveTypeMappings);
+            return CreateLoadPipeline(container, everythingDeserializer, DefaultEntityDatabaseFile);
+        }
+        
+        /// <summary>
+        /// This can be re-used if you want to just swap over to use JSON or XML etc
+        /// </summary>
+        /// <param name="container">The dependency container</param>
+        /// <param name="serializer">The serializer to use</param>
+        /// <param name="filename">The filename to use</param>
+        /// <returns>The save database pipeline with config provided</returns>
+        public ISaveEntityDatabasePipeline CreateSavePipeline(IDependencyContainer container, 
+            ISerializer serializer, string filename)
+        {
+            return new DefaultSaveEntityDatabasePipeline(serializer, new FileEndpoint(filename),
+                container.Resolve<IEntityDatabaseTransformer>());
+        }
+
+        /// <summary>
+        /// This can be re-used if you want to just swap over to use JSON or XML etc
+        /// </summary>
+        /// <param name="container">The dependency container</param>
+        /// <param name="deserializer">The deserializer to use</param>
+        /// <param name="filename">The filename to use</param>
+        /// <returns>The save database pipeline with config provided</returns>
+        public ILoadEntityDatabasePipeline CreateLoadPipeline(IDependencyContainer container,
+            IDeserializer deserializer, string filename)
+        {
+            return new DefaultLoadEntityDatabasePipeline(deserializer,
+                new FileEndpoint(filename), container.Resolve<IEntityDatabaseTransformer>());
         }
     }
 }

@@ -22,6 +22,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Custom
     {
         public virtual IGroup Group => new EmptyGroup();
         public IEventSystem EventSystem { get; }
+        public IObservableGroup ObservableGroup { get; private set; }
 
         private IDisposable _subscription;
 
@@ -32,6 +33,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Custom
 
         public virtual void StartSystem(IObservableGroup observableGroup)
         {
+            ObservableGroup = observableGroup;
             _subscription = EventSystem.Receive<T>().Subscribe(EventTriggered);
         }
 

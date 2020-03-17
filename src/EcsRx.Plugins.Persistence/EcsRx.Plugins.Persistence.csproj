@@ -10,11 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="LazyData.Binary" Version="2.0.11" />
-      <PackageReference Include="Persistity" Version="0.7.8" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Builder" />
+      <PackageReference Include="Persistity" Version="0.7.10" />
     </ItemGroup>
 
 </Project>

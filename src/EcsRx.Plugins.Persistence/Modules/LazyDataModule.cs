@@ -26,12 +26,13 @@ namespace EcsRx.Plugins.Persistence.Modules
             });
             
             container.Bind<ITypeCreator, TypeCreator>();
+            container.Bind<ITypeAnalyzer, TypeAnalyzer>();
+            container.Bind<MappingConfiguration>(x => x.ToInstance(MappingConfiguration.Default)); 
             container.Bind<EverythingTypeMapper>();
             container.Bind<DefaultTypeMapper>();
             container.Bind<ITypeMapper>(x => x.ToBoundType<DefaultTypeMapper>());
-            container.Bind<ITypeAnalyzer, TypeAnalyzer>();
             container.Bind<IMappingRegistry, MappingRegistry>();
-            
+
             container.Bind<IBinaryPrimitiveHandler, BasicBinaryPrimitiveHandler>();
             container.Bind<IBinarySerializer, BinarySerializer>();
             container.Bind<IBinaryDeserializer, BinaryDeserializer>();

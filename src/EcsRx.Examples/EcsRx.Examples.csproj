@@ -6,7 +6,9 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="LazyData.Json" Version="2.0.11" />
     <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="Persistity.Endpoints.Http" Version="0.7.10" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx.Infrastructure.Ninject\EcsRx.Infrastructure.Ninject.csproj" />
@@ -20,8 +22,5 @@
     <ProjectReference Include="..\EcsRx.Plugins.Views\EcsRx.Plugins.Views.csproj" />
     <ProjectReference Include="..\EcsRx.ReactiveData\EcsRx.ReactiveData.csproj" />
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ExampleApps\PersistData\Components" />
   </ItemGroup>
 </Project>

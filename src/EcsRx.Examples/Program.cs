@@ -2,6 +2,7 @@
 using EcsRx.Examples.Custom;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample;
+using EcsRx.Examples.ExampleApps.DataPipelinesExample;
 using EcsRx.Examples.ExampleApps.HealthExample;
 using EcsRx.Examples.ExampleApps.HelloWorldExample;
 using EcsRx.Examples.ExampleApps.Performance;
@@ -17,7 +18,8 @@ namespace EcsRx.Examples
             // Sample examples
             //new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
-            new HealthExampleApplication().StartApplication();
+            //new HealthExampleApplication().StartApplication();
+            new PersistDataApplication().StartApplication();
             //new BatchedGroupExampleApplication().StartApplication();
             //new SetupSystemPriorityApplication().StartApplication();
 

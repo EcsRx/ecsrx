@@ -57,7 +57,7 @@ namespace EcsRx.Plugins.Persistence.Modules
         /// <param name="serializer">The serializer to use</param>
         /// <param name="filename">The filename to use</param>
         /// <returns>The save database pipeline with config provided</returns>
-        public ISaveEntityDatabasePipeline CreateSavePipeline(IDependencyContainer container, 
+        public static ISaveEntityDatabasePipeline CreateSavePipeline(IDependencyContainer container, 
             ISerializer serializer, string filename)
         {
             return new DefaultSaveEntityDatabasePipeline(serializer, new FileEndpoint(filename),
@@ -71,7 +71,7 @@ namespace EcsRx.Plugins.Persistence.Modules
         /// <param name="deserializer">The deserializer to use</param>
         /// <param name="filename">The filename to use</param>
         /// <returns>The save database pipeline with config provided</returns>
-        public ILoadEntityDatabasePipeline CreateLoadPipeline(IDependencyContainer container,
+        public static ILoadEntityDatabasePipeline CreateLoadPipeline(IDependencyContainer container,
             IDeserializer deserializer, string filename)
         {
             return new DefaultLoadEntityDatabasePipeline(deserializer,

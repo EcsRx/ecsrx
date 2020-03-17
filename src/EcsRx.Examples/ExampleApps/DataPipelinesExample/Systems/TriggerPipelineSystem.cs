@@ -8,6 +8,8 @@ using EcsRx.Examples.ExampleApps.DataPipelinesExample.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Plugins.ReactiveSystems.Custom;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Persistity.Pipelines;
 
 namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Systems
@@ -33,8 +35,13 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Systems
         public async Task TriggerPipeline(PlayerStateComponent playerState)
         {
             var httpResponse = (HttpResponseMessage) await SaveJsonPipeline.Execute(playerState, null);
-            var response = await httpResponse.Content.ReadAsStringAsync();
-            Console.WriteLine($"Server Responded With > {response}");
+            var responseContent = await httpResponse.Content.ReadAsStringAsync();
+            var prettyResponse = MakeDataPretty(responseContent);
+            Console.WriteLine($"Server Responded With {prettyResponse}");
         }
+
+        // Feel free to output everything in the JToken if you want, only showing data for simplicity
+        public string MakeDataPretty(string jsonData)
+        { return JToken.Parse(jsonData)["data"].ToString(Formatting.Indented); }
     }
 }

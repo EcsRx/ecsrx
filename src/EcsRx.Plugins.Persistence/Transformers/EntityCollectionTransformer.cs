@@ -11,14 +11,12 @@ namespace EcsRx.Plugins.Persistence.Transformers
     public class EntityCollectionTransformer : IEntityCollectionTransformer
     {
         public IEntityTransformer EntityTransformer { get; }
-        public IEventSystem EventSystem { get; }
-        public IEntityFactory EntityFactory { get; }
+        public IEntityCollectionFactory EntityCollectionFactory { get; }
 
-        public EntityCollectionTransformer(IEntityTransformer entityTransformer, IEventSystem eventSystem, IEntityFactory entityFactory)
+        public EntityCollectionTransformer(IEntityTransformer entityTransformer, IEntityCollectionFactory entityCollectionFactory)
         {
             EntityTransformer = entityTransformer;
-            EventSystem = eventSystem;
-            EntityFactory = entityFactory;
+            EntityCollectionFactory = entityCollectionFactory;
         }
 
         public object TransformTo(object original)
@@ -40,7 +38,7 @@ namespace EcsRx.Plugins.Persistence.Transformers
         public object TransformFrom(object converted)
         {
             var collectionData = (EntityCollectionData) converted;
-            var collection = new EntityCollection(collectionData.CollectionId, EntityFactory);
+            var collection = EntityCollectionFactory.Create(collectionData.CollectionId);
             var entities = collectionData.Entities
                 .Select(EntityTransformer.TransformFrom)
                 .Cast<IEntity>();

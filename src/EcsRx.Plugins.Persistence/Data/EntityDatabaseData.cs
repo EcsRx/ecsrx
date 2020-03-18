@@ -4,7 +4,7 @@ namespace EcsRx.Plugins.Persistence.Data
 {
     public class EntityDatabaseData
     {
-        public IList<EntityCollectionData> EntityCollections { get; set; }
+        public List<EntityCollectionData> EntityCollections { get; set; }
         public string Version { get; set; }
         
         public EntityDatabaseData()

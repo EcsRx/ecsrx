@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Collections.Database;
 using EcsRx.Components.Lookups;
-using EcsRx.Entities;
-using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Lookups;
-using EcsRx.MicroRx.Disposables;
-using EcsRx.MicroRx.Extensions;
-using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Collections
 {
@@ -27,7 +22,6 @@ namespace EcsRx.Collections
         
         public EntityCollectionManager(IObservableGroupFactory observableGroupFactory, IEntityDatabase entityDatabase, IComponentTypeLookup componentTypeLookup)
         {
-            
             ObservableGroupFactory = observableGroupFactory;
             EntityDatabase = entityDatabase;
             ComponentTypeLookup = componentTypeLookup;

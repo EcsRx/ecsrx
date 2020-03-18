@@ -6,8 +6,8 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="LazyData.Json" Version="2.0.11" />
-    <PackageReference Include="LazyData.Numerics" Version="2.0.11" />
+    <PackageReference Include="LazyData.Json" Version="3.0.17" />
+    <PackageReference Include="LazyData.Numerics" Version="3.0.17" />
     <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="Persistity.Endpoints.Http" Version="0.7.10" />
   </ItemGroup>
@@ -23,5 +23,8 @@
     <ProjectReference Include="..\EcsRx.Plugins.Views\EcsRx.Plugins.Views.csproj" />
     <ProjectReference Include="..\EcsRx.ReactiveData\EcsRx.ReactiveData.csproj" />
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ExampleApps\LoadingEntityDatabase\Systems" />
   </ItemGroup>
 </Project>

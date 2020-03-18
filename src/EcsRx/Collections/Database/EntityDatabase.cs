@@ -50,9 +50,6 @@ namespace EcsRx.Collections.Database
             _onEntityComponentsAdded = new Subject<ComponentsChangedEvent>();
             _onEntityComponentsRemoving = new Subject<ComponentsChangedEvent>();
             _onEntityComponentsRemoved = new Subject<ComponentsChangedEvent>();
-
-
-            CreateCollection(EntityCollectionLookups.DefaultCollectionId);
         }
 
         public void SubscribeToCollection(IEntityCollection collection)
@@ -86,7 +83,12 @@ namespace EcsRx.Collections.Database
         }
 
         public IEntityCollection GetCollection(int id = EntityCollectionLookups.DefaultCollectionId)
-        { return _collections[id]; }
+        {
+            if(id == EntityCollectionLookups.DefaultCollectionId && _collections.Count == 0)
+            { CreateCollection(EntityCollectionLookups.DefaultCollectionId); }
+            
+            return _collections[id];
+        }
 
         public void RemoveCollection(int id, bool disposeEntities = true)
         {

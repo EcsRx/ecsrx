@@ -1,3 +1,4 @@
+using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 using LazyData.Binary;
@@ -16,15 +17,19 @@ namespace EcsRx.Plugins.Persistence.Modules
         {
             container.Bind<TypeAnalyzerConfiguration>(x => x.AsSingleton());
 
-            var primitiveRegistry = new PrimitiveRegistry();
-            primitiveRegistry.AddPrimitiveCheck(new BasicPrimitiveChecker());
-
-            container.Bind<IPrimitiveRegistry>(x =>
-            {
-                x.ToInstance(primitiveRegistry)
-                    .AsSingleton();
-            });
+            container.Bind<IPrimitiveChecker, BasicPrimitiveChecker>();
             
+            container.Bind<IPrimitiveRegistry>(builder =>
+                builder
+                    .ToMethod(x =>
+                        {
+                            var primitiveCheckers = x.ResolveAll<IPrimitiveChecker>();
+                            var primitiveRegistry = new PrimitiveRegistry();
+                            primitiveCheckers.ForEachRun(primitiveRegistry.AddPrimitiveCheck);
+                            return primitiveRegistry;
+                        })
+                    .AsSingleton());
+
             container.Bind<ITypeCreator, TypeCreator>();
             container.Bind<ITypeAnalyzer, TypeAnalyzer>();
             container.Bind<MappingConfiguration>(x => x.ToInstance(MappingConfiguration.Default)); 

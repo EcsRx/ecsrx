@@ -100,7 +100,17 @@ namespace EcsRx.Infrastructure.Ninject
         }
 
         public void Unbind(Type type)
-        { _kernel.Unbind(type); }
+        {
+            _kernel.Unbind(type);
+            /*
+            _kernel.GetBindings(type)
+                //.Where(binding => !binding.IsConditional)
+                .ToList()
+                .ForEach(
+                    binding =>
+                        _kernel.RemoveBinding(binding)
+                );*/
+        }
 
         public IEnumerable ResolveAll(Type type)
         { return _kernel.GetAll(type); }

@@ -26,10 +26,12 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules
         public void Setup(IDependencyContainer container)
         {
             // Override our default save pipeline (binary ones) with the json one
+            container.Unbind<ISaveEntityDatabasePipeline>();
             container.Bind<ISaveEntityDatabasePipeline>(builder =>
                 builder.ToMethod(CreateJsonSavePipeline).AsSingleton());
             
             // Override our default load pipeline (binary ones) with the json one
+            container.Unbind<ILoadEntityDatabasePipeline>();
             container.Bind<ILoadEntityDatabasePipeline>(builder =>
                 builder.ToMethod(CreateJsonLoadPipeline).AsSingleton());
         }

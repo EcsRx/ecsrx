@@ -1,27 +1,22 @@
 ﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using EcsRx.Collections.Database;
-using EcsRx.Entities;
-using EcsRx.Examples.Application;
-using EcsRx.Examples.ExampleApps.DataPipelinesExample.Components;
-using EcsRx.Examples.ExampleApps.DataPipelinesExample.Events;
-using EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules;
 using EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Blueprints;
 using EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules;
-using EcsRx.Extensions;
+using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
-using EcsRx.Plugins.Persistence.Pipelines;
-using Persistity.Pipelines;
+using EcsRx.Infrastructure.Ninject;
+using EcsRx.Plugins.Persistence;
 
 namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
 {
-    public class LoadingEntityDatabaseApplication : EcsRxConsoleApplication
+    // We extend from EcsRxPersistedApplication which has built in helpers for persisting entity DB
+    public class LoadingEntityDatabaseApplication : EcsRxPersistedApplication
     {
-        private bool _quit;
+        public override IDependencyContainer Container { get; }  = new NinjectDependencyContainer();
 
-        private ISaveEntityDatabasePipeline _saveEntityDatabasePipeline;
-        private ILoadEntityDatabasePipeline _loadEntityDatabasePipeline;
+        // Tell it to look for the JSON file now rather than the binary one
+        public override string EntityDatabaseFile => JsonEntityDatabaseModule.CustomEntityDatabaseFile;
+
+        private bool _quit;
 
         protected override void LoadModules()
         {
@@ -38,29 +33,7 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
             // bindings set in place by the plugin.
             Container.LoadModule<JsonEntityDatabaseModule>();
             
-            _saveEntityDatabasePipeline = Container.Resolve<ISaveEntityDatabasePipeline>();
-            _loadEntityDatabasePipeline = Container.Resolve<ILoadEntityDatabasePipeline>();
-
-            LoadEntityDatabase().Wait();
             base.ResolveApplicationDependencies();
-        }
-
-        private async Task LoadEntityDatabase()
-        {
-            // If we have an existing entity database load it
-            if (!File.Exists(JsonEntityDatabaseModule.CustomEntityDatabaseFile)) { return; }
-            
-            var entityDatabase = await _loadEntityDatabasePipeline.Execute<EntityDatabase>(null);
-            Container.Unbind<IEntityDatabase>();
-            Container.Bind<IEntityDatabase>(x => x.ToInstance(entityDatabase));
-        }
-        
-        private void SaveEntityDatabase()
-        {
-            // Update our database with any changes that have happened since it loaded
-            _saveEntityDatabasePipeline
-                .Execute(EntityCollectionManager.EntityDatabase, null)
-                .Wait();
         }
 
         protected override void ApplicationStarted()

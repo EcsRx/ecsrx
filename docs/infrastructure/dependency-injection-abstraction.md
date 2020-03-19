@@ -33,7 +33,7 @@ If you want to configure how a binding should work, you can pass into the `Bind`
 ### AsSingleton: `bool`
 
 Setting this to `true` will mean that only one instance of this binding should exist, so if you were to do:
- ```c#
+```csharp
 Bind<IEventSystem, EventSystem>(new BindingConfiguration{AsSingleton = true});
 ```
 Then resolve `IEventSystem` in multiple places you will always get back the same instance, which is extremely handy for infrastructure style objects which should act as singletons. If you provide `false` as the value it will return a new instance for every resolve request.
@@ -46,7 +46,7 @@ This will allow you to give the binding a name for resolving via name.
 
 This allows you to bind to an actual instance of an object rather than a type, which is useful if you need to manually setup something yourself.
 
-```c#
+```csharp
 var someInstance = new Something(foo, bar);
 Bind<ISomething>(new BindingConfiguration{ToInstance = someInstance});
 ```
@@ -55,7 +55,7 @@ Bind<ISomething>(new BindingConfiguration{ToInstance = someInstance});
 
 This allows you to lazy bind something to a method rather than an instance/type, which is useful if you want to setup something in a custom way once all DI configuration has been processed.
 
-```c#
+```csharp
 var bindingConfiguration = new BindingConfiguration({
     ToMethod: container =>
       {
@@ -85,7 +85,7 @@ The configuration object is simple but can be unsightly for larger configuration
 
 There is a builder pattern helper which lets you setup your binding config via a builder rather than an instance of `BindingConfiguration`, this can be used by just creating a lambda within the bind method like so:
 
-```c#
+```csharp
 Bind<ISomething>(config => config
   .AsSingleton()
   .WithName("something-1")
@@ -95,7 +95,7 @@ Bind<ISomething>(config => config
 
 This lets you setup the configuration in a nice way, it also has type safety so you can setup instances and methods using it like so:
 
-```c#
+```csharp
 // With instance
 Bind<ISomething>(config => config
   .ToInstance(new InstanceOfISomething())
@@ -120,7 +120,7 @@ Bind<ISomething>(config => config
 
 There is also another helper which allows you to get an `IObservableGroup` directly from the container, this internally gets the instance of the `IEntityCollectionManager` and requests an observable group of a given type like so:
 
-```c#
+```csharp
 // By group
 var observableGroup = container.ResolveObservableGroup(new MyGroup());
 // By required components

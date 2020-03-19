@@ -2,7 +2,7 @@
 
 Out the box it assumes you will be using classes for components, i.e:
 
-```c#
+```csharp
 public class MyComponent : IComponent
 {
 	//...

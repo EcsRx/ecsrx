@@ -2,6 +2,7 @@ using System.Net.Http;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Builders;
+using EcsRx.Plugins.Persistence.Extensions;
 using LazyData.Json;
 using LazyData.Json.Handlers;
 using Persistity.Endpoints.Http;
@@ -22,20 +23,9 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules
             container.Bind<IJsonDeserializer, JsonDeserializer>();
             
             // Register our custom pipeline using the json stuff above
-            container.Bind<ISendDataPipeline>(x => 
-                x.ToMethod(CreateJsonPostingPipeline).WithName(PipelineName));
-        }
-
-        public ISendDataPipeline CreateJsonPostingPipeline(IDependencyContainer container)
-        {
-            // This pipeline builder lets you make your own pipelines in a fluent way
-            var pipelineBuilder = container.Resolve<EcsRxPipelineBuilder>();
-            
-            // Setup a pipeline that serializes to JSON then sends to postman (which just tells us what we sent)
-            return pipelineBuilder
-                .SerializeWith<IJsonSerializer>()
-                .SendTo(new HttpSendEndpoint("https://postman-echo.com/post", HttpMethod.Post))
-                .Build();
+            container.BuildPipeline(PipelineName, x => 
+                x.SerializeWith<IJsonSerializer>()
+                    .SendTo(new HttpSendEndpoint("https://postman-echo.com/post", HttpMethod.Post)));
         }
     }
 }

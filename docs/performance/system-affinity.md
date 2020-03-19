@@ -2,7 +2,7 @@
 
 Out the box `ObservableGroups` will just listen to changes across all collections, but you can give them an affinity so they will only listen to changes on certain collections, providing a performance boost as they dont need to listen to changes on entities they will never interact with, however most of the time you are not creating observable groups as they are requested per system. So we need to be able to tell the system what affinity they have so you can have a better suited observable group.
 
-```c#
+```csharp
 // Tell this system that it should only interact with collections with id 1,5,6
 [CollectionAffinity(1,5,6)]
 public class SomeSystemWithAffinity : ISetupSystem

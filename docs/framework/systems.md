@@ -16,7 +16,7 @@ This is a niche system for when you want to carry out some logic outside the sco
 more fine grained control over how you deal with the entities matched.
 
 Rather than the `SystemExecutor` doing most of the work for you and managing the subscriptions and entity interactions 
-this just provides you the `GroupAccessor` for the entities targetted and its up to you to control how they are 
+this just provides you the `GroupAccessor` for the entities targeted and its up to you to control how they are 
 dealt with.
 
 The `StartSystem` method will be triggered when the system has been added to the executor, and the `StopSystem` 
@@ -30,4 +30,4 @@ So by default (with the default implementation of `ISystemExecutor`) systems wil
 2. Implementations of `IReactToEntitySystem`
 3. Other Systems
 
-However within those groupings it will load the systems in whatever order Zenject (assuming you are using it) provides them, however there is a way to enforce some level of priority by applying the `[Priority(1)]` attribute, this allows you to specify the priority of how systems should be loaded. The ordering will be from lowest to highest so if you have a priority of 1 it will load before a system with a priority of 10.
+However within those groupings it will load the systems in whatever order Zenject/Extenject (assuming you are using it) provides them, however there is a way to enforce some level of priority by applying the `[Priority(1)]` attribute, this allows you to specify the priority of how systems should be loaded. The ordering will be from lowest to highest so if you have a priority of 1 it will load before a system with a priority of 10.

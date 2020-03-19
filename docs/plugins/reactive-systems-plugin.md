@@ -14,7 +14,7 @@ This is similar to `ISetupSystem`, but is used when a matched entity's group is 
 
 This interface implies that you want to react to individual changes in an entity. It will pass each entity to the `ReactToEntity` method to setup the observable you want, such as Health changing, input occurring, random intervals etc. This only happens once per matched entity, here is an example of the sort of thing you would do here:
 
-```c#
+```csharp
 public IObservable<IEntity> ReactToEntity(IEntity entity)
 {
     var colorComponent = entity.GetComponent<RandomColorComponent>();
@@ -30,7 +30,7 @@ It is also worth looking at the groups documentation as there are some features 
 
 This is like the `IReactToEntitySystem` but rather than reacting to each entity matched, it instead just reacts to something at the group level. The `ReactToGroup` is generally used as a way to process all entities every frame using `Observable.EveryUpdate()` and selecting the group, however you can do many other things such as reacting to events at a group level or some other observable notion, here is a simple example:
 
-```c#
+```csharp
 public IObservable<GroupAccessor> ReactToGroup(GroupAccessor group)
 {
     return Observable.EveryUpdate().Select(x => group);
@@ -43,7 +43,7 @@ The main benefit of this interface vs the `IReactToEntitySystem` approach is tha
 
 So this is the more complicated and lesser used flavour of system. It is basically the same as the `IReactToEntitySystem` however it reacts to data rather than an entity. So for example lets say you wanted to react to a collision event and your system wanted to know about the entity as normal, but also the collision event that occurred. This system is the way you would do that, as its subscription passes back some data rather than an entity, here is an example:
 
-```c#
+```csharp
 IObservable<CollisionEvent> ReactToEntity(IEntity entity)
 {
     return MessageBroker.Receive<EntityCollisionEvent>().Single(x => x.collidee == entity);
@@ -60,7 +60,7 @@ This is a custom implementation of the IManualSystem which acts as a shorthand w
 once it occurs running some logic based purely upon the logic within that event. (However you can override 
 it a bit to provide additional entities outside of the group if needed).
 
-```c#
+```csharp
 public class SomeEventSystem : EventReactionSystem<SomeEvent>
 {
     public SomeEventSystem(IEventSystem eventSystem) : base(eventSystem)

@@ -16,7 +16,7 @@ So the first part of this convention is a `ViewComponent` which contains the und
 
 So to make use of `ViewResolverSystem`s you will need to have applied a `ViewComponent` to you entity, like so:
 
-```c#
+```csharp
 someEntity.AddComponent<ViewComponent>();
 ```
 
@@ -32,7 +32,7 @@ It is also recommended that you override the `Group` to indicate the grouping fo
 
 ### Example
 
-```c#
+```csharp
 public class VehicleViewResolver : ViewResolverSystem
 {
 	public override IGroup Group` => base.Group.WithComponent<VehicleComponent>();

@@ -6,7 +6,7 @@ There are a few plugins provided with EcsRx that you can opt in to use by just r
 
 You just need to reference the dll in your project and then in your `LoadPlugins` phase you just load the desired plugin entry point. Here is an example of loading some of the official EcsRx plugins:
 
-```c#
+```csharp
 public abstract class EcsRxConsoleApplication : EcsRxApplication
 {
     public override IDependencyContainer Container { get; } = new NinjectDependencyContainer();
@@ -35,7 +35,7 @@ Plugins are pretty simple, they just require you to implement the `IEcsRxPlugin`
 
 Here is an example of the reactive systems plugin, which binds some conventional system handlers for the `SystemExecutor` to make use of, then we output any systems we need to register (in this case none).
 
-```c#
+```csharp
 public class ReactiveSystemsPlugin : IEcsRxPlugin
 {
     public string Name => "Reactive Systems";

@@ -10,7 +10,7 @@ Just load the plugin and then extend the required batched system, most of the he
 
 ### Using struct based components
 
-```c#
+```csharp
 public class BatchedMovementSystem : BatchedSystem<PositionComponent, MovementSpeedComponent>
 {
     public BatchedMovementSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler)
@@ -32,7 +32,7 @@ As you can see we extend the `BatchedSystem` class and provide it the component 
 
 The setup is almost identical to the struct based one but instead of using `BatchedSystem` you use `ReferenceBatchedSystem` as shown below:
 
-```c#
+```csharp
 public class BatchedMovementSystem : ReferencedBatchedSystem<PositionComponent, MovementSpeedComponent>
 {
     public BatchedMovementSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler)

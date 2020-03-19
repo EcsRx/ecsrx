@@ -13,11 +13,17 @@ namespace EcsRx.Plugins.Persistence.Builders
         {
             _container = container;
         }
+        
+        public SendPipelineBuilder SerializeWith(ISerializer serializer)
+        { return new SendPipelineBuilder(_container, serializer); }
 
         public SendPipelineBuilder SerializeWith<T>() where T : ISerializer
-        { return new SendPipelineBuilder(_container, _container.Resolve<T>()); }
-
+        { return SerializeWith(_container.Resolve<T>()); }
+        
+        public ReceivePipelineBuilder RecieveFrom(IReceiveDataEndpoint endpoint)
+        { return new ReceivePipelineBuilder(_container, endpoint);  }
+        
         public ReceivePipelineBuilder RecieveFrom<T>() where T : IReceiveDataEndpoint
-        { return new ReceivePipelineBuilder(_container, _container.Resolve<T>());  }
+        { return RecieveFrom(_container.Resolve<T>());  }
     }
 }

@@ -12,11 +12,17 @@ As mentioned entities are created within collections and you can have many entit
 
 ### From `IEntityCollectionManager`
 
-- `myCollectionManager.CreateObservableGroup(myGroup, optionalPoolName)`
+- `myCollectionManager.GetObservableGroup(myGroup, idsForCollectionsToCheck)`
 
 This is probably the most common approach, you get your `IEntityCollectionManager` instance (usually injected in to your class) and you call `CreateObservableGroup`, this will create or return an existing observable group for you which internally contains the `Entities` that match the group for you to query on further. This is often a better approach than accessing entities directly. (read more on this in querying/filtration docs)
 
-- `myCollectionManager.GetEntitiesFor(myGroup, optionalPoolName)`
+- `myCollectionManager.EntityDatabase.*`
+
+The entity collection manager exposes the entity database which can be queried for more info 
+
+### From `IEntityDatabase`
+
+- `entityDatabase.GetEntitiesFor(myGroup, idsForCollectionsToCheck)`
 
 This is not used often but is there for convenience, it allows you to just get back an `IEnumerable<IEntity>` collection which contains all entities which match the group, so it you can query on the matching entities further however you want.
 

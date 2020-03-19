@@ -15,7 +15,7 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
 
         // Tell it to look for the JSON file now rather than the binary one
         public override string EntityDatabaseFile => JsonEntityDatabaseModule.CustomEntityDatabaseFile;
-
+        
         private bool _quit;
 
         protected override void LoadModules()

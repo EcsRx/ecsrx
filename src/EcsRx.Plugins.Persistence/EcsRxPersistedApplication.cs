@@ -14,6 +14,8 @@ namespace EcsRx.Plugins.Persistence
         public ILoadEntityDatabasePipeline LoadEntityDatabasePipeline;
 
         public virtual string EntityDatabaseFile => PersistityModule.DefaultEntityDatabaseFile;
+        public virtual bool LoadOnStart => true;
+        public virtual bool SaveOnStop => true;
         
         protected override void LoadPlugins()
         {
@@ -26,7 +28,9 @@ namespace EcsRx.Plugins.Persistence
             SaveEntityDatabasePipeline = Container.Resolve<ISaveEntityDatabasePipeline>();
             LoadEntityDatabasePipeline = Container.Resolve<ILoadEntityDatabasePipeline>();
 
-            LoadEntityDatabase().Wait();
+            if(LoadOnStart)
+            { LoadEntityDatabase().Wait(); }
+            
             base.ResolveApplicationDependencies();
         }
         
@@ -44,6 +48,14 @@ namespace EcsRx.Plugins.Persistence
         {
             // Update our database with any changes that have happened since it loaded
             return SaveEntityDatabasePipeline.Execute(EntityCollectionManager.EntityDatabase, null);
+        }
+
+        public override void StopApplication()
+        {
+            if(SaveOnStop)
+            { SaveEntityDatabase().Wait(); }
+            
+            base.StopApplication();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using EcsRx.Extensions;
 using EcsRx.Infrastructure.Exceptions;
 
 namespace EcsRx.Infrastructure.Dependencies
@@ -40,6 +42,30 @@ namespace EcsRx.Infrastructure.Dependencies
         public BindingBuilder WithConstructorArg(Type argType, object argValue)
         {
             _configuration.WithTypedConstructorArgs.Add(argType, argValue);
+            return this;
+        }
+        
+        public BindingBuilder WhenInjectedInto<T>()
+        {
+            _configuration.WhenInjectedInto.Add(typeof(T));
+            return this;
+        }
+        
+        public BindingBuilder WhenInjectedInto(Type argType)
+        {
+            _configuration.WhenInjectedInto.Add(argType);
+            return this;
+        }
+
+        public BindingBuilder OnActivation(Action<IDependencyContainer, object> activation)
+        {
+            _configuration.OnActivation = activation;
+            return this;
+        }
+        
+        public BindingBuilder WhenInjectedInto(IEnumerable<Type> argType)
+        {
+            argType.ForEachRun(_configuration.WhenInjectedInto.Add);
             return this;
         }
         

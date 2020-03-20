@@ -12,7 +12,7 @@ namespace EcsRx.Infrastructure.Dependencies
     /// to define what DI system they want to use and create an implementation
     /// themselves.
     /// </summary>
-    public interface IDependencyContainer
+    public interface IDependencyContainer : IDisposable
     {
         /// <summary>
         /// This exposes the underlying DI container, but any calls to this directly

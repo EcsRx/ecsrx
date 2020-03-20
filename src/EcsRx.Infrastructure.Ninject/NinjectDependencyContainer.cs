@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
 using Ninject;
 
@@ -68,9 +69,12 @@ namespace EcsRx.Infrastructure.Ninject
             if(!string.IsNullOrEmpty(configuration.WithName))
             { binding.Named(configuration.WithName); }
 
-            if (configuration.WithNamedConstructorArgs.Count == 0)
-            { return; }
+            if (configuration.OnActivation != null)
+            { binding.OnActivation(instance => configuration.OnActivation(this, instance)); }
 
+            if (configuration.WhenInjectedInto.Count != 0)
+            { configuration.WhenInjectedInto.ForEachRun(x => binding.WhenInjectedInto(x)); }
+            
             foreach (var constructorArg in configuration.WithNamedConstructorArgs)
             { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
             
@@ -100,22 +104,15 @@ namespace EcsRx.Infrastructure.Ninject
         }
 
         public void Unbind(Type type)
-        {
-            _kernel.Unbind(type);
-            /*
-            _kernel.GetBindings(type)
-                //.Where(binding => !binding.IsConditional)
-                .ToList()
-                .ForEach(
-                    binding =>
-                        _kernel.RemoveBinding(binding)
-                );*/
-        }
+        { _kernel.Unbind(type); }
 
         public IEnumerable ResolveAll(Type type)
         { return _kernel.GetAll(type); }
 
         public void LoadModule(IDependencyModule module)
         { module.Setup(this); }
+
+        public void Dispose()
+        { _kernel?.Dispose(); }
     }
 }

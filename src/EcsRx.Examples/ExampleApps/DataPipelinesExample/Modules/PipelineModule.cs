@@ -23,9 +23,10 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules
             container.Bind<IJsonDeserializer, JsonDeserializer>();
             
             // Register our custom pipeline using the json stuff above
-            container.BuildPipeline(PipelineName, x => 
-                x.SerializeWith<IJsonSerializer>()
-                    .SendTo(new HttpSendEndpoint("https://postman-echo.com/post", HttpMethod.Post)));
+            container.BuildPipeline(PipelineName, x => x
+                .StartFromInput()
+                .SerializeWith<IJsonSerializer>(false)
+                .ThenSendTo(new HttpSendEndpoint("https://postman-echo.com/post", HttpMethod.Post)));
         }
     }
 }

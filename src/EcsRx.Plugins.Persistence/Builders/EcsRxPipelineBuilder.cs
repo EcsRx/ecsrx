@@ -1,7 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 using LazyData.Serialization;
 using Persistity.Endpoints;
+using Persistity.Pipelines.Builders;
+using Persistity.Pipelines.Steps;
+using Persistity.Pipelines.Steps.Types;
 
 namespace EcsRx.Plugins.Persistence.Builders
 {
@@ -14,16 +20,20 @@ namespace EcsRx.Plugins.Persistence.Builders
             _container = container;
         }
         
-        public SendPipelineBuilder SerializeWith(ISerializer serializer)
-        { return new SendPipelineBuilder(_container, serializer); }
+        public EcsRxPipelineNeedsObjectBuilder StartFromInput()
+        { return new EcsRxPipelineNeedsObjectBuilder(_container, new List<IPipelineStep>()); }
+        
+        public EcsRxPipelineNeedsObjectBuilder StartFrom(Func<Task<object>> method)
+        { return new EcsRxPipelineNeedsObjectBuilder(_container, new List<IPipelineStep>{ new ReceiveMethodStep(method)}); }
+        
+        public EcsRxPipelineNeedsObjectBuilder StartFrom(Func<object, Task<object>> method)
+        { return new EcsRxPipelineNeedsObjectBuilder(_container, new List<IPipelineStep>{ new ReceiveMethodStep(method)}); }
+        
+        public EcsRxPipelineNeedsDataBuilder StartFrom(IReceiveDataEndpoint endpoint)
+        { return new EcsRxPipelineNeedsDataBuilder(_container, new List<IPipelineStep>{ new ReceiveEndpointStep(endpoint)}); }
+        
+        public EcsRxPipelineNeedsDataBuilder StartFrom<T>() where T : IReceiveDataEndpoint
+        { return new EcsRxPipelineNeedsDataBuilder(_container, new List<IPipelineStep>{ new ReceiveEndpointStep(_container.Resolve<T>())}); }
 
-        public SendPipelineBuilder SerializeWith<T>() where T : ISerializer
-        { return SerializeWith(_container.Resolve<T>()); }
-        
-        public ReceivePipelineBuilder RecieveFrom(IReceiveDataEndpoint endpoint)
-        { return new ReceivePipelineBuilder(_container, endpoint);  }
-        
-        public ReceivePipelineBuilder RecieveFrom<T>() where T : IReceiveDataEndpoint
-        { return RecieveFrom(_container.Resolve<T>());  }
     }
 }

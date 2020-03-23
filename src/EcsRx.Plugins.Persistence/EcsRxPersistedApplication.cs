@@ -39,7 +39,7 @@ namespace EcsRx.Plugins.Persistence
             // If there is no file just ignore loading
             if (!File.Exists(EntityDatabaseFile)) { return; }
             
-            var entityDatabase = await LoadEntityDatabasePipeline.Execute<EntityDatabase>(null);
+            var entityDatabase = await LoadEntityDatabasePipeline.Execute();
             Container.Unbind<IEntityDatabase>();
             Container.Bind<IEntityDatabase>(x => x.ToInstance(entityDatabase));
         }
@@ -47,7 +47,7 @@ namespace EcsRx.Plugins.Persistence
         protected virtual Task SaveEntityDatabase()
         {
             // Update our database with any changes that have happened since it loaded
-            return SaveEntityDatabasePipeline.Execute(EntityCollectionManager.EntityDatabase, null);
+            return SaveEntityDatabasePipeline.Execute(EntityCollectionManager.EntityDatabase);
         }
 
         public override void StopApplication()

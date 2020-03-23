@@ -19,9 +19,12 @@ namespace EcsRx.Plugins.Persistence.Modules
         
         public void Setup(IDependencyContainer container)
         {
-            container.Bind<IEntityTransformer, EntityTransformer>();
-            container.Bind<IEntityCollectionTransformer, EntityCollectionTransformer>();
-            container.Bind<IEntityDatabaseTransformer, EntityDatabaseTransformer>();
+            container.Bind<IToEntityTransformer, ToEntityTransformer>();
+            container.Bind<IToEntityCollectionTransformer, ToEntityCollectionTransformer>();
+            container.Bind<IToEntityDatabaseTransformer, ToEntityDatabaseTransformer>();
+            container.Bind<IFromEntityTransformer, FromEntityTransformer>();
+            container.Bind<IFromEntityCollectionTransformer, FromEntityCollectionTransformer>();
+            container.Bind<IFromEntityDatabaseTransformer, FromEntityDatabaseTransformer>();
             container.Bind<EcsRxPipelineBuilder>(builder => builder.ToMethod(x =>
                 new EcsRxPipelineBuilder(x)).AsSingleton());
 
@@ -60,8 +63,9 @@ namespace EcsRx.Plugins.Persistence.Modules
         public static ISaveEntityDatabasePipeline CreateSavePipeline(IDependencyContainer container, 
             ISerializer serializer, string filename)
         {
-            return new DefaultSaveEntityDatabasePipeline(serializer, new FileEndpoint(filename),
-                container.Resolve<IEntityDatabaseTransformer>());
+            return new DefaultSaveEntityDatabasePipeline(serializer, 
+                container.Resolve<IToEntityDatabaseTransformer>(), 
+                new FileEndpoint(filename));
         }
 
         /// <summary>
@@ -75,7 +79,8 @@ namespace EcsRx.Plugins.Persistence.Modules
             IDeserializer deserializer, string filename)
         {
             return new DefaultLoadEntityDatabasePipeline(deserializer,
-                new FileEndpoint(filename), container.Resolve<IEntityDatabaseTransformer>());
+                container.Resolve<IFromEntityDatabaseTransformer>(), 
+                new FileEndpoint(filename));
         }
     }
 }

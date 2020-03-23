@@ -18,9 +18,9 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Systems
     {
         public override IGroup Group => new Group(typeof(PlayerStateComponent));
         
-        public ISendDataPipeline SaveJsonPipeline { get; }
+        public IPipeline SaveJsonPipeline { get; }
 
-        public TriggerPipelineSystem(IEventSystem eventSystem, ISendDataPipeline saveJsonPipeline) : base(eventSystem)
+        public TriggerPipelineSystem(IEventSystem eventSystem, IPipeline saveJsonPipeline) : base(eventSystem)
         {
             SaveJsonPipeline = saveJsonPipeline;
         }

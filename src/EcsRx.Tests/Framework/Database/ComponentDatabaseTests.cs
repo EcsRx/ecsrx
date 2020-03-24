@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EcsRx.Collections;
+using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Tests.Models;

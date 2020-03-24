@@ -18,13 +18,13 @@ There are a few different ways to create a group, here are some of the common wa
 
 There is a `Group` class which implements `IGroup`, this can be instantiated and passed any of the components you want to target, like so:
 
-```c#
+```csharp
 var group = new Group(typeof(SomeComponent));
 ```
 
 There are also some helper methods here so you can add component types if needed via extension methods, like so:
 
-```c#
+```csharp
 var group = new Group()
     .WithComponent<SomeComponent>()
     .WithoutComponent<SomeOtherComponent();
@@ -36,7 +36,7 @@ This is a halfway house between the builder approach and the instantiation appro
 
 So there is also a `GroupBuilder` class which can simplify making complex groups, it is easy to use and allows you to express complex group setups in a fluent manner, like so:
 
-```c#
+```csharp
 var group = new GroupBuilder()
     .WithComponent<SomeComponent>()
     .WithComponent<SomeOtherComponent>()
@@ -49,7 +49,7 @@ So if you are going to be using the same groupings a lot, it would probably make
 
 It is quite simple to make your own group, you just need to implement the 2 getters:
 
-```c#
+```csharp
 public class MyGroup : IGroup
 {
     public IEnumerable<Type> RequiredComponents {get;} =  return new[] { typeof(SomeComponent), typeof(SomeOtherComponent) };

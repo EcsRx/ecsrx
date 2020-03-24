@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Blueprints;
 using EcsRx.Collections;
+using EcsRx.Collections.Entity;
 using EcsRx.Components;
 using EcsRx.Entities;
 

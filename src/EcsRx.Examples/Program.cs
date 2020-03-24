@@ -2,8 +2,10 @@
 using EcsRx.Examples.Custom;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample;
+using EcsRx.Examples.ExampleApps.DataPipelinesExample;
 using EcsRx.Examples.ExampleApps.HealthExample;
 using EcsRx.Examples.ExampleApps.HelloWorldExample;
+using EcsRx.Examples.ExampleApps.LoadingEntityDatabase;
 using EcsRx.Examples.ExampleApps.Performance;
 using EcsRx.Examples.ExampleApps.Playground.ClassBased;
 using EcsRx.Examples.ExampleApps.Playground.StructBased;
@@ -18,6 +20,8 @@ namespace EcsRx.Examples
             //new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
+            new PersistDataApplication().StartApplication();
+            //new LoadingEntityDatabaseApplication().StartApplication();
             //new BatchedGroupExampleApplication().StartApplication();
             //new SetupSystemPriorityApplication().StartApplication();
 
@@ -27,7 +31,7 @@ namespace EcsRx.Examples
             //new OptimizedGroupPerformanceApplication().StartApplication();
             //new OptimizedEntityPerformanceApplication().StartApplication();
             //new EntityPerformanceApplication().StartApplication();
-            new MakingLotsOfEntitiesApplication().StartApplication();
+            //new MakingLotsOfEntitiesApplication().StartApplication();
            
             // Playground examples
             //new Class1Application().StartApplication();

@@ -1,5 +1,9 @@
 # Breaking Changes
 
+## 3.9.0 -> 3.10.0
+
+- IEntityCollectionManager no longer contains EntityCollections its now within `IEntityDatabase`, which is within there
+
 ## 3.8.0 -> 3.9.0
 
  - `IObservableScheduler` is now known as `IUpdateScheduler` and uses an `ElapsedTime` object not `TimeSpan`

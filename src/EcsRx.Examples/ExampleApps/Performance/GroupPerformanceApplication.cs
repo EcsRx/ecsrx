@@ -38,8 +38,8 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities(int amount)
         {
-            var defaultPool = EntityCollectionManager.GetCollection();
-            EntityCollectionManager.Collections.ForEachRun(x => x.RemoveAllEntities());
+            var defaultPool = EntityCollectionManager.EntityDatabase.GetCollection();
+            EntityCollectionManager.EntityDatabase.Collections.ForEachRun(x => x.RemoveAllEntities());
             GC.Collect();
             
             var timer = Stopwatch.StartNew();

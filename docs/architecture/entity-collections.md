@@ -18,4 +18,4 @@ So taking the above example again, if you were to partition your collections so 
 
 ## Where do they live?
 
-So there is an `EntityCollectionManager` which acts as the container for all the entity collections 
+So there is an `EntityDatabase` which acts as the container for all the entity collections 

@@ -5,7 +5,7 @@ So now you know what entities are and how you can get hold of them, its worth go
 ## Filtration Flow
 
 ```
-IEntityCollectionManager	<-  This contains all collections, which in turn contains ALL entities
+IEntityCollectionManager	<-  This contains the database which contains all collections, which in turn contains ALL entities
      |
      |
 IObservableGroup      		<-  This filters all entities down to only ones which are within the group
@@ -15,7 +15,7 @@ IComputedGroup        		<-  This acts as another layer of filtration on an IObse
                           		i.e Top 5 entities with PlayerComponent sorted by Score
 ```
 
-## IEntityCollectionManager
+## IEntityCollectionManager || IEntityDatabase
 
 The entity collection manager is the root most point where all entity queries should originate from.
 

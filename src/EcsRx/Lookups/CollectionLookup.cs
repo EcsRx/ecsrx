@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using EcsRx.Collections;
+using EcsRx.Collections.Entity;
 
 namespace EcsRx.Lookups
 {

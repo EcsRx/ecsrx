@@ -104,7 +104,7 @@ namespace EcsRx.Infrastructure
         protected void StartPluginSystems()
         {
             Plugins.SelectMany(x => x.GetSystemsForRegistration(Container))
-                .ForEachRun(x => SystemExecutor.AddSystem(x));
+                .ForEachRun(SystemExecutor.AddSystem);
         }
 
         /// <summary>

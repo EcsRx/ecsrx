@@ -1,4 +1,6 @@
 ﻿using EcsRx.Collections;
+using EcsRx.Collections.Database;
+using EcsRx.Collections.Entity;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
@@ -26,6 +28,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IThreadHandler, DefaultThreadHandler>();
             container.Bind<IEntityFactory, DefaultEntityFactory>();
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
+            container.Bind<IEntityDatabase, EntityDatabase>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
             container.Bind<IEntityCollectionManager, EntityCollectionManager>();
             container.Bind<IObservableGroupManager>(x => x.ToBoundType<IEntityCollectionManager>());

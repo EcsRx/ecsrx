@@ -6,7 +6,7 @@ how they wish to implement blueprints, as you can add as much configurable prope
 
 Here is an example of a blueprint:
 
-```
+```csharp
 public class PlayerBlueprint : IBlueprint
 {
 	public string Name {get;set;}
@@ -27,7 +27,7 @@ public class PlayerBlueprint : IBlueprint
 Pools are aware of blueprints and you can create an entity with a blueprint to save you the time of having to create the entity 
 then manually applying all the components, which would look like:
 
-```
+```csharp
 var hanSoloEntity = somePool.createEntity(new PlayerBlueprint{ 
 	Name = "Han Solo", 
 	Class = "Smuggler", 
@@ -40,7 +40,7 @@ You have 2 options of applying blueprints to entities, one would be to just new 
 `Apply` method passing in the entity, or you could use the available extension methods to apply directly from the entity, 
 this is also chainable so you are able to apply multiple blueprints to the same entity if you wanted, like so:
 
-```
+```csharp
 entity.ApplyBlueprint(new DefaultActorBlueprint())
 	.ApplyBlueprint(new DefaultEquipmentBlueprint())
 	.ApplyBlueprint(new SetupNetworkingBlueprint());

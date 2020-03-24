@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EcsRx.Entities;
 
-namespace EcsRx.Collections
+namespace EcsRx.Collections.Entity
 {
     /// <summary>
     /// A pre made query which will extract relevant entities from the entity collection, this is useful

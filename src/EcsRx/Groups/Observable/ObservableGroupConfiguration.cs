@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EcsRx.Collections;
+using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 
 namespace EcsRx.Groups.Observable

@@ -26,7 +26,7 @@ All of these classes are provided as `abstract` classes so you should inherit fr
 
 ### `ComputedGroup`
 
-```c#
+```csharp
 var myGroup = new MyComputedGroup(someObservableGroup); // inherits from ComputedGroup
 foreach(IEntity entity in myGroup) 
 {
@@ -38,7 +38,7 @@ This implements `IComputedGroup` and takes in an `IObservableGroup` instance in 
 
 ### `ComputedCollectionFromGroup`
 
-```c#
+```csharp
 var scoresForEntities = new ComputedScores(someObservableGroupWithScores); // inherits from ComputedCollectionFromGroup<int>
 foreach(int someScore in scoresForEntities)
 {
@@ -50,7 +50,7 @@ This provides a way to create a computed collecton based off an observable group
 
 ### `ComputedFromGroup`
 
-```c#
+```csharp
 var partyRating = new ComputedPartyRating(observableGroupOfPartyMemebers); // inherits from ComputedFromGroup<float>
 
 GroupHud.PartyRating.Text = partyRating.Value.ToString();
@@ -60,7 +60,7 @@ This can be useful for taking a group and computing a singular value based upon 
 
 ### `ComputedFromData`
 
-```c#
+```csharp
 var firstPlaceRacer = new ComputedFirstPlace(collectionOfRacers); // inherits from ComputedFromData<Racer, IEnumerable<Racer>>
 
 RacerHud.CurrentWinner.Text = firstPlaceRacer.Value.Name;

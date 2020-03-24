@@ -1,7 +1,7 @@
 ﻿using System;
 using EcsRx.Events.Collections;
 
-namespace EcsRx.Collections
+namespace EcsRx.Collections.Entity
 {
     public interface INotifyingEntityCollection
     {

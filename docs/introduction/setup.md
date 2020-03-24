@@ -67,15 +67,18 @@ public abstract class EcsRxApplication
 		// For creating entities, collections, observable groups and managing Ids
 		var entityFactory = new DefaultEntityFactory(new IdPool(), componentRepository);
 		var entityCollectionFactory = new DefaultEntityCollectionFactory(entityFactory);
+		var entityDatabase = new EntityDatabase(entityFactory);
 		var observableGroupFactory = new DefaultObservableObservableGroupFactory();
-		EntityCollectionManager = new EntityCollectionManager(entityCollectionFactory, observableGroupFactory, componentLookup);
+		EntityCollectionManager = new EntityCollectionManager(observableGroupFactory, entityDatabase, componentLookup);
 
 		// All system handlers for the system types you want to support
 		var manualSystemHandler = new ManualSystemHandler(EntityCollectionManager);
+		var basicSystemHandler = new BasicSystemHandler(EntityCollectionManager);
 
 		var conventionalSystems = new List<IConventionalSystemHandler>
 		{
-			manualSystemHandler
+			manualSystemHandler,
+            basicSystemHandler
 		};
 		
 		// The main executor which manages how systems are given information

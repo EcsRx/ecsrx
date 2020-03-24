@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using EcsRx.Collections;
+using EcsRx.Collections.Entity;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
 using EcsRx.Examples.ExampleApps.Performance.Systems;
@@ -17,7 +18,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         protected override void ApplicationStarted()
         {
-            _collection = EntityCollectionManager.GetCollection();
+            _collection = EntityCollectionManager.EntityDatabase.GetCollection();
             _system = new ExampleReactToGroupSystem();
             
             for (var i = 0; i < EntityCount; i++)

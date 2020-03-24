@@ -8,7 +8,7 @@ So if you are happy to provide a type index/id with your call it will bypass the
 
 So this change means **YOU** have to tell EcsRx ahead of time what indexes/ids to use for your components and provide that data to the rest of your codebase, its easiest to do this by making a class with static int properties like so:
 
-```c#
+```csharp
 public static class ComponentLookupTypes
 {
     public static int NameComponentId = 0;
@@ -19,7 +19,7 @@ public static class ComponentLookupTypes
 
 Then you can just reference these types anywhere which satisfies the telling of the entity the index, and you then just need to make sure when the application is created it uses these explicit lookups rather than auto generating them, generally done by making your own module and loading it like so:
 
-```c#
+```csharp
 public class CustomComponentLookupsModule : IDependencyModule
 {
     public void Setup(IDependencyContainer container)

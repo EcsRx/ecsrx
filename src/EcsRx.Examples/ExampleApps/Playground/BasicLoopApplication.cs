@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using EcsRx.Collections;
+using EcsRx.Collections.Entity;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
@@ -32,7 +33,7 @@ namespace EcsRx.Examples.ExampleApps.Playground
             _componentDatabase = Container.Resolve<IComponentDatabase>();
             _batchBuilderFactory = Container.Resolve<IBatchBuilderFactory>();
             _referenceBatchBuilderFactory = Container.Resolve<IReferenceBatchBuilderFactory>();
-            _collection = EntityCollectionManager.GetCollection();
+            _collection = EntityCollectionManager.EntityDatabase.GetCollection();
 
             ClassComponent1TypeId = _componentTypeLookup.GetComponentType(typeof(ClassComponent));
             ClassComponent2TypeId = _componentTypeLookup.GetComponentType(typeof(ClassComponent2));

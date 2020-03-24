@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
 using Ninject;
+using Ninject.Syntax;
 
 namespace EcsRx.Infrastructure.Ninject
 {
@@ -40,42 +42,34 @@ namespace EcsRx.Infrastructure.Ninject
                 return;
             }
 
+            IBindingWhenInNamedWithOrOnSyntax<object> binding;
+
             if (configuration.ToInstance != null)
+            { binding = bindingSetup.ToConstant(configuration.ToInstance); }
+            else if (configuration.ToMethod != null)
+            { binding = bindingSetup.ToMethod(x => configuration.ToMethod(this)); }
+            else
             {
-                var instanceBinding = bindingSetup.ToConstant(configuration.ToInstance);
+                binding = bindingSetup.To(toType);
                 
-                if(configuration.AsSingleton)
-                { instanceBinding.InSingletonScope(); }
-
-                return;
+                foreach (var constructorArg in configuration.WithNamedConstructorArgs)
+                { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
+            
+                foreach (var constructorArg in configuration.WithTypedConstructorArgs)
+                { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
             }
-
-            if (configuration.ToMethod != null)
-            {
-                var methodBinding = bindingSetup.ToMethod(x => configuration.ToMethod(this));
-
-                if(configuration.AsSingleton)
-                { methodBinding.InSingletonScope(); }
-
-                return;
-            }
-
-            var binding = bindingSetup.To(toType);
             
             if(configuration.AsSingleton)
-            { binding.InSingletonScope(); } 
+            { binding.InSingletonScope(); }
             
             if(!string.IsNullOrEmpty(configuration.WithName))
             { binding.Named(configuration.WithName); }
 
-            if (configuration.WithNamedConstructorArgs.Count == 0)
-            { return; }
+            if (configuration.OnActivation != null)
+            { binding.OnActivation(instance => configuration.OnActivation(this, instance)); }
 
-            foreach (var constructorArg in configuration.WithNamedConstructorArgs)
-            { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
-            
-            foreach (var constructorArg in configuration.WithTypedConstructorArgs)
-            { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
+            if (configuration.WhenInjectedInto.Count != 0)
+            { configuration.WhenInjectedInto.ForEachRun(x => binding.WhenInjectedInto(x)); }
         }
 
         public void Bind(Type type, BindingConfiguration configuration = null)
@@ -107,5 +101,8 @@ namespace EcsRx.Infrastructure.Ninject
 
         public void LoadModule(IDependencyModule module)
         { module.Setup(this); }
+
+        public void Dispose()
+        { _kernel?.Dispose(); }
     }
 }

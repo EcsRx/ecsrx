@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
-using EcsRx.Components;
 using EcsRx.MicroRx.Subjects;
 using EcsRx.Pools;
 
-namespace EcsRx.Collections
+namespace EcsRx.Components
 {
     public class ComponentPool<T> : IComponentPool<T>
         where T : IComponent

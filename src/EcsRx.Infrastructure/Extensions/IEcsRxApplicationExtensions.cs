@@ -122,7 +122,7 @@ namespace EcsRx.Infrastructure.Extensions
         /// <remarks>This is really for runtime usage, in mose cases you will want to bind in starting and register in started</remarks>
         public static void BindAndStartSystem<T>(this IEcsRxApplication application) where T : ISystem
         {
-            application.Container.Bind<ISystem, T>(new BindingConfiguration{WithName = typeof(T).Name});
+            application.Container.Bind<ISystem, T>(x => x.WithName(typeof(T).Name));
             StartSystem<T>(application);
         }
 

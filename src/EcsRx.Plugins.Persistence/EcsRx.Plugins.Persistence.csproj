@@ -1,7 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <Version>0.0.0</Version>
+        <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+        <Title>EcsRx.Plugins.Persistence</Title>
+        <Authors>Grofit (LP)</Authors>
+        <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ecsrx/ecsrx</PackageProjectUrl>
+        <Description>A suite of persistence related features and helpers to allow you to make complex data pipelines, as well as saving/loading entity databases</Description>
+        <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

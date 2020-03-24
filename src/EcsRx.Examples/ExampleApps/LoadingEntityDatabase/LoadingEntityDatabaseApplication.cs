@@ -59,7 +59,10 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
                 Console.WriteLine("Look in the bin folder for an entity-database.json file, alter it if you want");
                 Console.WriteLine();
                 Console.WriteLine($" - {defaultCollection.Count} Entities Loaded");
-                debugPipeline.Execute(EntityCollectionManager.EntityDatabase);
+                
+                // Uncomment this if you want to see all the entity content in console window
+                //debugPipeline.Execute(EntityCollectionManager.EntityDatabase);
+                
                 Console.WriteLine();
                 Console.WriteLine(" - Press Enter To Add Another Random Entity");
                 Console.WriteLine(" - Press Escape To Save and Quit");

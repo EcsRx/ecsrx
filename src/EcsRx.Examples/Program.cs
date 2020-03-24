@@ -20,8 +20,8 @@ namespace EcsRx.Examples
             //new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
-            //new PersistDataApplication().StartApplication();
-            new LoadingEntityDatabaseApplication().StartApplication();
+            new PersistDataApplication().StartApplication();
+            //new LoadingEntityDatabaseApplication().StartApplication();
             //new BatchedGroupExampleApplication().StartApplication();
             //new SetupSystemPriorityApplication().StartApplication();
 

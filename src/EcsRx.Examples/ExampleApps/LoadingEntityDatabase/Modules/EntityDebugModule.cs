@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Extensions;
 using EcsRx.Plugins.Persistence.Pipelines;
 using LazyData;
@@ -16,10 +15,11 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules
         
         public void Setup(IDependencyContainer container)
         {
-            var a = container.Resolve<ISaveEntityDatabasePipeline>();
-            
+            // Make a new pipeline for showing json output
             container.BuildPipeline(DebugPipeline, builder => builder
+                // Fork from the 2nd step (serializer) on the existing JSON Saving Pipeline
                 .ForkDataFrom<ISaveEntityDatabasePipeline>(2)
+                // Then spit out the json to the console in a nice way
                 .ThenInvoke(WriteEntityData));
         }
 

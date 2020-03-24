@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EcsRx.Events;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Components;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Events;
+using EcsRx.Examples.ExampleApps.DataPipelinesExample.Pipelines;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Plugins.ReactiveSystems.Custom;
@@ -18,9 +19,9 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Systems
     {
         public override IGroup Group => new Group(typeof(PlayerStateComponent));
         
-        public IPipeline SaveJsonPipeline { get; }
+        public PostJsonHttpPipeline SaveJsonPipeline { get; }
 
-        public TriggerPipelineSystem(IEventSystem eventSystem, IPipeline saveJsonPipeline) : base(eventSystem)
+        public TriggerPipelineSystem(IEventSystem eventSystem, PostJsonHttpPipeline saveJsonPipeline) : base(eventSystem)
         {
             SaveJsonPipeline = saveJsonPipeline;
         }
@@ -34,7 +35,7 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Systems
 
         public async Task TriggerPipeline(PlayerStateComponent playerState)
         {
-            var httpResponse = (HttpResponseMessage) await SaveJsonPipeline.Execute(playerState, null);
+            var httpResponse = (HttpResponseMessage) await SaveJsonPipeline.Execute(playerState);
             var responseContent = await httpResponse.Content.ReadAsStringAsync();
             var prettyResponse = MakeDataPretty(responseContent);
             Console.WriteLine($"Server Responded With {prettyResponse}");

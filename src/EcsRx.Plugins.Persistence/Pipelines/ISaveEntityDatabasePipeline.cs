@@ -4,7 +4,7 @@ using Persistity.Pipelines;
 
 namespace EcsRx.Plugins.Persistence.Pipelines
 {
-    public interface ISaveEntityDatabasePipeline : IPipeline
+    public interface ISaveEntityDatabasePipeline : IFlowPipeline
     {
         Task Execute(IEntityDatabase database);
     }

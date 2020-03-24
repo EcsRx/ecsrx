@@ -1,4 +1,5 @@
 using System.Net.Http;
+using EcsRx.Examples.ExampleApps.DataPipelinesExample.Pipelines;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Builders;
@@ -13,8 +14,6 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules
 {
     public class PipelineModule : IDependencyModule
     {
-        public const string PipelineName = "SendJson";
-        
         public void Setup(IDependencyContainer container)
         {
             // By default only the binary stuff is loaded, but you can load json, yaml, bson etc
@@ -23,10 +22,7 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules
             container.Bind<IJsonDeserializer, JsonDeserializer>();
             
             // Register our custom pipeline using the json stuff above
-            container.BuildPipeline(PipelineName, x => x
-                .StartFromInput()
-                .SerializeWith<IJsonSerializer>(false)
-                .ThenSendTo(new HttpSendEndpoint("https://postman-echo.com/post", HttpMethod.Post)));
+            container.Bind<PostJsonHttpPipeline>();
         }
     }
 }

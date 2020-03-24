@@ -4,7 +4,7 @@ using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers
 {
-    public class ToEntityTransformer : IToEntityTransformer
+    public class ToEntityDataTransformer : IToEntityDataTransformer
     {
         public object Transform(object original)
         {

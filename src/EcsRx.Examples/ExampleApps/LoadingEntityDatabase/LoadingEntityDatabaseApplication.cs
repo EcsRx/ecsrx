@@ -5,6 +5,7 @@ using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.Infrastructure.Ninject;
 using EcsRx.Plugins.Persistence;
+using EcsRx.Plugins.Persistence.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
 {
@@ -33,6 +34,9 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
             // bindings set in place by the plugin.
             Container.LoadModule<JsonEntityDatabaseModule>();
             
+            // Add our debug output pipeline for displaying the collections
+            Container.LoadModule<EntityDebugModule>();
+            
             base.ResolveApplicationDependencies();
         }
 
@@ -44,6 +48,7 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
         private void HandleInput()
         {
             var defaultCollection = EntityCollectionManager.EntityDatabase.GetCollection();
+            var debugPipeline = Container.ResolvePipeline(EntityDebugModule.DebugPipeline);
             var randomBlueprint = new RandomEntityBlueprint();
 
             while (!_quit)
@@ -54,6 +59,7 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
                 Console.WriteLine("Look in the bin folder for an entity-database.json file, alter it if you want");
                 Console.WriteLine();
                 Console.WriteLine($" - {defaultCollection.Count} Entities Loaded");
+                debugPipeline.Execute(EntityCollectionManager.EntityDatabase);
                 Console.WriteLine();
                 Console.WriteLine(" - Press Enter To Add Another Random Entity");
                 Console.WriteLine(" - Press Escape To Save and Quit");

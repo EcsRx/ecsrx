@@ -4,6 +4,7 @@ using System.Linq;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure.Dependencies;
 using Ninject;
+using Ninject.Syntax;
 
 namespace EcsRx.Infrastructure.Ninject
 {
@@ -41,30 +42,25 @@ namespace EcsRx.Infrastructure.Ninject
                 return;
             }
 
+            IBindingWhenInNamedWithOrOnSyntax<object> binding;
+
             if (configuration.ToInstance != null)
+            { binding = bindingSetup.ToConstant(configuration.ToInstance); }
+            else if (configuration.ToMethod != null)
+            { binding = bindingSetup.ToMethod(x => configuration.ToMethod(this)); }
+            else
             {
-                var instanceBinding = bindingSetup.ToConstant(configuration.ToInstance);
+                binding = bindingSetup.To(toType);
                 
-                if(configuration.AsSingleton)
-                { instanceBinding.InSingletonScope(); }
-
-                return;
+                foreach (var constructorArg in configuration.WithNamedConstructorArgs)
+                { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
+            
+                foreach (var constructorArg in configuration.WithTypedConstructorArgs)
+                { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
             }
-
-            if (configuration.ToMethod != null)
-            {
-                var methodBinding = bindingSetup.ToMethod(x => configuration.ToMethod(this));
-
-                if(configuration.AsSingleton)
-                { methodBinding.InSingletonScope(); }
-
-                return;
-            }
-
-            var binding = bindingSetup.To(toType);
             
             if(configuration.AsSingleton)
-            { binding.InSingletonScope(); } 
+            { binding.InSingletonScope(); }
             
             if(!string.IsNullOrEmpty(configuration.WithName))
             { binding.Named(configuration.WithName); }
@@ -74,12 +70,6 @@ namespace EcsRx.Infrastructure.Ninject
 
             if (configuration.WhenInjectedInto.Count != 0)
             { configuration.WhenInjectedInto.ForEachRun(x => binding.WhenInjectedInto(x)); }
-            
-            foreach (var constructorArg in configuration.WithNamedConstructorArgs)
-            { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
-            
-            foreach (var constructorArg in configuration.WithTypedConstructorArgs)
-            { binding.WithConstructorArgument(constructorArg.Key, constructorArg.Value); }
         }
 
         public void Bind(Type type, BindingConfiguration configuration = null)

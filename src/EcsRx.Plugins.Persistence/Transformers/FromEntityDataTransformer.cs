@@ -3,11 +3,11 @@ using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers
 {
-    public class FromEntityTransformer : IFromEntityTransformer
+    public class FromEntityDataTransformer : IFromEntityDataTransformer
     {
         public IEntityFactory EntityFactory { get; }
 
-        public FromEntityTransformer(IEntityFactory entityFactory)
+        public FromEntityDataTransformer(IEntityFactory entityFactory)
         {
             EntityFactory = entityFactory;
         }

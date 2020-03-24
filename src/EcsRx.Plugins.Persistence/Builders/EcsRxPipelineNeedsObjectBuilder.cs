@@ -89,8 +89,11 @@ namespace EcsRx.Plugins.Persistence.Builders
             _steps.Add(new ReceiveMethodStep(method));
             return this;
         }
+        
+        public IEnumerable<IPipelineStep> BuildSteps()
+        { return _steps; }
     
-        public IPipeline Build()
+        public IFlowPipeline Build()
         { return new DefaultPipeline(_steps); }
     }
 }

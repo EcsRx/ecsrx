@@ -1,32 +1,38 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EcsRx.Collections.Database;
+using EcsRx.Plugins.Persistence.Builders;
 using EcsRx.Plugins.Persistence.Transformers;
 using LazyData.Serialization;
 using Persistity.Endpoints;
+using Persistity.Pipelines.Steps.Types;
 
 namespace EcsRx.Plugins.Persistence.Pipelines
 {
-    public class DefaultSaveEntityDatabasePipeline : ISaveEntityDatabasePipeline
+    public class DefaultSaveEntityDatabasePipeline : EcsRxBuiltPipeline, ISaveEntityDatabasePipeline
     {
         public ISerializer Serializer { get; }
-        public IToEntityDatabaseTransformer Transformer { get; }
+        public IToEntityDatabaseDataTransformer DataTransformer { get; }
         public ISendDataEndpoint Endpoint { get; }
 
-        public DefaultSaveEntityDatabasePipeline(ISerializer serializer, IToEntityDatabaseTransformer transformer, ISendDataEndpoint endpoint)
+        public DefaultSaveEntityDatabasePipeline(EcsRxPipelineBuilder pipelineBuilder, ISerializer serializer, IToEntityDatabaseDataTransformer dataTransformer, ISendDataEndpoint endpoint) : base(pipelineBuilder)
         {
             Serializer = serializer;
-            Transformer = transformer;
+            DataTransformer = dataTransformer;
             Endpoint = endpoint;
         }
 
         public Task Execute(IEntityDatabase entityDatabase)
         { return Execute(entityDatabase, null); }
-
-        public Task<object> Execute(object input = null, object state = null)
+        
+        protected override IEnumerable<IPipelineStep> BuildSteps(EcsRxPipelineBuilder builder)
         {
-            var transformedData = Transformer.Transform(input);
-            var output = Serializer.Serialize(transformedData, true);
-            return Endpoint.Send(output);
+            return builder
+                .StartFromInput()
+                .TransformWith(DataTransformer)
+                .SerializeWith(Serializer)
+                .ThenSendTo(Endpoint)
+                .BuildSteps();
         }
     }
 }

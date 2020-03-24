@@ -16,7 +16,12 @@ namespace EcsRx.Plugins.Persistence.Extensions
         /// <param name="name">The name of the pipeline</param>
         /// <returns>The pipeline with the given name</returns>
         public static IPipeline ResolvePipeline(this IDependencyContainer container, string name)
-        { return container.Resolve<IPipeline>(name); }
+        {
+            if(!container.HasBinding<IPipeline>(name))
+            { throw new Exception($"No pipeline registered with the name \"{name}\"");}
+            
+            return container.Resolve<IPipeline>(name);
+        }
         
         /// <summary>
         /// Builds a pipeline for objects

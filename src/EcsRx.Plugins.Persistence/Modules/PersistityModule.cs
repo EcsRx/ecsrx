@@ -19,12 +19,12 @@ namespace EcsRx.Plugins.Persistence.Modules
         
         public void Setup(IDependencyContainer container)
         {
-            container.Bind<IToEntityTransformer, ToEntityTransformer>();
-            container.Bind<IToEntityCollectionTransformer, ToEntityCollectionTransformer>();
-            container.Bind<IToEntityDatabaseTransformer, ToEntityDatabaseTransformer>();
-            container.Bind<IFromEntityTransformer, FromEntityTransformer>();
-            container.Bind<IFromEntityCollectionTransformer, FromEntityCollectionTransformer>();
-            container.Bind<IFromEntityDatabaseTransformer, FromEntityDatabaseTransformer>();
+            container.Bind<IToEntityDataTransformer, ToEntityDataTransformer>();
+            container.Bind<IToEntityCollectionDataTransformer, ToEntityCollectionDataTransformer>();
+            container.Bind<IToEntityDatabaseDataTransformer, ToEntityDatabaseDataTransformer>();
+            container.Bind<IFromEntityDataTransformer, FromEntityDataTransformer>();
+            container.Bind<IFromEntityCollectionDataTransformer, FromEntityCollectionDataTransformer>();
+            container.Bind<IFromEntityDatabaseDataTransformer, FromEntityDatabaseDataTransformer>();
             container.Bind<EcsRxPipelineBuilder>(builder => builder.ToMethod(x =>
                 new EcsRxPipelineBuilder(x)).AsSingleton());
 
@@ -63,8 +63,9 @@ namespace EcsRx.Plugins.Persistence.Modules
         public static ISaveEntityDatabasePipeline CreateSavePipeline(IDependencyContainer container, 
             ISerializer serializer, string filename)
         {
-            return new DefaultSaveEntityDatabasePipeline(serializer, 
-                container.Resolve<IToEntityDatabaseTransformer>(), 
+            return new DefaultSaveEntityDatabasePipeline(
+                container.Resolve<EcsRxPipelineBuilder>(), serializer, 
+                container.Resolve<IToEntityDatabaseDataTransformer>(), 
                 new FileEndpoint(filename));
         }
 
@@ -78,8 +79,9 @@ namespace EcsRx.Plugins.Persistence.Modules
         public static ILoadEntityDatabasePipeline CreateLoadPipeline(IDependencyContainer container,
             IDeserializer deserializer, string filename)
         {
-            return new DefaultLoadEntityDatabasePipeline(deserializer,
-                container.Resolve<IFromEntityDatabaseTransformer>(), 
+            return new DefaultLoadEntityDatabasePipeline(
+                container.Resolve<EcsRxPipelineBuilder>(), deserializer,
+                container.Resolve<IFromEntityDatabaseDataTransformer>(), 
                 new FileEndpoint(filename));
         }
     }

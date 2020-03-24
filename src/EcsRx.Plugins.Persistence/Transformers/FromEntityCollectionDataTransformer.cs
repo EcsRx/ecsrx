@@ -6,14 +6,14 @@ using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers
 {
-    public class FromEntityCollectionTransformer : IFromEntityCollectionTransformer
+    public class FromEntityCollectionDataTransformer : IFromEntityCollectionDataTransformer
     {
-        public IFromEntityTransformer EntityTransformer { get; }
+        public IFromEntityDataTransformer EntityDataTransformer { get; }
         public IEntityCollectionFactory EntityCollectionFactory { get; }
 
-        public FromEntityCollectionTransformer(IFromEntityTransformer entityTransformer, IEntityCollectionFactory entityCollectionFactory)
+        public FromEntityCollectionDataTransformer(IFromEntityDataTransformer entityDataTransformer, IEntityCollectionFactory entityCollectionFactory)
         {
-            EntityTransformer = entityTransformer;
+            EntityDataTransformer = entityDataTransformer;
             EntityCollectionFactory = entityCollectionFactory;
         }
         
@@ -22,7 +22,7 @@ namespace EcsRx.Plugins.Persistence.Transformers
             var collectionData = (EntityCollectionData) converted;
             var collection = EntityCollectionFactory.Create(collectionData.CollectionId);
             var entities = collectionData.Entities
-                .Select(EntityTransformer.Transform)
+                .Select(EntityDataTransformer.Transform)
                 .Cast<IEntity>();
             
             entities.ForEachRun(collection.AddEntity);

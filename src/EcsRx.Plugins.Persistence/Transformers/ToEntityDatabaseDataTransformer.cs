@@ -9,11 +9,11 @@ using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers
 {
-    public class ToEntityDatabaseTransformer : IToEntityDatabaseTransformer
+    public class ToEntityDatabaseDataTransformer : IToEntityDatabaseDataTransformer
     {
         public IToEntityCollectionTransformer EntityCollectionTransformer { get; }
 
-        public ToEntityDatabaseTransformer(IToEntityCollectionTransformer entityCollectionTransformer, IEntityCollectionFactory entityCollectionFactory)
+        public ToEntityDatabaseDataTransformer(IToEntityCollectionTransformer entityCollectionTransformer, IEntityCollectionFactory entityCollectionFactory)
         {
             EntityCollectionTransformer = entityCollectionTransformer;
         }

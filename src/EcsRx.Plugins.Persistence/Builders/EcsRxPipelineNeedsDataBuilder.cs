@@ -1,14 +1,15 @@
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
+using LazyData;
 using LazyData.Serialization;
 using Persistity.Endpoints;
 using Persistity.Pipelines;
-using Persistity.Pipelines.Builders;
 using Persistity.Pipelines.Steps;
 using Persistity.Pipelines.Steps.Types;
 using Persistity.Processors;
-using Persistity.Transformers;
 
 namespace EcsRx.Plugins.Persistence.Builders
 {
@@ -59,7 +60,34 @@ namespace EcsRx.Plugins.Persistence.Builders
             return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
         }
         
-        public IPipeline Build()
+        public EcsRxPipelineNeedsObjectBuilder ThenInvoke(Func<DataObject, object, Task<object>> method)
+        {
+            _steps.Add(new SendDataToObjectMethodStep(method));
+            return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
+        }
+        
+        public EcsRxPipelineNeedsObjectBuilder ThenInvoke(Func<DataObject, Task<object>> method)
+        {
+            _steps.Add(new SendDataToObjectMethodStep(method));
+            return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
+        }
+        
+        public EcsRxPipelineNeedsDataBuilder ThenInvoke(Func<DataObject, object, Task<DataObject>> method)
+        {
+            _steps.Add(new SendDataToDataMethodStep(method));
+            return this;
+        }
+        
+        public EcsRxPipelineNeedsDataBuilder ThenInvoke(Func<DataObject, Task<DataObject>> method)
+        {
+            _steps.Add(new SendDataToDataMethodStep(method));
+            return this;
+        }
+        
+        public IEnumerable<IPipelineStep> BuildSteps()
+        { return _steps; }
+        
+        public IFlowPipeline Build()
         { return new DefaultPipeline(_steps); }
     }
 }

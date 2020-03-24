@@ -1,33 +1,40 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EcsRx.Collections.Database;
+using EcsRx.Plugins.Persistence.Builders;
 using EcsRx.Plugins.Persistence.Transformers;
 using LazyData.Serialization;
 using Persistity.Endpoints;
+using Persistity.Pipelines;
+using Persistity.Pipelines.Steps.Types;
 
 namespace EcsRx.Plugins.Persistence.Pipelines
 {
-    public class DefaultLoadEntityDatabasePipeline : ILoadEntityDatabasePipeline
+    public class DefaultLoadEntityDatabasePipeline : FlowPipeline, ILoadEntityDatabasePipeline
     {
         public IDeserializer Deserializer { get; }
-        public IFromEntityDatabaseTransformer Transformer { get; }
+        public IFromEntityDatabaseDataTransformer DataTransformer { get; }
         public IReceiveDataEndpoint Endpoint { get; }
 
-        public DefaultLoadEntityDatabasePipeline(IDeserializer deserializer, IFromEntityDatabaseTransformer transformer, IReceiveDataEndpoint endpoint)
+        public DefaultLoadEntityDatabasePipeline(EcsRxPipelineBuilder pipelineBuilder, IDeserializer deserializer, IFromEntityDatabaseDataTransformer dataTransformer, IReceiveDataEndpoint endpoint)
         {
             Deserializer = deserializer;
-            Transformer = transformer;
+            DataTransformer = dataTransformer;
             Endpoint = endpoint;
+
+            Steps = BuildSteps(pipelineBuilder);
         }
 
         public async Task<IEntityDatabase> Execute()
         { return (IEntityDatabase) await Execute(null); }
 
-        public async Task<object> Execute(object input = null, object state = null)
+        protected IEnumerable<IPipelineStep> BuildSteps(EcsRxPipelineBuilder builder)
         {
-            var endpointData = await Endpoint.Receive();
-            var deserializedData = Deserializer.Deserialize(endpointData);
-            var transformedData = Transformer.Transform(deserializedData);
-            return transformedData;
+            return builder
+                .StartFrom(Endpoint)
+                .DeserializeWith(Deserializer)
+                .TransformWith(DataTransformer)
+                .BuildSteps();
         }
     }
 }

@@ -11,11 +11,11 @@ namespace EcsRx.Plugins.Persistence.Transformers
 {
     public class ToEntityDatabaseDataTransformer : IToEntityDatabaseDataTransformer
     {
-        public IToEntityCollectionTransformer EntityCollectionTransformer { get; }
+        public IToEntityCollectionDataTransformer EntityCollectionDataTransformer { get; }
 
-        public ToEntityDatabaseDataTransformer(IToEntityCollectionTransformer entityCollectionTransformer, IEntityCollectionFactory entityCollectionFactory)
+        public ToEntityDatabaseDataTransformer(IToEntityCollectionDataTransformer entityCollectionDataTransformer, IEntityCollectionFactory entityCollectionFactory)
         {
-            EntityCollectionTransformer = entityCollectionTransformer;
+            EntityCollectionDataTransformer = entityCollectionDataTransformer;
         }
 
         public object Transform(object original)
@@ -23,7 +23,7 @@ namespace EcsRx.Plugins.Persistence.Transformers
             var entityDatabase = (IEntityDatabase)original;
 
             var entityCollections = entityDatabase.Collections
-                .Select(EntityCollectionTransformer.Transform)
+                .Select(EntityCollectionDataTransformer.Transform)
                 .Cast<EntityCollectionData>()
                 .ToList();
 

@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using EcsRx.Infrastructure.Dependencies;
+using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Extensions;
 using EcsRx.Plugins.Persistence.Pipelines;
 using LazyData;
@@ -15,6 +16,8 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules
         
         public void Setup(IDependencyContainer container)
         {
+            var a = container.Resolve<ISaveEntityDatabasePipeline>();
+            
             container.BuildPipeline(DebugPipeline, builder => builder
                 .ForkDataFrom<ISaveEntityDatabasePipeline>(2)
                 .ThenInvoke(WriteEntityData));

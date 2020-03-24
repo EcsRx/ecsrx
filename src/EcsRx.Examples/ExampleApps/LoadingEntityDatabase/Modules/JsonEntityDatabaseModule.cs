@@ -47,8 +47,6 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules
             // Create the serializer to serialize everything
             var everythingSerializer = new JsonSerializer(mappingRegistry, primitiveTypeMappings);
             
-            // Bind the JSON serializer so we can use it in the debug one
-            
             // Piggyback off the existing save pipeline helper, which lets you set your format and filename
             return PersistityModule.CreateSavePipeline(container, everythingSerializer, CustomEntityDatabaseFile);
         }

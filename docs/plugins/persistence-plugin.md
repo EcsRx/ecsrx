@@ -40,12 +40,15 @@ var decryptionProcessor = new DecryptDataProcessor(encryptor);
 var fileEndpoint = new FileEndpoint("savegame.sav");
 
 // Create the pipeline to save the data
-container.BuildPipeline("SaveGame", x => x.SerializeWith<IBinarySerializer>()
+container.BuildPipeline("SaveGame", x => x
+        .StartWithInput()
+        .SerializeWith<IBinarySerializer>()
         .ProcessWith(encryptionProcessor)
-        .SendTo(fileEndpoint));
+        .ThenSendTo(fileEndpoint));
 
 // Create the pipeline to load the data
-container.BuildPipeline("LoadGame", x => x.ReceiveFrom(fileEndpoint)
+container.BuildPipeline("LoadGame", x => x
+        .StartFrom(fileEndpoint)
         .ProcessWith(decryptionProcessor)
         .DeserializeWith<IBinaryDeerializer>());
 

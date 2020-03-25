@@ -14,12 +14,12 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
     [Priority(10)]
     public class TeardownSystemHandler : IConventionalSystemHandler
     {
-        public readonly IEntityCollectionManager EntityCollectionManager;
+        public readonly IObservableGroupManager ObservableGroupManager;
         public readonly IDictionary<ISystem, IDisposable> SystemSubscriptions;
         
-        public TeardownSystemHandler(IEntityCollectionManager entityCollectionManager)
+        public TeardownSystemHandler(IObservableGroupManager observableGroupManager)
         {
-            EntityCollectionManager = entityCollectionManager;
+            ObservableGroupManager = observableGroupManager;
             SystemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
@@ -33,7 +33,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
             var castSystem = (ITeardownSystem) system;
             var affinities = system.GetGroupAffinities();
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinities);
+            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group, affinities);
             
             observableGroup.OnEntityRemoving
                 .Subscribe(castSystem.Teardown)

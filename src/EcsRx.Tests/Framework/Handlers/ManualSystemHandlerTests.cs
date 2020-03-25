@@ -14,8 +14,8 @@ namespace EcsRx.Tests.Framework.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
-            var teardownSystemHandler = new ManualSystemHandler(mockCollectionManager);
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var teardownSystemHandler = new ManualSystemHandler(observableGroupManager);
             
             var fakeMatchingSystem = Substitute.For<IManualSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
@@ -30,12 +30,12 @@ namespace EcsRx.Tests.Framework.Handlers
         public void should_start_system_when_added_to_handler()
         {
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
-            mockCollectionManager.GetObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
             var mockSystem = Substitute.For<IManualSystem>();
 
-            var systemHandler = new ManualSystemHandler(mockCollectionManager);
+            var systemHandler = new ManualSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             mockSystem.Received(1).StartSystem(Arg.Is(mockObservableGroup));
@@ -45,12 +45,12 @@ namespace EcsRx.Tests.Framework.Handlers
         public void should_stop_system_when_added_to_handler()
         {
             var mockObservableGroup = Substitute.For<IObservableGroup>();
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
-            mockCollectionManager.GetObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Any<IGroup>()).Returns(mockObservableGroup);
             var mockSystem = Substitute.For<IManualSystem>();
 
-            var systemHandler = new ManualSystemHandler(mockCollectionManager);
+            var systemHandler = new ManualSystemHandler(observableGroupManager);
             systemHandler.DestroySystem(mockSystem);
             
             mockSystem.Received(1).StopSystem(Arg.Is(mockObservableGroup));

@@ -7,11 +7,11 @@ namespace EcsRx.Executor.Handlers
     [Priority(5)]
     public class ManualSystemHandler : IConventionalSystemHandler
     {
-        public IEntityCollectionManager EntityCollectionManager { get; }
+        public IObservableGroupManager ObservableGroupManager { get; }
         
-        public ManualSystemHandler(IEntityCollectionManager entityCollectionManager)
+        public ManualSystemHandler(IObservableGroupManager observableGroupManager)
         {
-            EntityCollectionManager = entityCollectionManager;
+            ObservableGroupManager = observableGroupManager;
         }
 
         public bool CanHandleSystem(ISystem system)
@@ -19,7 +19,7 @@ namespace EcsRx.Executor.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
+            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group);
             var castSystem = (IManualSystem)system;
             castSystem.StartSystem(observableGroup);
         }
@@ -27,7 +27,7 @@ namespace EcsRx.Executor.Handlers
         public void DestroySystem(ISystem system)
         {
             var castSystem = (IManualSystem)system;
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group);
+            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group);
             castSystem.StopSystem(observableGroup);
         }
 

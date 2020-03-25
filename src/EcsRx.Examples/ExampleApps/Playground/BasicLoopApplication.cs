@@ -33,7 +33,7 @@ namespace EcsRx.Examples.ExampleApps.Playground
             _componentDatabase = Container.Resolve<IComponentDatabase>();
             _batchBuilderFactory = Container.Resolve<IBatchBuilderFactory>();
             _referenceBatchBuilderFactory = Container.Resolve<IReferenceBatchBuilderFactory>();
-            _collection = EntityCollectionManager.EntityDatabase.GetCollection();
+            _collection = EntityDatabase.GetCollection();
 
             ClassComponent1TypeId = _componentTypeLookup.GetComponentType(typeof(ClassComponent));
             ClassComponent2TypeId = _componentTypeLookup.GetComponentType(typeof(ClassComponent2));

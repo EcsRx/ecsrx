@@ -18,8 +18,8 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
-            var teardownSystemHandler = new TeardownSystemHandler(mockCollectionManager);
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
             
             var fakeMatchingSystem = Substitute.For<ITeardownSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
@@ -43,16 +43,16 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockObservableGroup.OnEntityRemoving.Returns(removeSubject);
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ITeardownSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new TeardownSystemHandler(mockCollectionManager);
+            var systemHandler = new TeardownSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             removeSubject.OnNext(fakeEntity1);

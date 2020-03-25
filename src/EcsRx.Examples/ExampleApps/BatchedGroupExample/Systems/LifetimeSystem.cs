@@ -2,6 +2,7 @@ using System;
 using System.Reactive.Linq;
 using EcsRx.Blueprints;
 using EcsRx.Collections;
+using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Blueprints;
 using EcsRx.Groups;
@@ -18,8 +19,8 @@ namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Systems
         public IGroup Group { get; } = new EmptyGroup();       
         public IEntityCollection DefaultCollection { get; }
 
-        public SpawnerSystem(IEntityCollectionManager collectionManager)
-        { DefaultCollection = collectionManager.EntityDatabase.GetCollection(); }
+        public SpawnerSystem(IEntityDatabase entityDatabase)
+        { DefaultCollection = entityDatabase.GetCollection(); }
 
         public void StartSystem(IObservableGroup observableGroup)
         { _sub = Observable.Interval(TimeSpan.FromSeconds(2)).Subscribe(x => Spawn()); }

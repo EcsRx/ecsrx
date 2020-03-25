@@ -11,7 +11,7 @@ namespace EcsRx.Examples.ExampleApps.HelloWorldExample
 
         protected override void ApplicationStarted()
         {
-            var defaultPool = EntityCollectionManager.EntityDatabase.GetCollection();
+            var defaultPool = EntityDatabase.GetCollection();
             var entity = defaultPool.CreateEntity();
 
             var canTalkComponent = new CanTalkComponent {Message = "Hello world"};

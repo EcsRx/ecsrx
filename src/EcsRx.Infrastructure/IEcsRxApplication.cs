@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EcsRx.Collections;
+using EcsRx.Collections.Database;
 using EcsRx.Events;
 using EcsRx.Executor;
 using EcsRx.Infrastructure.Dependencies;
@@ -29,9 +30,14 @@ namespace EcsRx.Infrastructure
         IEventSystem EventSystem { get; }
         
         /// <summary>
-        /// The entity collection manager, allows you to create entity collections and observable groups
+        /// The entity database, allows you to create and manage entity collections
         /// </summary>
-        IEntityCollectionManager EntityCollectionManager { get; }
+        IEntityDatabase EntityDatabase { get; }
+        
+        /// <summary>
+        /// The observable group manager, allows you to get observable groups
+        /// </summary>
+        IObservableGroupManager ObservableGroupManager { get; }
         
         /// <summary>
         /// Any plugins which have been registered within the application

@@ -18,8 +18,8 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
-            var reactToEntitySystemHandler = new ReactToDataSystemHandler(mockCollectionManager);
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var reactToEntitySystemHandler = new ReactToDataSystemHandler(observableGroupManager);
             
             var fakeMatchingSystem1 = Substitute.For<IReactToDataSystem<int>>();
             var fakeMatchingSystem2 = Substitute.For<IReactToDataSystem<DateTime>>();
@@ -49,10 +49,10 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -61,7 +61,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockSystem.ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
             mockSystem.ReactToData(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
-            var systemHandler = new ReactToDataSystemHandler(mockCollectionManager);
+            var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             firstEntitySubject.OnNext(1);
@@ -98,10 +98,10 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var addedSubject = new Subject<IEntity>();
             mockObservableGroup.OnEntityAdded.Returns(addedSubject);
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -110,7 +110,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockSystem.ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
             mockSystem.ReactToData(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
-            var systemHandler = new ReactToDataSystemHandler(mockCollectionManager);
+            var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
 
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
@@ -158,10 +158,10 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var removedSubject = new Subject<IEntity>();
             mockObservableGroup.OnEntityRemoved.Returns(removedSubject);
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = new Group();
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -170,7 +170,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockSystem.ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
             mockSystem.ReactToData(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
-            var systemHandler = new ReactToDataSystemHandler(mockCollectionManager);
+            var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
@@ -204,10 +204,10 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = new GroupWithPredicate(x => x.Id == id1);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<int>();
             var secondEntitySubject = new Subject<int>();
@@ -216,7 +216,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockSystem.ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubject);
             mockSystem.ReactToData(Arg.Is(fakeEntity2)).Returns(secondEntitySubject);
             
-            var systemHandler = new ReactToDataSystemHandler(mockCollectionManager);
+            var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             firstEntitySubject.OnNext(1);
@@ -241,11 +241,11 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var id1 = 1;
             var id2 = 2;
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
             var mockSystem = Substitute.For<IReactToDataSystem<int>>();
             var mockSystemDisposable = Substitute.For<IDisposable>();
             
-            var systemHandler = new ReactToDataSystemHandler(mockCollectionManager);
+            var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
             systemHandler._systemSubscriptions.Add(mockSystem, mockSystemDisposable);
             
             var entitySubscriptions = new Dictionary<int, IDisposable>();

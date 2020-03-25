@@ -18,7 +18,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         protected override void ApplicationStarted()
         {
-            _collection = EntityCollectionManager.EntityDatabase.GetCollection();
+            _collection = EntityDatabase.GetCollection();
             _system = new ExampleReactToGroupSystem();
             
             for (var i = 0; i < EntityCount; i++)

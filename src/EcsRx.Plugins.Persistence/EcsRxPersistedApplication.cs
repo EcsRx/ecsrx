@@ -47,7 +47,7 @@ namespace EcsRx.Plugins.Persistence
         protected virtual Task SaveEntityDatabase()
         {
             // Update our database with any changes that have happened since it loaded
-            return SaveEntityDatabasePipeline.Execute(EntityCollectionManager.EntityDatabase);
+            return SaveEntityDatabasePipeline.Execute(EntityDatabase);
         }
 
         public override void StopApplication()

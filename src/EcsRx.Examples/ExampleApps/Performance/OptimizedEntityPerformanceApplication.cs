@@ -62,7 +62,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities()
         {
-            EntityCollectionManager.EntityDatabase.Collections.ForEachRun(x => x.RemoveAllEntities());
+            EntityDatabase.Collections.ForEachRun(x => x.RemoveAllEntities());
             GC.Collect();
             var timer = Stopwatch.StartNew();
 

@@ -16,13 +16,13 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
     [Priority(10)]
     public class SetupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IEntityCollectionManager EntityCollectionManager;
+        public readonly IObservableGroupManager ObservableGroupManager;
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
-        public SetupSystemHandler(IEntityCollectionManager entityCollectionManager)
+        public SetupSystemHandler(IObservableGroupManager observableGroupManager)
         {
-            EntityCollectionManager = entityCollectionManager;
+            ObservableGroupManager = observableGroupManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
         }
@@ -39,7 +39,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
             var castSystem = (ISetupSystem) system;
             var affinities = system.GetGroupAffinities();
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinities);
+            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group, affinities);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

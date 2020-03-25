@@ -19,8 +19,8 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
-            var reactToEntitySystemHandler = new SetupSystemHandler(mockCollectionManager);
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var reactToEntitySystemHandler = new SetupSystemHandler(observableGroupManager);
             
             var fakeMatchingSystem = Substitute.For<ISetupSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
@@ -45,16 +45,16 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockCollectionManager);
+            var systemHandler = new SetupSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
@@ -80,16 +80,16 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockCollectionManager);
+            var systemHandler = new SetupSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             mockSystem.Received(0).Setup(Arg.Is(fakeEntity1));
@@ -123,16 +123,16 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockObservableGroup.OnEntityRemoved.Returns(removingSubject);
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
             fakeGroup.RequiredComponents.Returns(new Type[0]);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockCollectionManager);
+            var systemHandler = new SetupSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
 
             var mockDisposable = Substitute.For<IDisposable>();
@@ -165,15 +165,15 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = new GroupWithPredicate(x => x.Id == fakeEntity1.Id);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockCollectionManager);
+            var systemHandler = new SetupSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             mockSystem.Received(1).Setup(Arg.Is(fakeEntity1));
@@ -204,15 +204,15 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
             mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = new GroupWithPredicate(x => x.Id == fakeEntity1.Id && DateTime.Now >= expectedDate);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
             mockSystem.Group.Returns(fakeGroup);
 
-            var systemHandler = new SetupSystemHandler(mockCollectionManager);
+            var systemHandler = new SetupSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);

@@ -36,7 +36,7 @@ namespace EcsRx.Tests.Sanity
             _logger = logger;
         }
 
-        private (IEntityCollectionManager, IComponentDatabase, IComponentTypeLookup) CreateFramework()
+        private (IObservableGroupManager, IEntityDatabase, IComponentDatabase, IComponentTypeLookup) CreateFramework()
         {
             var componentLookups = new Dictionary<Type, int>
             {
@@ -53,20 +53,20 @@ namespace EcsRx.Tests.Sanity
             var collectionFactory = new DefaultEntityCollectionFactory(entityFactory);
             var entityDatabase = new EntityDatabase(collectionFactory);
             var observableGroupFactory = new DefaultObservableObservableGroupFactory();
-            var collectionManager = new EntityCollectionManager(observableGroupFactory, entityDatabase, componentLookupType);
+            var observableGroupManager = new ObservableGroupManager(observableGroupFactory, entityDatabase, componentLookupType);
 
-            return (collectionManager, componentDatabase, componentLookupType);
+            return (observableGroupManager, entityDatabase, componentDatabase, componentLookupType);
         }
         
-        private SystemExecutor CreateExecutor(IEntityCollectionManager entityCollectionManager)
+        private SystemExecutor CreateExecutor(IObservableGroupManager observableGroupManager)
         {
             var threadHandler = new DefaultThreadHandler();
-            var reactsToEntityHandler = new ReactToEntitySystemHandler(entityCollectionManager);
-            var reactsToGroupHandler = new ReactToGroupSystemHandler(entityCollectionManager, threadHandler);
-            var reactsToDataHandler = new ReactToDataSystemHandler(entityCollectionManager);
-            var manualSystemHandler = new ManualSystemHandler(entityCollectionManager);
-            var setupHandler = new SetupSystemHandler(entityCollectionManager);
-            var teardownHandler = new TeardownSystemHandler(entityCollectionManager);
+            var reactsToEntityHandler = new ReactToEntitySystemHandler(observableGroupManager);
+            var reactsToGroupHandler = new ReactToGroupSystemHandler(observableGroupManager, threadHandler);
+            var reactsToDataHandler = new ReactToDataSystemHandler(observableGroupManager);
+            var manualSystemHandler = new ManualSystemHandler(observableGroupManager);
+            var setupHandler = new SetupSystemHandler(observableGroupManager);
+            var teardownHandler = new TeardownSystemHandler(observableGroupManager);
 
             var conventionalSystems = new List<IConventionalSystemHandler>
             {
@@ -84,11 +84,11 @@ namespace EcsRx.Tests.Sanity
         [Fact]
         public void should_execute_setup_for_matching_entities()
         {
-            var (collectionManager, _, _) = CreateFramework();
-            var executor = CreateExecutor(collectionManager);
+            var (observableGroupManager, entityDatabase, _, _) = CreateFramework();
+            var executor = CreateExecutor(observableGroupManager);
             executor.AddSystem(new TestSetupSystem());
 
-            var collection = collectionManager.EntityDatabase.GetCollection();
+            var collection = entityDatabase.GetCollection();
             var entityOne = collection.CreateEntity();
             var entityTwo = collection.CreateEntity();
 
@@ -102,8 +102,8 @@ namespace EcsRx.Tests.Sanity
         [Fact]
         public void should_not_freak_out_when_removing_components_during_removing_event()
         {
-            var (collectionManager, _,_) = CreateFramework();
-            var collection = collectionManager.EntityDatabase.GetCollection();
+            var (observableGroupManager, entityDatabase, _, _) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
             var entityOne = collection.CreateEntity();
 
             var timesCalled = 0;
@@ -122,9 +122,9 @@ namespace EcsRx.Tests.Sanity
         [Fact]
         public void should_treat_view_handler_as_setup_system_and_teardown_system()
         {
-            var mockEntityCollectionManager = Substitute.For<IEntityCollectionManager>();
-            var setupSystemHandler = new SetupSystemHandler(mockEntityCollectionManager);
-            var teardownSystemHandler = new TeardownSystemHandler(mockEntityCollectionManager);
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var setupSystemHandler = new SetupSystemHandler(observableGroupManager);
+            var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
             
             var viewSystem = Substitute.For<IViewResolverSystem>();
             
@@ -135,8 +135,8 @@ namespace EcsRx.Tests.Sanity
         [Fact]
         public void should_trigger_both_setup_and_teardown_for_view_resolver()
         {
-            var (collectionManager, _,_) = CreateFramework();
-            var executor = CreateExecutor(collectionManager);
+            var (observableGroupManager, entityDatabase, _, _) = CreateFramework();
+            var executor = CreateExecutor(observableGroupManager);
             var viewResolverSystem = new TestViewResolverSystem(new EventSystem(new MessageBroker()),
                 new Group(typeof(TestComponentOne), typeof(ViewComponent)));
             executor.AddSystem(viewResolverSystem);
@@ -146,7 +146,7 @@ namespace EcsRx.Tests.Sanity
             var teardownCalled = false;
             viewResolverSystem.OnTeardown = entity => { teardownCalled = true; };
             
-            var collection = collectionManager.EntityDatabase.GetCollection();
+            var collection = entityDatabase.GetCollection();
             var entityOne = collection.CreateEntity();
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
 
@@ -159,16 +159,16 @@ namespace EcsRx.Tests.Sanity
         [Fact]
         public void should_listen_to_multiple_collections_for_updates()
         {
-            var (collectionManager, _,_) = CreateFramework();
+            var (observableGroupManager, entityDatabase, _, _) = CreateFramework();
             
             var group = new Group(typeof(TestComponentOne));
-            var collection1 = collectionManager.EntityDatabase.CreateCollection(1);
-            var collection2 = collectionManager.EntityDatabase.CreateCollection(2);
+            var collection1 = entityDatabase.CreateCollection(1);
+            var collection2 = entityDatabase.CreateCollection(2);
 
             var addedTimesCalled = 0;
             var removingTimesCalled = 0;
             var removedTimesCalled = 0;
-            var observableGroup = collectionManager.GetObservableGroup(group, 1, 2);
+            var observableGroup = observableGroupManager.GetObservableGroup(group, 1, 2);
             observableGroup.OnEntityAdded.Subscribe(x => addedTimesCalled++);
             observableGroup.OnEntityRemoving.Subscribe(x => removingTimesCalled++);
             observableGroup.OnEntityRemoved.Subscribe(x => removedTimesCalled++);
@@ -190,8 +190,8 @@ namespace EcsRx.Tests.Sanity
         [Fact]
         public unsafe void should_keep_state_with_batches()
         {            
-            var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
-            var collection1 = collectionManager.EntityDatabase.CreateCollection(1);
+            var (_, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection1 = entityDatabase.CreateCollection(1);
             var entity1 = collection1.CreateEntity();
 
             var startingInt = 2;
@@ -231,8 +231,8 @@ namespace EcsRx.Tests.Sanity
         [Fact]
         public unsafe void should_retain_pointer_through_new_struct()
         {            
-            var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
-            var collection1 = collectionManager.EntityDatabase.CreateCollection(1);
+            var (_, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection1 = entityDatabase.CreateCollection(1);
             var entity1 = collection1.CreateEntity();
 
             var startingInt = 2;
@@ -274,9 +274,9 @@ namespace EcsRx.Tests.Sanity
         public void should_allocate_entities_correctly()
         {
             var expectedSize = 5000;
-            var (collectionManager, componentDatabase, componentLookup) = CreateFramework();
-            var collection = collectionManager.EntityDatabase.GetCollection();
-            var observableGroup = collectionManager.GetObservableGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var observableGroup = observableGroupManager.GetObservableGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
             
             for (var i = 0; i < expectedSize; i++)
             {

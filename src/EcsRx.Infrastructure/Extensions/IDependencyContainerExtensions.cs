@@ -111,7 +111,7 @@ namespace EcsRx.Infrastructure.Extensions
         /// <returns>The observable group</returns>
         public static IObservableGroup ResolveObservableGroup(this IDependencyContainer container, IGroup group)
         {
-            var collectionManager = container.Resolve<IEntityCollectionManager>();
+            var collectionManager = container.Resolve<IObservableGroupManager>();
             return collectionManager.GetObservableGroup(group);
         }
         
@@ -123,7 +123,7 @@ namespace EcsRx.Infrastructure.Extensions
         /// <returns></returns>
         public static IObservableGroup ResolveObservableGroup(this IDependencyContainer container, params Type[] componentTypes)
         {
-            var collectionManager = container.Resolve<IEntityCollectionManager>();
+            var collectionManager = container.Resolve<IObservableGroupManager>();
             var group = new Group(componentTypes);
             return collectionManager.GetObservableGroup(group);
         }

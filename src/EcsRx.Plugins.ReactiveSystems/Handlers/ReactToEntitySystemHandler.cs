@@ -18,11 +18,11 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
     {
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
-        public readonly IEntityCollectionManager EntityCollectionManager;
+        public readonly IObservableGroupManager ObservableGroupManager;
         
-        public ReactToEntitySystemHandler(IEntityCollectionManager entityCollectionManager)
+        public ReactToEntitySystemHandler(IObservableGroupManager observableGroupManager)
         {
-            EntityCollectionManager = entityCollectionManager;
+            ObservableGroupManager = observableGroupManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
         }
@@ -33,7 +33,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
         public void SetupSystem(ISystem system)
         {
             var affinities = system.GetGroupAffinities();
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinities);            
+            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group, affinities);            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);

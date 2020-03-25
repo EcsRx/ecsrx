@@ -10,7 +10,7 @@ using EcsRx.Lookups;
 
 namespace EcsRx.Collections
 {
-    public class EntityCollectionManager : IEntityCollectionManager, IDisposable
+    public class ObservableGroupManager : IObservableGroupManager, IDisposable
     {
         private readonly ObservableGroupLookup _observableGroups;
 
@@ -20,7 +20,7 @@ namespace EcsRx.Collections
         public IObservableGroupFactory ObservableGroupFactory { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         
-        public EntityCollectionManager(IObservableGroupFactory observableGroupFactory, IEntityDatabase entityDatabase, IComponentTypeLookup componentTypeLookup)
+        public ObservableGroupManager(IObservableGroupFactory observableGroupFactory, IEntityDatabase entityDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ObservableGroupFactory = observableGroupFactory;
             EntityDatabase = entityDatabase;

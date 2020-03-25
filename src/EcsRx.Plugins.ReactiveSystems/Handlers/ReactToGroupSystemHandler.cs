@@ -17,13 +17,13 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
     [Priority(6)]
     public class ReactToGroupSystemHandler : IConventionalSystemHandler
     {
-        public readonly IEntityCollectionManager _entityCollectionManager;       
+        public readonly IObservableGroupManager _observableGroupManager;       
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
-        public ReactToGroupSystemHandler(IEntityCollectionManager entityCollectionManager, IThreadHandler threadHandler)
+        public ReactToGroupSystemHandler(IObservableGroupManager observableGroupManager, IThreadHandler threadHandler)
         {
-            _entityCollectionManager = entityCollectionManager;
+            _observableGroupManager = observableGroupManager;
             _threadHandler = threadHandler;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
@@ -34,7 +34,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
         public void SetupSystem(ISystem system)
         {
             var affinities = system.GetGroupAffinities();
-            var observableGroup = _entityCollectionManager.GetObservableGroup(system.Group, affinities);
+            var observableGroup = _observableGroupManager.GetObservableGroup(system.Group, affinities);
             var groupPredicate = system.Group as IHasPredicate;
             var isExtendedSystem = system is IReactToGroupExSystem;
             var castSystem = (IReactToGroupSystem)system;

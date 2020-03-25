@@ -16,14 +16,14 @@ namespace EcsRx.Executor.Handlers
     [Priority(6)]
     public class BasicSystemHandler : IConventionalSystemHandler
     {
-        public readonly IEntityCollectionManager _entityCollectionManager;
+        public readonly IObservableGroupManager _observableGroupManager;
         public readonly IUpdateScheduler UpdateScheduler;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
-        public BasicSystemHandler(IEntityCollectionManager entityCollectionManager, IThreadHandler threadHandler, IUpdateScheduler updateScheduler)
+        public BasicSystemHandler(IObservableGroupManager observableGroupManager, IThreadHandler threadHandler, IUpdateScheduler updateScheduler)
         {
-            _entityCollectionManager = entityCollectionManager;
+            _observableGroupManager = observableGroupManager;
             _threadHandler = threadHandler;
             UpdateScheduler = updateScheduler;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
@@ -35,7 +35,7 @@ namespace EcsRx.Executor.Handlers
         public void SetupSystem(ISystem system)
         {
             var affinities = system.GetGroupAffinities();
-            var observableGroup = _entityCollectionManager.GetObservableGroup(system.Group, affinities);
+            var observableGroup = _observableGroupManager.GetObservableGroup(system.Group, affinities);
             var hasEntityPredicate = system.Group is IHasPredicate;
             var castSystem = (IBasicSystem)system;
             var runParallel = system.ShouldMutliThread();

@@ -38,7 +38,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
             var observableGroups = new List<IObservableGroup>();
             foreach (var group in groups)
             {
-                var newGroup = EntityCollectionManager.GetObservableGroup(group);
+                var newGroup = ObservableGroupManager.GetObservableGroup(group);
                 observableGroups.Add(newGroup);
             }
 
@@ -55,8 +55,8 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         private TimeSpan ProcessEntities(int amount)
         {
-            var defaultPool = EntityCollectionManager.EntityDatabase.GetCollection();
-            EntityCollectionManager.EntityDatabase.Collections.ForEachRun(x => x.RemoveAllEntities());
+            var defaultPool = EntityDatabase.GetCollection();
+            EntityDatabase.Collections.ForEachRun(x => x.RemoveAllEntities());
             GC.Collect();
             
             var timer = Stopwatch.StartNew();

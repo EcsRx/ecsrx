@@ -1,5 +1,6 @@
 using System.Linq;
 using EcsRx.Collections;
+using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
@@ -26,8 +27,9 @@ namespace EcsRx.Examples.ExampleApps.Performance.Modules
             container.Bind<IIdPool, IdPool>();
             container.Bind<IEntityFactory, DefaultEntityFactory>();
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
+            container.Bind<IEntityDatabase, EntityDatabase>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
-            container.Bind<IEntityCollectionManager, EntityCollectionManager>();
+            container.Bind<ObservableGroupManager, ObservableGroupManager>();
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
             

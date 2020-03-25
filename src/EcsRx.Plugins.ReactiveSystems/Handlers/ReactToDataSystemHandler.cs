@@ -20,13 +20,13 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
     {
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
-        public readonly IEntityCollectionManager EntityCollectionManager;
+        public readonly IObservableGroupManager ObservableGroupManager;
 
         private readonly MethodInfo _processEntityMethod;
         
-        public ReactToDataSystemHandler(IEntityCollectionManager entityCollectionManager)
+        public ReactToDataSystemHandler(IObservableGroupManager observableGroupManager)
         {
-            EntityCollectionManager = entityCollectionManager;
+            ObservableGroupManager = observableGroupManager;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
             _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
             _processEntityMethod = GetType().GetMethod("ProcessEntity");
@@ -71,7 +71,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             _entitySubscriptions.Add(system, entitySubscriptions);
             
             var affinities = system.GetGroupAffinities();
-            var observableGroup = EntityCollectionManager.GetObservableGroup(system.Group, affinities);
+            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group, affinities);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

@@ -47,7 +47,7 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
         
         private void HandleInput()
         {
-            var defaultCollection = EntityCollectionManager.EntityDatabase.GetCollection();
+            var defaultCollection = EntityDatabase.GetCollection();
             var debugPipeline = Container.ResolvePipeline(EntityDebugModule.DebugPipeline);
             var randomBlueprint = new RandomEntityBlueprint();
 

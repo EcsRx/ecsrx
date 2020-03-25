@@ -30,8 +30,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IEntityDatabase, EntityDatabase>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
-            container.Bind<IEntityCollectionManager, EntityCollectionManager>();
-            container.Bind<IObservableGroupManager>(x => x.ToBoundType<IEntityCollectionManager>());
+            container.Bind<IObservableGroupManager, ObservableGroupManager>();
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
             container.Bind<IConventionalSystemHandler, BasicSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();

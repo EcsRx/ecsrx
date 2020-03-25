@@ -19,10 +19,10 @@ namespace EcsRx.Tests.Framework.Handlers
         [Fact]
         public void should_correctly_handle_systems()
         {
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
-            var reactToEntitySystemHandler = new BasicSystemHandler(mockCollectionManager, threadHandler, observableScheduler);
+            var reactToEntitySystemHandler = new BasicSystemHandler(observableGroupManager, threadHandler, observableScheduler);
             
             var fakeMatchingSystem = Substitute.For<IBasicSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<IManualSystem>();
@@ -47,19 +47,19 @@ namespace EcsRx.Tests.Framework.Handlers
             mockObservableGroup[1].Returns(fakeEntities[1]);
             mockObservableGroup.Count.Returns(fakeEntities.Count);
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
             var observableSubject = new Subject<ElapsedTime>();
             observableScheduler.OnUpdate.Returns(observableSubject);
             
             var fakeGroup = new Group();
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var mockSystem = Substitute.For<IBasicSystem>();
             mockSystem.Group.Returns(fakeGroup);
             
-            var systemHandler = new BasicSystemHandler(mockCollectionManager, threadHandler, observableScheduler);
+            var systemHandler = new BasicSystemHandler(observableGroupManager, threadHandler, observableScheduler);
             systemHandler.SetupSystem(mockSystem);
             
             observableSubject.OnNext(new ElapsedTime());
@@ -88,19 +88,19 @@ namespace EcsRx.Tests.Framework.Handlers
             mockObservableGroup[1].Returns(fakeEntities[1]);
             mockObservableGroup.Count.Returns(fakeEntities.Count);
             
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
             var observableSubject = new Subject<ElapsedTime>();
             observableScheduler.OnUpdate.Returns(observableSubject);
             
             var fakeGroup = new GroupWithPredicate(x => x.Id == idToMatch);
-            mockCollectionManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var mockSystem = Substitute.For<IBasicSystem>();
             mockSystem.Group.Returns(fakeGroup);
             
-            var systemHandler = new BasicSystemHandler(mockCollectionManager, threadHandler, observableScheduler);
+            var systemHandler = new BasicSystemHandler(observableGroupManager, threadHandler, observableScheduler);
             systemHandler.SetupSystem(mockSystem);
             
             observableSubject.OnNext(new ElapsedTime());
@@ -113,13 +113,13 @@ namespace EcsRx.Tests.Framework.Handlers
         [Fact]
         public void should_destroy_and_dispose_system()
         {
-            var mockCollectionManager = Substitute.For<IEntityCollectionManager>();
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
             var observableScheduler = Substitute.For<IUpdateScheduler>();
             var mockSystem = Substitute.For<IBasicSystem>();
             var mockDisposable = Substitute.For<IDisposable>();
             
-            var systemHandler = new BasicSystemHandler(mockCollectionManager, threadHandler, observableScheduler);
+            var systemHandler = new BasicSystemHandler(observableGroupManager, threadHandler, observableScheduler);
             systemHandler._systemSubscriptions.Add(mockSystem, mockDisposable);
             systemHandler.DestroySystem(mockSystem);
             

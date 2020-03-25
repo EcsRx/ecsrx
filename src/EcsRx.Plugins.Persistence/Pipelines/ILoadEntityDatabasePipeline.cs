@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using EcsRx.Collections.Database;
-using Persistity.Pipelines;
+using Persistity.Flow.Pipelines;
 
 namespace EcsRx.Plugins.Persistence.Pipelines
 {

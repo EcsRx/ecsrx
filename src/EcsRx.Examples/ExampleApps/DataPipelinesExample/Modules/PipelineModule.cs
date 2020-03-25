@@ -1,14 +1,8 @@
-using System.Net.Http;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Pipelines;
 using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
-using EcsRx.Plugins.Persistence.Builders;
-using EcsRx.Plugins.Persistence.Extensions;
 using LazyData.Json;
 using LazyData.Json.Handlers;
-using Persistity.Endpoints.Http;
-using Persistity.Pipelines;
-using Persistity.Pipelines.Builders;
 
 namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules
 {

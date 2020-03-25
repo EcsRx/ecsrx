@@ -4,7 +4,7 @@ using EcsRx.Plugins.Persistence.Builders;
 using EcsRx.Plugins.Persistence.Pipelines;
 using LazyData.Json;
 using Persistity.Endpoints.Http;
-using Persistity.Pipelines.Steps.Types;
+using Persistity.Flow.Steps.Types;
 
 namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Pipelines
 {

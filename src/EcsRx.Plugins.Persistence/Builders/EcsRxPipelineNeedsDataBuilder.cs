@@ -6,9 +6,9 @@ using EcsRx.Infrastructure.Extensions;
 using LazyData;
 using LazyData.Serialization;
 using Persistity.Endpoints;
-using Persistity.Pipelines;
-using Persistity.Pipelines.Steps;
-using Persistity.Pipelines.Steps.Types;
+using Persistity.Flow.Pipelines;
+using Persistity.Flow.Steps;
+using Persistity.Flow.Steps.Types;
 using Persistity.Processors;
 
 namespace EcsRx.Plugins.Persistence.Builders

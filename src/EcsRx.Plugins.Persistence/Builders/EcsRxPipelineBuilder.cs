@@ -6,10 +6,9 @@ using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Extensions;
 using Persistity.Endpoints;
-using Persistity.Pipelines;
-using Persistity.Pipelines.Builders;
-using Persistity.Pipelines.Steps;
-using Persistity.Pipelines.Steps.Types;
+using Persistity.Flow.Pipelines;
+using Persistity.Flow.Steps;
+using Persistity.Flow.Steps.Types;
 
 namespace EcsRx.Plugins.Persistence.Builders
 {

@@ -42,6 +42,14 @@ Then resolve `IEventSystem` in multiple places you will always get back the same
 
 This will allow you to give the binding a name for resolving via name.
 
+### OnActivation: `Action<IDependencyContainer, object>`
+
+This method will fire when an instance has been activated within the DI container.
+
+### WhenInjectedInto: `Type || IEnumerable<Type>`
+
+This will only inject the given binding in when the requesting type matches the types provided.
+
 ### ToInstance: `object`
 
 This allows you to bind to an actual instance of an object rather than a type, which is useful if you need to manually setup something yourself.

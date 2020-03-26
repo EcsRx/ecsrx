@@ -1,5 +1,9 @@
 # Breaking Changes
 
+## 3.10.0 -> 3.11.0
+
+- IEntityCollectionManager no longer exists, it is now just `IObservableGroupManager`
+
 ## 3.9.0 -> 3.10.0
 
 - IEntityCollectionManager no longer contains EntityCollections its now within `IEntityDatabase`, which is within there

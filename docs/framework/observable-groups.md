@@ -43,6 +43,8 @@ It is meant to be an interface for you to implement with your own filtration log
 
 This implementation has caching built in so it will try to keep a pre-evaluted list of entities which match the filtration requirements, this can be beneficial if you are using this in a few places and want it to update automatically when the underlying data changes.
 
+> This now needs the `EcsRx.Plugins.Computeds` nuget package, as the computed functionality has been moved there.
+
 ## Querys
 
 So up to this point we have discussed the general filtration process, however there are some extension methods which let you do more ad-hoc queries on data, these are not cached in any way but allow you to drill down into a subset of data in a pre-defined way, this overlaps a bit with the `IComputedGroup` but lets you query directly at the pool level or accessor level.

@@ -35,7 +35,18 @@ namespace EcsRx.Groups
             _withoutComponents.Add(typeof(T));
             return this;
         }
-
+        
+        public GroupBuilder WithStructComponent<T>() where T : struct, IComponent
+        {
+            _withComponents.Add(typeof(T));
+            return this;
+        }
+        
+        public GroupBuilder WithoutStructComponent<T>() where T : struct, IComponent
+        {
+            _withoutComponents.Add(typeof(T));
+            return this;
+        }
 
         public GroupBuilder WithPredicate(Predicate<IEntity> predicate)
         {

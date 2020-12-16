@@ -35,7 +35,9 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
                 var entity = _collection[i];
                 
                 ref var basicComponent = ref Components1[entity.ComponentAllocations[StructComponent1TypeId]];
-                basicComponent.Position += Vector3.One;
+                basicComponent.X += Vector3.One.X;
+                basicComponent.Y += Vector3.One.Y;
+                basicComponent.Z += Vector3.One.Z;
                 basicComponent.Something += 10;
                 
                 ref var basicComponent2 = ref Components2[entity.ComponentAllocations[StructComponent2TypeId]];

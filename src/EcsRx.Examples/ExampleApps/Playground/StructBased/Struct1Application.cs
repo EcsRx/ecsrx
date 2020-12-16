@@ -22,7 +22,9 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             foreach (var entity in _collection)
             {
                 ref var basicComponent = ref entity.GetComponent<StructComponent>(StructComponent1TypeId);
-                basicComponent.Position += Vector3.One;
+                basicComponent.X += Vector3.One.X;
+                basicComponent.Y += Vector3.One.Y;
+                basicComponent.Z += Vector3.One.Z;
                 basicComponent.Something += 10;
 
                 ref var basicComponent2 = ref entity.GetComponent<StructComponent2>(StructComponent2TypeId);

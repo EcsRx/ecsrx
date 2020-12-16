@@ -6,7 +6,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.Components
     [StructLayout(LayoutKind.Sequential)]
     public struct StructComponent2 : IComponent
     {
-        public bool IsTrue { get; set; }
-        public int Value { get; set; }
+        public bool IsTrue;
+        public int Value;
     }
 }

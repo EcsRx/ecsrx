@@ -38,7 +38,9 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
                 var basicComponent = Components1[component1Allocation];
                 Components1[component1Allocation] = new StructComponent
                 {
-                    Position = basicComponent.Position + Vector3.One,
+                    X = basicComponent.X + Vector3.One.X,
+                    Y = basicComponent.Y + Vector3.One.Y,
+                    Z = basicComponent.Z + Vector3.One.Z,
                     Something = basicComponent.Something + 10
                 };
                 

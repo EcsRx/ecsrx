@@ -18,7 +18,7 @@ namespace EcsRx.Examples
             //new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
-            //new BatchedGroupExampleApplication().StartApplication();
+            new BatchedGroupExampleApplication().StartApplication();
             //new SetupSystemPriorityApplication().StartApplication();
 
             // Performance examples
@@ -37,8 +37,8 @@ namespace EcsRx.Examples
             //new Class3Application().StartApplication();
             //new Struct3Application().StartApplication();
             //new Class4Application().StartApplication();
-            new Struct4Application().StartApplication();            
-            //new Struct4BApplication().StartApplication();
+            //new Struct4Application().StartApplication();            
+            new Struct4BApplication().StartApplication();
 
         }
     }

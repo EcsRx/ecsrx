@@ -40,7 +40,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
                     ref var basic2 = ref *batch.Component2;
                     basic.Position += Vector3.One;
                     basic.Something += 10;
-                    basic2.IsTrue = true;
+                    basic2.IsTrue = 1;
                     basic2.Value += 10;
                 }
             });

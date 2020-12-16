@@ -20,6 +20,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public void Dispose()
         {
+            if (Handles == null) { return; }
             foreach (var handle in Handles)
             {
                 if(handle.IsAllocated)
@@ -45,6 +46,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public void Dispose()
         {
+            if (Handles == null) { return; }
             foreach (var handle in Handles)
             {
                 if(handle.IsAllocated)
@@ -71,6 +73,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public void Dispose()
         {
+            if (Handles == null) { return; }
             foreach (var handle in Handles)
             {
                 if(handle.IsAllocated)
@@ -98,6 +101,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public void Dispose()
         {
+            if (Handles == null) { return; }
             foreach (var handle in Handles)
             {
                 if(handle.IsAllocated)
@@ -126,6 +130,7 @@ namespace EcsRx.Plugins.Batching.Batches
 
         public void Dispose()
         {
+            if (Handles == null) { return; }
             foreach (var handle in Handles)
             {
                 if(handle.IsAllocated)

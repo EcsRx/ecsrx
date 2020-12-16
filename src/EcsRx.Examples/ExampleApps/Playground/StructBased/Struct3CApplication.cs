@@ -47,7 +47,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
                 Components2[component2Allocation] = new StructComponent2
                 {
                     Value = basicComponent2.Value + 10,
-                    IsTrue = true
+                    IsTrue = 1
                 };
             }
         }

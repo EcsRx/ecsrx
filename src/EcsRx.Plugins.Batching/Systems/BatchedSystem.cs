@@ -17,7 +17,7 @@ namespace EcsRx.Plugins.Batching.Systems
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2));
         
         private readonly IBatchBuilder<T1, T2> _batchBuilder;
-        protected Batch<T1, T2>[] _batches;
+        protected PinnedBatch<T1, T2> _batch;
         
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2);
 
@@ -29,23 +29,26 @@ namespace EcsRx.Plugins.Batching.Systems
         }
 
         protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup); }
+        {
+            _batch.Dispose();
+            _batch = _batchBuilder.Build(ObservableGroup);
+        }
         
         protected override void ProcessBatch()
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, _batches.Length, i =>
+                ThreadHandler.For(0, _batch.Batches.Length, i =>
                 {
-                    ref var batch = ref _batches[i];
+                    ref var batch = ref _batch.Batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2);
                 });
                 return;
             }
 
-            for (var i = 0; i < _batches.Length; i++)
+            for (var i = 0; i < _batch.Batches.Length; i++)
             {
-                ref var batch = ref _batches[i];
+                ref var batch = ref _batch.Batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2);
             }
         }
@@ -59,7 +62,7 @@ namespace EcsRx.Plugins.Batching.Systems
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3));
         
         private readonly IBatchBuilder<T1, T2, T3> _batchBuilder;
-        protected Batch<T1, T2, T3>[] _batches;
+        protected PinnedBatch<T1, T2, T3> _batch;
         
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3);
 
@@ -71,23 +74,26 @@ namespace EcsRx.Plugins.Batching.Systems
         }
 
         protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup); }
+        {
+            _batch.Dispose();
+            _batch = _batchBuilder.Build(ObservableGroup);
+        }
         
         protected override void ProcessBatch()
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, _batches.Length, i =>
+                ThreadHandler.For(0, _batch.Batches.Length, i =>
                 {
-                    ref var batch = ref _batches[i];
+                    ref var batch = ref _batch.Batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, ref *batch.Component3);
                 });
                 return;
             }
 
-            for (var i = 0; i < _batches.Length; i++)
+            for (var i = 0; i < _batch.Batches.Length; i++)
             {
-                ref var batch = ref _batches[i];
+                ref var batch = ref _batch.Batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, ref *batch.Component3);
             }
         }
@@ -102,7 +108,7 @@ namespace EcsRx.Plugins.Batching.Systems
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
         
         private readonly IBatchBuilder<T1, T2, T3, T4> _batchBuilder;
-        protected Batch<T1, T2, T3, T4>[] _batches;
+        protected PinnedBatch<T1, T2, T3, T4> _batch;
         
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4);
 
@@ -114,24 +120,27 @@ namespace EcsRx.Plugins.Batching.Systems
         }
 
         protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup); }
+        {
+            _batch.Dispose();
+            _batch = _batchBuilder.Build(ObservableGroup);
+        }
         
         protected override void ProcessBatch()
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, _batches.Length, i =>
+                ThreadHandler.For(0, _batch.Batches.Length, i =>
                 {
-                    ref var batch = ref _batches[i];
+                    ref var batch = ref _batch.Batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
                         ref *batch.Component3, ref *batch.Component4);
                 });
                 return;
             }
 
-            for (var i = 0; i < _batches.Length; i++)
+            for (var i = 0; i < _batch.Batches.Length; i++)
             {
-                ref var batch = ref _batches[i];
+                ref var batch = ref _batch.Batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
                     ref *batch.Component3, ref *batch.Component4);
             }
@@ -148,7 +157,7 @@ namespace EcsRx.Plugins.Batching.Systems
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
         
         private readonly IBatchBuilder<T1, T2, T3, T4, T5> _batchBuilder;
-        protected Batch<T1, T2, T3, T4, T5>[] _batches;
+        protected PinnedBatch<T1, T2, T3, T4, T5> _batch;
         
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5);
 
@@ -160,24 +169,27 @@ namespace EcsRx.Plugins.Batching.Systems
         }
 
         protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup); }
+        {
+            _batch.Dispose();
+            _batch = _batchBuilder.Build(ObservableGroup);
+        }
         
         protected override void ProcessBatch()
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, _batches.Length, i =>
+                ThreadHandler.For(0, _batch.Batches.Length, i =>
                 {
-                    ref var batch = ref _batches[i];
+                    ref var batch = ref _batch.Batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
                         ref *batch.Component3, ref *batch.Component4, ref *batch.Component5);
                 });
                 return;
             }
 
-            for (var i = 0; i < _batches.Length; i++)
+            for (var i = 0; i < _batch.Batches.Length; i++)
             {
-                ref var batch = ref _batches[i];
+                ref var batch = ref _batch.Batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
                     ref *batch.Component3, ref *batch.Component4, ref *batch.Component5);
             }
@@ -195,7 +207,7 @@ namespace EcsRx.Plugins.Batching.Systems
         public override IGroup Group { get; } = new Group(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
         
         private readonly IBatchBuilder<T1, T2, T3, T4, T5, T6> _batchBuilder;
-        protected Batch<T1, T2, T3, T4, T5, T6>[] _batches;
+        protected PinnedBatch<T1, T2, T3, T4, T5, T6> _batch;
         
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6);
 
@@ -207,15 +219,18 @@ namespace EcsRx.Plugins.Batching.Systems
         }
 
         protected override void RebuildBatch()
-        { _batches = _batchBuilder.Build(ObservableGroup); }
+        {
+            _batch.Dispose();
+            _batch = _batchBuilder.Build(ObservableGroup);
+        }
         
         protected override void ProcessBatch()
         {
             if (ShouldParallelize)
             {
-                ThreadHandler.For(0, _batches.Length, i =>
+                ThreadHandler.For(0, _batch.Batches.Length, i =>
                 {
-                    ref var batch = ref _batches[i];
+                    ref var batch = ref _batch.Batches[i];
                     Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
                         ref *batch.Component3, ref *batch.Component4, ref *batch.Component5,
                         ref *batch.Component6);
@@ -223,9 +238,9 @@ namespace EcsRx.Plugins.Batching.Systems
                 return;
             }
 
-            for (var i = 0; i < _batches.Length; i++)
+            for (var i = 0; i < _batch.Batches.Length; i++)
             {
-                ref var batch = ref _batches[i];
+                ref var batch = ref _batch.Batches[i];
                 Process(batch.EntityId, ref *batch.Component1, ref *batch.Component2, 
                     ref *batch.Component3, ref *batch.Component4, ref *batch.Component5,
                     ref *batch.Component6);

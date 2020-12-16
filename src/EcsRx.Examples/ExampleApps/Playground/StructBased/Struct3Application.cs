@@ -40,7 +40,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
                 
                 ref var basicComponent2 = ref Components2[entity.ComponentAllocations[StructComponent2TypeId]];
                 basicComponent2.Value += 10;
-                basicComponent2.IsTrue = true;
+                basicComponent2.IsTrue = 1;
             }
         }
     }

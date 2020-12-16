@@ -52,7 +52,7 @@ namespace EcsRx.Plugins.Batching.Accessors
         where T1 : unmanaged, IComponent
         where T2 : unmanaged, IComponent
     {
-        public Batch<T1, T2>[] Batch { get; private set; }
+        public PinnedBatch<T1, T2> Batch { get; private set; }
 
         public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
@@ -82,7 +82,7 @@ namespace EcsRx.Plugins.Batching.Accessors
         where T2 : unmanaged, IComponent
         where T3 : unmanaged, IComponent
     {
-        public Batch<T1, T2, T3>[] Batch { get; private set; }
+        public PinnedBatch<T1, T2, T3> Batch { get; private set; }
 
         public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
@@ -116,7 +116,7 @@ namespace EcsRx.Plugins.Batching.Accessors
         where T3 : unmanaged, IComponent
         where T4 : unmanaged, IComponent
     {
-        public Batch<T1, T2, T3, T4>[] Batch { get; private set; }
+        public PinnedBatch<T1, T2, T3, T4> Batch { get; private set; }
 
         public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
@@ -154,7 +154,7 @@ namespace EcsRx.Plugins.Batching.Accessors
         where T4 : unmanaged, IComponent
         where T5 : unmanaged, IComponent
     {
-        public Batch<T1, T2, T3, T4, T5>[] Batch { get; private set; }
+        public PinnedBatch<T1, T2, T3, T4, T5> Batch { get; private set; }
 
         public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)
@@ -196,7 +196,7 @@ namespace EcsRx.Plugins.Batching.Accessors
         where T5 : unmanaged, IComponent
         where T6 : unmanaged, IComponent
     {
-        public Batch<T1, T2, T3, T4, T5, T6>[] Batch { get; private set; }
+        public PinnedBatch<T1, T2, T3, T4, T5, T6> Batch { get; private set; }
 
         public BatchAccessor(IObservableGroup observableGroup, IComponentDatabase componentDatabase, IBatchBuilder batchBuilder, IComponentTypeLookup componentTypeLookup) 
             : base(observableGroup, componentDatabase, batchBuilder, componentTypeLookup)

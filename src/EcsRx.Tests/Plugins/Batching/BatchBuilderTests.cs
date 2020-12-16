@@ -41,8 +41,9 @@ namespace EcsRx.Tests.Plugins.Batching
             
             var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(mockComponentDatabase, mockTypeLookup);
 
-            var batches = batchBuilder.Build(fakeEntities);
-                
+            var batch = batchBuilder.Build(fakeEntities);
+            var batches = batch.Batches;
+            
             Assert.Equal(fakeEntities.Length, batches.Length);
             Assert.Equal(fakeEntities[0].Id, batches[0].EntityId);
             Assert.Equal(fakeOne1.Data, (*batches[0].Component1).Data);

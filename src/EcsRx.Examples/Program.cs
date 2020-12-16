@@ -42,7 +42,7 @@ namespace EcsRx.Examples
             //new Struct3Application().StartApplication();
             //new Class4Application().StartApplication();
             //new Struct4Application().StartApplication();            
-            //new Struct4BApplication().StartApplication();
+            new Struct4BApplication().StartApplication();
 
         }
     }

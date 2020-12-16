@@ -7,7 +7,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.Components
     [StructLayout(LayoutKind.Sequential)]
     public struct StructComponent : IComponent
     {
-        public float X, Y, Z;
-        public float Something;
+        public Vector3 Position { get; set; }
+        public float Something { get; set; }
     }
 }

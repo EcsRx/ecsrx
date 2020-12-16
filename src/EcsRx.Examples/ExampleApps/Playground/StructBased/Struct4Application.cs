@@ -36,11 +36,9 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
                     ref var batch = ref _componentBatch.Batches[i];
                     ref var basic = ref *batch.Component1;
                     ref var basic2 = ref *batch.Component2;
-                    basic.X += Vector3.One.X;
-                    basic.Y += Vector3.One.Y;
-                    basic.Z += Vector3.One.Z;
+                    basic.Position += Vector3.One;
                     basic.Something += 10;
-                    basic2.IsTrue = true;
+                    basic2.IsTrue = 1;
                     basic2.Value += 10;
                 }
         }

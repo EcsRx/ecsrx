@@ -28,14 +28,12 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
             {
                 var entity = _collection[i];
                 ref var basicComponent = ref entity.GetComponent<StructComponent>(StructComponent1TypeId);
-                basicComponent.X += Vector3.One.X;
-                basicComponent.Y += Vector3.One.Y;
-                basicComponent.Z += Vector3.One.Z;
+                basicComponent.Position += Vector3.One;
                 basicComponent.Something += 10;
 
                 ref var basicComponent2 = ref entity.GetComponent<StructComponent2>(StructComponent2TypeId);
                 basicComponent2.Value += 10;
-                basicComponent2.IsTrue = true;
+                basicComponent2.IsTrue = 1;
             }
         }
     }

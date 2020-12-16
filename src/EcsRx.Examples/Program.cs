@@ -18,7 +18,7 @@ namespace EcsRx.Examples
             //new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
-            //new BatchedGroupExampleApplication().StartApplication();
+            new BatchedGroupExampleApplication().StartApplication();
             //new SetupSystemPriorityApplication().StartApplication();
 
             // Performance examples

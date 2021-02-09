@@ -58,9 +58,12 @@ namespace EcsRx.Collections.Entity
         public void UnsubscribeFromEntity(int entityId)
         { EntitySubscriptions.RemoveAndDispose(entityId); }
         
-        public IEntity CreateEntity(IBlueprint blueprint = null)
+        public IEntity CreateEntity(IBlueprint blueprint = null, int? id = null)
         {
-            var entity = EntityFactory.Create(null);
+            if (id.HasValue && EntityLookup.Contains(id.Value))
+            { throw new InvalidOperationException("id already exists"); }
+
+            var entity = EntityFactory.Create(id);
 
             EntityLookup.Add(entity);
             _onEntityAdded.OnNext(new CollectionEntityEvent(entity));

@@ -20,7 +20,7 @@ EcsRx is a reactive take on the common ECS pattern with a well separated design 
 - Built in support for pooling (easy to add your own implementation or wrap 3rd party pooling tools)
 - Built in support for plugins (wrap up your own components/systems/events and share them with others)
 
-The core framework is meant to be used primarily by .net applications/games, there is a unity specific version [here](https://github.com/ecsrx/ecsrx.unity) which is currently being ported over to use this version.
+The core framework is meant to be used primarily by .net applications/games, there is a unity specific version [here](https://github.com/ecsrx/ecsrx.unity) which builds on top of this core version, as well as a monogame game version [here](https://github.com/ecsrx/ecsrx.monogame).
 
 ## Installation
 

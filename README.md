@@ -1,6 +1,6 @@
-# EcsRx
+# EcsRx / SystemsRx
 
-EcsRx is a reactive take on the common ECS pattern with a well separated design using rx and adhering to IoC and other sensible design patterns.
+EcsRx is a reactive take on the common ECS pattern with a well separated design using rx and adhering to IoC and other sensible design patterns, with a more cut down systems only version called SystemsRx if you dont need Entities and Components.
 
 [![Build Status][build-status-image]][build-status-url]
 [![Code Quality Status][codacy-image]][codacy-url]
@@ -91,15 +91,30 @@ If you want to run the examples then just clone it and open examples project in 
 
 There are also a suite of tests which are being expanded as the project grows, it was written with testability in mind.
 
-## Note on infrastructure/view namespaces and going forward
+## Architecture / Infrastructure
 
-This library started out as a unity specific project but has moved to a generic .net library, due to this the movement of functionality from the unity layer down into the core has been incremental. 
+### MicroRx
 
-We are now at a point where the underlying infrastructure module (mainly for `EcsRxApplication` and dependency injection notions) has been added, and the generic view module has been moved here. While both of these libraries offer a stepping stone to get up and running quicker they unfortunately are not as easy as just including and off you go.
+This is a bare bones rx implementation, it literally just contains some basic `Subject` and other related rx classes, this is so that we do not have a dependencies on rx.net or unirx in the core.
 
-The examples folder shows examples on how to create your own application implementations, but hopefully once things have been ironed out in the whole Rx world this area will improve more as we start to add another layer which will let you just drop in and go (like the unity version).
+### SystemsRx
 
-If you want to know more about this drop into the discord chat and we can discuss more.
+SystemsRx is a really just the Systems aspect of the ECS paradigm without any dependencies on Entites or Components. It allows you create your own conventions for systems as well as make use of the infrastructure layer which provides a DI abstraction layer, Plugin support and some best practice classes.
+
+The 2 main libraries here are **SystemsRx** and **SystemsRx.Infrastructure**, these only have a dependency on **MicroRx**
+
+### EcsRx
+
+This is layered on top of **SystemsRx** and adds the ECS paradigm to the framework as well as adding a couple of systems specifically for entity handling. This also contains an **EcsRx.Infrastructure** layer which builds off the **SystemsRx.Infrastructure** layer to provide additional ECS related infrastructure.
+
+### EcsRx.Plugins.*
+
+These are plugins that can be used with **EcsRx** to add new functionality to the library, from entity persistance/rehydration to schedulable systems, these can optionally be added to your projects.
+
+### History
+The library was originally deveoped for unity (way before they had their own ECS framework) and since then has moved to be a regular .net library that can run anywhere (Even in Blazor WASM).
+
+
 
 ## Docs
 

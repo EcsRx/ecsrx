@@ -1,4 +1,4 @@
-﻿using EcsRx.Factories;
+﻿using SystemsRx.Factories;
 
 namespace EcsRx.Groups.Observable
 {

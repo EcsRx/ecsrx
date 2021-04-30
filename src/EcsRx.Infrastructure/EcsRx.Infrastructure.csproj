@@ -11,5 +11,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
+    <ProjectReference Include="..\SystemsRx.Infrastructure\SystemsRx.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

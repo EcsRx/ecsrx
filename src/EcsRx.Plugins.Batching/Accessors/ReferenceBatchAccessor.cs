@@ -1,4 +1,5 @@
 using System;
+using SystemsRx.Extensions;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;

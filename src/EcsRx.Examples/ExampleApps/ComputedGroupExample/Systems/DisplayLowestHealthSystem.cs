@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using SystemsRx.Extensions;
+using SystemsRx.Systems;
+using SystemsRx.Systems.Conventional;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Extensions;
 using EcsRx.Extensions;
@@ -13,8 +16,6 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
 {
     public class DisplayLowestHealthSystem : IManualSystem
     {
-        public IGroup Group { get; } = new EmptyGroup();
-        
         private readonly IList<IDisposable> _subscriptions = new List<IDisposable>();
 
         private readonly ILowestHealthComputedGroup _lowestHealthGroup;
@@ -24,10 +25,10 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
             _lowestHealthGroup = lowestHealthGroup;
         }
 
-        public void StartSystem(IObservableGroup observableGroup)
+        public void StartSystem()
         { Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(UpdateListings).AddTo(_subscriptions); }
         
-        public void StopSystem(IObservableGroup observableGroup)
+        public void StopSystem()
         { _subscriptions.DisposeAll(); }
 
         public void UpdateListings(long _)

@@ -8,19 +8,12 @@ namespace EcsRx.Extensions
 {
     public static class ISystemExtensions
     {
-        public static IGroup GroupFor(this ISystem system, params Type[] requiredTypes)
+        public static IGroup GroupFor(this IGroupSystem groupSystem, params Type[] requiredTypes)
         { return new Group(requiredTypes); }
         
-        public static bool ShouldMutliThread(this ISystem system)
+        public static int[] GetGroupAffinities(this IGroupSystem groupSystem)
         {
-            return system.GetType()
-                       .GetCustomAttributes(typeof(MultiThreadAttribute), true)
-                       .FirstOrDefault() != null;
-        }
-        
-        public static int[] GetGroupAffinities(this ISystem system)
-        {
-            var affinity = system.GetType()
+            var affinity = groupSystem.GetType()
                 .GetCustomAttributes(typeof(CollectionAffinityAttribute), true)
                 .FirstOrDefault();
 

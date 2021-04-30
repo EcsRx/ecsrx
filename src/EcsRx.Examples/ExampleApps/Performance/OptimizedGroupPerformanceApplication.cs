@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using SystemsRx.Extensions;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Components;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {

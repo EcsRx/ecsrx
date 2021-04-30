@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using EcsRx.Components;
-using EcsRx.Components.Database;
-using EcsRx.Components.Lookups;
-using EcsRx.Entities;
+using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Systems;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
-using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
-using EcsRx.Examples.ExampleApps.Performance.Helper;
-using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Examples.ExampleApps.Performance.Systems;
 using EcsRx.Extensions;
-using EcsRx.Groups;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
 using EcsRx.Systems;
 
 namespace EcsRx.Examples.ExampleApps.Performance
@@ -26,7 +16,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         protected override void BindSystems()
         {
-            Container.Bind<ISystem, ExampleBatchedGroupSystem>();
+            Container.Bind<ISystem, ExampleBatchedSystem>();
         }
 
         protected override void ApplicationStarted()

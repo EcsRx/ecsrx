@@ -1,4 +1,7 @@
-﻿using EcsRx.Entities;
+﻿using SystemsRx.Events;
+using SystemsRx.Systems;
+using SystemsRx.Systems.Conventional;
+using EcsRx.Entities;
 using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
@@ -9,7 +12,7 @@ using EcsRx.Systems;
 
 namespace EcsRx.Plugins.Views.Systems
 {
-    public abstract class PooledViewResolverSystem : IViewResolverSystem, IManualSystem
+    public abstract class PooledViewResolverSystem : IViewResolverSystem, IManualSystem, IGroupSystem
     {
         public IEventSystem EventSystem { get; }
 
@@ -54,13 +57,13 @@ namespace EcsRx.Plugins.Views.Systems
             RecycleView(entity, viewComponent);
         }
 
-        public void StartSystem(IObservableGroup observableGroup)
+        public void StartSystem()
         {
             ViewPool = CreateViewPool();
             OnPoolStarting();
         }
 
-        public void StopSystem(IObservableGroup observableGroup)
+        public void StopSystem()
         { ViewPool.EmptyPool(); }
     }
 }

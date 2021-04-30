@@ -1,12 +1,21 @@
 # Breaking Changes
 
+## 3.12.0 -> 4.0.0
+
+- `IEcsRxPlugin` has been renamed to `ISystemsRxPlugin` and lives in `SystemsRx.Infrastructure`
+- `EventReactionSystem<T>` no longer exists, the same convention can be mapped to `IReactToEventSystem` from `SystemsRx`
+- `IBasicSystem` has changed and has no `IEntity` dependencies and lives in `SystemsRx`, the same convention can be mapped to `IBasicEntitySystem` in `EcsRx`
+- `IManualSystem` no longer has a group or gets passed `IObservableGroupManager`, you can inject it yourself if you need it
+- `EcsRx` now depends upon `SystemsRx`, all the classes in `SystemsRx` were originally in `EcsRx` but now can be used without the `ECS` related paradigm dependencies
+- `ISystem` no longer contains an `IGroup` and now lives in `SystemsRx` there is now an `IGroupSystem` which represents a system with a `IGroup`
+
 ## 3.10.0 -> 3.11.0
 
-- IEntityCollectionManager no longer exists, it is now just `IObservableGroupManager`
+- `IEntityCollectionManager` no longer exists, it is now just `IObservableGroupManager`
 
 ## 3.9.0 -> 3.10.0
 
-- IEntityCollectionManager no longer contains EntityCollections its now within `IEntityDatabase`, which is within there
+- `IEntityCollectionManager` no longer contains EntityCollections its now within `IEntityDatabase`, which is within there
 
 ## 3.8.0 -> 3.9.0
 

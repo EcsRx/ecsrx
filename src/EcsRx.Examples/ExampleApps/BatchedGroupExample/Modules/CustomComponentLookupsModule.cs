@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Components.Lookups;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Lookups;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Modules
 {

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using EcsRx.Extensions;
+using SystemsRx.Extensions;
+using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Systems;
 using EcsRx.Infrastructure;
-using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Plugins.Views.Systems;
-using EcsRx.Systems;
 
 namespace EcsRx.Plugins.Views.Extensions
 {

@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using EcsRx.Executor.Handlers;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
-using EcsRx.Infrastructure.Plugins;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Infrastructure.Plugins;
+using SystemsRx.Systems;
 using EcsRx.Plugins.ReactiveSystems.Handlers;
-using EcsRx.Systems;
 
 namespace EcsRx.Plugins.ReactiveSystems
 {
-    public class ReactiveSystemsPlugin : IEcsRxPlugin
+    public class ReactiveSystemsPlugin : ISystemsRxPlugin
     {
         public string Name => "Reactive Systems";
         public Version Version { get; } = new Version("1.0.0");

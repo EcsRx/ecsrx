@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
-using EcsRx.Infrastructure.Plugins;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Infrastructure.Plugins;
+using SystemsRx.Systems;
 using EcsRx.Plugins.Batching.Accessors;
 using EcsRx.Plugins.Batching.Factories;
-using EcsRx.Systems;
 
 namespace EcsRx.Plugins.Batching
 {
-    public class BatchPlugin : IEcsRxPlugin
+    public class BatchPlugin : ISystemsRxPlugin
     {
         public string Name => "Batching";
         public Version Version { get; } = new Version("1.0.0");

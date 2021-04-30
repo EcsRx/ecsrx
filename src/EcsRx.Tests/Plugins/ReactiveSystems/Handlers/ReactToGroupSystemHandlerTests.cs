@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SystemsRx.Threading;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Groups;
@@ -8,7 +9,6 @@ using EcsRx.MicroRx.Subjects;
 using EcsRx.Plugins.ReactiveSystems.Handlers;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
-using EcsRx.Threading;
 using NSubstitute;
 using Xunit;
 
@@ -26,7 +26,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var fakeMatchingSystem = Substitute.For<IReactToGroupSystem>();
             var fakeMatchingSystem2 = Substitute.For<IReactToGroupExSystem>();
             var fakeNonMatchingSystem1 = Substitute.For<ISetupSystem>();
-            var fakeNonMatchingSystem2 = Substitute.For<ISystem>();
+            var fakeNonMatchingSystem2 = Substitute.For<IGroupSystem>();
             
             Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem));
             Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem2));

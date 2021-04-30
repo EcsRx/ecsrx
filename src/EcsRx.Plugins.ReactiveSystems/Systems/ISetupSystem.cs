@@ -16,7 +16,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Systems
     /// if there is a predicate that doesn't match then it wont be run until it
     /// does match.
     /// </remarks>
-    public interface ISetupSystem : ISystem
+    public interface ISetupSystem : IGroupSystem
     {
         /// <summary>
         /// The logic run when the entity needs setting up

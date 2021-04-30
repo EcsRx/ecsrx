@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Plugins;
-using EcsRx.Systems;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Plugins;
+using SystemsRx.Systems;
 
 namespace EcsRx.Plugins.Computeds
 {
-    public class ComputedsPlugin : IEcsRxPlugin
+    public class ComputedsPlugin : ISystemsRxPlugin
     {
         public string Name => "Computeds";
         public Version Version { get; } = new Version("1.0.0");

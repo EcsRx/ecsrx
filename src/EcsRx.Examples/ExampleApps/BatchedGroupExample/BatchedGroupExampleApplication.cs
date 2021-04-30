@@ -1,8 +1,8 @@
 ﻿using System;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Blueprints;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Modules;
-using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.BatchedGroupExample
 {

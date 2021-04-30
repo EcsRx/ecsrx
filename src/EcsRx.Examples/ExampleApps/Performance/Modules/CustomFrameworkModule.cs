@@ -1,18 +1,18 @@
 using System.Linq;
+using SystemsRx.Events;
+using SystemsRx.Executor;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Executor.Handlers.Conventional;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
-using EcsRx.Executor;
-using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Events;
-using EcsRx.Infrastructure.Extensions;
 using EcsRx.MicroRx.Events;
 using EcsRx.Pools;
 
@@ -29,7 +29,7 @@ namespace EcsRx.Examples.ExampleApps.Performance.Modules
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IEntityDatabase, EntityDatabase>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
-            container.Bind<ObservableGroupManager, ObservableGroupManager>();
+            container.Bind<IObservableGroupManager, ObservableGroupManager>();
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
             

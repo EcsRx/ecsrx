@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SystemsRx.Extensions;
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Events.Collections;

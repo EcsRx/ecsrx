@@ -1,4 +1,9 @@
 using System;
+using SystemsRx.Extensions;
+using SystemsRx.Systems;
+using SystemsRx.Systems.Conventional;
+using SystemsRx.Threading;
+using EcsRx.Collections;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
@@ -8,7 +13,6 @@ using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.Systems;
-using EcsRx.Threading;
 
 namespace EcsRx.Plugins.Batching.Systems
 {
@@ -16,6 +20,7 @@ namespace EcsRx.Plugins.Batching.Systems
     {
         public abstract IGroup Group { get; }
         
+        public IObservableGroupManager ObservableGroupManager { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         public IThreadHandler ThreadHandler { get; }
@@ -24,11 +29,12 @@ namespace EcsRx.Plugins.Batching.Systems
         protected bool ShouldParallelize { get; private set; }
         protected IDisposable Subscriptions;
 
-        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler)
+        protected ManualBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager)
         {
             ComponentDatabase = componentDatabase;
             ComponentTypeLookup = componentTypeLookup;
             ThreadHandler = threadHandler;
+            ObservableGroupManager = observableGroupManager;
         }
 
         protected abstract void RebuildBatch();
@@ -54,9 +60,9 @@ namespace EcsRx.Plugins.Batching.Systems
         /// </summary>
         protected abstract void ProcessBatch();
 
-        public virtual void StartSystem(IObservableGroup observableGroup)
+        public virtual void StartSystem()
         {
-            ObservableGroup = observableGroup;
+            ObservableGroup = ObservableGroupManager.GetObservableGroup(Group);
             ShouldParallelize = this.ShouldMutliThread();
             
             var subscriptions = new CompositeDisposable();
@@ -91,7 +97,7 @@ namespace EcsRx.Plugins.Batching.Systems
             AfterProcessing();
         }
 
-        public virtual void StopSystem(IObservableGroup observableGroup)
+        public virtual void StopSystem()
         { Subscriptions.Dispose(); }
     }
 }

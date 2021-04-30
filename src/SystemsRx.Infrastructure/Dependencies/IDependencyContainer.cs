@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace SystemsRx.Infrastucture.Dependencies
+namespace SystemsRx.Infrastructure.Dependencies
 {
     /// <summary>
     /// This represents a cross platform way of managing dependencies.

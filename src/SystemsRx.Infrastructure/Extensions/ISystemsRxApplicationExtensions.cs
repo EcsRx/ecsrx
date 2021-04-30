@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using SystemsRx.Extensions;
-using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Systems;
 
-namespace SystemsRx.Infrastucture.Extensions
+namespace SystemsRx.Infrastructure.Extensions
 {
     public static class ISystemsRxApplicationExtensions
     {

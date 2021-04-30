@@ -1,6 +1,6 @@
 using SystemsRx.Executor.Handlers;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;

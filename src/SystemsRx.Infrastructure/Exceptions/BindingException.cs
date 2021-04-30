@@ -1,6 +1,6 @@
 using System;
 
-namespace SystemsRx.Infrastucture.Exceptions
+namespace SystemsRx.Infrastructure.Exceptions
 {
     public class BindingException : Exception
     {

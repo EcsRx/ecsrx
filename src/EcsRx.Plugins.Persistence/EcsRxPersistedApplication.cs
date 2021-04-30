@@ -1,6 +1,6 @@
 using System.IO;
 using System.Threading.Tasks;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Collections.Database;
 using EcsRx.Infrastructure;
 using EcsRx.Plugins.Persistence.Modules;

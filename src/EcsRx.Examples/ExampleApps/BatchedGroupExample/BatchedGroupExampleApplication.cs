@@ -1,5 +1,5 @@
 ﻿using System;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Blueprints;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Modules;

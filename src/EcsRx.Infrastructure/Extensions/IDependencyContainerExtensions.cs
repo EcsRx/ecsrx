@@ -1,6 +1,6 @@
 using System;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Collections;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SystemsRx.Infrastucture.Dependencies
+namespace SystemsRx.Infrastructure.Dependencies
 {
     public class BindingConfiguration
     {

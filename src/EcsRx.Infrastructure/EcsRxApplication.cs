@@ -1,5 +1,5 @@
-using SystemsRx.Infrastucture;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;
 using EcsRx.Infrastructure.Modules;

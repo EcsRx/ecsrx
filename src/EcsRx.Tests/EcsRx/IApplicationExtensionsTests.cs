@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using SystemsRx.Systems;
 using EcsRx.Infrastructure;
 using EcsRx.Plugins.ReactiveSystems.Extensions;

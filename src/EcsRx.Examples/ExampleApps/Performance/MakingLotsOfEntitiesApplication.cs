@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Extensions;
 using SystemsRx.Systems;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;

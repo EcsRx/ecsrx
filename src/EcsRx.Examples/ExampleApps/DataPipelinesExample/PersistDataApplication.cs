@@ -1,5 +1,5 @@
 ﻿using System;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Components;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Events;

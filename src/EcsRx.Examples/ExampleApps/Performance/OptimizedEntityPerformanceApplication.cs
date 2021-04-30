@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SystemsRx.Extensions;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;

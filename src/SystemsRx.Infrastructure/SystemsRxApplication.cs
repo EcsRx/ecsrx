@@ -3,13 +3,13 @@ using System.Linq;
 using SystemsRx.Events;
 using SystemsRx.Executor;
 using SystemsRx.Extensions;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
-using SystemsRx.Infrastucture.Modules;
-using SystemsRx.Infrastucture.Plugins;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Infrastructure.Modules;
+using SystemsRx.Infrastructure.Plugins;
 using SystemsRx.Systems;
 
-namespace SystemsRx.Infrastucture
+namespace SystemsRx.Infrastructure
 {
     public abstract class SystemsRxApplication : ISystemsRxApplication
     {

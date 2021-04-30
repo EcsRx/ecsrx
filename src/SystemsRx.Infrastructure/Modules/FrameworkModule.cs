@@ -2,13 +2,13 @@
 using SystemsRx.Executor;
 using SystemsRx.Executor.Handlers;
 using SystemsRx.Executor.Handlers.Conventional;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using SystemsRx.Scheduling;
 using SystemsRx.Threading;
 using EcsRx.MicroRx.Events;
 
-namespace SystemsRx.Infrastucture.Modules
+namespace SystemsRx.Infrastructure.Modules
 {
     public class FrameworkModule : IDependencyModule
     {

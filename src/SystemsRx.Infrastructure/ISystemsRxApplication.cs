@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using SystemsRx.Events;
 using SystemsRx.Executor;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Plugins;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Plugins;
 
-namespace SystemsRx.Infrastucture
+namespace SystemsRx.Infrastructure
 {
     /// <summary>
     /// Acts as an entry point and bootstrapper for the framework

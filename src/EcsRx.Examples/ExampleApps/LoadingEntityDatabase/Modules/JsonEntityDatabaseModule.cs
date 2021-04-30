@@ -1,5 +1,5 @@
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Modules;
 using EcsRx.Plugins.Persistence.Pipelines;
 using LazyData.Json;

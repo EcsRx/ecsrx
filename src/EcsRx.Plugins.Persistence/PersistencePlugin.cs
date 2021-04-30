@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
-using SystemsRx.Infrastucture.Plugins;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Infrastructure.Plugins;
 using SystemsRx.Systems;
 using EcsRx.Plugins.Persistence.Modules;
 

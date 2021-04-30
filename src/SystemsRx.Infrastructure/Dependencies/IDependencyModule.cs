@@ -1,4 +1,4 @@
-﻿namespace SystemsRx.Infrastucture.Dependencies
+﻿namespace SystemsRx.Infrastructure.Dependencies
 {
     /// <summary>
     /// This represents a cross platform DI module which contains

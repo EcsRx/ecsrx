@@ -1,6 +1,6 @@
 using SystemsRx.Extensions;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using LazyData.Binary;
 using LazyData.Binary.Handlers;
 using LazyData.Mappings.Mappers;

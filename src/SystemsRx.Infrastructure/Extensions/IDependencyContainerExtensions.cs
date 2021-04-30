@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastructure.Dependencies;
 
-namespace SystemsRx.Infrastucture.Extensions
+namespace SystemsRx.Infrastructure.Extensions
 {
     public static class IDependencyContainerExtensions
     {

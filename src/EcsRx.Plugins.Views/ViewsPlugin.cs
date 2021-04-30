@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Plugins;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Plugins;
 using SystemsRx.Systems;
 
 namespace EcsRx.Plugins.Views

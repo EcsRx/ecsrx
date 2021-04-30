@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Components.Lookups;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Lookups;

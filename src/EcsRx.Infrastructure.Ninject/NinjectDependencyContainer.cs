@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Linq;
 using SystemsRx.Extensions;
-using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastructure.Dependencies;
 using Ninject;
 using Ninject.Syntax;
 

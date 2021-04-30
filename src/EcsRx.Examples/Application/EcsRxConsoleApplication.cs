@@ -1,4 +1,4 @@
-﻿using SystemsRx.Infrastucture.Dependencies;
+﻿using SystemsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure;
 using EcsRx.Infrastructure.Ninject;
 using EcsRx.Plugins.Batching;

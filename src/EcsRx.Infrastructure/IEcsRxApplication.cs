@@ -1,4 +1,4 @@
-using SystemsRx.Infrastucture;
+using SystemsRx.Infrastructure;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;
 

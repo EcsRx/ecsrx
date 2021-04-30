@@ -1,5 +1,5 @@
-using SystemsRx.Infrastucture.Dependencies;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Builders;
 using EcsRx.Plugins.Persistence.Pipelines;
 using EcsRx.Plugins.Persistence.Transformers;

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using SystemsRx.Extensions;
-using SystemsRx.Infrastucture.Exceptions;
+using SystemsRx.Infrastructure.Exceptions;
 
-namespace SystemsRx.Infrastucture.Dependencies
+namespace SystemsRx.Infrastructure.Dependencies
 {
     public class BindingBuilder
     {

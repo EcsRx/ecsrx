@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Collections.Entity;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;

@@ -2,6 +2,7 @@ using System;
 using System.Numerics;
 using System.Reactive.Linq;
 using SystemsRx.Threading;
+using EcsRx.Collections;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Components;
@@ -12,7 +13,8 @@ namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Systems
 {
     public class BatchedMovementSystem : BatchedSystem<PositionComponent, MovementSpeedComponent>
     {
-        public BatchedMovementSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler)
+        public BatchedMovementSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) 
+            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, observableGroupManager)
         {}
 
         protected override IObservable<bool> ReactWhen()

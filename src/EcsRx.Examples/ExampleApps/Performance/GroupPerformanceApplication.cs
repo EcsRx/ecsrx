@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using SystemsRx.Extensions;
 using EcsRx.Components;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Helper;

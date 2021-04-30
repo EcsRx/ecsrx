@@ -1,6 +1,6 @@
+using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastucture.Extensions;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Pipelines;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
 using LazyData.Json;
 using LazyData.Json.Handlers;
 

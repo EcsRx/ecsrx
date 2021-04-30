@@ -2,7 +2,7 @@ using SystemsRx.Attributes;
 using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 
-namespace SystemsRx.Executor.Handlers
+namespace SystemsRx.Executor.Handlers.Conventional
 {
     [Priority(5)]
     public class ManualSystemHandler : IConventionalSystemHandler

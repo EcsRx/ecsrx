@@ -7,7 +7,7 @@ using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 using EcsRx.MicroRx.Extensions;
 
-namespace SystemsRx.Executor.Handlers
+namespace SystemsRx.Executor.Handlers.Conventional
 {
     [Priority(6)]
     public class BasicSystemHandler : IConventionalSystemHandler

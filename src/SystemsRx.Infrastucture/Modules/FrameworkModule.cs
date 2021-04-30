@@ -1,6 +1,7 @@
 ﻿using SystemsRx.Events;
 using SystemsRx.Executor;
 using SystemsRx.Executor.Handlers;
+using SystemsRx.Executor.Handlers.Conventional;
 using SystemsRx.Infrastucture.Dependencies;
 using SystemsRx.Infrastucture.Extensions;
 using SystemsRx.Scheduling;
@@ -18,6 +19,7 @@ namespace SystemsRx.Infrastucture.Modules
             container.Bind<IThreadHandler, DefaultThreadHandler>();
             container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
             container.Bind<IConventionalSystemHandler, BasicSystemHandler>();
+            container.Bind<IConventionalSystemHandler, ReactToEventSystemHandler>();
             container.Bind<ISystemExecutor, SystemExecutor>();
             container.Bind<IUpdateScheduler, DefaultUpdateScheduler>();
             container.Bind<ITimeTracker>(x => x.ToBoundType(typeof(IUpdateScheduler)));

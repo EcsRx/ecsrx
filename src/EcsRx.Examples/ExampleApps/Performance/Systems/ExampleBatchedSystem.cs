@@ -1,7 +1,7 @@
 using System;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using SystemsRx.Threading;
+using EcsRx.Collections;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
@@ -13,7 +13,9 @@ namespace EcsRx.Examples.ExampleApps.Performance.Systems
 {
     public class ExampleBatchedSystem : ReferenceBatchedSystem<SimpleReadComponent, SimpleWriteComponent>
     {
-        public ExampleBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler)
+        public ExampleBatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup, 
+            IReferenceBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager)
+            : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, observableGroupManager)
         {}
 
         protected override IObservable<bool> ReactWhen()

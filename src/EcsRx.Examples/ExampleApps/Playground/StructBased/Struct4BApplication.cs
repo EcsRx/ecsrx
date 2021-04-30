@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Threading.Tasks;
+using SystemsRx.Threading;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Playground.Components;
 using EcsRx.Plugins.Batching.Batches;
@@ -9,6 +10,7 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
     public class Struct4BApplication : BasicLoopApplication
     {
         private PinnedBatch<StructComponent, StructComponent2> _componentBatch;
+        private readonly IThreadHandler ThreadHandler = new DefaultThreadHandler();
         
         protected override void SetupEntities()
         {
@@ -31,9 +33,10 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
 
         protected override void RunProcess()
         {
-            Parallel.For(0, _componentBatch.Batches.Length, i =>
+            unsafe
             {
-                unsafe
+                var size = _componentBatch.Batches.Length;
+                ThreadHandler.For(0, size, i =>
                 {
                     ref var batch = ref _componentBatch.Batches[i];
                     ref var basic = ref *batch.Component1;
@@ -42,8 +45,8 @@ namespace EcsRx.Examples.ExampleApps.Playground.StructBased
                     basic.Something += 10;
                     basic2.IsTrue = 1;
                     basic2.Value += 10;
-                }
-            });
+                });
+            }
         }
     }
 }

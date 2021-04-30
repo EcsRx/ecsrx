@@ -17,10 +17,10 @@ namespace EcsRx.Examples
         static void Main(string[] args)
         {
             // Sample examples
-            //new HelloWorldExampleApplication().StartApplication();
+            new HelloWorldExampleApplication().StartApplication();
             //new ComputedGroupExampleApplication().StartApplication();
             //new HealthExampleApplication().StartApplication();
-            new PersistDataApplication().StartApplication();
+            //new PersistDataApplication().StartApplication();
             //new LoadingEntityDatabaseApplication().StartApplication();
             //new BatchedGroupExampleApplication().StartApplication();
             //new SetupSystemPriorityApplication().StartApplication();

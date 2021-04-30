@@ -1,7 +1,8 @@
+using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastucture.Extensions;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
 using EcsRx.Groups;
-using EcsRx.Infrastructure.Dependencies;
 using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Modules

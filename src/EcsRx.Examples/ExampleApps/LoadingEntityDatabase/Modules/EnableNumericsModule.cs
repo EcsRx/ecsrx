@@ -1,5 +1,5 @@
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
+using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastucture.Extensions;
 using LazyData.Binary.Handlers;
 using LazyData.Json.Handlers;
 using LazyData.Mappings.Types.Primitives.Checkers;

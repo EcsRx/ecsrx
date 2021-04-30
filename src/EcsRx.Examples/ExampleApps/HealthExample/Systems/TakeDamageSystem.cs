@@ -1,16 +1,11 @@
-﻿using SystemsRx.Events;
-using EcsRx.Events;
+﻿using SystemsRx.Systems.Conventional;
 using EcsRx.Examples.ExampleApps.HealthExample.Events;
-using EcsRx.Plugins.ReactiveSystems.Custom;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample.Systems
 {
-    public class TakeDamageSystem : EventReactionSystem<EntityDamagedEvent>
+    public class TakeDamageSystem : IReactToEventSystem<EntityDamagedEvent>
     {
-        public TakeDamageSystem(IEventSystem eventSystem) : base(eventSystem)
-        {}
-
-        public override void EventTriggered(EntityDamagedEvent eventData)
+        public void Process(EntityDamagedEvent eventData)
         { eventData.HealthComponent.Health.Value -= eventData.DamageApplied; }
     }
 }

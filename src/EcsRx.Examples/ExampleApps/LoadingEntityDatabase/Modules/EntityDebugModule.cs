@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using EcsRx.Infrastructure.Dependencies;
+using SystemsRx.Infrastucture.Dependencies;
 using EcsRx.Plugins.Persistence.Extensions;
 using EcsRx.Plugins.Persistence.Pipelines;
 using LazyData;

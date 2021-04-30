@@ -1,13 +1,12 @@
 using System;
-using SystemsRx.Executor.Handlers;
+using SystemsRx.Executor.Handlers.Conventional;
 using SystemsRx.Scheduling;
-using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 using EcsRx.Systems;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.EcsRx.Handlers
+namespace EcsRx.Tests.SystemsRx.Handlers
 {
     public class BasicSystemHandlerTests
     {

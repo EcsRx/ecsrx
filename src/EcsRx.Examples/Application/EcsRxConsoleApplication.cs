@@ -1,5 +1,5 @@
-﻿using EcsRx.Infrastructure;
-using EcsRx.Infrastructure.Dependencies;
+﻿using SystemsRx.Infrastucture.Dependencies;
+using EcsRx.Infrastructure;
 using EcsRx.Infrastructure.Ninject;
 using EcsRx.Plugins.Batching;
 using EcsRx.Plugins.Computeds;

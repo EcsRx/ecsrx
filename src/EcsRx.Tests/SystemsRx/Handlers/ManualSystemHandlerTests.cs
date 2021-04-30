@@ -1,15 +1,11 @@
-using SystemsRx.Executor.Handlers;
-using SystemsRx.Systems;
+using SystemsRx.Executor.Handlers.Conventional;
 using SystemsRx.Systems.Conventional;
-using EcsRx.Collections;
-using EcsRx.Groups;
-using EcsRx.Groups.Observable;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.EcsRx.Handlers
+namespace EcsRx.Tests.SystemsRx.Handlers
 {
     public class ManualSystemHandlerTests
     {

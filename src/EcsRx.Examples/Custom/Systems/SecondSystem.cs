@@ -1,5 +1,5 @@
 ﻿using System;
-using EcsRx.Attributes;
+using SystemsRx.Attributes;
 using EcsRx.Entities;
 using EcsRx.Examples.Custom.Groups;
 using EcsRx.Groups;

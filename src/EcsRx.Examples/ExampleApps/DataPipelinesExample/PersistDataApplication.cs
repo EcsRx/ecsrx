@@ -1,15 +1,10 @@
 ﻿using System;
-using EcsRx.Entities;
+using SystemsRx.Infrastucture.Extensions;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Components;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Events;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules;
-using EcsRx.Examples.ExampleApps.HealthExample.Blueprints;
-using EcsRx.Examples.ExampleApps.HealthExample.Components;
-using EcsRx.Examples.ExampleApps.HealthExample.Events;
 using EcsRx.Extensions;
-using EcsRx.Infrastructure.Extensions;
-using Persistity.Pipelines;
 
 namespace EcsRx.Examples.ExampleApps.DataPipelinesExample
 {

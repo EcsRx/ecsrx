@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using SystemsRx.Extensions;
+using SystemsRx.Infrastucture.Extensions;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
@@ -10,7 +12,6 @@ using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Extensions;
-using EcsRx.Infrastructure.Extensions;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {

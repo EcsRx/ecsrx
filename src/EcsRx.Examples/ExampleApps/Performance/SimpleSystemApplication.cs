@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using EcsRx.Collections;
 using EcsRx.Collections.Entity;
 using EcsRx.Examples.Application;
 using EcsRx.Examples.ExampleApps.Performance.Components;
@@ -12,7 +11,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 {
     public class SimpleSystemApplication : EcsRxConsoleApplication
     {
-        private static readonly int EntityCount = 10000;
+        private static readonly int EntityCount = 1000;
         private IEntityCollection _collection;
         private ExampleReactToGroupSystem _groupSystem;
 

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
-using EcsRx.Infrastructure.Plugins;
+using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastucture.Extensions;
+using SystemsRx.Infrastucture.Plugins;
+using SystemsRx.Systems;
 using EcsRx.Plugins.Persistence.Modules;
-using EcsRx.Systems;
 
 namespace EcsRx.Plugins.Persistence
 {
-    public class PersistencePlugin : IEcsRxPlugin
+    public class PersistencePlugin : ISystemsRxPlugin
     {
         public string Name => "Persistence Plugin";
         public Version Version { get; } = new Version("1.0.0");

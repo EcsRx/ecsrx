@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
-using EcsRx.Attributes;
+using SystemsRx.Attributes;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Extensions;
+using SystemsRx.Systems;
 using EcsRx.Collections;
 using EcsRx.Entities;
-using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
-using EcsRx.Systems;
 
 namespace EcsRx.Plugins.ReactiveSystems.Handlers
 {
@@ -38,8 +39,8 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ISetupSystem) system;
-            var affinities = system.GetGroupAffinities();
-            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group, affinities);
+            var affinities = castSystem.GetGroupAffinities();
+            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group, affinities);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
@@ -58,7 +59,6 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-
             foreach (var entity in observableGroup)
             {
                 var possibleSubscription = ProcessEntity(castSystem, entity);
@@ -68,9 +68,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
         }
 
         public void DestroySystem(ISystem system)
-        {
-            _systemSubscriptions.RemoveAndDispose(system);
-        }
+        { _systemSubscriptions.RemoveAndDispose(system); }
 
         public IDisposable ProcessEntity(ISetupSystem system, IEntity entity)
         {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EcsRx.Extensions;
+using SystemsRx.Extensions;
 using EcsRx.Plugins.Views.ViewHandlers;
 
 namespace EcsRx.Plugins.Views.Pooling

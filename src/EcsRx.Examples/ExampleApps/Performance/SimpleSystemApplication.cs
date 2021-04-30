@@ -14,12 +14,12 @@ namespace EcsRx.Examples.ExampleApps.Performance
     {
         private static readonly int EntityCount = 10000;
         private IEntityCollection _collection;
-        private ExampleReactToGroupSystem _system;
+        private ExampleReactToGroupSystem _groupSystem;
 
         protected override void ApplicationStarted()
         {
             _collection = EntityDatabase.GetCollection();
-            _system = new ExampleReactToGroupSystem();
+            _groupSystem = new ExampleReactToGroupSystem();
             
             for (var i = 0; i < EntityCount; i++)
             {
@@ -35,7 +35,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         {
             var timer = Stopwatch.StartNew();
             foreach(var entity in _collection)
-            { _system.Process(entity); }
+            { _groupSystem.Process(entity); }
             timer.Stop();
 
             var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);
@@ -45,7 +45,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         private void RunMultiThreaded()
         {
             var timer = Stopwatch.StartNew();
-            Parallel.ForEach(_collection, _system.Process);
+            Parallel.ForEach(_collection, _groupSystem.Process);
             timer.Stop();
 
             var totalTime = TimeSpan.FromMilliseconds(timer.ElapsedMilliseconds);

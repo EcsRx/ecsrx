@@ -24,7 +24,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var fakeMatchingSystem1 = Substitute.For<IReactToDataSystem<int>>();
             var fakeMatchingSystem2 = Substitute.For<IReactToDataSystem<DateTime>>();
             var fakeNonMatchingSystem1 = Substitute.For<IReactToEntitySystem>();
-            var fakeNonMatchingSystem2 = Substitute.For<ISystem>();
+            var fakeNonMatchingSystem2 = Substitute.For<IGroupSystem>();
             
             Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem1));
             Assert.True(reactToEntitySystemHandler.CanHandleSystem(fakeMatchingSystem2));

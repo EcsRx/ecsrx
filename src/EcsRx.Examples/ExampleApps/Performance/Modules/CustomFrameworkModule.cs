@@ -1,4 +1,5 @@
 using System.Linq;
+using SystemsRx.Events;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
@@ -11,7 +12,6 @@ using EcsRx.Executor;
 using EcsRx.Executor.Handlers;
 using EcsRx.Groups.Observable;
 using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Events;
 using EcsRx.Infrastructure.Extensions;
 using EcsRx.MicroRx.Events;
 using EcsRx.Pools;

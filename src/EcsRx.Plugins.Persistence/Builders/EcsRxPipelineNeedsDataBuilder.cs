@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
+using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastucture.Extensions;
 using LazyData;
 using LazyData.Serialization;
 using Persistity.Endpoints;

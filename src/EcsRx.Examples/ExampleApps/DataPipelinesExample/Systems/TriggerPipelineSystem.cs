@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SystemsRx.Events;
 using EcsRx.Events;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Components;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Events;

@@ -1,5 +1,6 @@
 using System;
 using System.Reactive.Linq;
+using SystemsRx.Systems;
 using EcsRx.Blueprints;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;

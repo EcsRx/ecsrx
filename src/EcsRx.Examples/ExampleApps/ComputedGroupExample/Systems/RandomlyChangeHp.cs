@@ -9,7 +9,7 @@ using EcsRx.Plugins.ReactiveSystems.Systems;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
 {
-    public class RandomlyChangeHpSystem : IReactToGroupSystem
+    public class RandomlyChangeHpGroupSystem : IReactToGroupSystem
     {
         private const int HealthChange = 20;
         

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
-using EcsRx.Attributes;
+using SystemsRx.Attributes;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Extensions;
+using SystemsRx.Systems;
 using EcsRx.Collections;
-using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
@@ -23,8 +25,8 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             SystemSubscriptions = new Dictionary<ISystem, IDisposable>();
         }
 
-        public bool CanHandleSystem(ISystem system)
-        { return system is ITeardownSystem; }
+        public bool CanHandleSystem(ISystem groupSystem)
+        { return groupSystem is ITeardownSystem; }
 
         public void SetupSystem(ISystem system)
         {
@@ -32,8 +34,8 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             SystemSubscriptions.Add(system, entityChangeSubscriptions);
 
             var castSystem = (ITeardownSystem) system;
-            var affinities = system.GetGroupAffinities();
-            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group, affinities);
+            var affinities = castSystem.GetGroupAffinities();
+            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group, affinities);
             
             observableGroup.OnEntityRemoving
                 .Subscribe(castSystem.Teardown)

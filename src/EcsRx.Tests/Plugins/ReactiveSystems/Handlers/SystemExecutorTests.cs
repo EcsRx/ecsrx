@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using EcsRx.Exceptions;
-using EcsRx.Executor;
-using EcsRx.Executor.Handlers;
+using SystemsRx.Exceptions;
+using SystemsRx.Executor;
+using SystemsRx.Executor.Handlers;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using EcsRx.Tests.Systems.Handlers;
@@ -47,7 +47,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
         [Fact]
         public void should_return_true_if_system_already_exists()
         {
-            var fakeSystem = Substitute.For<ISystem>();
+            var fakeSystem = Substitute.For<IGroupSystem>();
            
             var systemExecutor = new SystemExecutor(new IConventionalSystemHandler[0]);
             systemExecutor._systems.Add(fakeSystem);
@@ -57,7 +57,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
         [Fact]
         public void should_return_false_if_system_doesnt_exist()
         {
-            var fakeSystem = Substitute.For<ISystem>();
+            var fakeSystem = Substitute.For<IGroupSystem>();
            
             var systemExecutor = new SystemExecutor(new IConventionalSystemHandler[0]);
             Assert.False(systemExecutor.HasSystem(fakeSystem));
@@ -66,7 +66,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
         [Fact]
         public void should_throw_exception_if_system_already_exists()
         {
-            var fakeSystem = Substitute.For<ISystem>();
+            var fakeSystem = Substitute.For<IGroupSystem>();
            
             var systemExecutor = new SystemExecutor(new IConventionalSystemHandler[0]);
             systemExecutor._systems.Add(fakeSystem);
@@ -94,8 +94,8 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var fakeSystem2 = Substitute.For<ISetupSystem>();
             var fakeSystem3 = Substitute.For<ISetupSystem>();
 
-            fakeSetupSystemHandler1.CanHandleSystem(Arg.Any<ISystem>()).Returns(true);
-            fakeSetupSystemHandler2.CanHandleSystem(Arg.Any<ISystem>()).Returns(true);
+            fakeSetupSystemHandler1.CanHandleSystem(Arg.Any<IGroupSystem>()).Returns(true);
+            fakeSetupSystemHandler2.CanHandleSystem(Arg.Any<IGroupSystem>()).Returns(true);
            
             var systemExecutor = new SystemExecutor(new[] { fakeSetupSystemHandler1, fakeSetupSystemHandler2 });
             systemExecutor._systems.Add(fakeSystem1);
@@ -104,8 +104,8 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             
             systemExecutor.Dispose();
             
-            fakeSetupSystemHandler1.Received(3).DestroySystem(Arg.Any<ISystem>());
-            fakeSetupSystemHandler2.Received(3).DestroySystem(Arg.Any<ISystem>());
+            fakeSetupSystemHandler1.Received(3).DestroySystem(Arg.Any<IGroupSystem>());
+            fakeSetupSystemHandler2.Received(3).DestroySystem(Arg.Any<IGroupSystem>());
             fakeSetupSystemHandler1.Received(1).Dispose();
             fakeSetupSystemHandler2.Received(1).Dispose();
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SystemsRx.Extensions;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Extensions;

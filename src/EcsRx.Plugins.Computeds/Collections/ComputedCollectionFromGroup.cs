@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using SystemsRx.Extensions;
 using EcsRx.Entities;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;

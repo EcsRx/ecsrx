@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using EcsRx.Extensions;
-using EcsRx.Infrastructure.Dependencies;
+using SystemsRx.Extensions;
+using SystemsRx.Infrastucture.Dependencies;
 using Ninject;
 using Ninject.Syntax;
 

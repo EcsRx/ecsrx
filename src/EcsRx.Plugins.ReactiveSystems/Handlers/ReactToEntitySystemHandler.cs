@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
-using EcsRx.Attributes;
+using SystemsRx.Attributes;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Extensions;
+using SystemsRx.Systems;
 using EcsRx.Collections;
 using EcsRx.Entities;
-using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
-using EcsRx.Systems;
 
 namespace EcsRx.Plugins.ReactiveSystems.Handlers
 {
@@ -32,14 +33,13 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
         
         public void SetupSystem(ISystem system)
         {
-            var affinities = system.GetGroupAffinities();
-            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group, affinities);            
+            var castSystem = (IReactToEntitySystem) system;
+            var affinities = castSystem.GetGroupAffinities();
+            var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group, affinities);            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
-
-            var castSystem = (IReactToEntitySystem) system;
-            
+           
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {

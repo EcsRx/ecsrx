@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using SystemsRx.Threading;
+using EcsRx.Collections;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
@@ -6,7 +8,6 @@ using EcsRx.Groups;
 using EcsRx.Plugins.Batching.Batches;
 using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Plugins.Batching.Factories;
-using EcsRx.Threading;
 
 namespace EcsRx.Plugins.Batching.Systems
 {
@@ -22,8 +23,8 @@ namespace EcsRx.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase,
-            componentTypeLookup, threadHandler)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, observableGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2>();
         }
@@ -67,8 +68,8 @@ namespace EcsRx.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase,
-            componentTypeLookup, threadHandler)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, observableGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2, T3>();
         }
@@ -113,8 +114,8 @@ namespace EcsRx.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase,
-            componentTypeLookup, threadHandler)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, observableGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4>();
         }
@@ -162,8 +163,8 @@ namespace EcsRx.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase,
-            componentTypeLookup, threadHandler)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, observableGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4, T5>();
         }
@@ -212,8 +213,8 @@ namespace EcsRx.Plugins.Batching.Systems
         protected abstract void Process(int entityId, ref T1 component1, ref T2 component2, ref T3 component3, ref T4 component4, ref T5 component5, ref T6 component6);
 
         protected BatchedSystem(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup,
-            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler) : base(componentDatabase,
-            componentTypeLookup, threadHandler)
+            IBatchBuilderFactory batchBuilderFactory, IThreadHandler threadHandler, IObservableGroupManager observableGroupManager) : base(componentDatabase,
+            componentTypeLookup, threadHandler, observableGroupManager)
         {
             _batchBuilder = batchBuilderFactory.Create<T1, T2, T3, T4, T5, T6>();
         }

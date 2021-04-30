@@ -1,11 +1,12 @@
 using System;
-using EcsRx.Attributes;
-using EcsRx.Executor.Handlers;
-using EcsRx.Systems;
+using SystemsRx.Attributes;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Systems;
+using SystemsRx.Types;
 
 namespace EcsRx.Tests.Systems.Handlers
 {
-    [Priority(100)]
+    [Priority(PriorityTypes.Higher)]
     public class HigherPriorityHandler : IConventionalSystemHandler
     {
         private Action _doSomethingOnSetup;

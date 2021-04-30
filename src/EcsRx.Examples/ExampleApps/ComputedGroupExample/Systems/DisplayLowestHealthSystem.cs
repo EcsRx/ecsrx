@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using SystemsRx.Extensions;
+using SystemsRx.Systems;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Extensions;
 using EcsRx.Extensions;

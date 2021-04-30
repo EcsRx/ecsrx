@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using EcsRx.Attributes;
+using SystemsRx.Attributes;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Extensions;
+using SystemsRx.Systems;
 using EcsRx.Collections;
 using EcsRx.Entities;
-using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.MicroRx.Disposables;
@@ -35,7 +37,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
         // TODO: This is REALLY bad but currently no other way around the dynamic invocation lookup stuff
         public Func<IEntity, IDisposable> CreateEntityProcessorFunction(ISystem system)
         {
-            var genericDataType = system.GetGenericDataType();
+            var genericDataType = system.GetGenericDataType(typeof(IReactToDataSystem<>));
             var genericMethod = _processEntityMethod.MakeGenericMethod(genericDataType);
             return entity => (IDisposable) genericMethod.Invoke(this, new object[] {system, entity});
         }
@@ -66,12 +68,12 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
-            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             _entitySubscriptions.Add(system, entitySubscriptions);
-            
-            var affinities = system.GetGroupAffinities();
-            var observableGroup = ObservableGroupManager.GetObservableGroup(system.Group, affinities);
+
+            var groupSystem = system as IGroupSystem;
+            var affinities = groupSystem.GetGroupAffinities();
+            var observableGroup = ObservableGroupManager.GetObservableGroup(groupSystem.Group, affinities);
 
             observableGroup.OnEntityAdded
                 .Subscribe(x =>

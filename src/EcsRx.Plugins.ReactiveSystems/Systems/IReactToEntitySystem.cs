@@ -15,7 +15,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Systems
     /// use a React To LookupGroup system as they have less overhead as there is only one
     /// subscription required rather than 1 per entity.
     /// </remarks>
-    public interface IReactToEntitySystem : ISystem
+    public interface IReactToEntitySystem : IGroupSystem
     {
         /// <summary>
         /// Returns and observable indicating when the system should execute for a given entity

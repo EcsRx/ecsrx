@@ -10,7 +10,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Systems
     /// payloads to the executor, use this if you need to react with custom data
     /// </summary>
     /// <typeparam name="T">The type of payload to react with</typeparam>
-    public interface IReactToDataSystem<T> : ISystem
+    public interface IReactToDataSystem<T> : IGroupSystem
     {
         /// <summary>
         /// Returns and observable indicating both when the system should execute for a given entity

@@ -1,7 +1,6 @@
 using System;
-using EcsRx.Collections;
-using EcsRx.Infrastructure.Dependencies;
-using EcsRx.Infrastructure.Extensions;
+using SystemsRx.Infrastucture.Dependencies;
+using SystemsRx.Infrastucture.Extensions;
 using EcsRx.Plugins.Persistence.Builders;
 using Persistity.Pipelines;
 

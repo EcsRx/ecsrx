@@ -17,7 +17,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Systems
     /// on all applicable entities. If you need more control over individual
     /// entity reactions etc then look at ReactToEntity/Data systems.
     /// </remarks>
-    public interface IReactToGroupSystem : ISystem
+    public interface IReactToGroupSystem : IGroupSystem
     {
         /// <summary>
         /// Dictates when the group should be processed

@@ -1,4 +1,5 @@
 using System.Linq;
+using SystemsRx.Extensions;
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Extensions;

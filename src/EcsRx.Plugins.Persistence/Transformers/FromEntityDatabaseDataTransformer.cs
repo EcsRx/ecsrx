@@ -1,7 +1,7 @@
 using System.Linq;
+using SystemsRx.Extensions;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
-using EcsRx.Extensions;
 using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers

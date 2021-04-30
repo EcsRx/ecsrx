@@ -1,6 +1,6 @@
 using System;
-using EcsRx.Executor.Handlers;
-using EcsRx.Systems;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Systems;
 
 namespace EcsRx.Tests.Systems.Handlers
 {

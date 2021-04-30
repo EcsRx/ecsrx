@@ -13,7 +13,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Systems
     /// method on there so keep this in mind. You can also combine ISetupSystem and
     /// ITeardownSystem on the same implementation which is often useful.
     /// </remarks>
-    public interface ITeardownSystem : ISystem
+    public interface ITeardownSystem : IGroupSystem
     {
         /// <summary>
         /// The teardown method to be run when the entity is leaving the group

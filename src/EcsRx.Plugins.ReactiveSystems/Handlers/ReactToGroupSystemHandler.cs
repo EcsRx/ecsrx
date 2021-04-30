@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EcsRx.Attributes;
+using SystemsRx.Attributes;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Extensions;
+using SystemsRx.Systems;
+using SystemsRx.Threading;
 using EcsRx.Collections;
 using EcsRx.Entities;
-using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
-using EcsRx.Threading;
 
 namespace EcsRx.Plugins.ReactiveSystems.Handlers
 {
@@ -33,11 +35,11 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var affinities = system.GetGroupAffinities();
-            var observableGroup = _observableGroupManager.GetObservableGroup(system.Group, affinities);
-            var groupPredicate = system.Group as IHasPredicate;
-            var isExtendedSystem = system is IReactToGroupExSystem;
             var castSystem = (IReactToGroupSystem)system;
+            var affinities = castSystem.GetGroupAffinities();
+            var observableGroup = _observableGroupManager.GetObservableGroup(castSystem.Group, affinities);
+            var groupPredicate = castSystem.Group as IHasPredicate;
+            var isExtendedSystem = system is IReactToGroupExSystem;
             var reactObservable = castSystem.ReactToGroup(observableGroup);
             var runParallel = system.ShouldMutliThread();
                 
@@ -65,24 +67,27 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             _systemSubscriptions.Add(system, predicateSub);
         }
 
-        private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupSystem castSystem, bool runParallel = false)
+        private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupSystem system, bool runParallel = false)
         {
             if (runParallel)
             {
                 _threadHandler.For(0, entities.Count, i =>
-                { castSystem.Process(entities[i]); });
+                { system.Process(entities[i]); });
                 return;
             }
             
             for (var i = entities.Count - 1; i >= 0; i--)
-            { castSystem.Process(entities[i]); }
+            { system.Process(entities[i]); }
         }
         
-        private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupExSystem castSystem, bool runParallel = false)
+        private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupExSystem system, bool runParallel = false)
         {
-            castSystem.BeforeProcessing();
-            ExecuteForGroup(entities, (IReactToGroupSystem)castSystem, runParallel);
-            castSystem.AfterProcessing();
+            // We manually down cast this so it doesnt recurse this method
+            var castSystem = (IReactToGroupSystem)system;
+            
+            system.BeforeProcessing();
+            ExecuteForGroup(entities, castSystem, runParallel);
+            system.AfterProcessing();
         }
         
 

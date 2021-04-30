@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using SystemsRx.Events;
+using SystemsRx.Executor;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Threading;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
-using EcsRx.Executor;
-using EcsRx.Executor.Handlers;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using EcsRx.Infrastructure.Events;
 using EcsRx.MicroRx.Events;
 using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Plugins.ReactiveSystems.Handlers;
@@ -20,7 +21,6 @@ using EcsRx.Plugins.Views.Systems;
 using EcsRx.Pools;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
-using EcsRx.Threading;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
@@ -64,7 +64,7 @@ namespace EcsRx.Tests.Sanity
             var reactsToEntityHandler = new ReactToEntitySystemHandler(observableGroupManager);
             var reactsToGroupHandler = new ReactToGroupSystemHandler(observableGroupManager, threadHandler);
             var reactsToDataHandler = new ReactToDataSystemHandler(observableGroupManager);
-            var manualSystemHandler = new ManualSystemHandler(observableGroupManager);
+            var manualSystemHandler = new ManualSystemHandler();
             var setupHandler = new SetupSystemHandler(observableGroupManager);
             var teardownHandler = new TeardownSystemHandler(observableGroupManager);
 

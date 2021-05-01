@@ -6,6 +6,7 @@ using EcsRx.MicroRx.Subjects;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
+using EcsRx.Tests.SystemsRx.Handlers.Helpers;
 using NSubstitute;
 using Xunit;
 
@@ -56,20 +57,25 @@ namespace EcsRx.Tests.SystemsRx.Handlers
         }
 
         [Fact]
-        public void should_process_event_when_triggered()
+        public void should_process_events_with_multiple_interfaces()
         {
             var mockEventSystem = Substitute.For<IEventSystem>();
-            var dummySubject = new Subject<ComplexObject>();
-            mockEventSystem.Receive<ComplexObject>().Returns(dummySubject);
+            var dummyObjectSubject = new Subject<ComplexObject>();
+            var dummyIntSubject = new Subject<int>();
+            mockEventSystem.Receive<ComplexObject>().Returns(dummyObjectSubject);
+            mockEventSystem.Receive<int>().Returns(dummyIntSubject);
             
-            var mockSystem = Substitute.For<IReactToEventSystem<ComplexObject>>();
+            var mockSystem = Substitute.For<ITestMultiReactToEvent>();
             var dummyObject = new ComplexObject(10, "Bob");
+            var dummyInt = 100;
             
             var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
             systemHandler.SetupSystem(mockSystem);
-            dummySubject.OnNext(dummyObject);
+            dummyObjectSubject.OnNext(dummyObject);
+            dummyIntSubject.OnNext(dummyInt);
             
             mockSystem.Received(1).Process(Arg.Is(dummyObject));
+            mockSystem.Received(1).Process(Arg.Is(dummyInt));
         }
     }
 }

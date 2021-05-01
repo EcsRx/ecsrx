@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using SystemsRx.Attributes;
 using SystemsRx.Events;
 using SystemsRx.Extensions;
 using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
+using EcsRx.MicroRx.Disposables;
 using EcsRx.MicroRx.Extensions;
 
 namespace SystemsRx.Executor.Handlers.Conventional
@@ -26,21 +28,28 @@ namespace SystemsRx.Executor.Handlers.Conventional
 
         public bool CanHandleSystem(ISystem system)
         { return system.IsReactToEventSystem(); }
+
+        public Type[] GetMatchingInterfaces(ISystem system)
+        { return system.GetGenericInterfacesFor(typeof(IReactToEventSystem<>)).ToArray(); }
         
         public Type GetEventTypeFromSystem(ISystem system)
         { return system.GetGenericDataType(typeof(IReactToEventSystem<>)); }
 
         public void SetupSystem(ISystem system)
         {
-            var eventType = GetEventTypeFromSystem(system);
-            _setupSystemGenericMethodInfo.MakeGenericMethod(eventType).Invoke(this, new object[] { system });
+            var matchingInterfaces = GetMatchingInterfaces(system);
+            var disposables = new List<IDisposable>();
+            foreach (var matchingInterface in matchingInterfaces)
+            {
+                var eventType = matchingInterface.GetGenericArguments()[0];
+                var disposable = (IDisposable)_setupSystemGenericMethodInfo.MakeGenericMethod(eventType).Invoke(this, new object[] { system });
+                disposables.Add(disposable);
+            }
+            _systemSubscriptions.Add(system, new CompositeDisposable(disposables));
         }
 
-        private void SetupSystemGeneric<T>(IReactToEventSystem<T> system)
-        {
-            var disposable = EventSystem.Receive<T>().Subscribe(system.Process);
-            _systemSubscriptions.Add(system, disposable);
-        }
+        private IDisposable SetupSystemGeneric<T>(IReactToEventSystem<T> system)
+        { return EventSystem.Receive<T>().Subscribe(system.Process); }
         
         public void DestroySystem(ISystem system)
         { _systemSubscriptions.RemoveAndDispose(system); }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SystemsRx.Attributes;
 using SystemsRx.Systems;
@@ -15,12 +16,15 @@ namespace SystemsRx.Extensions
                        .FirstOrDefault() != null;
         }
         
-        public static bool MatchesSystemTypeWithGeneric(this ISystem system, Type systemType)
+        public static IEnumerable<Type> GetGenericInterfacesFor(this ISystem system, Type systemType)
         {
             return system.GetType()
                 .GetInterfaces()
-                .Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == systemType);
+                .Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == systemType);
         }
+        
+        public static bool MatchesSystemTypeWithGeneric(this ISystem system, Type systemType)
+        { return GetGenericInterfacesFor(system, systemType).Any(); }
         
         public static Type GetGenericDataType(this ISystem system, Type systemType)
         {

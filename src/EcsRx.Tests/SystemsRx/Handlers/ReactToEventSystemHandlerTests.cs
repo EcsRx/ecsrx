@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using SystemsRx.Events;
 using SystemsRx.Executor.Handlers.Conventional;
 using SystemsRx.Systems.Conventional;

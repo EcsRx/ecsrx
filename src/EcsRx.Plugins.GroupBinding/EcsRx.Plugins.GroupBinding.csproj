@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
+      <ProjectReference Include="..\SystemsRx.Infrastructure\SystemsRx.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

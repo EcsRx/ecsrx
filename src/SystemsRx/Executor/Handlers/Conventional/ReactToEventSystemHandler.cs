@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using SystemsRx.Attributes;
 using SystemsRx.Events;
@@ -14,53 +13,32 @@ namespace SystemsRx.Executor.Handlers.Conventional
     [Priority(6)]
     public class ReactToEventSystemHandler : IConventionalSystemHandler
     {
+        private readonly MethodInfo _setupSystemGenericMethodInfo;
         public readonly IEventSystem EventSystem;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
-        
+
         public ReactToEventSystemHandler(IEventSystem eventSystem)
         {
             EventSystem = eventSystem;
             _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
+            _setupSystemGenericMethodInfo = typeof(ReactToEventSystemHandler).GetMethod(nameof(SetupSystemGeneric), BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
         public bool CanHandleSystem(ISystem system)
         { return system.IsReactToEventSystem(); }
-
-        public MethodInfo MakeGenericMethod(Type classType, string methodName, Type dataType)
-        {
-            var receiveMethod = classType.GetMethods().Single(x => x.Name == methodName);
-            return receiveMethod.MakeGenericMethod(dataType);
-        }
         
-        public MethodInfo GetGenericEventReceiveMethod(Type eventType)
-        { return MakeGenericMethod(EventSystem.GetType(), "Receive", eventType); }
-
-        public MethodInfo GetGenericSubscriptionMethod(Type eventType)
-        { return MakeGenericMethod(typeof(IObservableExtensions), "Subscribe", eventType); }
-
         public Type GetEventTypeFromSystem(ISystem system)
         { return system.GetGenericDataType(typeof(IReactToEventSystem<>)); }
-        
-        public MethodInfo GetGenericEventProcessMethod(ISystem system)
-        { return system.GetType().GetMethods().SingleOrDefault(x => x.Name == "Process"); }
 
-        public Type CreateGenericActionType(Type eventType)
-        { return typeof(Action<>).MakeGenericType(eventType); }
-        
-        public Delegate CreateGenericDelegate(Type genericActionType, ISystem system, MethodInfo systemProcessMethod)
-        { return Delegate.CreateDelegate(genericActionType, system, systemProcessMethod); }
-        
         public void SetupSystem(ISystem system)
         {
             var eventType = GetEventTypeFromSystem(system);
-            var receiveMethod = GetGenericEventReceiveMethod(eventType);
-            var subscriptionMethod = GetGenericSubscriptionMethod(eventType);
-            var systemProcessMethod = GetGenericEventProcessMethod(system);
-            var genericActionType = CreateGenericActionType(eventType);
-            var systemProcessDelegate = CreateGenericDelegate(genericActionType, system, systemProcessMethod);
-            
-            var observable = receiveMethod.Invoke(EventSystem, new object[0]);
-            var disposable = (IDisposable)subscriptionMethod.Invoke(null, new[] {observable, systemProcessDelegate});
+            _setupSystemGenericMethodInfo.MakeGenericMethod(eventType).Invoke(this, new object[] { system });
+        }
+
+        private void SetupSystemGeneric<T>(IReactToEventSystem<T> system)
+        {
+            var disposable = EventSystem.Receive<T>().Subscribe(system.Process);
             _systemSubscriptions.Add(system, disposable);
         }
         

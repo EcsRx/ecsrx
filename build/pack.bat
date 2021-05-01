@@ -1,4 +1,4 @@
-set version=3.0.0
+set version=3.0.1
 dotnet pack ../src/EcsRx.MicroRx -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/SystemsRx -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/SystemsRx.Infrastructure -c Release -o ../../_dist /p:version=%version%

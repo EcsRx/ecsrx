@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Reflection;
 using SystemsRx.Events;
 using SystemsRx.Executor.Handlers.Conventional;
 using SystemsRx.Systems.Conventional;
@@ -55,76 +53,6 @@ namespace EcsRx.Tests.SystemsRx.Handlers
             var actualType = systemHandler.GetEventTypeFromSystem(mockSystem);
             
             Assert.Equal(typeof(int), actualType);
-        }
-        
-        [Fact]
-        public void should_get_generic_event_receive()
-        {
-            var mockEventSystem = Substitute.For<IEventSystem>();
-            var dummyEventType = typeof(int);
-            
-            var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
-            var methodInfo = systemHandler.GetGenericEventReceiveMethod(dummyEventType);
-            
-            Assert.NotNull(methodInfo);
-            Assert.Equal(1, methodInfo.GetGenericArguments().Length);
-            Assert.Equal(dummyEventType, methodInfo.GetGenericArguments()[0]);
-        }
-        
-        [Fact]
-        public void should_get_generic_subscription_method()
-        {
-            var mockEventSystem = Substitute.For<IEventSystem>();
-            var dummyEventType = typeof(int);
-            
-            var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
-            var methodInfo = systemHandler.GetGenericSubscriptionMethod(dummyEventType);
-            
-            Assert.NotNull(methodInfo);
-            Assert.Equal(1, methodInfo.GetGenericArguments().Length);
-            Assert.Equal(dummyEventType, methodInfo.GetGenericArguments()[0]);
-        }
-        
-        [Fact]
-        public void should_get_generic_event_process_method()
-        {
-            var mockEventSystem = Substitute.For<IEventSystem>();
-            var mockSystem = Substitute.For<IReactToEventSystem<int>>();
-            
-            var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
-            var methodInfo = systemHandler.GetGenericEventProcessMethod(mockSystem);
-            
-            Assert.NotNull(methodInfo);
-            Assert.False(methodInfo.IsGenericMethod);
-        }
-        
-        [Fact]
-        public void should_get_generic_action_type()
-        {
-            var mockEventSystem = Substitute.For<IEventSystem>();
-            var dummyEventType = typeof(int);
-            
-            var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
-            var genericAction = systemHandler.CreateGenericActionType(dummyEventType);
-            
-            Assert.NotNull(genericAction);
-            Assert.Equal(typeof(Action<int>), genericAction);
-        }
-        
-        // This is used in below test
-        public static void DummyMethod(int _){}
-        
-        [Fact]
-        public void should_get_generic_delegate()
-        {
-            var mockEventSystem = Substitute.For<IEventSystem>();
-            var dummyActionType = typeof(Action<int>);
-            var mockMethodInfo = GetType().GetMethods().First(x => x.Name == "DummyMethod");
-            
-            var systemHandler = new ReactToEventSystemHandler(mockEventSystem);
-            var genericAction = systemHandler.CreateGenericDelegate(dummyActionType, null, mockMethodInfo);
-            
-            Assert.NotNull(genericAction);
         }
 
         [Fact]

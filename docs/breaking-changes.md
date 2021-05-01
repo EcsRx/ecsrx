@@ -5,7 +5,7 @@
 - `IEcsRxPlugin` has been renamed to `ISystemsRxPlugin` and lives in `SystemsRx.Infrastructure`
 - `EventReactionSystem<T>` no longer exists, the same convention can be mapped to `IReactToEventSystem` from `SystemsRx`
 - `IBasicSystem` has changed and has no `IEntity` dependencies and lives in `SystemsRx`, the same convention can be mapped to `IBasicEntitySystem` in `EcsRx`
-- `IManualSystem` no longer has a group or gets passed `IObservableGroupManager`, you can inject it yourself if you need it
+- `IManualSystem` no longer has a group or gets passed `IObservableGroup`, you can inject `IObservableGroupManager` yourself if you need it
 - `EcsRx` now depends upon `SystemsRx`, all the classes in `SystemsRx` were originally in `EcsRx` but now can be used without the `ECS` related paradigm dependencies
 - `ISystem` no longer contains an `IGroup` and now lives in `SystemsRx` there is now an `IGroupSystem` which represents a system with a `IGroup`
 

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>0.0.0</Version>
+        <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+        <Title>EcsRx.Plugins.GroupBinding</Title>
+        <Authors>Grofit (LP)</Authors>
+        <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ecsrx/ecsrx</PackageProjectUrl>
+        <Description>EcsRx plugin to allow auto resolving of IObservableGroup properties or fields</Description>
+        <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
+      <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

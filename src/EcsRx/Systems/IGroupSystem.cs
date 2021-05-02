@@ -1,5 +1,6 @@
 using SystemsRx.Systems;
 using EcsRx.Groups;
+using EcsRx.Groups.Observable;
 
 namespace EcsRx.Systems
 {
@@ -12,5 +13,10 @@ namespace EcsRx.Systems
         /// The group to target with this system
         /// </summary>
         IGroup Group { get; }
+    }
+
+    public interface IObservableGroupSystem : IGroupSystem
+    {
+        IObservableGroup ObservableGroup { get; set; } 
     }
 }

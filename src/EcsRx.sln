@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemsRx", "SystemsRx\Syst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemsRx.Infrastructure", "SystemsRx.Infrastructure\SystemsRx.Infrastructure.csproj", "{C093DA78-1AAD-43CE-A9FA-DB568D8AD580}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Plugins.GroupBinding", "EcsRx.Plugins.GroupBinding\EcsRx.Plugins.GroupBinding.csproj", "{3DD20735-C1F5-4033-A909-2E1BD9EA075F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{C093DA78-1AAD-43CE-A9FA-DB568D8AD580}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C093DA78-1AAD-43CE-A9FA-DB568D8AD580}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C093DA78-1AAD-43CE-A9FA-DB568D8AD580}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD20735-C1F5-4033-A909-2E1BD9EA075F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD20735-C1F5-4033-A909-2E1BD9EA075F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD20735-C1F5-4033-A909-2E1BD9EA075F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD20735-C1F5-4033-A909-2E1BD9EA075F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{D63A4C86-6515-4A3C-9473-45947D34DE21} = {48050703-1E4C-4179-9539-90212854B3F7}
 		{4108FD71-E687-416B-BC98-5DAF5F7113AD} = {1B6A21E2-A539-42B6-9234-6687CD36C2A0}
 		{C093DA78-1AAD-43CE-A9FA-DB568D8AD580} = {1B6A21E2-A539-42B6-9234-6687CD36C2A0}
+		{3DD20735-C1F5-4033-A909-2E1BD9EA075F} = {48050703-1E4C-4179-9539-90212854B3F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9292D27-B07F-42D9-94D7-38263CA662DB}

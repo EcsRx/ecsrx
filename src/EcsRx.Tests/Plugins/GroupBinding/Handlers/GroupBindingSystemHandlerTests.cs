@@ -1,12 +1,13 @@
-using System.Linq;
 using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 using EcsRx.Collections;
+using EcsRx.Groups;
+using EcsRx.Plugins.GroupBinding.Exceptions;
 using EcsRx.Plugins.GroupBinding.Systems.Handlers;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
-using EcsRx.Tests.SystemsRx.Handlers.Helpers;
+using EcsRx.Tests.Plugins.GroupBinding.Handlers.Helpers;
 using NSubstitute;
 using Xunit;
 
@@ -84,7 +85,21 @@ namespace EcsRx.Tests.Plugins.GroupBinding.Handlers
         [Fact]
         public void should_throw_exception_when_no_group_system_interface_with_empty_group()
         {
-            Assert.True(false);
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+            var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
+            var dummySystem = new SystemMissingGroup();
+            var propertyInfo = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupA));
+            
+            try
+            { reactToEntitySystemHandler.ProcessProperty(propertyInfo, dummySystem); }
+            catch (MissingGroupSystemInterfaceException e)
+            {
+                Assert.Equal(e.Member, propertyInfo);
+                Assert.Equal(e.System, dummySystem);
+                return;
+            }
+            
+            Assert.True(false, "The test should have thrown exception");
         }
         
         [Fact]
@@ -94,11 +109,11 @@ namespace EcsRx.Tests.Plugins.GroupBinding.Handlers
             var reactToEntitySystemHandler = new GroupBindingSystemHandler(observableGroupManager);
             var dummySystem = new SystemWithAutoGroupPopulation();
 
-            var applicableProperties = reactToEntitySystemHandler.GetApplicableFields(dummySystem.GetType());
-            Assert.Equal(1, applicableProperties.Length);
-            Assert.Contains(applicableProperties, x => x.Name == nameof(dummySystem.ObservableGroupC));
-            
-            Assert.True(false);
+            reactToEntitySystemHandler.SetupSystem(dummySystem);
+
+            // This could be more specific but given other tests it seems fine for now
+            observableGroupManager.Received(2).GetObservableGroup(Arg.Any<TestGroupA>());
+            observableGroupManager.Received(1).GetObservableGroup(Arg.Any<Group>());
         }
     }
 }

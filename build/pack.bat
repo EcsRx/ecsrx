@@ -6,6 +6,7 @@ dotnet pack ../src/EcsRx -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsRx.Plugins.ReactiveSystems -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsRx.Plugins.Views -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsRx.Plugins.Computeds -c Release -o ../../_dist /p:version=%version%
+dotnet pack ../src/EcsRx.Plugins.GroupBinding -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsRx.Plugins.Batching -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsRx.Infrastructure -c Release -o ../../_dist /p:version=%version%
 dotnet pack ../src/EcsRx.Infrastructure.Ninject -c Release -o ../../_dist /p:version=%version%

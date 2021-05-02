@@ -1,4 +1,3 @@
-using System;
 using SystemsRx.Systems;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
@@ -6,20 +5,17 @@ using EcsRx.Plugins.GroupBinding.Attributes;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
 
-namespace EcsRx.Tests.SystemsRx.Handlers.Helpers
+namespace EcsRx.Tests.Plugins.GroupBinding.Handlers.Helpers
 {
-    public class TestGroupA : IGroup
-    {
-        public Type[] RequiredComponents { get; set; } = {typeof(TestComponentOne)};
-        public Type[] ExcludedComponents { get; set; } = new Type[0];
-    }
-    
     public class SystemWithAutoGroupPopulation : ISystem, IGroupSystem
     {
         public IGroup Group => new TestGroupA();
         
         [FromGroup(typeof(TestGroupA))]
         public IObservableGroup ObservableGroupA { get; set; }
+        
+        [FromGroup(typeof(TestGroupA))]
+        public IObservableGroup IgnoredObservableGroup { get; }
         
         [FromComponents(typeof(TestComponentTwo))]
         public IObservableGroup ObservableGroupB { get; set; }

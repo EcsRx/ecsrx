@@ -14,7 +14,14 @@ using EcsRx.Systems;
 
 namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
 {
-    [Priority(PriorityTypes.SuperHigh)]
+    /// <summary>
+    /// This will check all ISystem implementations to see if it contains any properties or fields that are
+    /// IObservableGroups and if they have an attribute to indicate population from a group
+    /// </summary>
+    /// <remarks>
+    /// The priority is 10 higher than SuperHigh just to make sure it runs before most common systems
+    /// </remarks>
+    [Priority(PriorityTypes.SuperHigh + 10)]
     public class GroupBindingSystemHandler : IConventionalSystemHandler
     {
         private static Type FromGroupAttributeType = typeof(FromGroupAttribute); 
@@ -52,7 +59,7 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
         public PropertyInfo[] GetApplicableProperties(Type systemType)
         {
             return systemType.GetProperties()
-                .Where(x => x.PropertyType == typeof(IObservableGroup))
+                .Where(x => x.CanWrite && x.PropertyType == typeof(IObservableGroup))
                 .ToArray();
         }
         

@@ -91,7 +91,7 @@ namespace EcsRx.Tests.Plugins.GroupBinding.Handlers
             var propertyInfo = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupA));
             
             try
-            { reactToEntitySystemHandler.ProcessProperty(propertyInfo, dummySystem); }
+            { reactToEntitySystemHandler.ProcessProperty(propertyInfo, dummySystem, null); }
             catch (MissingGroupSystemInterfaceException e)
             {
                 Assert.Equal(e.Member, propertyInfo);
@@ -112,8 +112,8 @@ namespace EcsRx.Tests.Plugins.GroupBinding.Handlers
             reactToEntitySystemHandler.SetupSystem(dummySystem);
 
             // This could be more specific but given other tests it seems fine for now
-            observableGroupManager.Received(2).GetObservableGroup(Arg.Any<TestGroupA>());
-            observableGroupManager.Received(1).GetObservableGroup(Arg.Any<Group>());
+            observableGroupManager.Received(2).GetObservableGroup(Arg.Any<TestGroupA>(), Arg.Any<int[]>());
+            observableGroupManager.Received(1).GetObservableGroup(Arg.Any<Group>(), Arg.Any<int[]>());
         }
     }
 }

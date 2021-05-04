@@ -1,5 +1,4 @@
 using System;
-using EcsRx.Collections;
 using EcsRx.Collections.Database;
 
 namespace EcsRx.Attributes

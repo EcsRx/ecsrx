@@ -11,6 +11,7 @@ using EcsRx.Groups.Observable;
 using EcsRx.Plugins.GroupBinding.Attributes;
 using EcsRx.Plugins.GroupBinding.Exceptions;
 using EcsRx.Systems;
+using EcsRx.Extensions;
 
 namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
 {
@@ -70,21 +71,21 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
                 .ToArray();
         }
 
-        public void ProcessProperty(PropertyInfo property, ISystem system)
+        public void ProcessProperty(PropertyInfo property, ISystem system, int[] groupAffinities)
         {
             var possibleGroup = GetGroupAttributeIfAvailable(system, property);
             if (possibleGroup == null) { return; }
                 
-            var observableGroup = ObservableGroupManager.GetObservableGroup(possibleGroup);
+            var observableGroup = ObservableGroupManager.GetObservableGroup(possibleGroup, groupAffinities);
             property.SetValue(system, observableGroup);
         }
 
-        public void ProcessField(FieldInfo field, ISystem system)
+        public void ProcessField(FieldInfo field, ISystem system, int[] groupAffinities)
         {
             var possibleGroup = GetGroupAttributeIfAvailable(system, field);
             if (possibleGroup == null) { return; }
-                
-            var observableGroup = ObservableGroupManager.GetObservableGroup(possibleGroup);
+
+            var observableGroup = ObservableGroupManager.GetObservableGroup(possibleGroup, groupAffinities);
             field.SetValue(system, observableGroup);
         }
         
@@ -96,12 +97,14 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
 
             if (observableGroupProperties.Length == 0 && observableGroupFields.Length == 0)
             { return; }
-            
+
+            var groupAffinities = system.GetGroupAffinities();
+
             foreach (var observableGroupProperty in observableGroupProperties)
-            { ProcessProperty(observableGroupProperty, system); }
+            { ProcessProperty(observableGroupProperty, system, groupAffinities); }
             
             foreach (var observableGroupField in observableGroupFields)
-            { ProcessField(observableGroupField, system); }
+            { ProcessField(observableGroupField, system, groupAffinities); }
         }
 
         public void DestroySystem(ISystem system)

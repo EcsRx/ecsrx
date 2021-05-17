@@ -3,6 +3,7 @@ using System.Linq;
 using EcsRx.Attributes;
 using EcsRx.Groups;
 using EcsRx.Systems;
+using SystemsRx.Systems;
 
 namespace EcsRx.Extensions
 {
@@ -11,9 +12,14 @@ namespace EcsRx.Extensions
         public static IGroup GroupFor(this IGroupSystem groupSystem, params Type[] requiredTypes)
         { return new Group(requiredTypes); }
         
-        public static int[] GetGroupAffinities(this IGroupSystem groupSystem)
+        public static int[] GetGroupAffinities(this ISystem system)
         {
-            var affinity = groupSystem.GetType()
+            if (system is null)
+            {
+                throw new ArgumentNullException(nameof(system));
+            }
+
+            var affinity = system.GetType()
                 .GetCustomAttributes(typeof(CollectionAffinityAttribute), true)
                 .FirstOrDefault();
 

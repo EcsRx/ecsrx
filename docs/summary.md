@@ -22,6 +22,7 @@
     * [Computeds Plugin](plugins/computed-plugin.md)
     * [View Plugin](plugins/view-plugin.md)
     * [Batching Systems Plugin](plugins/batched-plugin.md)
+    * [Group Binding Plugin](plugins/group-binding-plugin.md)
 * Performance
     * [Overview](performance/readme.md)
     * [Component Type Lookups](performance/component-type-lookups.md)

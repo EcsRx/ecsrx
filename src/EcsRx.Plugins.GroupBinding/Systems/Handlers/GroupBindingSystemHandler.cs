@@ -6,13 +6,12 @@ using SystemsRx.Executor.Handlers;
 using SystemsRx.Systems;
 using SystemsRx.Types;
 using EcsRx.Collections;
-using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Plugins.GroupBinding.Attributes;
 using EcsRx.Plugins.GroupBinding.Exceptions;
 using EcsRx.Systems;
 using EcsRx.Extensions;
-using EcsRx.Attributes;
+using EcsRx.Plugins.GroupBinding.Groups;
 
 namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
 {
@@ -37,26 +36,26 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
         public bool CanHandleSystem(ISystem system)
         { return true; }
 
-        public Tuple<IGroup, int[]> GetGroupAndAffinityFromAttributeIfAvailable(ISystem system, MemberInfo member)
+        public GroupWithAffinity GetGroupAndAffinityFromAttributeIfAvailable(ISystem system, MemberInfo member)
         {
             var fromGroupAttribute = (FromGroupAttribute)member.GetCustomAttribute(FromGroupAttributeType, true);
             if (fromGroupAttribute != null)
             {
                 var possibleGroup = fromGroupAttribute.Group;
                 if (possibleGroup != null)
-                { return new Tuple<IGroup, int[]>(possibleGroup, system.GetGroupAffinities(member)); }
+                { return new GroupWithAffinity(possibleGroup, system.GetGroupAffinities(member)); }
 
                 if (system is IGroupSystem groupSystem)
-                { return new Tuple<IGroup, int[]>(groupSystem.Group, system.GetGroupAffinities(member) ?? groupSystem.GetGroupAffinities()); }
+                { return new GroupWithAffinity(groupSystem.Group, system.GetGroupAffinities(member) ?? groupSystem.GetGroupAffinities()); }
 
                 throw new MissingGroupSystemInterfaceException(system, member);
             }
             
             var fromComponentsAttribute = (FromComponentsAttribute)member.GetCustomAttribute(FromComponentsAttributeType, true);
             if (fromComponentsAttribute != null)
-            { return new Tuple<IGroup, int[]>(fromComponentsAttribute.Group, system.GetGroupAffinities(member)); }
+            { return new GroupWithAffinity(fromComponentsAttribute.Group, system.GetGroupAffinities(member)); }
 
-            return new Tuple<IGroup, int[]>(null, null);
+            return GroupWithAffinity.Default;
         }
 
         public PropertyInfo[] GetApplicableProperties(Type systemType)
@@ -75,20 +74,18 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
 
         public void ProcessProperty(PropertyInfo property, ISystem system)
         {
-            var tuple = GetGroupAndAffinityFromAttributeIfAvailable(system, property);
-            var observableGroup = tuple.Item1;
-            if (observableGroup == null) { return; }
+            var groupWithAffinity = GetGroupAndAffinityFromAttributeIfAvailable(system, property);
+            if (groupWithAffinity.Group == null) { return; }
 
-            property.SetValue(system, ObservableGroupManager.GetObservableGroup(observableGroup, tuple.Item2));
+            property.SetValue(system, ObservableGroupManager.GetObservableGroup(groupWithAffinity.Group, groupWithAffinity.CollectionIds));
         }
 
         public void ProcessField(FieldInfo field, ISystem system)
         {
-            var tuple = GetGroupAndAffinityFromAttributeIfAvailable(system, field);
-            var observableGroup = tuple.Item1;
-            if (observableGroup == null) { return; }
+            var groupWithAffinity = GetGroupAndAffinityFromAttributeIfAvailable(system, field);
+            if (groupWithAffinity.Group == null) { return; }
 
-            field.SetValue(system, ObservableGroupManager.GetObservableGroup(observableGroup, tuple.Item2));
+            field.SetValue(system, ObservableGroupManager.GetObservableGroup(groupWithAffinity.Group, groupWithAffinity.CollectionIds));
         }
         
         public void SetupSystem(ISystem system)

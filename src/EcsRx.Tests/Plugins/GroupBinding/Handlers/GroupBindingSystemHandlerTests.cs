@@ -76,40 +76,40 @@ namespace EcsRx.Tests.Plugins.GroupBinding.Handlers
             var member5 = dummySystem.GetType().GetField(nameof(dummySystem.ObservableGroupBInCollection5));
             var member6 = dummySystem.GetType().GetProperty(nameof(dummySystem.ObservableGroupCInCollection7));
 
-            var tuple1 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member1);
-            var tuple2 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member2);
-            var tuple3 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member3);
-            var tuple4 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member4);
-            var tuple5 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member5);
-            var tuple6 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member6);
+            var groupWithAffinity1 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member1);
+            var groupWithAffinity2 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member2);
+            var groupWithAffinity3 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member3);
+            var groupWithAffinity4 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member4);
+            var groupWithAffinity5 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member5);
+            var groupWithAffinity6 = reactToEntitySystemHandler.GetGroupAndAffinityFromAttributeIfAvailable(dummySystem, member6);
 
-            Assert.Single(tuple1.Item1.RequiredComponents);
-            Assert.Contains(tuple1.Item1.RequiredComponents, x => x == typeof(TestComponentOne));
-            Assert.Null(tuple1.Item2);
+            Assert.Single(groupWithAffinity1.Group.RequiredComponents);
+            Assert.Contains(groupWithAffinity1.Group.RequiredComponents, x => x == typeof(TestComponentOne));
+            Assert.Null(groupWithAffinity1.CollectionIds);
 
-            Assert.Single(tuple2.Item1.RequiredComponents);
-            Assert.Contains(tuple2.Item1.RequiredComponents, x => x == typeof(TestComponentTwo));
-            Assert.Null(tuple2.Item2);
+            Assert.Single(groupWithAffinity2.Group.RequiredComponents);
+            Assert.Contains(groupWithAffinity2.Group.RequiredComponents, x => x == typeof(TestComponentTwo));
+            Assert.Null(groupWithAffinity2.CollectionIds);
 
-            Assert.Single(tuple3.Item1.RequiredComponents);
-            Assert.Contains(tuple3.Item1.RequiredComponents, x => x == typeof(TestComponentOne));
-            Assert.Single(tuple3.Item2);
-            Assert.Contains(tuple3.Item2, x => x == 3);
+            Assert.Single(groupWithAffinity3.Group.RequiredComponents);
+            Assert.Contains(groupWithAffinity3.Group.RequiredComponents, x => x == typeof(TestComponentOne));
+            Assert.Single(groupWithAffinity3.CollectionIds);
+            Assert.Contains(groupWithAffinity3.CollectionIds, x => x == 3);
 
-            Assert.Single(tuple4.Item1.RequiredComponents);
-            Assert.Contains(tuple4.Item1.RequiredComponents, x => x == typeof(TestComponentOne));
-            Assert.Single(tuple4.Item2);
-            Assert.Contains(tuple4.Item2, x => x == 2);
+            Assert.Single(groupWithAffinity4.Group.RequiredComponents);
+            Assert.Contains(groupWithAffinity4.Group.RequiredComponents, x => x == typeof(TestComponentOne));
+            Assert.Single(groupWithAffinity4.CollectionIds);
+            Assert.Contains(groupWithAffinity4.CollectionIds, x => x == 2);
 
-            Assert.Single(tuple5.Item1.RequiredComponents);
-            Assert.Contains(tuple5.Item1.RequiredComponents, x => x == typeof(TestComponentTwo));
-            Assert.Single(tuple5.Item2);
-            Assert.Contains(tuple5.Item2, x => x == 5);
+            Assert.Single(groupWithAffinity5.Group.RequiredComponents);
+            Assert.Contains(groupWithAffinity5.Group.RequiredComponents, x => x == typeof(TestComponentTwo));
+            Assert.Single(groupWithAffinity5.CollectionIds);
+            Assert.Contains(groupWithAffinity5.CollectionIds, x => x == 5);
 
-            Assert.Single(tuple6.Item1.RequiredComponents);
-            Assert.Contains(tuple6.Item1.RequiredComponents, x => x == typeof(TestComponentOne));
-            Assert.Single(tuple6.Item2);
-            Assert.Contains(tuple6.Item2, x => x == 7);
+            Assert.Single(groupWithAffinity6.Group.RequiredComponents);
+            Assert.Contains(groupWithAffinity6.Group.RequiredComponents, x => x == typeof(TestComponentOne));
+            Assert.Single(groupWithAffinity6.CollectionIds);
+            Assert.Contains(groupWithAffinity6.CollectionIds, x => x == 7);
         }
 
         [Fact]

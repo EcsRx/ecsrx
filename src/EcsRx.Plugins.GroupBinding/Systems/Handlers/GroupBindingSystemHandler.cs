@@ -6,12 +6,12 @@ using SystemsRx.Executor.Handlers;
 using SystemsRx.Systems;
 using SystemsRx.Types;
 using EcsRx.Collections;
-using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Plugins.GroupBinding.Attributes;
 using EcsRx.Plugins.GroupBinding.Exceptions;
 using EcsRx.Systems;
 using EcsRx.Extensions;
+using EcsRx.Plugins.GroupBinding.Groups;
 
 namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
 {
@@ -25,8 +25,8 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
     [Priority(PriorityTypes.SuperHigh + 10)]
     public class GroupBindingSystemHandler : IConventionalSystemHandler
     {
-        private static Type FromGroupAttributeType = typeof(FromGroupAttribute); 
-        private static Type FromComponentsAttributeType = typeof(FromComponentsAttribute); 
+        private static readonly Type FromGroupAttributeType = typeof(FromGroupAttribute); 
+        private static readonly Type FromComponentsAttributeType = typeof(FromComponentsAttribute); 
         
         public IObservableGroupManager ObservableGroupManager { get; }
 
@@ -36,25 +36,26 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
         public bool CanHandleSystem(ISystem system)
         { return true; }
 
-        public IGroup GetGroupAttributeIfAvailable(ISystem system, MemberInfo member)
+        public GroupWithAffinity GetGroupAndAffinityFromAttributeIfAvailable(ISystem system, MemberInfo member)
         {
-            var fromGroupAttributes = member.GetCustomAttributes(FromGroupAttributeType, true);
-            if (fromGroupAttributes.Length > 0)
+            var fromGroupAttribute = (FromGroupAttribute)member.GetCustomAttribute(FromGroupAttributeType, true);
+            if (fromGroupAttribute != null)
             {
-                var possibleGroup = ((FromGroupAttribute)fromGroupAttributes.First()).Group;
-                if(possibleGroup != null) { return possibleGroup; }
+                var possibleGroup = fromGroupAttribute.Group;
+                if (possibleGroup != null)
+                { return new GroupWithAffinity(possibleGroup, system.GetGroupAffinities(member)); }
 
                 if (system is IGroupSystem groupSystem)
-                { return groupSystem.Group; }
+                { return new GroupWithAffinity(groupSystem.Group, system.GetGroupAffinities(member) ?? groupSystem.GetGroupAffinities()); }
 
                 throw new MissingGroupSystemInterfaceException(system, member);
             }
             
-            var fromComponentsAttributes = member.GetCustomAttributes(FromComponentsAttributeType, true);
-            if (fromComponentsAttributes.Length > 0)
-            { return ((FromComponentsAttribute)fromComponentsAttributes.First()).Group; }
+            var fromComponentsAttribute = (FromComponentsAttribute)member.GetCustomAttribute(FromComponentsAttributeType, true);
+            if (fromComponentsAttribute != null)
+            { return new GroupWithAffinity(fromComponentsAttribute.Group, system.GetGroupAffinities(member)); }
 
-            return null;
+            return GroupWithAffinity.Default;
         }
 
         public PropertyInfo[] GetApplicableProperties(Type systemType)
@@ -71,22 +72,20 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
                 .ToArray();
         }
 
-        public void ProcessProperty(PropertyInfo property, ISystem system, int[] groupAffinities)
+        public void ProcessProperty(PropertyInfo property, ISystem system)
         {
-            var possibleGroup = GetGroupAttributeIfAvailable(system, property);
-            if (possibleGroup == null) { return; }
-                
-            var observableGroup = ObservableGroupManager.GetObservableGroup(possibleGroup, groupAffinities);
-            property.SetValue(system, observableGroup);
+            var groupWithAffinity = GetGroupAndAffinityFromAttributeIfAvailable(system, property);
+            if (groupWithAffinity.Group == null) { return; }
+
+            property.SetValue(system, ObservableGroupManager.GetObservableGroup(groupWithAffinity.Group, groupWithAffinity.CollectionIds));
         }
 
-        public void ProcessField(FieldInfo field, ISystem system, int[] groupAffinities)
+        public void ProcessField(FieldInfo field, ISystem system)
         {
-            var possibleGroup = GetGroupAttributeIfAvailable(system, field);
-            if (possibleGroup == null) { return; }
+            var groupWithAffinity = GetGroupAndAffinityFromAttributeIfAvailable(system, field);
+            if (groupWithAffinity.Group == null) { return; }
 
-            var observableGroup = ObservableGroupManager.GetObservableGroup(possibleGroup, groupAffinities);
-            field.SetValue(system, observableGroup);
+            field.SetValue(system, ObservableGroupManager.GetObservableGroup(groupWithAffinity.Group, groupWithAffinity.CollectionIds));
         }
         
         public void SetupSystem(ISystem system)
@@ -98,13 +97,11 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
             if (observableGroupProperties.Length == 0 && observableGroupFields.Length == 0)
             { return; }
 
-            var groupAffinities = system.GetGroupAffinities();
-
             foreach (var observableGroupProperty in observableGroupProperties)
-            { ProcessProperty(observableGroupProperty, system, groupAffinities); }
+            { ProcessProperty(observableGroupProperty, system); }
             
             foreach (var observableGroupField in observableGroupFields)
-            { ProcessField(observableGroupField, system, groupAffinities); }
+            { ProcessField(observableGroupField, system); }
         }
 
         public void DestroySystem(ISystem system)

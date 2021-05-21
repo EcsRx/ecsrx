@@ -3,7 +3,7 @@ using EcsRx.Collections.Database;
 
 namespace EcsRx.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field)]
     public class CollectionAffinityAttribute : Attribute
     {
         public int[] CollectionIds { get; }

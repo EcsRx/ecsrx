@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using SystemsRx.Events;
 using SystemsRx.Executor;
 using SystemsRx.Executor.Handlers;
@@ -20,7 +21,11 @@ using EcsRx.Plugins.ReactiveSystems.Handlers;
 using EcsRx.Plugins.Views.Components;
 using EcsRx.Plugins.Views.Systems;
 using EcsRx.Pools;
+using EcsRx.ReactiveData;
+using EcsRx.ReactiveData.Collections;
+using EcsRx.ReactiveData.Extensions;
 using EcsRx.Tests.Models;
+using EcsRx.Tests.Plugins.ReactiveData.Utils;
 using EcsRx.Tests.Systems;
 using NSubstitute;
 using Xunit;
@@ -293,6 +298,71 @@ namespace EcsRx.Tests.Sanity
             
             var testComponentPool = componentDatabase.GetPoolFor<TestComponentOne>(componentLookup.GetComponentType(typeof(TestComponentOne)));
             Assert.Equal(expectedSize, testComponentPool.Components.Length);
+        }
+
+        [Fact]
+        public void should_notify_and_update_values_with_reactive_property()
+        {
+            var reactiveProperty = new ReactiveProperty<int>(10);
+            Assert.Equal(10, reactiveProperty.Value);
+
+            var timesEntered = 0;
+            var sub = reactiveProperty.Subscribe(x =>
+            {
+                if(timesEntered == 0) { Assert.Equal(10, x); }
+                if(timesEntered == 1) { Assert.Equal(7, x); }
+                timesEntered++;
+            });
+            reactiveProperty.Value = 7;
+            Assert.Equal(7, reactiveProperty.Value);
+            Assert.Equal(2, timesEntered);
+            
+            sub.Dispose();
+        }
+        
+        [Fact]
+        public void should_notify_and_update_values_with_reactive_collection()
+        {
+            var initial = new List<int> {1, 2, 3};
+            var reactiveCollection = new ReactiveCollection<int>(initial);
+            Assert.Equal(3, reactiveCollection.Count);
+            Assert.Equal(initial, reactiveCollection);
+            
+            var timesEntered = 0;
+            var sub = reactiveCollection.ObserveAdd().Subscribe(x =>
+            {
+                if(timesEntered == 0) { Assert.Equal(6, x.Value); }
+                if(timesEntered == 1) { Assert.Equal(7, x.Value); }
+                timesEntered++;
+            });
+            
+            reactiveCollection.Add(6);
+            reactiveCollection.Add(7);
+            initial.Add(6);
+            initial.Add(7);
+            Assert.Equal(initial, reactiveCollection);
+            Assert.Equal(2, timesEntered);
+            
+            sub.Dispose();
+        }
+        
+        [Fact]
+        public void should_notify_and_update_values_with_reactive_property_from_observable()
+        {
+            var reactiveProperty = Observable.Return(10).ToReactiveProperty();
+            Assert.Equal(10, reactiveProperty.Value);
+
+            var timesEntered = 0;
+            var sub = reactiveProperty.Subscribe(x =>
+            {
+                if(timesEntered == 0) { Assert.Equal(10, x); }
+                if(timesEntered == 1) { Assert.Equal(7, x); }
+                timesEntered++;
+            });
+            reactiveProperty.Value = 7;
+            Assert.Equal(7, reactiveProperty.Value);
+            
+            sub.Dispose();
         }
     }
 }

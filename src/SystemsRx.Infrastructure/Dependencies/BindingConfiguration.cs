@@ -5,6 +5,7 @@ namespace SystemsRx.Infrastructure.Dependencies
 {
     public class BindingConfiguration
     {
+
         public bool AsSingleton { get; set; }  
         public string WithName { get; set; }
         public object ToInstance { get; set; }

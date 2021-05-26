@@ -10,6 +10,7 @@
     <PackageReference Include="LazyData.Numerics" Version="3.0.17" />
     <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="Persistity.Endpoints.Http" Version="1.1.30" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx.Infrastructure.Ninject\EcsRx.Infrastructure.Ninject.csproj" />

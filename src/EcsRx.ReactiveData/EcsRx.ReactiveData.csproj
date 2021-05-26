@@ -10,10 +10,9 @@
     <Description>Reactive data objects for extending the dotnet reactive library, unirx provides this out of the box</Description>
     <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Core" Version="4.1.0" />
-    <PackageReference Include="System.Reactive.Linq" Version="4.1.0" />
+    <ProjectReference Include="..\EcsRx.MicroRx\EcsRx.MicroRx.csproj" />
   </ItemGroup>
   
 </Project>

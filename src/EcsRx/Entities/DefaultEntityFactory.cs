@@ -1,7 +1,7 @@
 ﻿using System;
+using SystemsRx.Pools;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
-using EcsRx.Pools;
 
 namespace EcsRx.Entities
 {

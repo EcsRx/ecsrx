@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EcsRx.Pools;
+using SystemsRx.Pools;
 using Xunit;
 
 namespace EcsRx.Tests.EcsRx.Pools

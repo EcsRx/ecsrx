@@ -1,4 +1,4 @@
-﻿using EcsRx.Pools;
+﻿using SystemsRx.Pools;
 
 namespace EcsRx.Plugins.Views.Pooling
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EcsRx.Pools
+namespace SystemsRx.Pools
 {   
     public class IndexPool : IPool<int>
     {

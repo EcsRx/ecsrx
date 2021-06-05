@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
+using SystemsRx.Pools;
 using EcsRx.MicroRx.Subjects;
-using EcsRx.Pools;
 
 namespace EcsRx.Components
 {

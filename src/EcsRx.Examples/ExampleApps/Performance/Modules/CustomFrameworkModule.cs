@@ -5,6 +5,7 @@ using SystemsRx.Executor.Handlers;
 using SystemsRx.Executor.Handlers.Conventional;
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Pools;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
@@ -14,7 +15,6 @@ using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Groups.Observable;
 using EcsRx.MicroRx.Events;
-using EcsRx.Pools;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Modules
 {

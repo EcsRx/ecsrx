@@ -1,4 +1,4 @@
-﻿namespace EcsRx.Pools
+﻿namespace SystemsRx.Pools
 {
     public interface IIdPool : IPool<int>
     {

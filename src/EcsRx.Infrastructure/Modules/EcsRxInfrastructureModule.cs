@@ -1,6 +1,7 @@
 using SystemsRx.Executor.Handlers;
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Pools;
 using EcsRx.Collections;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
@@ -8,7 +9,6 @@ using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
-using EcsRx.Pools;
 using EcsRx.Systems.Handlers;
 
 namespace EcsRx.Infrastructure.Modules

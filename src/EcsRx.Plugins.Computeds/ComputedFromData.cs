@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using SystemsRx.Extensions;
-using EcsRx.Extensions;
 using EcsRx.MicroRx.Extensions;
 using EcsRx.MicroRx.Subjects;
 

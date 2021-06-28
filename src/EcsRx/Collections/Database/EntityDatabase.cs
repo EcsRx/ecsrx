@@ -106,7 +106,7 @@ namespace EcsRx.Collections.Database
         public IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = EntityCollectionLookups.NoCollectionDefined)
         {
             if(group is EmptyGroup)
-            { return new IEntity[0]; }
+            { return Array.Empty<IEntity>(); }
 
             if (collectionId != EntityCollectionLookups.NoCollectionDefined)
             { return _collections[collectionId].MatchingGroup(group); }
@@ -117,7 +117,7 @@ namespace EcsRx.Collections.Database
         public IEnumerable<IEntity> GetEntitiesFor(IGroup group, params int[] collectionIds)
         {
             if(group is EmptyGroup)
-            { return new IEntity[0]; }
+            { return Array.Empty<IEntity>(); }
 
             if (collectionIds == null || collectionIds.Length == 0)
             { return Collections.GetAllEntities().MatchingGroup(group); }
@@ -135,7 +135,7 @@ namespace EcsRx.Collections.Database
         public IEnumerable<IEntity> GetEntitiesFor(LookupGroup lookupGroup, params int[] collectionIds)
         {
             if(lookupGroup.RequiredComponents.Length == 0 && lookupGroup.ExcludedComponents.Length  == 0)
-            { return new IEntity[0]; }
+            { return Array.Empty<IEntity>(); }
 
             if (collectionIds == null || collectionIds.Length == 0)
             { return Collections.GetAllEntities().MatchingGroup(lookupGroup); }

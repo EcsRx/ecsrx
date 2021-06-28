@@ -16,6 +16,6 @@ namespace EcsRx.Plugins.Computeds
             // Nothing needs registering
         }
         
-        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => new ISystem[0];
+        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
     }
 }

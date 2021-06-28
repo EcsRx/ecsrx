@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using EcsRx.Components;
@@ -32,7 +33,7 @@ namespace EcsRx.Plugins.Batching.Builders
             for (var i = 0; i < entities.Count; i++)
             {
                 if (entities.Count != batches.Length)
-                { return new ReferenceBatch<T1, T2>[0]; }
+                { return Array.Empty<ReferenceBatch<T1, T2>>(); }
                 
                 var entity = entities[i];
                 var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
@@ -72,7 +73,7 @@ namespace EcsRx.Plugins.Batching.Builders
             for (var i = 0; i < entities.Count; i++)
             {
                 if (entities.Count != batches.Length)
-                { return new ReferenceBatch<T1, T2, T3>[0]; }
+                { return Array.Empty<ReferenceBatch<T1, T2, T3>>(); }
                 
                 var entity = entities[i];
                 var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
@@ -118,7 +119,7 @@ namespace EcsRx.Plugins.Batching.Builders
             for (var i = 0; i < entities.Count; i++)
             {
                 if (entities.Count != batches.Length)
-                { return new ReferenceBatch<T1, T2, T3, T4>[0]; }
+                { return Array.Empty<ReferenceBatch<T1, T2, T3, T4>>(); }
                 
                 var entity = entities[i];
                 var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
@@ -169,7 +170,7 @@ namespace EcsRx.Plugins.Batching.Builders
             for (var i = 0; i < entities.Count; i++)
             {
                 if (entities.Count != batches.Length)
-                { return new ReferenceBatch<T1, T2, T3, T4, T5>[0]; }
+                { return Array.Empty<ReferenceBatch<T1, T2, T3, T4, T5>>(); }
                 
                 var entity = entities[i];
                 var component1Allocation = entity.ComponentAllocations[_componentTypeId1];
@@ -225,7 +226,7 @@ namespace EcsRx.Plugins.Batching.Builders
             for (var i = 0; i < entities.Count; i++)
             {
                 if (entities.Count != batches.Length)
-                { return new ReferenceBatch<T1, T2, T3, T4, T5, T6>[0]; }
+                { return Array.Empty<ReferenceBatch<T1, T2, T3, T4, T5, T6>>(); }
                 
                 var entity = entities[i];
                 var component1Allocation = entity.ComponentAllocations[_componentTypeId1];

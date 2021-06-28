@@ -21,6 +21,6 @@ namespace EcsRx.Plugins.Batching
             container.Bind<IBatchManager, BatchManager>(x => x.AsSingleton());
         }
         
-        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => new ISystem[0];
+        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
     }
 }

@@ -17,6 +17,6 @@ namespace EcsRx.Plugins.GroupBinding
         public void SetupDependencies(IDependencyContainer container)
         { container.Bind<IConventionalSystemHandler, GroupBindingSystemHandler>(); }
         
-        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => new ISystem[0];
+        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using EcsRx.Components;
@@ -39,8 +40,8 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 if (entities.Count != batches.Length)
                 {
-                    var tempBatch = new Batch<T1, T2>[0];
-                    return new PinnedBatch<T1, T2>(tempBatch, new GCHandle[0]);
+                    var tempBatch = Array.Empty<Batch<T1, T2>>();
+                    return new PinnedBatch<T1, T2>(tempBatch, Array.Empty<GCHandle>());
                 }
                 
                 var entity = entities[i];
@@ -89,8 +90,8 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 if (entities.Count != batches.Length)
                 {
-                    var tempBatch = new Batch<T1, T2, T3>[0];
-                    return new PinnedBatch<T1, T2, T3>(tempBatch, new GCHandle[0]);
+                    var tempBatch = Array.Empty<Batch<T1, T2, T3>>();
+                    return new PinnedBatch<T1, T2, T3>(tempBatch, Array.Empty<GCHandle>());
                 }
                 
                 var entity = entities[i];
@@ -148,8 +149,8 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 if (entities.Count != batches.Length)
                 {
-                    var tempBatch = new Batch<T1, T2, T3, T4>[0];
-                    return new PinnedBatch<T1, T2, T3, T4>(tempBatch, new GCHandle[0]);
+                    var tempBatch = Array.Empty<Batch<T1, T2, T3, T4>>();
+                    return new PinnedBatch<T1, T2, T3, T4>(tempBatch, Array.Empty<GCHandle>());
                 }
                 
                 var entity = entities[i];
@@ -214,8 +215,8 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 if (entities.Count != batches.Length)
                 {
-                    var tempBatch = new Batch<T1, T2, T3, T4, T5>[0];
-                    return new PinnedBatch<T1, T2, T3, T4, T5>(tempBatch, new GCHandle[0]);
+                    var tempBatch = Array.Empty<Batch<T1, T2, T3, T4, T5>>();
+                    return new PinnedBatch<T1, T2, T3, T4, T5>(tempBatch, Array.Empty<GCHandle>());
                 }
                 
                 var entity = entities[i];
@@ -287,8 +288,8 @@ namespace EcsRx.Plugins.Batching.Builders
             {
                 if (entities.Count != batches.Length)
                 {
-                    var tempBatch = new Batch<T1, T2, T3, T4, T5, T6>[0];
-                    return new PinnedBatch<T1, T2, T3, T4, T5, T6>(tempBatch, new GCHandle[0]);
+                    var tempBatch = Array.Empty<Batch<T1, T2, T3, T4, T5, T6>>();
+                    return new PinnedBatch<T1, T2, T3, T4, T5, T6>(tempBatch, Array.Empty<GCHandle>());
                 }
                 
                 var entity = entities[i];

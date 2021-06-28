@@ -8,6 +8,6 @@ namespace EcsRx.Examples.Custom.Groups
     {
         public Type[] RequiredComponents { get;  } = {typeof(FirstComponent) };
 
-        public Type[] ExcludedComponents { get; } = new Type[0];
+        public Type[] ExcludedComponents { get; } = Array.Empty<Type>();
     }
 }

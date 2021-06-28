@@ -15,7 +15,7 @@ namespace EcsRx.MicroRx
 
         ImmutableList()
         {
-            data = new T[0];
+            data = Array.Empty<T>();
         }
 
         public ImmutableList(T[] data)

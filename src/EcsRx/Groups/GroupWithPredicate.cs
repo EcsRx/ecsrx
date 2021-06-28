@@ -8,7 +8,7 @@ namespace EcsRx.Groups
     {
         public Predicate<IEntity> EntityPredicate { get; }
         
-        public GroupWithPredicate(Predicate<IEntity> entityPredicate, params Type[] requiredComponents): this(entityPredicate, requiredComponents, new Type[0]){}
+        public GroupWithPredicate(Predicate<IEntity> entityPredicate, params Type[] requiredComponents): this(entityPredicate, requiredComponents, Array.Empty<Type>()){}
 
         public GroupWithPredicate(Predicate<IEntity> entityPredicate, IEnumerable<Type> requiredComponents, IEnumerable<Type> excludedComponents) : base(requiredComponents, excludedComponents)
         {

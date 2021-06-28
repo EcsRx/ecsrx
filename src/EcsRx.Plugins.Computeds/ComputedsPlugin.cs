@@ -8,7 +8,7 @@ namespace EcsRx.Plugins.Computeds
 {
     public class ComputedsPlugin : ISystemsRxPlugin
     {
-        public string Name => "Computeds";
+        public string Name => "EcsRx Computeds";
         public Version Version { get; } = new Version("1.0.0");
         
         public void SetupDependencies(IDependencyContainer container)

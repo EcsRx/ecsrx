@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using SystemsRx.Computeds;
 using SystemsRx.Extensions;
-using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using EcsRx.MicroRx.Extensions;
-using EcsRx.MicroRx.Subjects;
+using SystemsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Plugins.Computeds
 {

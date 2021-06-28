@@ -1,8 +1,8 @@
-﻿using EcsRx.Blueprints;
+﻿using SystemsRx.ReactiveData;
+using EcsRx.Blueprints;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.HealthExample.Components;
 using EcsRx.Extensions;
-using EcsRx.ReactiveData;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample.Blueprints
 {

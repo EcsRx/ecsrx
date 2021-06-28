@@ -13,8 +13,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj" />
-      <ProjectReference Include="..\EcsRx.MicroRx\EcsRx.MicroRx.csproj" />
+      <ProjectReference Include="..\SystemsRx.MicroRx\SystemsRx.MicroRx.csproj" />
       <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SystemsRx.Plugins.Computeds" Version="5.0.2" />
     </ItemGroup>
 
 </Project>

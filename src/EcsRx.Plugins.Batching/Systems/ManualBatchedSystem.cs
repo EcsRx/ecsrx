@@ -10,8 +10,8 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using EcsRx.MicroRx.Disposables;
-using EcsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Disposables;
+using SystemsRx.MicroRx.Extensions;
 using EcsRx.Systems;
 
 namespace EcsRx.Plugins.Batching.Systems

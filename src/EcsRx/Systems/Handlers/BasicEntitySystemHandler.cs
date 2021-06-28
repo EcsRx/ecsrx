@@ -11,7 +11,7 @@ using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Extensions;
 
 namespace EcsRx.Systems.Handlers
 {

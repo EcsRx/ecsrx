@@ -4,7 +4,7 @@ using System.Reactive.Subjects;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using EcsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Extensions;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Plugins.Computeds.Models;
 using NSubstitute;

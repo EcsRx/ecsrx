@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using SystemsRx.Extensions;
+using SystemsRx.MicroRx.Disposables;
+using SystemsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Subjects;
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Lookups;
-using EcsRx.MicroRx.Disposables;
-using EcsRx.MicroRx.Extensions;
-using EcsRx.MicroRx.Subjects;
 
 namespace EcsRx.Collections.Database
 {

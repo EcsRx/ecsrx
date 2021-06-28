@@ -6,8 +6,8 @@ using SystemsRx.Extensions;
 using SystemsRx.Systems;
 using EcsRx.Collections;
 using EcsRx.Extensions;
-using EcsRx.MicroRx.Disposables;
-using EcsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Disposables;
+using SystemsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 

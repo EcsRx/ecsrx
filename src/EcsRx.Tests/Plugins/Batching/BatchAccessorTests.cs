@@ -5,7 +5,7 @@ using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
-using EcsRx.MicroRx.Subjects;
+using SystemsRx.MicroRx.Subjects;
 using EcsRx.Plugins.Batching.Accessors;
 using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Tests.Models;

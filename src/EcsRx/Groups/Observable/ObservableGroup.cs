@@ -9,8 +9,8 @@ using EcsRx.Entities;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Lookups;
-using EcsRx.MicroRx.Extensions;
-using EcsRx.MicroRx.Subjects;
+using SystemsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Groups.Observable
 {

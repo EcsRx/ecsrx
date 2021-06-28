@@ -4,7 +4,7 @@ using System.Linq;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Extensions;
-using EcsRx.MicroRx.Subjects;
+using SystemsRx.MicroRx.Subjects;
 using IComponent = EcsRx.Components.IComponent;
 
 namespace EcsRx.Entities

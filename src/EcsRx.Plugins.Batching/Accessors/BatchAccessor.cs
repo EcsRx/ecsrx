@@ -5,8 +5,8 @@ using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using EcsRx.MicroRx.Disposables;
-using EcsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Disposables;
+using SystemsRx.MicroRx.Extensions;
 using EcsRx.Plugins.Batching.Batches;
 using EcsRx.Plugins.Batching.Builders;
 

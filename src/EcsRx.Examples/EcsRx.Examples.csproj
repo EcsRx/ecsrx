@@ -11,6 +11,8 @@
     <PackageReference Include="Ninject" Version="3.3.4" />
     <PackageReference Include="Persistity.Endpoints.Http" Version="1.1.30" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
+    <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="5.0.2" />
+    <PackageReference Include="SystemsRx.ReactiveData" Version="5.0.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx.Infrastructure.Ninject\EcsRx.Infrastructure.Ninject.csproj" />

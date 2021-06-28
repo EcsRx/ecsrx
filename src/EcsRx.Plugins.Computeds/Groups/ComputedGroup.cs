@@ -7,8 +7,8 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Lookups;
-using EcsRx.MicroRx.Extensions;
-using EcsRx.MicroRx.Subjects;
+using SystemsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Plugins.Computeds.Groups
 {

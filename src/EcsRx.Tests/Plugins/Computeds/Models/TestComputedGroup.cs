@@ -2,7 +2,7 @@
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using EcsRx.MicroRx.Subjects;
+using SystemsRx.MicroRx.Subjects;
 using EcsRx.Plugins.Computeds.Groups;
 using EcsRx.Tests.Models;
 

@@ -14,7 +14,7 @@ using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Groups.Observable;
-using EcsRx.MicroRx.Events;
+using SystemsRx.MicroRx.Events;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Modules
 {

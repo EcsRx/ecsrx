@@ -10,7 +10,7 @@ using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 

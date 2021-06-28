@@ -11,6 +11,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
-    <ProjectReference Include="..\SystemsRx.Infrastructure\SystemsRx.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SystemsRx.Infrastructure" Version="5.0.2" />
   </ItemGroup>
 </Project>

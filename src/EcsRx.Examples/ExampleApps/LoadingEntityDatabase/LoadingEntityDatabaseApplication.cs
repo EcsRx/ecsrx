@@ -1,9 +1,9 @@
 ﻿using System;
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
+using SystemsRx.Infrastructure.Ninject;
 using EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Blueprints;
 using EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules;
-using EcsRx.Infrastructure.Ninject;
 using EcsRx.Plugins.Persistence;
 using EcsRx.Plugins.Persistence.Extensions;
 

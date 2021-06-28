@@ -8,8 +8,8 @@ using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.MicroRx.Disposables;
-using EcsRx.MicroRx.Extensions;
+using SystemsRx.MicroRx.Disposables;
+using SystemsRx.MicroRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 
 namespace EcsRx.Plugins.ReactiveSystems.Handlers

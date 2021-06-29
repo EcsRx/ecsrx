@@ -14,7 +14,7 @@ namespace EcsRx.Extensions
         public static async Task<IEntity> WaitForPredicateMet(this IEntity entity, Predicate<IEntity> predicate)
         {
             while(!predicate(entity))
-            { await Task.Delay(1000); }
+            { await Task.Delay(1000).ConfigureAwait(false); }
 
             return entity;
         }

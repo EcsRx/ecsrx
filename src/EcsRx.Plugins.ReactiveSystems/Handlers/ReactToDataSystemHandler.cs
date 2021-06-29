@@ -20,17 +20,17 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
     [Priority(3)]
     public class ReactToDataSystemHandler : IConventionalSystemHandler
     {
-        public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
-        public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IObservableGroupManager ObservableGroupManager;
+        public readonly IDictionary<ISystem, IDisposable> SystemSubscriptions;
+        public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> EntitySubscriptions;
 
         private readonly MethodInfo _processEntityMethod;
         
         public ReactToDataSystemHandler(IObservableGroupManager observableGroupManager)
         {
             ObservableGroupManager = observableGroupManager;
-            _systemSubscriptions = new Dictionary<ISystem, IDisposable>();
-            _entitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
+            SystemSubscriptions = new Dictionary<ISystem, IDisposable>();
+            EntitySubscriptions = new Dictionary<ISystem, IDictionary<int, IDisposable>>();
             _processEntityMethod = GetType().GetMethod("ProcessEntity");
         }
 
@@ -67,9 +67,9 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             var processEntityFunction = CreateEntityProcessorFunction(system);
 
             var entityChangeSubscriptions = new CompositeDisposable();
-            _systemSubscriptions.Add(system, entityChangeSubscriptions);
+            SystemSubscriptions.Add(system, entityChangeSubscriptions);
             var entitySubscriptions = new Dictionary<int, IDisposable>();
-            _entitySubscriptions.Add(system, entitySubscriptions);
+            EntitySubscriptions.Add(system, entitySubscriptions);
 
             var groupSystem = system as IGroupSystem;
             var affinities = groupSystem.GetGroupAffinities();
@@ -99,23 +99,23 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
         public void DestroySystem(ISystem system)
         {
-            _systemSubscriptions.RemoveAndDispose(system);
+            SystemSubscriptions.RemoveAndDispose(system);
             
-            var entitySubscriptions = _entitySubscriptions[system];
+            var entitySubscriptions = EntitySubscriptions[system];
             entitySubscriptions.Values.DisposeAll();
             entitySubscriptions.Clear();
-            _entitySubscriptions.Remove(system);
+            EntitySubscriptions.Remove(system);
         }
         
         public void Dispose()
         {
-            _systemSubscriptions.DisposeAll();
-            foreach (var entitySubscriptions in _entitySubscriptions.Values)
+            SystemSubscriptions.DisposeAll();
+            foreach (var entitySubscriptions in EntitySubscriptions.Values)
             {
                 entitySubscriptions.Values.DisposeAll();
                 entitySubscriptions.Clear();
             }
-            _entitySubscriptions.Clear();
+            EntitySubscriptions.Clear();
         }
     }
 }

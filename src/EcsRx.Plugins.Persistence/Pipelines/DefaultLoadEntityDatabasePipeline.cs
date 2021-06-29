@@ -26,7 +26,7 @@ namespace EcsRx.Plugins.Persistence.Pipelines
         }
 
         public async Task<IEntityDatabase> Execute()
-        { return (IEntityDatabase) await Execute(null); }
+        { return (IEntityDatabase) await Execute(null).ConfigureAwait(false); }
 
         protected IEnumerable<IPipelineStep> BuildSteps(EcsRxPipelineBuilder builder)
         {

@@ -34,7 +34,7 @@ namespace EcsRx.Plugins.Computeds.Collections
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementRemoved;
         private bool _needsUpdate;
 
-        public ComputedCollectionFromGroup(IObservableGroup internalObservableGroup)
+        protected ComputedCollectionFromGroup(IObservableGroup internalObservableGroup)
         {
             InternalObservableGroup = internalObservableGroup;
             Subscriptions = new List<IDisposable>();       

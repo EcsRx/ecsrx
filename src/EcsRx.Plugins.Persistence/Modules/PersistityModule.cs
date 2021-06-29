@@ -15,7 +15,7 @@ namespace EcsRx.Plugins.Persistence.Modules
 {
     public class PersistityModule : IDependencyModule
     {
-        public const string DefaultEntityDatabaseFile = "entity-database.edb";
+        public static readonly string DefaultEntityDatabaseFile = "entity-database.edb";
         
         public void Setup(IDependencyContainer container)
         {

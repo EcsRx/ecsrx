@@ -70,14 +70,14 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockSystem.Received(1).Process(Arg.Is(fakeEntity1), Arg.Is(1));
             mockSystem.Received(1).Process(Arg.Is(fakeEntity2), Arg.Is(2));
             
-            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
-            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
+            Assert.Equal(1, systemHandler.SystemSubscriptions.Count);
+            Assert.NotNull(systemHandler.SystemSubscriptions[mockSystem]);
             
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id1));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
-            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
+            Assert.Equal(1, systemHandler.EntitySubscriptions.Count);
+            Assert.Equal(2, systemHandler.EntitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id1));
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id2));
+            Assert.All(systemHandler.EntitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
         [Fact]
@@ -113,8 +113,8 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
 
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(0, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.Equal(1, systemHandler.EntitySubscriptions.Count);
+            Assert.Equal(0, systemHandler.EntitySubscriptions[mockSystem].Count);
             
             mockSystem.Received(0).ReactToData(Arg.Any<IEntity>());
             addedSubject.OnNext(fakeEntity1);
@@ -129,14 +129,14 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockSystem.Received(1).Process(Arg.Is(fakeEntity1), Arg.Is(1));
             mockSystem.Received(1).Process(Arg.Is(fakeEntity2), Arg.Is(2));
             
-            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
-            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
+            Assert.Equal(1, systemHandler.SystemSubscriptions.Count);
+            Assert.NotNull(systemHandler.SystemSubscriptions[mockSystem]);
             
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id1));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
-            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
+            Assert.Equal(1, systemHandler.EntitySubscriptions.Count);
+            Assert.Equal(2, systemHandler.EntitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id1));
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id2));
+            Assert.All(systemHandler.EntitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
         [Fact]
@@ -173,18 +173,18 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
             systemHandler.SetupSystem(mockSystem);
             
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id1));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
-            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
+            Assert.Equal(1, systemHandler.EntitySubscriptions.Count);
+            Assert.Equal(2, systemHandler.EntitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id1));
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id2));
+            Assert.All(systemHandler.EntitySubscriptions[mockSystem].Values, Assert.NotNull);
 
             removedSubject.OnNext(fakeEntity1);
             
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(1, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
-            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
+            Assert.Equal(1, systemHandler.EntitySubscriptions.Count);
+            Assert.Equal(1, systemHandler.EntitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id2));
+            Assert.All(systemHandler.EntitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
         [Fact]
@@ -225,14 +225,14 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockSystem.Received(1).Process(Arg.Is(fakeEntity1), Arg.Is(1));
             mockSystem.Received(0).Process(Arg.Is(fakeEntity2), Arg.Is(2));
             
-            Assert.Equal(1, systemHandler._systemSubscriptions.Count);
-            Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
+            Assert.Equal(1, systemHandler.SystemSubscriptions.Count);
+            Assert.NotNull(systemHandler.SystemSubscriptions[mockSystem]);
             
-            Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id1));
-            Assert.True(systemHandler._entitySubscriptions[mockSystem].Keys.Contains(id2));
-            Assert.All(systemHandler._entitySubscriptions[mockSystem].Values, Assert.NotNull);
+            Assert.Equal(1, systemHandler.EntitySubscriptions.Count);
+            Assert.Equal(2, systemHandler.EntitySubscriptions[mockSystem].Count);
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id1));
+            Assert.True(systemHandler.EntitySubscriptions[mockSystem].Keys.Contains(id2));
+            Assert.All(systemHandler.EntitySubscriptions[mockSystem].Values, Assert.NotNull);
         }
         
         [Fact]
@@ -246,23 +246,23 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var mockSystemDisposable = Substitute.For<IDisposable>();
             
             var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
-            systemHandler._systemSubscriptions.Add(mockSystem, mockSystemDisposable);
+            systemHandler.SystemSubscriptions.Add(mockSystem, mockSystemDisposable);
             
             var entitySubscriptions = new Dictionary<int, IDisposable>();
             var mockEntityDisposable1 = Substitute.For<IDisposable>();
             entitySubscriptions.Add(id1, mockEntityDisposable1);
             var mockEntityDisposable2 = Substitute.For<IDisposable>();
             entitySubscriptions.Add(id2, mockEntityDisposable2);
-            systemHandler._entitySubscriptions.Add(mockSystem, entitySubscriptions);
+            systemHandler.EntitySubscriptions.Add(mockSystem, entitySubscriptions);
             
             systemHandler.DestroySystem(mockSystem);
             
             mockSystemDisposable.Received(1).Dispose();
-            Assert.Equal(0, systemHandler._systemSubscriptions.Count);
+            Assert.Equal(0, systemHandler.SystemSubscriptions.Count);
             
             mockEntityDisposable1.Received(1).Dispose();
             mockEntityDisposable2.Received(1).Dispose();
-            Assert.Equal(0, systemHandler._entitySubscriptions.Count);
+            Assert.Equal(0, systemHandler.EntitySubscriptions.Count);
         }
     }
 }

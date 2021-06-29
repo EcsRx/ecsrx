@@ -105,9 +105,13 @@ namespace EcsRx.Plugins.GroupBinding.Systems.Handlers
         }
 
         public void DestroySystem(ISystem system)
-        {}
-        
+        {
+            // Nothing to destroy
+        }
+
         public void Dispose()
-        {}
+        {
+            // Nothing to dispose
+        }
     }
 }

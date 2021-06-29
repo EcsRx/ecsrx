@@ -13,7 +13,7 @@ using EcsRx.Lookups;
 
 namespace EcsRx.Collections.Database
 {
-    public class EntityDatabase : IEntityDatabase, IDisposable
+    public class EntityDatabase : IEntityDatabase
     {
         private readonly CollectionLookup _collections;
         private readonly IDictionary<int, IDisposable> _collectionSubscriptions;

@@ -20,7 +20,7 @@ namespace EcsRx.Components.Lookups
         {
             var lookupId = 0;
             var componentTypes = GetAllComponentTypes();
-            return componentTypes.ToDictionary(x => x, x => lookupId++);
+            return componentTypes.ToDictionary(x => x, _ => lookupId++);
         }
     }
 }

@@ -15,8 +15,8 @@ namespace EcsRx.Plugins.Persistence.Builders
 {
     public class EcsRxPipelineNeedsDataBuilder
     {
-        private IDependencyContainer _container;
-        private List<IPipelineStep> _steps;
+        private readonly IDependencyContainer _container;
+        private readonly List<IPipelineStep> _steps;
 
         public EcsRxPipelineNeedsDataBuilder(IDependencyContainer container, List<IPipelineStep> steps)
         {

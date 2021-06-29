@@ -130,8 +130,8 @@ There is a book available which covers the main parts which can be found here:
 [nuget-url]: https://www.nuget.org/packages/EcsRx/
 [discord-image]: https://img.shields.io/discord/488609938399297536.svg
 [discord-url]: https://discord.gg/bS2rnGz
-[codacy-image]: https://api.codacy.com/project/badge/Grade/750972bd01be48e983ef7eec3fcb5a93
-[codacy-url]: https://www.codacy.com/app/grofit/ecsrx?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EcsRx/ecsrx&amp;utm_campaign=Badge_Grade
+[codacy-image]: https://app.codacy.com/project/badge/Grade/6ea8dc8c37f3452fa3a5a8dc6b0b3f47
+[codacy-url]: https://www.codacy.com/gh/EcsRx/ecsrx/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=EcsRx/ecsrx&amp;utm_campaign=Badge_Grade
 [license-image]: https://img.shields.io/github/license/ecsrx/ecsrx.svg
 [license-url]: https://github.com/EcsRx/ecsrx/blob/master/LICENSE
 [gitbook-image]: https://img.shields.io/static/v1.svg?label=Documentation&message=Read%20Now&color=Green&style=flat

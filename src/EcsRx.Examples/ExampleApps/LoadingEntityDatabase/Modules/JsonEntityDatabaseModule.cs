@@ -2,11 +2,13 @@ using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Modules;
 using EcsRx.Plugins.Persistence.Pipelines;
-using LazyData.Json;
 using LazyData.Json.Handlers;
 using LazyData.Mappings.Mappers;
 using LazyData.Mappings.Types;
 using LazyData.Registries;
+using LazyJsonSerializer = LazyData.Json.JsonSerializer;
+using LazyJsonDeserializer = LazyData.Json.JsonDeserializer;
+using Persistity.Serializers.LazyData.Json;
 
 namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules
 {
@@ -35,11 +37,12 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules
             var mappingRegistry = new MappingRegistry(container.Resolve<EverythingTypeMapper>());
             var primitiveTypeMappings = container.ResolveAll<IJsonPrimitiveHandler>();
             
-            // Create the serializer to serialize everything
-            var everythingSerializer = new JsonSerializer(mappingRegistry, primitiveTypeMappings);
+            // Create the lazy serializer to serialize everything, then wrap it in the persistity one
+            var everythingSerializer = new LazyJsonSerializer(mappingRegistry, primitiveTypeMappings);
+            var serializer = new JsonSerializer(everythingSerializer);
             
             // Piggyback off the existing save pipeline helper, which lets you set your format and filename
-            return PersistityModule.CreateSavePipeline(container, everythingSerializer, CustomEntityDatabaseFile);
+            return PersistityModule.CreateSavePipeline(container, serializer, CustomEntityDatabaseFile);
         }
         
         public ILoadEntityDatabasePipeline CreateJsonLoadPipeline(IDependencyContainer container)
@@ -50,10 +53,11 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules
             var primitiveTypeMappings = container.ResolveAll<IJsonPrimitiveHandler>();
 
             // Create deserializer for everything
-            var everythingDeserializer = new JsonDeserializer(mappingRegistry, typeCreator, primitiveTypeMappings);
+            var everythingDeserializer = new LazyJsonDeserializer(mappingRegistry, typeCreator, primitiveTypeMappings);
+            var deserializer = new JsonDeserializer(everythingDeserializer);
             
             // Use existing load pipeline helper to customize format and filename
-            return PersistityModule.CreateLoadPipeline(container, everythingDeserializer, CustomEntityDatabaseFile);
+            return PersistityModule.CreateLoadPipeline(container, deserializer, CustomEntityDatabaseFile);
         }
         
     }

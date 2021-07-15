@@ -1,8 +1,10 @@
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Examples.ExampleApps.DataPipelinesExample.Pipelines;
-using LazyData.Json;
+using LazyJsonDeserializer = LazyData.Json.JsonDeserializer;
+using LazyJsonSerializer = LazyData.Json.JsonSerializer;
 using LazyData.Json.Handlers;
+using Persistity.Serializers.LazyData.Json;
 
 namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules
 {
@@ -12,8 +14,10 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules
         {
             // By default only the binary stuff is loaded, but you can load json, yaml, bson etc
             container.Bind<IJsonPrimitiveHandler, BasicJsonPrimitiveHandler>();
-            container.Bind<IJsonSerializer, JsonSerializer>();
-            container.Bind<IJsonDeserializer, JsonDeserializer>();
+            container.Bind<LazyJsonSerializer>();
+            container.Bind<LazyJsonDeserializer>();
+            container.Bind<JsonSerializer>();
+            container.Bind<JsonDeserializer>();
             
             // Register our custom pipeline using the json stuff above
             container.Bind<PostJsonHttpPipeline>();

@@ -65,12 +65,12 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
                 
                 Console.WriteLine();
                 Console.WriteLine(" - Press Enter To Add Another Random Entity");
-                Console.WriteLine(" - Press Escape To Save and Quit");
+                Console.WriteLine(" - Press Space To Save and Quit");
                 
                 var keyPressed = Console.ReadKey();
                 if (keyPressed.Key == ConsoleKey.Enter)
                 { defaultCollection.CreateEntity(randomBlueprint); }
-                else if (keyPressed.Key == ConsoleKey.Escape)
+                else if (keyPressed.Key == ConsoleKey.Spacebar)
                 { _quit = true; }
             }
 

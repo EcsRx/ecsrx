@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using SystemsRx.Infrastructure.Dependencies;
 using EcsRx.Plugins.Persistence.Extensions;
 using EcsRx.Plugins.Persistence.Pipelines;
-using LazyData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Persistity.Core;
 
 namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase.Modules
 {

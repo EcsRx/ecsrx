@@ -13,6 +13,6 @@
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SystemsRx.Infrastructure" Version="5.0.2" />
+    <PackageReference Include="SystemsRx.Infrastructure" Version="5.0.19" />
   </ItemGroup>
 </Project>

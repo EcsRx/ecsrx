@@ -3,13 +3,15 @@ using SystemsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Persistence.Builders;
 using EcsRx.Plugins.Persistence.Pipelines;
 using EcsRx.Plugins.Persistence.Transformers;
-using LazyData.Binary;
 using LazyData.Binary.Handlers;
 using LazyData.Mappings.Mappers;
 using LazyData.Mappings.Types;
 using LazyData.Registries;
-using LazyData.Serialization;
+using Persistity.Core.Serialization;
 using Persistity.Endpoints.Files;
+using Persistity.Serializers.LazyData.Binary;
+using LazyBinarySerializer = LazyData.Binary.BinarySerializer;
+using LazyBinaryDeserializer = LazyData.Binary.BinaryDeserializer;
 
 namespace EcsRx.Plugins.Persistence.Modules
 {
@@ -40,8 +42,9 @@ namespace EcsRx.Plugins.Persistence.Modules
         {
             var mappingRegistry = new MappingRegistry(container.Resolve<EverythingTypeMapper>());
             var primitiveTypeMappings = container.ResolveAll<IBinaryPrimitiveHandler>();
-            var everythingSerializer = new BinarySerializer(mappingRegistry, primitiveTypeMappings);
-            return CreateSavePipeline(container, everythingSerializer, DefaultEntityDatabaseFile);
+            var everythingSerializer = new LazyBinarySerializer(mappingRegistry, primitiveTypeMappings);
+            var persistitySerializer = new BinarySerializer(everythingSerializer);
+            return CreateSavePipeline(container, persistitySerializer, DefaultEntityDatabaseFile);
         }
 
         public ILoadEntityDatabasePipeline CreateDefaultLoadPipeline(IDependencyContainer container)
@@ -49,8 +52,9 @@ namespace EcsRx.Plugins.Persistence.Modules
             var mappingRegistry = new MappingRegistry(container.Resolve<EverythingTypeMapper>());
             var typeCreator = container.Resolve<ITypeCreator>();
             var primitiveTypeMappings = container.ResolveAll<IBinaryPrimitiveHandler>();
-            var everythingDeserializer = new BinaryDeserializer(mappingRegistry, typeCreator, primitiveTypeMappings);
-            return CreateLoadPipeline(container, everythingDeserializer, DefaultEntityDatabaseFile);
+            var everythingDeserializer = new LazyBinaryDeserializer(mappingRegistry, typeCreator, primitiveTypeMappings);
+            var persistityDeserializer = new BinaryDeserializer(everythingDeserializer);
+            return CreateLoadPipeline(container, persistityDeserializer, DefaultEntityDatabaseFile);
         }
         
         /// <summary>

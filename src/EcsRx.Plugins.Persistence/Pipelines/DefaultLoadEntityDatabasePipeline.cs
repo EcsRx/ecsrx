@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EcsRx.Collections.Database;
 using EcsRx.Plugins.Persistence.Builders;
+using EcsRx.Plugins.Persistence.Data;
 using EcsRx.Plugins.Persistence.Transformers;
-using LazyData.Serialization;
+using Persistity.Core.Serialization;
 using Persistity.Endpoints;
 using Persistity.Flow.Pipelines;
 using Persistity.Flow.Steps.Types;
@@ -32,7 +33,7 @@ namespace EcsRx.Plugins.Persistence.Pipelines
         {
             return builder
                 .StartFrom(Endpoint)
-                .DeserializeWith(Deserializer)
+                .DeserializeWith(Deserializer, typeof(EntityDatabaseData))
                 .TransformWith(DataTransformer)
                 .BuildSteps();
         }

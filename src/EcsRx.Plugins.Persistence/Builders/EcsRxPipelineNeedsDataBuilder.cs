@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
-using LazyData;
-using LazyData.Serialization;
+using Persistity.Core;
+using Persistity.Core.Serialization;
 using Persistity.Endpoints;
 using Persistity.Flow.Pipelines;
 using Persistity.Flow.Steps;
@@ -24,15 +24,15 @@ namespace EcsRx.Plugins.Persistence.Builders
             _steps = steps;
         }
 
-        public EcsRxPipelineNeedsObjectBuilder DeserializeWith(IDeserializer deserializer)
+        public EcsRxPipelineNeedsObjectBuilder DeserializeWith(IDeserializer deserializer, Type type)
         {
-            _steps.Add(new DeserializeStep(deserializer));
+            _steps.Add(new DeserializeStep(deserializer, type));
             return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
         }
         
         public EcsRxPipelineNeedsObjectBuilder DeserializeWith<T>() where T : IDeserializer
         {
-            _steps.Add(new DeserializeStep(_container.Resolve<T>()));
+            _steps.Add(new DeserializeStep(_container.Resolve<T>(), typeof(T)));
             return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
         }
         

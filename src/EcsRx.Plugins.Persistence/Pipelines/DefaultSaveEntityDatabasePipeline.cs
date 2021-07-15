@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using EcsRx.Collections.Database;
 using EcsRx.Plugins.Persistence.Builders;
 using EcsRx.Plugins.Persistence.Transformers;
-using LazyData.Serialization;
+using Persistity.Core.Serialization;
 using Persistity.Endpoints;
 using Persistity.Flow.Pipelines;
 using Persistity.Flow.Steps.Types;

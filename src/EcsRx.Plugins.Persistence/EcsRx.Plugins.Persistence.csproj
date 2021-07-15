@@ -17,8 +17,10 @@
 
     <ItemGroup>
       <PackageReference Include="LazyData.Binary" Version="3.0.17" />
-      <PackageReference Include="Persistity" Version="1.1.30" />
-      <PackageReference Include="Persistity.Flow" Version="1.1.30" />
+      <PackageReference Include="Persistity" Version="2.0.41" />
+      <PackageReference Include="Persistity.Core" Version="2.0.41" />
+      <PackageReference Include="Persistity.Flow" Version="2.0.41" />
+      <PackageReference Include="Persistity.Serializers.LazyData.Binary" Version="2.0.41" />
     </ItemGroup>
 
 </Project>

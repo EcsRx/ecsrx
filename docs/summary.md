@@ -30,5 +30,6 @@
     * [Struct Components](performance/struct-components.md)
 * Other
     * [MicroRx](others/microrx.md)
+    * [Third Party Content](others/third-party-content.md)
     * [FAQs](others/faqs-etc.md)    
     * [Breaking Changes](breaking-changes.md)

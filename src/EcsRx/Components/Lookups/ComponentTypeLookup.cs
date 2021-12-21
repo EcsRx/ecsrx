@@ -9,14 +9,22 @@ namespace EcsRx.Components.Lookups
         public IReadOnlyDictionary<Type, int> ComponentsByType { get; }
         public IReadOnlyDictionary<int, Type> ComponentsById { get; }
         public bool[] ComponentStructLookups { get; }
+        public bool[] ComponentDisposableLookups { get; }
         public int[] AllComponentTypeIds { get; }
 
         public ComponentTypeLookup(IReadOnlyDictionary<Type, int> componentsByType)
         {
             ComponentsByType = componentsByType;
             ComponentsById = componentsByType.ToDictionary(x => x.Value, x => x.Key);
-            ComponentStructLookups = componentsByType.Keys.Select(x => x.IsValueType).ToArray();
             AllComponentTypeIds = componentsByType.Values.ToArray();
+            
+            ComponentStructLookups = componentsByType.Keys
+                .Select(x => x.IsValueType)
+                .ToArray();
+
+            ComponentDisposableLookups = componentsByType.Keys
+                .Select(x => x.GetInterfaces().Any(x => x == typeof(IDisposable)))
+                .ToArray();
         }
 
         public int GetComponentType<T>() where T : IComponent
@@ -33,6 +41,9 @@ namespace EcsRx.Components.Lookups
 
         public bool IsComponentStruct(int componentTypeId)
         { return ComponentStructLookups[componentTypeId]; }
+
+        public bool IsComponentDisposable(int componentTypeId)
+        { return ComponentDisposableLookups[componentTypeId]; }
 
         public T CreateDefault<T>() where T : IComponent, new()
         { return new T(); }

@@ -8,6 +8,8 @@ namespace EcsRx.Components
     public class ComponentPool<T> : IComponentPool<T>
         where T : IComponent
     {
+        public bool IsStructType { get; }
+        
         public IndexPool IndexPool { get; }
         public T[] Components { get; private set; }
         
@@ -19,7 +21,7 @@ namespace EcsRx.Components
         private readonly Subject<bool> _onPoolExtending;
 
         public ComponentPool(int expansionSize) : this(expansionSize, expansionSize)
-        {}
+        { }
         
         public ComponentPool(int expansionSize, int initialSize)
         {
@@ -28,6 +30,7 @@ namespace EcsRx.Components
             IndexPool = new IndexPool(expansionSize, initialSize);
             Components = new T[initialSize];
             _onPoolExtending = new Subject<bool>();
+            IsStructType = typeof(T).IsValueType;
         }
 
         public int Allocate()
@@ -37,8 +40,19 @@ namespace EcsRx.Components
             return IndexPool.AllocateInstance();
         }
 
-        public void Release(int index) => IndexPool.ReleaseInstance(index);
-        
+        public void Release(int index)
+        {
+            var instance = Components[index];
+            
+            if(!IsStructType)
+            { Components[index] = default; }
+            
+            if(instance is IDisposable disposable)
+            { disposable.Dispose(); }
+            
+            IndexPool.ReleaseInstance(index);
+        }
+
         public void Set(int index, object value) => Components.SetValue(value, index);
 
         public void Expand()

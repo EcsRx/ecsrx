@@ -20,6 +20,15 @@ namespace EcsRx.Tests.EcsRx.Pools
         }
         
         [Fact]
+        public void should_correctly_identify_struct_types()
+        {
+            var classBasedComponentPool = new ComponentPool<TestComponentOne>(0);
+            var structBasedComponentPool = new ComponentPool<TestStructComponentOne>(0);
+            Assert.False(classBasedComponentPool.IsStructType);
+            Assert.True(structBasedComponentPool.IsStructType);
+        }
+        
+        [Fact]
         public void should_expand_explicitly_when_needed()
         {
             var expansionIterations = 20;
@@ -88,6 +97,45 @@ namespace EcsRx.Tests.EcsRx.Pools
             Assert.All(actualAllocations, x => expectedAllocations.Contains(x));
             Assert.Equal(expectedAllocationCount, componentPool.Components.Length);
             Assert.Equal(expectedAllocationCount, componentPool.Count);
+        }
+        
+        [Fact]
+        public void should_request_index_pool_release_when_releasing_component()
+        {
+            var componentPool = new ComponentPool<TestStructComponentOne>(10);
+            var indexToUse = componentPool.IndexPool.AllocateInstance();
+            var availableIndexesPrior = componentPool.IndexPool.AvailableIndexes.ToArray();
+            componentPool.Release(indexToUse);
+            var availableIndexesAfter = componentPool.IndexPool.AvailableIndexes.ToArray();
+            
+            Assert.NotSame(availableIndexesPrior, availableIndexesAfter);
+            Assert.DoesNotContain(indexToUse, availableIndexesPrior);
+            Assert.Contains(indexToUse, availableIndexesAfter);
+        }
+        
+        [Fact]
+        public void should_nullify_class_based_components_on_release()
+        {
+            var componentPool = new ComponentPool<TestComponentOne>(10);
+            var indexToUse = componentPool.IndexPool.AllocateInstance();
+            componentPool.Components[indexToUse] = new TestComponentOne();
+            
+            componentPool.Release(indexToUse);
+            
+            Assert.True(componentPool.Components.All(x => x is null));
+        }  
+        
+        [Fact]
+        public void should_dispose_disposable_component_on_release()
+        {
+            var componentPool = new ComponentPool<TestDisposableComponent>(10);
+            var indexToUse = componentPool.IndexPool.AllocateInstance();
+            var componentToUse = new TestDisposableComponent();
+            componentPool.Components[indexToUse] = componentToUse;
+            
+            componentPool.Release(indexToUse);
+            
+            Assert.True(componentToUse.isDisposed);
         }
     }
 }

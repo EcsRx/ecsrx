@@ -64,7 +64,8 @@ As you can see, you can now just instantiate `new MyGroup();` and everyone is ha
 
 So as mentioned most entities and constrained by their component types, this is the `RequiredComponents` and `ExcludedComponents` parts, however there is also a `TargettedEntities` notion, which basically takes the constraining a step further and allows you to constrain further on the entities matching the components.
 
-The `TargettedEntities` property is just a predicate that takes an entity, and returns if it matches or not. Currently these are checked before subscriptions are passed to the system to execute, so you can express some complex constraints without having to be specific in each system.
+When a group also implements `IHasPredicate` an additional method `CanProcessEntity` can determine if an entity should be matched or not.
+For ease of use just use the `GroupWithPredicate` class instead of `Group` and specify an additional `entityPredicate`. Currently these are checked before subscriptions are passed to the system to execute, so you can express some complex constraints without having to be specific in each system.
 
 So for example lets say you wanted a system which would only react to characters with `health == 0`, you could have the component based grouping and then in your system reaction or execution phase check to see if the health == 0 and if not return, however if you had 2 systems wanting to react to the notion of a character death you would end up duplicating your code a lot.
 

@@ -19,6 +19,7 @@ namespace EcsRx.Collections.Database
         private readonly IDictionary<int, IDisposable> _collectionSubscriptions;
 
         public IReadOnlyList<IEntityCollection> Collections => _collections;
+        public IEntityCollection this[int id] => _collections[id];
 
         public IEntityCollectionFactory EntityCollectionFactory { get; }
         
@@ -87,8 +88,8 @@ namespace EcsRx.Collections.Database
         {
             if(id == EntityCollectionLookups.DefaultCollectionId && _collections.Count == 0)
             { CreateCollection(EntityCollectionLookups.DefaultCollectionId); }
-            
-            return _collections[id];
+
+            return _collections.Contains(id) ? _collections[id] : null;
         }
 
         public void RemoveCollection(int id, bool disposeEntities = true)
@@ -101,53 +102,6 @@ namespace EcsRx.Collections.Database
             UnsubscribeFromCollection(id);
 
             _onCollectionRemoved.OnNext(collection);
-        }
-        
-        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = EntityCollectionLookups.NoCollectionDefined)
-        {
-            if(group is EmptyGroup)
-            { return Array.Empty<IEntity>(); }
-
-            if (collectionId != EntityCollectionLookups.NoCollectionDefined)
-            { return _collections[collectionId].MatchingGroup(group); }
-
-            return Collections.GetAllEntities().MatchingGroup(group);
-        }
-        
-        public IEnumerable<IEntity> GetEntitiesFor(IGroup group, params int[] collectionIds)
-        {
-            if(group is EmptyGroup)
-            { return Array.Empty<IEntity>(); }
-
-            if (collectionIds == null || collectionIds.Length == 0)
-            { return Collections.GetAllEntities().MatchingGroup(group); }
-
-            var matchingEntities = new List<IEntity>();
-            foreach (var collectionName in collectionIds)
-            {
-                var results = _collections[collectionName].MatchingGroup(group);
-                matchingEntities.AddRange(results);
-            }
-
-            return matchingEntities;
-        }
-        
-        public IEnumerable<IEntity> GetEntitiesFor(LookupGroup lookupGroup, params int[] collectionIds)
-        {
-            if(lookupGroup.RequiredComponents.Length == 0 && lookupGroup.ExcludedComponents.Length  == 0)
-            { return Array.Empty<IEntity>(); }
-
-            if (collectionIds == null || collectionIds.Length == 0)
-            { return Collections.GetAllEntities().MatchingGroup(lookupGroup); }
-
-            var matchingEntities = new List<IEntity>();
-            foreach (var collectionName in collectionIds)
-            {
-                var results = _collections[collectionName].MatchingGroup(lookupGroup);
-                matchingEntities.AddRange(results);
-            }
-
-            return matchingEntities;
         }
 
         public void Dispose()

@@ -6,12 +6,6 @@ using EcsRx.Groups;
 
 namespace EcsRx.Collections.Database
 {
-    public static class EntityCollectionLookups
-    {
-        public const int NoCollectionDefined = -1;
-        public const int DefaultCollectionId = 0;
-    }
-    
     /// <summary>
     /// This acts as the database to store all entities, rather than containing all entities directly
     /// within itself, it partitions them into collections which can contain differing amounts of entities.

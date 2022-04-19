@@ -19,6 +19,7 @@ namespace EcsRx.Tests.EcsRx.Database
             var entityId = 101;
             var expectedEntity = Substitute.For<IEntity>();
             var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.Id.Returns(2);
             mockEntityCollection.ContainsEntity(entityId).Returns(true);
             mockEntityCollection.GetEntity(entityId).Returns(expectedEntity);
             
@@ -39,6 +40,7 @@ namespace EcsRx.Tests.EcsRx.Database
         {
             var entityId = 101;
             var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.Id.Returns(2);
             mockEntityCollection.ContainsEntity(entityId).Returns(false);
             
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();

@@ -5,10 +5,7 @@ using SystemsRx.MicroRx.Disposables;
 using SystemsRx.MicroRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
 using EcsRx.Collections.Entity;
-using EcsRx.Entities;
 using EcsRx.Events.Collections;
-using EcsRx.Extensions;
-using EcsRx.Groups;
 using EcsRx.Lookups;
 
 namespace EcsRx.Collections.Database

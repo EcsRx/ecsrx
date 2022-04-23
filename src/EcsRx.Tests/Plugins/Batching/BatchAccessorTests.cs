@@ -20,8 +20,8 @@ namespace EcsRx.Tests.Plugins.Batching
         public void should_populate_on_setup()
         {                      
             var mockTypeLookup = Substitute.For<IComponentTypeLookup>();
-            mockTypeLookup.GetComponentType(typeof(TestStructComponentOne)).Returns(0);
-            mockTypeLookup.GetComponentType(typeof(TestStructComponentTwo)).Returns(1);
+            mockTypeLookup.GetComponentTypeId(typeof(TestStructComponentOne)).Returns(0);
+            mockTypeLookup.GetComponentTypeId(typeof(TestStructComponentTwo)).Returns(1);
 
             var mockComponentPool1 = Substitute.For<IComponentPool<TestStructComponentOne>>();
             mockComponentPool1.OnPoolExtending.Returns(Observable.Empty<bool>());
@@ -48,8 +48,8 @@ namespace EcsRx.Tests.Plugins.Batching
         public void should_update_when_observable_group_changes()
         {
             var mockTypeLookup = Substitute.For<IComponentTypeLookup>();
-            mockTypeLookup.GetComponentType(typeof(TestStructComponentOne)).Returns(0);
-            mockTypeLookup.GetComponentType(typeof(TestStructComponentTwo)).Returns(1);
+            mockTypeLookup.GetComponentTypeId(typeof(TestStructComponentOne)).Returns(0);
+            mockTypeLookup.GetComponentTypeId(typeof(TestStructComponentTwo)).Returns(1);
 
             var mockComponentPool1 = Substitute.For<IComponentPool<TestStructComponentOne>>();
             mockComponentPool1.OnPoolExtending.Returns(Observable.Empty<bool>());
@@ -81,8 +81,8 @@ namespace EcsRx.Tests.Plugins.Batching
         public void should_update_when_component_pool_changes()
         {
             var mockTypeLookup = Substitute.For<IComponentTypeLookup>();
-            mockTypeLookup.GetComponentType(typeof(TestStructComponentOne)).Returns(0);
-            mockTypeLookup.GetComponentType(typeof(TestStructComponentTwo)).Returns(1);
+            mockTypeLookup.GetComponentTypeId(typeof(TestStructComponentOne)).Returns(0);
+            mockTypeLookup.GetComponentTypeId(typeof(TestStructComponentTwo)).Returns(1);
 
             var poolChanging1Subject = new Subject<bool>();
             var mockComponentPool1 = Substitute.For<IComponentPool<TestStructComponentOne>>();

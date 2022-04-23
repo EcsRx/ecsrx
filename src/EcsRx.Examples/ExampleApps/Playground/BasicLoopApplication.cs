@@ -34,10 +34,10 @@ namespace EcsRx.Examples.ExampleApps.Playground
             _referenceBatchBuilderFactory = Container.Resolve<IReferenceBatchBuilderFactory>();
             _collection = EntityDatabase.GetCollection();
 
-            ClassComponent1TypeId = _componentTypeLookup.GetComponentType(typeof(ClassComponent));
-            ClassComponent2TypeId = _componentTypeLookup.GetComponentType(typeof(ClassComponent2));
-            StructComponent1TypeId = _componentTypeLookup.GetComponentType(typeof(StructComponent));
-            StructComponent2TypeId = _componentTypeLookup.GetComponentType(typeof(StructComponent2));
+            ClassComponent1TypeId = _componentTypeLookup.GetComponentTypeId(typeof(ClassComponent));
+            ClassComponent2TypeId = _componentTypeLookup.GetComponentTypeId(typeof(ClassComponent2));
+            StructComponent1TypeId = _componentTypeLookup.GetComponentTypeId(typeof(StructComponent));
+            StructComponent2TypeId = _componentTypeLookup.GetComponentTypeId(typeof(StructComponent2));
             
             var name = GetType().Name;
             Console.WriteLine($"{name} - {Description}");

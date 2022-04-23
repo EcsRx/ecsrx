@@ -23,7 +23,7 @@ namespace EcsRx.Tests.EcsRx.Database
             };
             
             var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
-            mockComponentLookup.GetAllComponentTypes().Returns(fakeComponentTypes);
+            mockComponentLookup.GetComponentTypeMappings().Returns(fakeComponentTypes);
             
             var database = new ComponentDatabase(mockComponentLookup, expectedSize);           
             Assert.Equal(fakeComponentTypes.Count, database.ComponentData.Length);
@@ -34,7 +34,7 @@ namespace EcsRx.Tests.EcsRx.Database
         public void should_correctly_allocate_instance_when_adding()
         {
             var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
-            mockComponentLookup.GetAllComponentTypes().Returns(new Dictionary<Type, int>
+            mockComponentLookup.GetComponentTypeMappings().Returns(new Dictionary<Type, int>
             {
                 {typeof(TestComponentOne), 0}
             });
@@ -48,7 +48,7 @@ namespace EcsRx.Tests.EcsRx.Database
         public void should_correctly_remove_instance()
         {
             var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
-            mockComponentLookup.GetAllComponentTypes().Returns(new Dictionary<Type, int>
+            mockComponentLookup.GetComponentTypeMappings().Returns(new Dictionary<Type, int>
             {
                 {typeof(TestComponentOne), 0}
             });
@@ -66,7 +66,7 @@ namespace EcsRx.Tests.EcsRx.Database
         public void should_dispose_component_when_removed()
         {
             var mockComponentLookup = Substitute.For<IComponentTypeLookup>();
-            mockComponentLookup.GetAllComponentTypes().Returns(new Dictionary<Type, int>
+            mockComponentLookup.GetComponentTypeMappings().Returns(new Dictionary<Type, int>
             {
                 {typeof(TestComponentOne), 0}
             });

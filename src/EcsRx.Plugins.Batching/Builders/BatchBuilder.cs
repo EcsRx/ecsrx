@@ -20,8 +20,8 @@ namespace EcsRx.Plugins.Batching.Builders
         public BatchBuilder(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ComponentDatabase = componentDatabase;
-            _componentTypeId1 = componentTypeLookup.GetComponentType(typeof(T1));
-            _componentTypeId2 = componentTypeLookup.GetComponentType(typeof(T2));
+            _componentTypeId1 = componentTypeLookup.GetComponentTypeId(typeof(T1));
+            _componentTypeId2 = componentTypeLookup.GetComponentTypeId(typeof(T2));
         }
 
         public PinnedBatch<T1, T2> Build(IReadOnlyList<IEntity> entities)
@@ -67,9 +67,9 @@ namespace EcsRx.Plugins.Batching.Builders
         public BatchBuilder(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ComponentDatabase = componentDatabase;
-            _componentTypeId1 = componentTypeLookup.GetComponentType(typeof(T1));
-            _componentTypeId2 = componentTypeLookup.GetComponentType(typeof(T2));
-            _componentTypeId3 = componentTypeLookup.GetComponentType(typeof(T3));
+            _componentTypeId1 = componentTypeLookup.GetComponentTypeId(typeof(T1));
+            _componentTypeId2 = componentTypeLookup.GetComponentTypeId(typeof(T2));
+            _componentTypeId3 = componentTypeLookup.GetComponentTypeId(typeof(T3));
         }
 
         public PinnedBatch<T1, T2, T3> Build(IReadOnlyList<IEntity> entities)
@@ -121,10 +121,10 @@ namespace EcsRx.Plugins.Batching.Builders
         public BatchBuilder(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ComponentDatabase = componentDatabase;
-            _componentTypeId1 = componentTypeLookup.GetComponentType(typeof(T1));
-            _componentTypeId2 = componentTypeLookup.GetComponentType(typeof(T2));
-            _componentTypeId3 = componentTypeLookup.GetComponentType(typeof(T3));
-            _componentTypeId4 = componentTypeLookup.GetComponentType(typeof(T4));
+            _componentTypeId1 = componentTypeLookup.GetComponentTypeId(typeof(T1));
+            _componentTypeId2 = componentTypeLookup.GetComponentTypeId(typeof(T2));
+            _componentTypeId3 = componentTypeLookup.GetComponentTypeId(typeof(T3));
+            _componentTypeId4 = componentTypeLookup.GetComponentTypeId(typeof(T4));
         }
 
         public PinnedBatch<T1, T2, T3, T4> Build(IReadOnlyList<IEntity> entities)
@@ -183,11 +183,11 @@ namespace EcsRx.Plugins.Batching.Builders
         public BatchBuilder(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ComponentDatabase = componentDatabase;
-            _componentTypeId1 = componentTypeLookup.GetComponentType(typeof(T1));
-            _componentTypeId2 = componentTypeLookup.GetComponentType(typeof(T2));
-            _componentTypeId3 = componentTypeLookup.GetComponentType(typeof(T3));
-            _componentTypeId4 = componentTypeLookup.GetComponentType(typeof(T4));
-            _componentTypeId5 = componentTypeLookup.GetComponentType(typeof(T5));
+            _componentTypeId1 = componentTypeLookup.GetComponentTypeId(typeof(T1));
+            _componentTypeId2 = componentTypeLookup.GetComponentTypeId(typeof(T2));
+            _componentTypeId3 = componentTypeLookup.GetComponentTypeId(typeof(T3));
+            _componentTypeId4 = componentTypeLookup.GetComponentTypeId(typeof(T4));
+            _componentTypeId5 = componentTypeLookup.GetComponentTypeId(typeof(T5));
         }
 
         public PinnedBatch<T1, T2, T3, T4, T5> Build(IReadOnlyList<IEntity> entities)
@@ -252,12 +252,12 @@ namespace EcsRx.Plugins.Batching.Builders
         public BatchBuilder(IComponentDatabase componentDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ComponentDatabase = componentDatabase;
-            _componentTypeId1 = componentTypeLookup.GetComponentType(typeof(T1));
-            _componentTypeId2 = componentTypeLookup.GetComponentType(typeof(T2));
-            _componentTypeId3 = componentTypeLookup.GetComponentType(typeof(T3));
-            _componentTypeId4 = componentTypeLookup.GetComponentType(typeof(T4));
-            _componentTypeId5 = componentTypeLookup.GetComponentType(typeof(T5));
-            _componentTypeId6 = componentTypeLookup.GetComponentType(typeof(T6));
+            _componentTypeId1 = componentTypeLookup.GetComponentTypeId(typeof(T1));
+            _componentTypeId2 = componentTypeLookup.GetComponentTypeId(typeof(T2));
+            _componentTypeId3 = componentTypeLookup.GetComponentTypeId(typeof(T3));
+            _componentTypeId4 = componentTypeLookup.GetComponentTypeId(typeof(T4));
+            _componentTypeId5 = componentTypeLookup.GetComponentTypeId(typeof(T5));
+            _componentTypeId6 = componentTypeLookup.GetComponentTypeId(typeof(T6));
         }
 
         public PinnedBatch<T1, T2, T3, T4, T5, T6> Build(IReadOnlyList<IEntity> entities)

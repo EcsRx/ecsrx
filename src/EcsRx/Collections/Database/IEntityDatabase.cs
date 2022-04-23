@@ -6,12 +6,6 @@ using EcsRx.Groups;
 
 namespace EcsRx.Collections.Database
 {
-    public static class EntityCollectionLookups
-    {
-        public const int NoCollectionDefined = -1;
-        public const int DefaultCollectionId = 0;
-    }
-    
     /// <summary>
     /// This acts as the database to store all entities, rather than containing all entities directly
     /// within itself, it partitions them into collections which can contain differing amounts of entities.
@@ -32,20 +26,6 @@ namespace EcsRx.Collections.Database
         /// Fired when a collection has been removed
         /// </summary>
         IObservable<IEntityCollection> CollectionRemoved { get; }
-
-        /// <summary>
-        /// Gets an enumerable collection of entities for you to iterate through,
-        /// it will by default search across ALL collections within the manager unless constrained.
-        /// This is not cached and will always query the live data.
-        /// </summary>
-        /// <remarks>
-        /// So in most cases an IObservableGroup is a better option to use for repeat queries as it internally
-        /// will update a maintained list of entities without having to enumerate the entire collection/s.
-        /// </remarks>
-        /// <param name="group">The group to match entities on</param>
-        /// <param name="collectionId">The optional collection name to use (defaults to null)</param>
-        /// <returns>An enumerable to access the data inside the collection/s</returns>
-        IEnumerable<IEntity> GetEntitiesFor(IGroup group, int collectionId = EntityCollectionLookups.NoCollectionDefined);
         
         /// <summary>
         /// Creates a new collection within the database
@@ -68,11 +48,19 @@ namespace EcsRx.Collections.Database
         void AddCollection(IEntityCollection collection);
         
         /// <summary>
-        /// Gets a collection by name from within the manager, if no name is provided the default pool is returned
+        /// Gets a collection by id from within the manager, if no id is provided the default pool is returned
         /// </summary>
-        /// <param name="id">The optional name of collection to return</param>
+        /// <param name="id">The optional id of collection to return</param>
         /// <returns>The located collection</returns>
+        /// <remarks>This is a safe Get so it will return back a null if no collection can be found</remarks>
         IEntityCollection GetCollection(int id = EntityCollectionLookups.DefaultCollectionId);
+        
+        /// <summary>
+        /// Provides a mechanism to directly get the collection from the underlying store, however will throw if doesnt exist
+        /// </summary>
+        /// <param name="id">The id of the collection</param>
+        /// <remarks>This is more performant but unsafe way to access the collections directly by id</remarks>
+        IEntityCollection this[int id] { get; }
         
         /// <summary>
         /// Removes a collection from the manager
@@ -80,8 +68,5 @@ namespace EcsRx.Collections.Database
         /// <param name="id">The collection to remove</param>
         /// <param name="disposeEntities">if the entities should all be disposed too</param>
         void RemoveCollection(int id, bool disposeEntities = true);
-
-        IEnumerable<IEntity> GetEntitiesFor(LookupGroup lookupGroup, params int[] collectionIds);
-        IEnumerable<IEntity> GetEntitiesFor(IGroup group, params int[] collectionIds);
     }
 }

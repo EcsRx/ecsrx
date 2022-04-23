@@ -4,7 +4,7 @@ using EcsRx.Entities;
 using NSubstitute;
 using Xunit;
 
-namespace EcsRx.Tests.EcsRx
+namespace EcsRx.Tests.EcsRx.Database
 {
     public class EntityCollectionTests
     {

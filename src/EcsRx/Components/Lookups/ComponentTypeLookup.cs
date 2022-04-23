@@ -23,7 +23,7 @@ namespace EcsRx.Components.Lookups
                 .ToArray();
 
             ComponentDisposableLookups = componentsByType.Keys
-                .Select(x => x.GetInterfaces().Any(x => x == typeof(IDisposable)))
+                .Select(x => x.GetInterfaces().Any(y => y == typeof(IDisposable)))
                 .ToArray();
         }
 

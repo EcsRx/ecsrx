@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Components;
+using EcsRx.Components.Accessor;
 using EcsRx.Components.Lookups;
 
 namespace EcsRx.Extensions
@@ -25,5 +26,11 @@ namespace EcsRx.Extensions
 
         public static Type[] GetComponentTypes(this IComponentTypeLookup typeLookup, IEnumerable<int> typeIds)
         { return typeIds.Select(typeLookup.GetComponentType).ToArray(); }
+
+        public static IComponentAccessor<T> GetAccessorFor<T>(this IComponentTypeLookup typeLookup)
+        {
+            var componentTypeId = typeLookup.GetComponentTypeId(typeof(T));
+            return new ComponentAccessor<T>(componentTypeId);
+        }
     }
 }

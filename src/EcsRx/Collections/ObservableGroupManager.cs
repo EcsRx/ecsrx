@@ -40,8 +40,8 @@ namespace EcsRx.Collections
 
         public IObservableGroup GetObservableGroup(IGroup group, params int[] collectionIds)
         {
-            var requiredComponents = ComponentTypeLookup.GetComponentTypes(group.RequiredComponents);
-            var excludedComponents = ComponentTypeLookup.GetComponentTypes(group.ExcludedComponents);
+            var requiredComponents = ComponentTypeLookup.GetComponentTypeIds(group.RequiredComponents);
+            var excludedComponents = ComponentTypeLookup.GetComponentTypeIds(group.ExcludedComponents);
             var lookupGroup = new LookupGroup(requiredComponents, excludedComponents);
             
             var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionIds);

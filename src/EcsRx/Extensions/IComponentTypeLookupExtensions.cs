@@ -15,7 +15,7 @@ namespace EcsRx.Extensions
         public static T CreateDefault<T>(this IComponentTypeLookup typeLookup) where T : IComponent, new()
         { return new T(); }
         
-        public static int[] GetComponentTypes(this IComponentTypeLookup typeLookup, params Type[] types)
+        public static int[] GetComponentTypeIds(this IComponentTypeLookup typeLookup, params Type[] types)
         { return types.Select(typeLookup.GetComponentTypeId).ToArray(); }
 
         public static Type[] GetComponentTypes(this IComponentTypeLookup typeLookup, params int[] typeIds)

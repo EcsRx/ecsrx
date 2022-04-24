@@ -98,7 +98,7 @@ namespace EcsRx.Entities
         
         public void RemoveComponents(params Type[] componentTypes)
         {
-            var componentTypeIds = ComponentTypeLookup.GetComponentTypes(componentTypes);
+            var componentTypeIds = ComponentTypeLookup.GetComponentTypeIds(componentTypes);
             RemoveComponents(componentTypeIds);
         }
         

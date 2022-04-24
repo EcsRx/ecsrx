@@ -6,7 +6,7 @@ namespace EcsRx.Components.Lookups
 {
     public class DefaultComponentTypeAssigner : IComponentTypeAssigner
     {
-        private IEnumerable<Type> GetAllComponentTypes()
+        public IEnumerable<Type> GetAllComponentTypes()
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var componentType = typeof(IComponent);
@@ -19,8 +19,7 @@ namespace EcsRx.Components.Lookups
         public IReadOnlyDictionary<Type, int> GenerateComponentLookups()
         {
             var lookupId = 0;
-            var componentTypes = GetAllComponentTypes();
-            return componentTypes.ToDictionary(x => x, _ => lookupId++);
+            return GetAllComponentTypes()?.ToDictionary(x => x, _ => lookupId++);
         }
     }
 }

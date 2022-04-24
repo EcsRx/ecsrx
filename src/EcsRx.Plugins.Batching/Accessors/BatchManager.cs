@@ -3,6 +3,7 @@ using EcsRx.Collections;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
+using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Plugins.Batching.Factories;
 
@@ -30,7 +31,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T1 : unmanaged, IComponent 
             where T2 : unmanaged, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -47,7 +48,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T1 : class, IComponent 
             where T2 : class, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -65,7 +66,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T2 : unmanaged, IComponent 
             where T3 : unmanaged, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2), typeof(T3));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -83,7 +84,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T2 : class, IComponent 
             where T3 : class, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2), typeof(T3));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -102,7 +103,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T3 : unmanaged, IComponent 
             where T4 : unmanaged, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -121,7 +122,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T3 : class, IComponent 
             where T4 : class, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -141,7 +142,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T4 : unmanaged, IComponent 
             where T5 : unmanaged, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -161,7 +162,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T4 : class, IComponent 
             where T5 : class, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -182,7 +183,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T5 : unmanaged, IComponent 
             where T6 : unmanaged, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))
@@ -203,7 +204,7 @@ namespace EcsRx.Plugins.Batching.Accessors
             where T5 : class, IComponent 
             where T6 : class, IComponent
         {
-            var componentTypes = ComponentTypeLookup.GetComponentTypes(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
+            var componentTypes = ComponentTypeLookup.GetComponentTypeIds(typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6));
             var token = new AccessorToken(componentTypes, observableGroup);
             
             if (BatchAccessors.ContainsKey(token))

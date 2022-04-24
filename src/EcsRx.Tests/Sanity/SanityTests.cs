@@ -288,10 +288,10 @@ namespace EcsRx.Tests.Sanity
             Assert.Equal(expectedSize, collection.Count);
             Assert.Equal(expectedSize, observableGroup.Count);
 
-            var viewComponentPool = componentDatabase.GetPoolFor<ViewComponent>(componentLookup.GetComponentType(typeof(ViewComponent)));
+            var viewComponentPool = componentDatabase.GetPoolFor<ViewComponent>(componentLookup.GetComponentTypeId(typeof(ViewComponent)));
             Assert.Equal(expectedSize, viewComponentPool.Components.Length);
             
-            var testComponentPool = componentDatabase.GetPoolFor<TestComponentOne>(componentLookup.GetComponentType(typeof(TestComponentOne)));
+            var testComponentPool = componentDatabase.GetPoolFor<TestComponentOne>(componentLookup.GetComponentTypeId(typeof(TestComponentOne)));
             Assert.Equal(expectedSize, testComponentPool.Components.Length);
         }
     }

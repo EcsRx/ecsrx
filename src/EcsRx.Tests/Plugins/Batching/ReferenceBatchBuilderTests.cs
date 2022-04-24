@@ -26,8 +26,8 @@ namespace EcsRx.Tests.Plugins.Batching
             mockComponentDatabase.GetComponents<TestComponentTwo>(Arg.Any<int>()).Returns(fakeTwos);
             
             var mockTypeLookup = Substitute.For<IComponentTypeLookup>();
-            mockTypeLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
-            mockTypeLookup.GetComponentType(typeof(TestComponentTwo)).Returns(1);
+            mockTypeLookup.GetComponentTypeId(typeof(TestComponentOne)).Returns(0);
+            mockTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
 
             var fakeEntity1 = Substitute.For<IEntity>();
             fakeEntity1.Id.Returns(1);

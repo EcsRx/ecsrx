@@ -13,8 +13,8 @@
     <PackageReference Include="Persistity.Serializers.LazyData.Json" Version="2.0.41" />
     <PackageReference Include="Spectre.Console" Version="0.44.0" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
-    <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="5.0.19" />
-    <PackageReference Include="SystemsRx.ReactiveData" Version="5.0.19" />
+    <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="5.1.21" />
+    <PackageReference Include="SystemsRx.ReactiveData" Version="5.1.21" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj">

@@ -19,7 +19,7 @@ namespace EcsRx.Tests.EcsRx
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             componentTypeLookup.AllComponentTypeIds.Returns(new []{0,1});
-            componentTypeLookup.GetComponentType(Arg.Any<Type>()).Returns(1);
+            componentTypeLookup.GetComponentTypeId(Arg.Any<Type>()).Returns(1);
             
             var entity = new Entity(1, componentDatabase, componentTypeLookup);
             var dummyComponent = Substitute.For<IComponent>();
@@ -60,9 +60,8 @@ namespace EcsRx.Tests.EcsRx
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
-            componentTypeLookup.AllComponentTypeIds.Returns(new int[1]);
-            componentTypeLookup.GetComponentTypes(Arg.Any<Type>()).Returns(new []{0});
-
+            componentTypeLookup.AllComponentTypeIds.Returns(new[]{0});
+            
             var entity = new Entity(1, componentDatabase, componentTypeLookup);
             var dummyComponent = Substitute.For<IComponent>();
 
@@ -82,6 +81,8 @@ namespace EcsRx.Tests.EcsRx
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] { 0 });
+            
             var entity = new Entity(1, componentDatabase, componentTypeLookup);
             
             var beforeWasCalled = false;
@@ -101,8 +102,8 @@ namespace EcsRx.Tests.EcsRx
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1});
-            componentTypeLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
-            componentTypeLookup.GetComponentType(typeof(TestComponentTwo)).Returns(1);
+            componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne)).Returns(0);
+            componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
             
             var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
             entity.InternalComponentAllocations[0] = 1;
@@ -117,8 +118,8 @@ namespace EcsRx.Tests.EcsRx
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1});
-            componentTypeLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
-            componentTypeLookup.GetComponentType(typeof(TestComponentTwo)).Returns(1);
+            componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne)).Returns(0);
+            componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
             
             var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
             entity.InternalComponentAllocations[0] = 1;
@@ -132,8 +133,8 @@ namespace EcsRx.Tests.EcsRx
             
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1});
-            componentTypeLookup.GetComponentType(typeof(TestComponentOne)).Returns(0);
-            componentTypeLookup.GetComponentType(typeof(TestComponentTwo)).Returns(1);
+            componentTypeLookup.GetComponentTypeId(typeof(TestComponentOne)).Returns(0);
+            componentTypeLookup.GetComponentTypeId(typeof(TestComponentTwo)).Returns(1);
             
             var componentDatabase = Substitute.For<IComponentDatabase>();
             
@@ -203,9 +204,9 @@ namespace EcsRx.Tests.EcsRx
             
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1, 2});
-            componentTypeLookup.GetComponentType(fakeComponents[0].GetType()).Returns(0);
-            componentTypeLookup.GetComponentType(fakeComponents[1].GetType()).Returns(1);
-            componentTypeLookup.GetComponentType(fakeComponents[2].GetType()).Returns(2);
+            componentTypeLookup.GetComponentTypeId(fakeComponents[0].GetType()).Returns(0);
+            componentTypeLookup.GetComponentTypeId(fakeComponents[1].GetType()).Returns(1);
+            componentTypeLookup.GetComponentTypeId(fakeComponents[2].GetType()).Returns(2);
             
             var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
             entity.AddComponents(fakeComponents);
@@ -231,9 +232,9 @@ namespace EcsRx.Tests.EcsRx
                 
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
             componentTypeLookup.AllComponentTypeIds.Returns(new[] {0, 1, 2});
-            componentTypeLookup.GetComponentType(components[0].GetType()).Returns(0);
-            componentTypeLookup.GetComponentType(components[1].GetType()).Returns(1);
-            componentTypeLookup.GetComponentType(components[2].GetType()).Returns(2);
+            componentTypeLookup.GetComponentTypeId(components[0].GetType()).Returns(0);
+            componentTypeLookup.GetComponentTypeId(components[1].GetType()).Returns(1);
+            componentTypeLookup.GetComponentTypeId(components[2].GetType()).Returns(2);
             
             var entity = new Entity(fakeEntityId, componentDatabase, componentTypeLookup);
             entity.AddComponents(components);

@@ -68,7 +68,7 @@ namespace EcsRx.Entities
             var componentTypeIds = new int[components.Count];
             for (var i = 0; i < components.Count; i++)
             {
-                var componentTypeId = ComponentTypeLookup.GetComponentType(components[i].GetType());
+                var componentTypeId = ComponentTypeLookup.GetComponentTypeId(components[i].GetType());
                 var allocationId = ComponentDatabase.Allocate(componentTypeId);
                 InternalComponentAllocations[componentTypeId] = allocationId;
                 ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
@@ -98,7 +98,7 @@ namespace EcsRx.Entities
         
         public void RemoveComponents(params Type[] componentTypes)
         {
-            var componentTypeIds = ComponentTypeLookup.GetComponentTypes(componentTypes);
+            var componentTypeIds = ComponentTypeLookup.GetComponentTypeIds(componentTypes);
             RemoveComponents(componentTypeIds);
         }
         
@@ -125,7 +125,7 @@ namespace EcsRx.Entities
 
         public bool HasComponent(Type componentType)
         {
-            var componentTypeId = ComponentTypeLookup.GetComponentType(componentType);
+            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
             return HasComponent(componentTypeId);
         }
 
@@ -134,7 +134,7 @@ namespace EcsRx.Entities
 
         public IComponent GetComponent(Type componentType)
         {
-            var componentTypeId = ComponentTypeLookup.GetComponentType(componentType);
+            var componentTypeId = ComponentTypeLookup.GetComponentTypeId(componentType);
             return GetComponent(componentTypeId);
         }
 

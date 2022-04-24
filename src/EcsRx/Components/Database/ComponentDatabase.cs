@@ -29,7 +29,7 @@ namespace EcsRx.Components.Database
         
         public void Initialize()
         {
-            var componentTypes = ComponentTypeLookup.GetAllComponentTypes().ToArray();
+            var componentTypes = ComponentTypeLookup.GetComponentTypeMappings().ToArray();
             var componentCount = componentTypes.Length;
             ComponentData = new IComponentPool[componentCount];
 

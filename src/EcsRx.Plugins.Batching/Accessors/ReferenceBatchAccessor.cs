@@ -24,8 +24,8 @@ namespace EcsRx.Plugins.Batching.Accessors
 
         protected override IDisposable ReactToPools()
         {
-            var componentType1 = ComponentTypeLookup.GetComponentType(typeof(T1));
-            var componentType2 = ComponentTypeLookup.GetComponentType(typeof(T2));
+            var componentType1 = ComponentTypeLookup.GetComponentTypeId(typeof(T1));
+            var componentType2 = ComponentTypeLookup.GetComponentTypeId(typeof(T2));
             var pool1 = ComponentDatabase.GetPoolFor<T1>(componentType1);
             var pool2 = ComponentDatabase.GetPoolFor<T2>(componentType2);
 
@@ -53,9 +53,9 @@ namespace EcsRx.Plugins.Batching.Accessors
 
         protected override IDisposable ReactToPools()
         {
-            var componentType1 = ComponentTypeLookup.GetComponentType(typeof(T1));
-            var componentType2 = ComponentTypeLookup.GetComponentType(typeof(T2));
-            var componentType3 = ComponentTypeLookup.GetComponentType(typeof(T3));
+            var componentType1 = ComponentTypeLookup.GetComponentTypeId(typeof(T1));
+            var componentType2 = ComponentTypeLookup.GetComponentTypeId(typeof(T2));
+            var componentType3 = ComponentTypeLookup.GetComponentTypeId(typeof(T3));
             var pool1 = ComponentDatabase.GetPoolFor<T1>(componentType1);
             var pool2 = ComponentDatabase.GetPoolFor<T2>(componentType2);
             var pool3 = ComponentDatabase.GetPoolFor<T3>(componentType3);
@@ -86,10 +86,10 @@ namespace EcsRx.Plugins.Batching.Accessors
 
         protected override IDisposable ReactToPools()
         {
-            var componentType1 = ComponentTypeLookup.GetComponentType(typeof(T1));
-            var componentType2 = ComponentTypeLookup.GetComponentType(typeof(T2));
-            var componentType3 = ComponentTypeLookup.GetComponentType(typeof(T3));
-            var componentType4 = ComponentTypeLookup.GetComponentType(typeof(T4));
+            var componentType1 = ComponentTypeLookup.GetComponentTypeId(typeof(T1));
+            var componentType2 = ComponentTypeLookup.GetComponentTypeId(typeof(T2));
+            var componentType3 = ComponentTypeLookup.GetComponentTypeId(typeof(T3));
+            var componentType4 = ComponentTypeLookup.GetComponentTypeId(typeof(T4));
             var pool1 = ComponentDatabase.GetPoolFor<T1>(componentType1);
             var pool2 = ComponentDatabase.GetPoolFor<T2>(componentType2);
             var pool3 = ComponentDatabase.GetPoolFor<T3>(componentType3);
@@ -123,11 +123,11 @@ namespace EcsRx.Plugins.Batching.Accessors
 
         protected override IDisposable ReactToPools()
         {
-            var componentType1 = ComponentTypeLookup.GetComponentType(typeof(T1));
-            var componentType2 = ComponentTypeLookup.GetComponentType(typeof(T2));
-            var componentType3 = ComponentTypeLookup.GetComponentType(typeof(T3));
-            var componentType4 = ComponentTypeLookup.GetComponentType(typeof(T4));
-            var componentType5 = ComponentTypeLookup.GetComponentType(typeof(T5));
+            var componentType1 = ComponentTypeLookup.GetComponentTypeId(typeof(T1));
+            var componentType2 = ComponentTypeLookup.GetComponentTypeId(typeof(T2));
+            var componentType3 = ComponentTypeLookup.GetComponentTypeId(typeof(T3));
+            var componentType4 = ComponentTypeLookup.GetComponentTypeId(typeof(T4));
+            var componentType5 = ComponentTypeLookup.GetComponentTypeId(typeof(T5));
             var pool1 = ComponentDatabase.GetPoolFor<T1>(componentType1);
             var pool2 = ComponentDatabase.GetPoolFor<T2>(componentType2);
             var pool3 = ComponentDatabase.GetPoolFor<T3>(componentType3);
@@ -164,12 +164,12 @@ namespace EcsRx.Plugins.Batching.Accessors
 
         protected override IDisposable ReactToPools()
         {
-            var componentType1 = ComponentTypeLookup.GetComponentType(typeof(T1));
-            var componentType2 = ComponentTypeLookup.GetComponentType(typeof(T2));
-            var componentType3 = ComponentTypeLookup.GetComponentType(typeof(T3));
-            var componentType4 = ComponentTypeLookup.GetComponentType(typeof(T4));
-            var componentType5 = ComponentTypeLookup.GetComponentType(typeof(T5));
-            var componentType6 = ComponentTypeLookup.GetComponentType(typeof(T6));
+            var componentType1 = ComponentTypeLookup.GetComponentTypeId(typeof(T1));
+            var componentType2 = ComponentTypeLookup.GetComponentTypeId(typeof(T2));
+            var componentType3 = ComponentTypeLookup.GetComponentTypeId(typeof(T3));
+            var componentType4 = ComponentTypeLookup.GetComponentTypeId(typeof(T4));
+            var componentType5 = ComponentTypeLookup.GetComponentTypeId(typeof(T5));
+            var componentType6 = ComponentTypeLookup.GetComponentTypeId(typeof(T6));
             var pool1 = ComponentDatabase.GetPoolFor<T1>(componentType1);
             var pool2 = ComponentDatabase.GetPoolFor<T2>(componentType2);
             var pool3 = ComponentDatabase.GetPoolFor<T3>(componentType3);

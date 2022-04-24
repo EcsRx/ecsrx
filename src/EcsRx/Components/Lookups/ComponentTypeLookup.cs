@@ -27,17 +27,11 @@ namespace EcsRx.Components.Lookups
                 .ToArray();
         }
 
-        public int GetComponentType<T>() where T : IComponent
-        { return GetComponentType(typeof(T)); }
-
-        public int GetComponentType(Type type)
+        public int GetComponentTypeId(Type type)
         { return ComponentsByType[type]; }
-        
-        public int[] GetComponentTypes(params Type[] types)
-        { return types.Select(GetComponentType).ToArray(); }
 
-        public Type[] GetComponentTypes(params int[] typeIds)
-        { return typeIds.Select(x => ComponentsById[x]).ToArray(); }
+        public Type GetComponentType(int typeId)
+        { return ComponentsById[typeId]; }
 
         public bool IsComponentStruct(int componentTypeId)
         { return ComponentStructLookups[componentTypeId]; }
@@ -45,10 +39,7 @@ namespace EcsRx.Components.Lookups
         public bool IsComponentDisposable(int componentTypeId)
         { return ComponentDisposableLookups[componentTypeId]; }
 
-        public T CreateDefault<T>() where T : IComponent, new()
-        { return new T(); }
-
-        public IReadOnlyDictionary<Type, int> GetAllComponentTypes()
+        public IReadOnlyDictionary<Type, int> GetComponentTypeMappings()
         { return ComponentsByType; }
     }
 }

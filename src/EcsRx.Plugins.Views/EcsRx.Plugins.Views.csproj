@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Version>0.0.0</Version>
-        <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <Title>EcsRx.Plugins.Views</Title>
         <Authors>Grofit (LP)</Authors>
         <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>

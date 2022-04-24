@@ -60,9 +60,8 @@ namespace EcsRx.Tests.EcsRx
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
-            componentTypeLookup.AllComponentTypeIds.Returns(new int[1]);
-            componentTypeLookup.GetComponentTypeIds(Arg.Any<Type>()).Returns(new []{0});
-
+            componentTypeLookup.AllComponentTypeIds.Returns(new[]{0});
+            
             var entity = new Entity(1, componentDatabase, componentTypeLookup);
             var dummyComponent = Substitute.For<IComponent>();
 
@@ -82,6 +81,8 @@ namespace EcsRx.Tests.EcsRx
         {
             var componentDatabase = Substitute.For<IComponentDatabase>();
             var componentTypeLookup = Substitute.For<IComponentTypeLookup>();
+            componentTypeLookup.AllComponentTypeIds.Returns(new[] { 0 });
+            
             var entity = new Entity(1, componentDatabase, componentTypeLookup);
             
             var beforeWasCalled = false;

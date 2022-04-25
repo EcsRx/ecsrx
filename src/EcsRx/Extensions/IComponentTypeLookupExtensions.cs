@@ -4,6 +4,7 @@ using System.Linq;
 using EcsRx.Components;
 using EcsRx.Components.Accessor;
 using EcsRx.Components.Lookups;
+using EcsRx.Groups;
 
 namespace EcsRx.Extensions
 {
@@ -31,6 +32,13 @@ namespace EcsRx.Extensions
         {
             var componentTypeId = typeLookup.GetComponentTypeId(typeof(T));
             return new ComponentAccessor<T>(componentTypeId);
+        }
+
+        public static LookupGroup GetLookupGroupFor(this IComponentTypeLookup typeLookup, IGroup group)
+        {
+            var requiredComponents = typeLookup.GetComponentTypeIds(group.RequiredComponents);
+            var excludedComponents = typeLookup.GetComponentTypeIds(group.ExcludedComponents);
+            return new LookupGroup(requiredComponents, excludedComponents);
         }
     }
 }

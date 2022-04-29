@@ -50,12 +50,17 @@ namespace EcsRx.Groups.Observable
             foreach (var applicableEntity in applicableEntities)
             {
                 CachedEntities.Add(applicableEntity);
-                var trackingSub = GroupTrackerFactory.TrackGroup(applicableEntity, token.LookupGroup);
-                trackingSub.OnGroupMatchingChanged.Subscribe(x => OnEntityGroupChanged(applicableEntity, x));
-                GroupTrackers.Add(applicableEntity.Id, trackingSub);
+                TrackEntity(applicableEntity);
             }
 
             NotifyingCollections.ForEachRun(MonitorEntityChanges);
+        }
+
+        private void TrackEntity(IEntity entity)
+        {
+            var trackingSub = GroupTrackerFactory.TrackGroup(entity, Token.LookupGroup);
+            trackingSub.OnGroupMatchingChanged.Subscribe(x => OnEntityGroupChanged(entity, x));
+            GroupTrackers.Add(entity.Id, trackingSub);
         }
 
         private void MonitorEntityChanges(INotifyingEntityCollection notifyingCollection)
@@ -92,9 +97,7 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.Contains(args.Entity.Id)) { return; }
 
-            var tracker = GroupTrackerFactory.TrackGroup(args.Entity, Token.LookupGroup);
-            tracker.OnGroupMatchingChanged.Subscribe(x => OnEntityGroupChanged(args.Entity, x));
-            GroupTrackers.Add(args.Entity.Id, tracker);
+            TrackEntity(args.Entity);
             
             if (Token.LookupGroup.Matches(args.Entity))
             {
@@ -107,8 +110,7 @@ namespace EcsRx.Groups.Observable
         {
             if (!CachedEntities.Contains(args.Entity.Id)) { return; }
 
-            IObservableGroupTracker tracker;
-            if (GroupTrackers.TryGetValue(args.Entity.Id, out tracker))
+            if (GroupTrackers.TryGetValue(args.Entity.Id, out var tracker))
             {
                 tracker.Dispose();
                 GroupTrackers.Remove(args.Entity.Id);

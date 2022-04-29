@@ -7,9 +7,5 @@ namespace EcsRx.Collections.Entity
     {
         IObservable<CollectionEntityEvent> EntityAdded { get; }
         IObservable<CollectionEntityEvent> EntityRemoved { get; }
-
-        IObservable<ComponentsChangedEvent> EntityComponentsAdded { get; }
-        IObservable<ComponentsChangedEvent> EntityComponentsRemoving { get; }
-        IObservable<ComponentsChangedEvent> EntityComponentsRemoved { get; }
     }
 }

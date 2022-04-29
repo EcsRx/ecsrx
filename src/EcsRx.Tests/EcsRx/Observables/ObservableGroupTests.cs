@@ -42,9 +42,6 @@ namespace EcsRx.Tests.EcsRx.Observables
             
             mockCollectionNotifier.EntityAdded.Returns(Observable.Empty<CollectionEntityEvent>());
             mockCollectionNotifier.EntityRemoved.Returns(Observable.Empty<CollectionEntityEvent>());
-            mockCollectionNotifier.EntityComponentsAdded.Returns(Observable.Empty<ComponentsChangedEvent>());
-            mockCollectionNotifier.EntityComponentsRemoving.Returns(Observable.Empty<ComponentsChangedEvent>());
-            mockCollectionNotifier.EntityComponentsRemoved.Returns(Observable.Empty<ComponentsChangedEvent>());
 
             var observableGroup = new ObservableGroup(accessorToken, dummyEntitySnapshot, new []{mockCollectionNotifier});
 

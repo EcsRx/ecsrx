@@ -1,6 +1,6 @@
 namespace EcsRx.Groups.Observable.Tracking
 {
-    public enum GroupMatchingTypes
+    public enum GroupMatchingType
     {
         MatchesNoExcludes = 1,
         MatchesWithExcludes = 2,

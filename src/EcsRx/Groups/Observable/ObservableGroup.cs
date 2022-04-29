@@ -7,6 +7,7 @@ using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;
+using EcsRx.Groups.Observable.Tracking;
 using EcsRx.Lookups;
 using SystemsRx.MicroRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
@@ -17,6 +18,7 @@ namespace EcsRx.Groups.Observable
     {
         public readonly EntityLookup CachedEntities;
         public readonly List<IDisposable> Subscriptions;
+        public readonly Dictionary<int, IObservableGroupTracker> GroupTrackers;
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
         public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
@@ -28,22 +30,30 @@ namespace EcsRx.Groups.Observable
         
         public ObservableGroupToken Token { get; }
         public IEnumerable<INotifyingEntityCollection> NotifyingCollections { get; }
+        public IGroupTrackerFactory GroupTrackerFactory { get; }
         
-        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections)
+        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections, IGroupTrackerFactory trackerFactory)
         {
             Token = token;
             NotifyingCollections = notifyingCollections;
+            GroupTrackerFactory = trackerFactory;
 
             _onEntityAdded = new Subject<IEntity>();
             _onEntityRemoved = new Subject<IEntity>();
             _onEntityRemoving = new Subject<IEntity>();
 
             Subscriptions = new List<IDisposable>();
+            GroupTrackers = new Dictionary<int, IObservableGroupTracker>();
             var applicableEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x));
             CachedEntities = new EntityLookup();
 
             foreach (var applicableEntity in applicableEntities)
-            { CachedEntities.Add(applicableEntity); }
+            {
+                CachedEntities.Add(applicableEntity);
+                var trackingSub = GroupTrackerFactory.TrackGroup(applicableEntity, token.LookupGroup);
+                trackingSub.OnGroupMatchingChanged.Subscribe(x => OnEntityGroupChanged(applicableEntity, x));
+                GroupTrackers.Add(applicableEntity.Id, trackingSub);
+            }
 
             NotifyingCollections.ForEachRun(MonitorEntityChanges);
         }
@@ -57,79 +67,53 @@ namespace EcsRx.Groups.Observable
             notifyingCollection.EntityRemoved
                 .Subscribe(OnEntityRemovedFromCollection)
                 .AddTo(Subscriptions);
-            
-            notifyingCollection.EntityComponentsAdded
-                .Subscribe(OnEntityComponentAdded)
-                .AddTo(Subscriptions);
-
-            notifyingCollection.EntityComponentsRemoving
-                .Subscribe(OnEntityComponentRemoving)
-                .AddTo(Subscriptions);
-
-            notifyingCollection.EntityComponentsRemoved
-                .Subscribe(OnEntityComponentRemoved)
-                .AddTo(Subscriptions);
         }
 
-        public void OnEntityComponentRemoved(ComponentsChangedEvent args)
+        public void OnEntityGroupChanged(IEntity entity, GroupActionType groupActionType)
         {
-            if (CachedEntities.Contains(args.Entity.Id))
+            if (groupActionType == GroupActionType.JoinedGroup)
             {
-                if (args.Entity.HasAllComponents(Token.LookupGroup.RequiredComponents)) 
-                { return; }
-
-                CachedEntities.Remove(args.Entity.Id);
-                _onEntityRemoved.OnNext(args.Entity);
+                CachedEntities.Add(entity);
+                _onEntityAdded.OnNext(entity);
                 return;
             }
 
-            if (!Token.LookupGroup.Matches(args.Entity)) {return;}
-            
-            CachedEntities.Add(args.Entity);
-            _onEntityAdded.OnNext(args.Entity);
-        }
+            if (groupActionType == GroupActionType.LeavingGroup)
+            { _onEntityRemoving.OnNext(entity); }
 
-        public void OnEntityComponentRemoving(ComponentsChangedEvent args)
-        {
-            if (!CachedEntities.Contains(args.Entity.Id)) { return; }
-            
-            if(Token.LookupGroup.ContainsAnyRequiredComponents(args.ComponentTypeIds))
-            { _onEntityRemoving.OnNext(args.Entity); }
-        }
-
-        public void OnEntityComponentAdded(ComponentsChangedEvent args)
-        {
-            if (CachedEntities.Contains(args.Entity.Id))
+            if (groupActionType == GroupActionType.LeftGroup)
             {
-                if(!Token.LookupGroup.ContainsAnyExcludedComponents(args.Entity))
-                { return; }
-
-                _onEntityRemoving.OnNext(args.Entity);
-                CachedEntities.Remove(args.Entity.Id); 
-                _onEntityRemoved.OnNext(args.Entity);
-                return;
+                CachedEntities.Remove(entity.Id);
+                _onEntityRemoved.OnNext(entity);
             }
-            
-            if (!Token.LookupGroup.Matches(args.Entity)) { return; }
-
-            CachedEntities.Add(args.Entity);
-            _onEntityAdded.OnNext(args.Entity);
         }
 
         public void OnEntityAddedToCollection(CollectionEntityEvent args)
         {
-            // This is because you may have fired a blueprint before it is created
             if (CachedEntities.Contains(args.Entity.Id)) { return; }
-            if (!Token.LookupGroup.Matches(args.Entity)) { return; }
+
+            var tracker = GroupTrackerFactory.TrackGroup(args.Entity, Token.LookupGroup);
+            tracker.OnGroupMatchingChanged.Subscribe(x => OnEntityGroupChanged(args.Entity, x));
+            GroupTrackers.Add(args.Entity.Id, tracker);
             
-            CachedEntities.Add(args.Entity);
-            _onEntityAdded.OnNext(args.Entity);
+            if (Token.LookupGroup.Matches(args.Entity))
+            {
+                CachedEntities.Add(args.Entity);
+                _onEntityAdded.OnNext(args.Entity);
+            }
         }
         
         public void OnEntityRemovedFromCollection(CollectionEntityEvent args)
         {
             if (!CachedEntities.Contains(args.Entity.Id)) { return; }
-            
+
+            IObservableGroupTracker tracker;
+            if (GroupTrackers.TryGetValue(args.Entity.Id, out tracker))
+            {
+                tracker.Dispose();
+                GroupTrackers.Remove(args.Entity.Id);
+            }
+
             CachedEntities.Remove(args.Entity.Id); 
             _onEntityRemoved.OnNext(args.Entity);
         }

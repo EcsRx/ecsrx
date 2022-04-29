@@ -68,16 +68,13 @@ namespace EcsRx.Benchmarks.Benchmarks
         public override void Setup()
         {
             _group = new Group(_availableComponentTypes.Take(ComponentCount).ToArray());
-            
+            _collection = EntityDatabase.GetCollection();
             _observableGroup = ObservableGroupManager.GetObservableGroup(_group);
             
             _availableComponents = _availableComponentTypes
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .Take(ComponentCount)
                 .ToArray();
-            
-            _collection = EntityDatabase.GetCollection();
-
         }
 
         public override void Cleanup()
@@ -88,7 +85,6 @@ namespace EcsRx.Benchmarks.Benchmarks
         [Benchmark]
         public void ObservableGroupAddRemove()
         {
-            
             for (var i = 0; i < EntityCount; i++)
             {
                 var entity = _collection.CreateEntity();

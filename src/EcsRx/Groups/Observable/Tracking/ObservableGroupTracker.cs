@@ -12,47 +12,49 @@ namespace EcsRx.Groups.Observable.Tracking
     {
         private CompositeDisposable _subs;
         
-        public GroupMatchingTypes CurrentMatchingType { get; private set; }
+        public GroupMatchingType CurrentMatchingType { get; private set; }
         public LookupGroup LookupGroup { get; }
-        public Subject<GroupActionTypes> Subject { get; }
+        public Subject<GroupActionType> Subject { get; }
 
-        public IObservable<GroupActionTypes> OnGroupMatchingChanged => Subject;
+        public IObservable<GroupActionType> OnGroupMatchingChanged => Subject;
 
         public ObservableGroupTracker(IEntity entity, LookupGroup lookupGroup)
         {
             LookupGroup = lookupGroup;
-            CurrentMatchingType = CalculateMatchingType(entity, lookupGroup);
-            Subject = new Subject<GroupActionTypes>();
+            Subject = new Subject<GroupActionType>();
+            _subs = new CompositeDisposable();
             
             entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity, lookupGroup)).AddTo(_subs);
             entity.ComponentsRemoving.Subscribe(x => OnEntityComponentRemoving(x, entity, lookupGroup)).AddTo(_subs);
             entity.ComponentsRemoved.Subscribe(x => OnEntityComponentRemoved(x, entity, lookupGroup)).AddTo(_subs);
+            
+            CurrentMatchingType = CalculateMatchingType(entity, lookupGroup);
         }
-
-        public GroupMatchingTypes CalculateMatchingType(IEntity entity, LookupGroup group)
+        
+        public GroupMatchingType CalculateMatchingType(IEntity entity, LookupGroup group)
         {
             var containsAllRequired = group.ContainsAllRequiredComponents(entity);
             var containsAnyExcluded = group.ContainsAnyExcludedComponents(entity);
             
-            if(containsAllRequired && containsAnyExcluded) { return GroupMatchingTypes.MatchesWithExcludes; }
-            if(containsAllRequired) { return GroupMatchingTypes.MatchesNoExcludes; }
-            if(containsAnyExcluded) { return GroupMatchingTypes.NoMatchesWithExcludes; }
-            return GroupMatchingTypes.NoMatchesNoExcludes;
+            if(containsAllRequired && containsAnyExcluded) { return GroupMatchingType.MatchesWithExcludes; }
+            if(containsAllRequired) { return GroupMatchingType.MatchesNoExcludes; }
+            if(containsAnyExcluded) { return GroupMatchingType.NoMatchesWithExcludes; }
+            return GroupMatchingType.NoMatchesNoExcludes;
         }
 
         public void OnEntityComponentAdded(int[] componentsAdded, IEntity entity, LookupGroup group)
         {
-            if (CurrentMatchingType == GroupMatchingTypes.NoMatchesWithExcludes || 
-                CurrentMatchingType == GroupMatchingTypes.MatchesWithExcludes)
+            if (CurrentMatchingType == GroupMatchingType.NoMatchesWithExcludes || 
+                CurrentMatchingType == GroupMatchingType.MatchesWithExcludes)
             { return; }
             
-            if(CurrentMatchingType == GroupMatchingTypes.MatchesNoExcludes)
+            if(CurrentMatchingType == GroupMatchingType.MatchesNoExcludes)
             {
                 if (group.ContainsAnyExcludedComponents(componentsAdded))
                 {
-                    CurrentMatchingType = GroupMatchingTypes.MatchesWithExcludes;
-                    Subject.OnNext(GroupActionTypes.LeavingGroup);
-                    Subject.OnNext(GroupActionTypes.LeftGroup);
+                    CurrentMatchingType = GroupMatchingType.MatchesWithExcludes;
+                    Subject.OnNext(GroupActionType.LeavingGroup);
+                    Subject.OnNext(GroupActionType.LeftGroup);
                 }
                 return;
             }
@@ -61,54 +63,54 @@ namespace EcsRx.Groups.Observable.Tracking
             {
                 if (group.ContainsAnyExcludedComponents(entity))
                 {
-                    CurrentMatchingType = GroupMatchingTypes.MatchesWithExcludes;
+                    CurrentMatchingType = GroupMatchingType.MatchesWithExcludes;
                     return;
                 }
 
-                CurrentMatchingType = GroupMatchingTypes.MatchesNoExcludes;
-                Subject.OnNext(GroupActionTypes.JoinedGroup);
+                CurrentMatchingType = GroupMatchingType.MatchesNoExcludes;
+                Subject.OnNext(GroupActionType.JoinedGroup);
             }
         }
         
         public void OnEntityComponentRemoving(int[] componentsRemoving, IEntity entity, LookupGroup group)
         {
-            if (CurrentMatchingType == GroupMatchingTypes.NoMatchesNoExcludes)
+            if (CurrentMatchingType == GroupMatchingType.NoMatchesNoExcludes)
             { return; }
 
-            if (CurrentMatchingType == GroupMatchingTypes.NoMatchesNoExcludes)
+            if (CurrentMatchingType == GroupMatchingType.NoMatchesNoExcludes)
             {
                 if(group.ContainsAnyRequiredComponents(componentsRemoving))
-                { Subject.OnNext(GroupActionTypes.LeavingGroup); }
+                { Subject.OnNext(GroupActionType.LeavingGroup); }
             }
         }
         
         public void OnEntityComponentRemoved(int[] componentsAdded, IEntity entity, LookupGroup group)
         {
-            if (CurrentMatchingType == GroupMatchingTypes.NoMatchesNoExcludes)
+            if (CurrentMatchingType == GroupMatchingType.NoMatchesNoExcludes)
             { return; }
 
             var containsAllComponents = group.ContainsAllRequiredComponents(entity);
-            if (CurrentMatchingType == GroupMatchingTypes.MatchesNoExcludes)
+            if (CurrentMatchingType == GroupMatchingType.MatchesNoExcludes)
             {
                 if(containsAllComponents)
                 { return; }
 
-                CurrentMatchingType = GroupMatchingTypes.NoMatchesNoExcludes;
-                Subject.OnNext(GroupActionTypes.LeftGroup);
+                CurrentMatchingType = GroupMatchingType.NoMatchesNoExcludes;
+                Subject.OnNext(GroupActionType.LeftGroup);
             }
 
             var containsAnyExcluded = group.ContainsAnyExcludedComponents(entity);
             
-            if (CurrentMatchingType == GroupMatchingTypes.NoMatchesWithExcludes && !containsAnyExcluded)
+            if (CurrentMatchingType == GroupMatchingType.NoMatchesWithExcludes && !containsAnyExcluded)
             {
-                CurrentMatchingType = GroupMatchingTypes.NoMatchesNoExcludes;
+                CurrentMatchingType = GroupMatchingType.NoMatchesNoExcludes;
                 return;
             }
             
-            if (CurrentMatchingType == GroupMatchingTypes.MatchesWithExcludes && containsAllComponents && !containsAnyExcluded)
+            if (CurrentMatchingType == GroupMatchingType.MatchesWithExcludes && containsAllComponents && !containsAnyExcluded)
             {
-                CurrentMatchingType = GroupMatchingTypes.MatchesNoExcludes;
-                Subject.OnNext(GroupActionTypes.JoinedGroup);
+                CurrentMatchingType = GroupMatchingType.MatchesNoExcludes;
+                Subject.OnNext(GroupActionType.JoinedGroup);
                 return;
             }
         }

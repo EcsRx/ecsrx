@@ -25,6 +25,5 @@ namespace EcsRx.Groups
             var excludedHash = ExcludedComponents?.GetHashCode() ?? 0;
             return requiredHash ^ excludedHash;
         }
-
     }
 }

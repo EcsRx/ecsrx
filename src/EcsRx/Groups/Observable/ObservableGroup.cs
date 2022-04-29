@@ -13,7 +13,7 @@ using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Groups.Observable
 {
-    public class ObservableGroup : IObservableGroup, IDisposable
+    public class ObservableGroup : IObservableGroup
     {
         public readonly EntityLookup CachedEntities;
         public readonly List<IDisposable> Subscriptions;
@@ -57,7 +57,7 @@ namespace EcsRx.Groups.Observable
             notifyingCollection.EntityRemoved
                 .Subscribe(OnEntityRemovedFromCollection)
                 .AddTo(Subscriptions);
-
+            
             notifyingCollection.EntityComponentsAdded
                 .Subscribe(OnEntityComponentAdded)
                 .AddTo(Subscriptions);

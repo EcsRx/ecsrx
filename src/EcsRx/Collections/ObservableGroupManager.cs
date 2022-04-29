@@ -6,12 +6,11 @@ using EcsRx.Components.Lookups;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using EcsRx.Groups.Observable.Tracking;
 using EcsRx.Lookups;
 
 namespace EcsRx.Collections
 {
-    public class ObservableGroupManager : IObservableGroupManager, IDisposable
+    public class ObservableGroupManager : IObservableGroupManager
     {
         private readonly ObservableGroupLookup _observableGroups;
 

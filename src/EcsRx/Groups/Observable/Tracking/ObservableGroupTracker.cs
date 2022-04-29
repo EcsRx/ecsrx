@@ -70,14 +70,16 @@ namespace EcsRx.Groups.Observable.Tracking
             }
         }
         
-        public void OnEntityComponentRemoving(int[] componentsAdded, IEntity entity, LookupGroup group)
+        public void OnEntityComponentRemoving(int[] componentsRemoving, IEntity entity, LookupGroup group)
         {
             if (CurrentMatchingType == GroupMatchingTypes.NoMatchesNoExcludes)
             { return; }
 
-            var containsAllComponents = group.ContainsAllRequiredComponents(entity);
-            if (CurrentMatchingType == GroupMatchingTypes.MatchesNoExcludes && !containsAllComponents)
-            { Subject.OnNext(GroupActionTypes.LeavingGroup); }
+            if (CurrentMatchingType == GroupMatchingTypes.NoMatchesNoExcludes)
+            {
+                if(group.ContainsAnyRequiredComponents(componentsRemoving))
+                { Subject.OnNext(GroupActionTypes.LeavingGroup); }
+            }
         }
         
         public void OnEntityComponentRemoved(int[] componentsAdded, IEntity entity, LookupGroup group)

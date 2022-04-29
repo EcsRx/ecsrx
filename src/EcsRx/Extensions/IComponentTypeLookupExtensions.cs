@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using EcsRx.Components;
 using EcsRx.Components.Accessor;
 using EcsRx.Components.Lookups;
@@ -15,6 +16,9 @@ namespace EcsRx.Extensions
         
         public static T CreateDefault<T>(this IComponentTypeLookup typeLookup) where T : IComponent, new()
         { return new T(); }
+
+        public static IComponent CreateDefault(this IComponentTypeLookup typeLookup, int typeId)
+        { return Activator.CreateInstance(typeLookup.GetComponentType(typeId)) as IComponent; }
         
         public static int[] GetComponentTypeIds(this IComponentTypeLookup typeLookup, params Type[] types)
         { return types.Select(typeLookup.GetComponentTypeId).ToArray(); }

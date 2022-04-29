@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Plugins.Persistence",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Plugins.GroupBinding", "EcsRx.Plugins.GroupBinding\EcsRx.Plugins.GroupBinding.csproj", "{3DD20735-C1F5-4033-A909-2E1BD9EA075F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcsRx.Benchmarks", "EcsRx.Benchmarks\EcsRx.Benchmarks.csproj", "{4037E761-E07D-42B1-91B8-69798CF0B678}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{3DD20735-C1F5-4033-A909-2E1BD9EA075F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DD20735-C1F5-4033-A909-2E1BD9EA075F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD20735-C1F5-4033-A909-2E1BD9EA075F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4037E761-E07D-42B1-91B8-69798CF0B678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4037E761-E07D-42B1-91B8-69798CF0B678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4037E761-E07D-42B1-91B8-69798CF0B678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4037E761-E07D-42B1-91B8-69798CF0B678}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +98,7 @@ Global
 		{5CB6728F-7537-4C73-9557-52B4C6F9791A} = {48050703-1E4C-4179-9539-90212854B3F7}
 		{D63A4C86-6515-4A3C-9473-45947D34DE21} = {48050703-1E4C-4179-9539-90212854B3F7}
 		{3DD20735-C1F5-4033-A909-2E1BD9EA075F} = {48050703-1E4C-4179-9539-90212854B3F7}
+		{4037E761-E07D-42B1-91B8-69798CF0B678} = {4197CF20-C162-449D-A3A5-D50BF9476796}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9292D27-B07F-42D9-94D7-38263CA662DB}

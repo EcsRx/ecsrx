@@ -48,8 +48,6 @@ namespace EcsRx.Groups.Observable.Tracking
             _entitySubscriptions.Remove(entity.Id);
             EntityIdMatchTypes.Remove(entity.Id);
         }
-        
-
 
         public void OnEntityComponentAdded(int[] componentsAdded, IEntity entity, LookupGroup group)
         {

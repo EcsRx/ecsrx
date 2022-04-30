@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
+using EcsRx.Collections;
 using EcsRx.Collections.Entity;
 using EcsRx.Components;
 using EcsRx.Entities;
@@ -61,6 +62,10 @@ namespace EcsRx.Benchmarks.Benchmarks
         public override void Cleanup()
         {
             _collection.RemoveAllEntities();
+            var manager = (ObservableGroupManager as ObservableGroupManager);
+            var allObservableGroups = manager._observableGroups.ToArray();
+            allObservableGroups.DisposeAll();
+            manager._observableGroups.Clear();
         }
 
         [Benchmark]

@@ -12,7 +12,7 @@ namespace EcsRx.Collections
 {
     public class ObservableGroupManager : IObservableGroupManager
     {
-        private readonly ObservableGroupLookup _observableGroups;
+        public ObservableGroupLookup _observableGroups { get; }
 
         public IReadOnlyList<IObservableGroup> ObservableGroups => _observableGroups;
 

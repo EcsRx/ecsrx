@@ -12,9 +12,9 @@ namespace EcsRx.Benchmarks
         {
             var benchmarks = new []
             {
-                BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(EntityGroupMatchingBenchmark)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(EntityGroupMatchingBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultipleObservableGroupsAddAndRemoveBenchmark)),
             };

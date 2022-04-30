@@ -12,8 +12,9 @@ using SystemsRx.Infrastructure.Ninject;
 
 namespace EcsRx.Benchmarks
 {
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, warmupCount: 1, invocationCount: 1)]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, warmupCount: 1, invocationCount: 1, targetCount: 10)]
     [MemoryDiagnoser]
+    [MarkdownExporter]
     public abstract class EcsRxBenchmark
     {
         public IDependencyContainer Container { get; }

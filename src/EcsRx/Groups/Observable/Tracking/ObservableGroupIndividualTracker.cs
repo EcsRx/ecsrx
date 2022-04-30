@@ -10,7 +10,7 @@ using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Groups.Observable.Tracking
 {
-    public class IndividualObservableGroupTracker : IObservableGroupTracker
+    public class ObservableGroupIndividualTracker : IObservableGroupTracker
     {
         private CompositeDisposable _subs;
         
@@ -20,7 +20,7 @@ namespace EcsRx.Groups.Observable.Tracking
 
         public IObservable<GroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
 
-        public IndividualObservableGroupTracker(IEntity entity, LookupGroup lookupGroup)
+        public ObservableGroupIndividualTracker(IEntity entity, LookupGroup lookupGroup)
         {
             LookupGroup = lookupGroup;
             OnGroupMatchingChanged = new Subject<GroupStateChanged>();

@@ -15,8 +15,12 @@ namespace EcsRx.Groups.Observable.Tracking
         { return TrackGroup(entity, ComponentTypeLookup.GetLookupGroupFor(group)); }
 
         public IObservableGroupTracker TrackGroup(IEntity entity, LookupGroup group)
-        { return new IndividualObservableGroupTracker(entity, group); }
+        { return new ObservableGroupIndividualTracker(entity, group); }
 
-        
+        public IObservableGroupBatchTracker TrackGroup(IGroup group)
+        { return TrackGroup(ComponentTypeLookup.GetLookupGroupFor(group)); }
+
+        public IObservableGroupBatchTracker TrackGroup(LookupGroup group)
+        { return new ObservableGroupBatchTracker(group); }
     }
 }

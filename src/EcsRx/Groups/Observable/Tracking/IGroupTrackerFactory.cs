@@ -7,5 +7,7 @@ namespace EcsRx.Groups.Observable.Tracking
     {
         IObservableGroupTracker TrackGroup(IEntity entity, IGroup group);
         IObservableGroupTracker TrackGroup(IEntity entity, LookupGroup group);
+        IObservableGroupBatchTracker TrackGroup(IGroup group);
+        IObservableGroupBatchTracker TrackGroup(LookupGroup group);
     }
 }

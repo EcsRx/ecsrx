@@ -1,9 +1,10 @@
 using System;
+using EcsRx.Groups.Observable.Tracking.Events;
 
 namespace EcsRx.Groups.Observable.Tracking
 {
     public interface IObservableGroupTracker : IDisposable
     {
-        IObservable<GroupActionType> OnGroupMatchingChanged { get; }
+        IObservable<GroupStateChanged> GroupMatchingChanged { get; }
     }
 }

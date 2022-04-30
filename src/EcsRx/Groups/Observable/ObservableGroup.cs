@@ -8,6 +8,8 @@ using EcsRx.Entities;
 using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable.Tracking;
+using EcsRx.Groups.Observable.Tracking.Events;
+using EcsRx.Groups.Observable.Tracking.Types;
 using EcsRx.Lookups;
 using SystemsRx.MicroRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
@@ -59,7 +61,7 @@ namespace EcsRx.Groups.Observable
         private void TrackEntity(IEntity entity)
         {
             var trackingSub = GroupTrackerFactory.TrackGroup(entity, Token.LookupGroup);
-            trackingSub.OnGroupMatchingChanged.Subscribe(x => OnEntityGroupChanged(entity, x));
+            trackingSub.GroupMatchingChanged.Subscribe(OnEntityGroupChanged);
             GroupTrackers.Add(entity.Id, trackingSub);
         }
 
@@ -74,22 +76,22 @@ namespace EcsRx.Groups.Observable
                 .AddTo(Subscriptions);
         }
 
-        public void OnEntityGroupChanged(IEntity entity, GroupActionType groupActionType)
+        public void OnEntityGroupChanged(GroupStateChanged args)
         {
-            if (groupActionType == GroupActionType.JoinedGroup)
+            if (args.GroupActionType == GroupActionType.JoinedGroup)
             {
-                CachedEntities.Add(entity);
-                _onEntityAdded.OnNext(entity);
+                CachedEntities.Add(args.Entity);
+                _onEntityAdded.OnNext(args.Entity);
                 return;
             }
 
-            if (groupActionType == GroupActionType.LeavingGroup)
-            { _onEntityRemoving.OnNext(entity); }
+            if (args.GroupActionType == GroupActionType.LeavingGroup)
+            { _onEntityRemoving.OnNext(args.Entity); }
 
-            if (groupActionType == GroupActionType.LeftGroup)
+            if (args.GroupActionType == GroupActionType.LeftGroup)
             {
-                CachedEntities.Remove(entity.Id);
-                _onEntityRemoved.OnNext(entity);
+                CachedEntities.Remove(args.Entity.Id);
+                _onEntityRemoved.OnNext(args.Entity);
             }
         }
 

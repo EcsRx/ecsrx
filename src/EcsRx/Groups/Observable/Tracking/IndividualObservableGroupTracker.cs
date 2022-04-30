@@ -1,6 +1,8 @@
 using System;
 using EcsRx.Entities;
 using EcsRx.Extensions;
+using EcsRx.Groups.Observable.Tracking.Events;
+using EcsRx.Groups.Observable.Tracking.Types;
 using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Disposables;
 using SystemsRx.MicroRx.Extensions;
@@ -8,20 +10,20 @@ using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Groups.Observable.Tracking
 {
-    public class ObservableGroupTracker : IObservableGroupTracker
+    public class IndividualObservableGroupTracker : IObservableGroupTracker
     {
         private CompositeDisposable _subs;
         
         public GroupMatchingType CurrentMatchingType { get; private set; }
         public LookupGroup LookupGroup { get; }
-        public Subject<GroupActionType> Subject { get; }
+        public Subject<GroupStateChanged> OnGroupMatchingChanged { get; }
 
-        public IObservable<GroupActionType> OnGroupMatchingChanged => Subject;
+        public IObservable<GroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
 
-        public ObservableGroupTracker(IEntity entity, LookupGroup lookupGroup)
+        public IndividualObservableGroupTracker(IEntity entity, LookupGroup lookupGroup)
         {
             LookupGroup = lookupGroup;
-            Subject = new Subject<GroupActionType>();
+            OnGroupMatchingChanged = new Subject<GroupStateChanged>();
             _subs = new CompositeDisposable();
             
             entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity, lookupGroup)).AddTo(_subs);
@@ -53,8 +55,8 @@ namespace EcsRx.Groups.Observable.Tracking
                 if (group.ContainsAnyExcludedComponents(componentsAdded))
                 {
                     CurrentMatchingType = GroupMatchingType.MatchesWithExcludes;
-                    Subject.OnNext(GroupActionType.LeavingGroup);
-                    Subject.OnNext(GroupActionType.LeftGroup);
+                    OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeavingGroup));
+                    OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeftGroup));
                 }
                 return;
             }
@@ -68,7 +70,7 @@ namespace EcsRx.Groups.Observable.Tracking
                 }
 
                 CurrentMatchingType = GroupMatchingType.MatchesNoExcludes;
-                Subject.OnNext(GroupActionType.JoinedGroup);
+                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.JoinedGroup));
             }
         }
         
@@ -80,7 +82,7 @@ namespace EcsRx.Groups.Observable.Tracking
             if (CurrentMatchingType == GroupMatchingType.NoMatchesNoExcludes)
             {
                 if(group.ContainsAnyRequiredComponents(componentsRemoving))
-                { Subject.OnNext(GroupActionType.LeavingGroup); }
+                { OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeavingGroup)); }
             }
         }
         
@@ -96,7 +98,7 @@ namespace EcsRx.Groups.Observable.Tracking
                 { return; }
 
                 CurrentMatchingType = GroupMatchingType.NoMatchesNoExcludes;
-                Subject.OnNext(GroupActionType.LeftGroup);
+                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeftGroup));
             }
 
             var containsAnyExcluded = group.ContainsAnyExcludedComponents(entity);
@@ -110,14 +112,14 @@ namespace EcsRx.Groups.Observable.Tracking
             if (CurrentMatchingType == GroupMatchingType.MatchesWithExcludes && containsAllComponents && !containsAnyExcluded)
             {
                 CurrentMatchingType = GroupMatchingType.MatchesNoExcludes;
-                Subject.OnNext(GroupActionType.JoinedGroup);
+                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.JoinedGroup));
                 return;
             }
         }
 
         public void Dispose()
         {
-            Subject?.Dispose();
+            OnGroupMatchingChanged?.Dispose();
             _subs.Dispose();
         }
     }

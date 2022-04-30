@@ -2,7 +2,7 @@ using System;
 
 namespace EcsRx.Events.Collections
 {
-    public struct ComponentPoolResizedEvent : IEquatable<ComponentPoolResizedEvent>
+    public readonly struct ComponentPoolResizedEvent : IEquatable<ComponentPoolResizedEvent>
     {
         public readonly int ComponentTypeId;
 

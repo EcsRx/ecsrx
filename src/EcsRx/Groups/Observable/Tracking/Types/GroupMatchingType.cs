@@ -1,4 +1,4 @@
-namespace EcsRx.Groups.Observable.Tracking
+namespace EcsRx.Groups.Observable.Tracking.Types
 {
     public enum GroupMatchingType
     {

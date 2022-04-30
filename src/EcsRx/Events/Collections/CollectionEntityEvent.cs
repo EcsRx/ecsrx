@@ -3,7 +3,7 @@ using EcsRx.Entities;
 
 namespace EcsRx.Events.Collections
 {
-    public struct CollectionEntityEvent : IEquatable<CollectionEntityEvent>
+    public readonly struct CollectionEntityEvent : IEquatable<CollectionEntityEvent>
     {
         public readonly IEntity Entity;
 

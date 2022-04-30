@@ -122,6 +122,7 @@ namespace EcsRx.Groups.Observable
         {
             Subscriptions.DisposeAll();
             _onEntityAdded.Dispose();
+            ObservableGroupTracker.Dispose();
             _onEntityRemoved.Dispose();
             _onEntityRemoving.Dispose();
         }

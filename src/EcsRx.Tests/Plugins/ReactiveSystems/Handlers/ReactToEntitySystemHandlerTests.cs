@@ -49,7 +49,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             
             var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
-            var fakeGroup = new Group();
+            var fakeGroup = Group.Empty;
             observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<IEntity>();
@@ -98,7 +98,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             
             var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
-            var fakeGroup = new Group();
+            var fakeGroup = Group.Empty;
             observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<IEntity>();
@@ -158,7 +158,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             
             var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
-            var fakeGroup = new Group();
+            var fakeGroup = Group.Empty;
             observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var firstEntitySubject = new Subject<IEntity>();

@@ -51,7 +51,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var observableGroupManager = Substitute.For<IObservableGroupManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
 
-            var fakeGroup = new Group();
+            var fakeGroup = Group.Empty;
             observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();
@@ -87,7 +87,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var observableGroupManager = Substitute.For<IObservableGroupManager>();
             var threadHandler = Substitute.For<IThreadHandler>();
 
-            var fakeGroup = new Group();
+            var fakeGroup = Group.Empty;
             observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var observableSubject = new Subject<IObservableGroup>();

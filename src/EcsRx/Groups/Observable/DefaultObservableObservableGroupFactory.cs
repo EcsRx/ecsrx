@@ -13,7 +13,8 @@ namespace EcsRx.Groups.Observable
 
         public IObservableGroup Create(ObservableGroupConfiguration arg)
         {
-            return new ObservableGroup(arg.ObservableGroupToken, arg.InitialEntities, arg.NotifyingCollections, GroupTrackerFactory);
+            var tracker = GroupTrackerFactory.TrackGroup(arg.ObservableGroupToken.LookupGroup);
+            return new ObservableGroup(arg.ObservableGroupToken, arg.InitialEntities, arg.NotifyingCollections, tracker);
         }
     }
 }

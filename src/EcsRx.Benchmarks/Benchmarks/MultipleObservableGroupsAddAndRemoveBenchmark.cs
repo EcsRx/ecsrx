@@ -36,12 +36,12 @@ namespace EcsRx.Benchmarks.Benchmarks
             _availableComponentTypes = _groupFactory.GetComponentTypes
                 .Where(x => x.Namespace == componentNamespace)
                 .ToArray();
+            
+            _collection = EntityDatabase.GetCollection();
         }
 
         public override void Setup()
         {
-            _collection = EntityDatabase.GetCollection();
-
             var componentsPerGroup = _availableComponentTypes.Length / ObservableGroups;
             for (var i = 0; i < ObservableGroups; i++)
             {

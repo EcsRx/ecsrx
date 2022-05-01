@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using SystemsRx.Extensions;
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Events.Collections;
-using EcsRx.Extensions;
 using EcsRx.Groups.Observable.Tracking;
 using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Types;
@@ -20,11 +18,11 @@ namespace EcsRx.Groups.Observable
     {
         public readonly EntityLookup CachedEntities;
         public readonly List<IDisposable> Subscriptions;
-        public readonly IObservableGroupBatchTracker ObservableGroupTracker;
 
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
         public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
         public IObservable<IEntity> OnEntityRemoving => _onEntityRemoving;
+        public IObservableGroupBatchTracker GroupTracker { get; }
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
@@ -32,14 +30,13 @@ namespace EcsRx.Groups.Observable
         
         public ObservableGroupToken Token { get; }
         public IEnumerable<INotifyingEntityCollection> NotifyingCollections { get; }
-        public IGroupTrackerFactory GroupTrackerFactory { get; }
         
-        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections, IGroupTrackerFactory trackerFactory)
+        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections, IObservableGroupBatchTracker tracker)
         {
             Token = token;
             NotifyingCollections = notifyingCollections;
-            GroupTrackerFactory = trackerFactory;
-
+            GroupTracker = tracker;
+            
             _onEntityAdded = new Subject<IEntity>();
             _onEntityRemoved = new Subject<IEntity>();
             _onEntityRemoving = new Subject<IEntity>();
@@ -47,12 +44,11 @@ namespace EcsRx.Groups.Observable
             Subscriptions = new List<IDisposable>();
             CachedEntities = new EntityLookup();
 
-            ObservableGroupTracker = trackerFactory.TrackGroup(token.LookupGroup);
-            ObservableGroupTracker.GroupMatchingChanged.Subscribe(OnEntityGroupChanged);
+            GroupTracker.GroupMatchingChanged.Subscribe(OnEntityGroupChanged);
 
             foreach (var entity in initialEntities)
             {
-                var currentlyMatches = ObservableGroupTracker.StartTrackingEntity(entity);
+                var currentlyMatches = GroupTracker.StartTrackingEntity(entity);
                 if(currentlyMatches) { CachedEntities.Add(entity); }
             }
 
@@ -93,7 +89,7 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.Contains(args.Entity.Id)) { return; }
 
-            var matches = ObservableGroupTracker.StartTrackingEntity(args.Entity);
+            var matches = GroupTracker.StartTrackingEntity(args.Entity);
             
             if (matches)
             {
@@ -106,7 +102,7 @@ namespace EcsRx.Groups.Observable
         {
             if (!CachedEntities.Contains(args.Entity.Id)) { return; }
 
-            ObservableGroupTracker.StopTrackingEntity(args.Entity);
+            GroupTracker.StopTrackingEntity(args.Entity);
             CachedEntities.Remove(args.Entity.Id); 
             _onEntityRemoved.OnNext(args.Entity);
         }
@@ -120,8 +116,8 @@ namespace EcsRx.Groups.Observable
         public void Dispose()
         {
             Subscriptions.DisposeAll();
+            GroupTracker.Dispose();
             _onEntityAdded.Dispose();
-            ObservableGroupTracker.Dispose();
             _onEntityRemoved.Dispose();
             _onEntityRemoving.Dispose();
         }

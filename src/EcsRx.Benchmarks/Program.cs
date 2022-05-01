@@ -15,7 +15,7 @@ namespace EcsRx.Benchmarks
                 //BenchmarkConverter.TypeToBenchmarks(typeof(EntityRetrievalBenchmark)),
                 //BenchmarkConverter.TypeToBenchmarks(typeof(EntityAddComponentsBenchmark)),
                 //BenchmarkConverter.TypeToBenchmarks(typeof(EntityGroupMatchingBenchmark)),
-                BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),
+                //BenchmarkConverter.TypeToBenchmarks(typeof(ObservableGroupsAddAndRemoveBenchmark)),
                 BenchmarkConverter.TypeToBenchmarks(typeof(MultipleObservableGroupsAddAndRemoveBenchmark)),
             };
             

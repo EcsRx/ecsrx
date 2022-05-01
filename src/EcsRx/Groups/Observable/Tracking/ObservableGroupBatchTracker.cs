@@ -31,6 +31,9 @@ namespace EcsRx.Groups.Observable.Tracking
         
         public bool StartTrackingEntity(IEntity entity)
         {
+            if (EntityIdMatchTypes.ContainsKey(entity.Id))
+            { return EntityIdMatchTypes[entity.Id] == GroupMatchingType.MatchesNoExcludes; }
+            
             var entitySubs = new CompositeDisposable();
             entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity)).AddTo(entitySubs);
             entity.ComponentsRemoving.Subscribe(x => OnEntityComponentRemoving(x, entity)).AddTo(entitySubs);

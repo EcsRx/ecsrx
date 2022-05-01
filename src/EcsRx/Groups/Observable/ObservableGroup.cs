@@ -53,8 +53,7 @@ namespace EcsRx.Groups.Observable
             foreach (var entity in initialEntities)
             {
                 var currentlyMatches = ObservableGroupTracker.StartTrackingEntity(entity);
-                if(currentlyMatches)
-                { CachedEntities.Add(entity); }
+                if(currentlyMatches) { CachedEntities.Add(entity); }
             }
 
             NotifyingCollections.ForEachRun(MonitorEntityChanges);

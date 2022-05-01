@@ -32,11 +32,11 @@ namespace EcsRx.Groups.Observable.Tracking
         public bool StartTrackingEntity(IEntity entity)
         {
             var entitySubs = new CompositeDisposable();
-            entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity, LookupGroup)).AddTo(entitySubs);
-            entity.ComponentsRemoving.Subscribe(x => OnEntityComponentRemoving(x, entity, LookupGroup)).AddTo(entitySubs);
-            entity.ComponentsRemoved.Subscribe(x => OnEntityComponentRemoved(x, entity, LookupGroup)).AddTo(entitySubs);
-            
+            entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity)).AddTo(entitySubs);
+            entity.ComponentsRemoving.Subscribe(x => OnEntityComponentRemoving(x, entity)).AddTo(entitySubs);
+            entity.ComponentsRemoved.Subscribe(x => OnEntityComponentRemoved(x, entity)).AddTo(entitySubs);
             _entitySubscriptions.Add(entity.Id, entitySubs);
+            
             var matchingType = LookupGroup.CalculateMatchingType(entity);
             EntityIdMatchTypes.Add(entity.Id, matchingType);
 
@@ -54,7 +54,7 @@ namespace EcsRx.Groups.Observable.Tracking
 
         public bool IsMatching(int entityId) => EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes;
 
-        public void OnEntityComponentAdded(int[] componentsAdded, IEntity entity, LookupGroup group)
+        public void OnEntityComponentAdded(int[] componentsAdded, IEntity entity)
         {
             var entityMatchType = EntityIdMatchTypes[entity.Id];
             if (entityMatchType == GroupMatchingType.NoMatchesWithExcludes || 
@@ -63,7 +63,7 @@ namespace EcsRx.Groups.Observable.Tracking
             
             if(entityMatchType == GroupMatchingType.MatchesNoExcludes)
             {
-                if (group.ContainsAnyExcludedComponents(componentsAdded))
+                if (LookupGroup.ContainsAnyExcludedComponents(componentsAdded))
                 {
                     EntityIdMatchTypes[entity.Id] = GroupMatchingType.MatchesWithExcludes;
                     OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeavingGroup));
@@ -72,9 +72,9 @@ namespace EcsRx.Groups.Observable.Tracking
                 return;
             }
 
-            if (group.ContainsAllRequiredComponents(entity))
+            if (LookupGroup.ContainsAllRequiredComponents(entity))
             {
-                if (group.ContainsAnyExcludedComponents(entity))
+                if (LookupGroup.ContainsAnyExcludedComponents(entity))
                 {
                     EntityIdMatchTypes[entity.Id] = GroupMatchingType.MatchesWithExcludes;
                     return;
@@ -85,7 +85,7 @@ namespace EcsRx.Groups.Observable.Tracking
             }
         }
         
-        public void OnEntityComponentRemoving(int[] componentsRemoving, IEntity entity, LookupGroup group)
+        public void OnEntityComponentRemoving(int[] componentsRemoving, IEntity entity)
         {
             var entityMatchType = EntityIdMatchTypes[entity.Id];
             if (entityMatchType == GroupMatchingType.NoMatchesNoExcludes)
@@ -93,18 +93,18 @@ namespace EcsRx.Groups.Observable.Tracking
 
             if (entityMatchType == GroupMatchingType.MatchesNoExcludes)
             {
-                if(group.ContainsAnyRequiredComponents(componentsRemoving))
+                if(LookupGroup.ContainsAnyRequiredComponents(componentsRemoving))
                 { OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeavingGroup)); }
             }
         }
         
-        public void OnEntityComponentRemoved(int[] componentsAdded, IEntity entity, LookupGroup group)
+        public void OnEntityComponentRemoved(int[] componentsAdded, IEntity entity)
         {
             var entityMatchType = EntityIdMatchTypes[entity.Id];
             if (entityMatchType == GroupMatchingType.NoMatchesNoExcludes)
             { return; }
 
-            var containsAllComponents = group.ContainsAllRequiredComponents(entity);
+            var containsAllComponents = LookupGroup.ContainsAllRequiredComponents(entity);
             if (entityMatchType == GroupMatchingType.MatchesNoExcludes)
             {
                 if(containsAllComponents)
@@ -114,7 +114,7 @@ namespace EcsRx.Groups.Observable.Tracking
                 OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeftGroup));
             }
 
-            var containsAnyExcluded = group.ContainsAnyExcludedComponents(entity);
+            var containsAnyExcluded = LookupGroup.ContainsAnyExcludedComponents(entity);
             
             if (entityMatchType == GroupMatchingType.NoMatchesWithExcludes && !containsAnyExcluded)
             {

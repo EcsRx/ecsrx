@@ -69,7 +69,7 @@ namespace EcsRx.Benchmarks.Benchmarks
         }
 
         [Benchmark]
-        public void ObservableGroupAddRemove()
+        public void MultipleObservableGroupAddRemove()
         {
             for (var i = 0; i < EntityCount; i++)
             {

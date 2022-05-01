@@ -51,7 +51,7 @@ namespace EcsRx.Extensions
         /// <param name="entity">entity to use</param>
         /// <param name="component">The component to add</param>
         /// <returns>The created component</returns>
-        public static T AddComponent<T>(this IEntity entity, T component) where T : class, IComponent, new()
+        public static T AddComponent<T>(this IEntity entity, T component) where T : class, IComponent
         {
             entity.AddComponents(component);
             return component;

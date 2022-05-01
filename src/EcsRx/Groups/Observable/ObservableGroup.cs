@@ -29,12 +29,10 @@ namespace EcsRx.Groups.Observable
         private readonly Subject<IEntity> _onEntityRemoving;
         
         public ObservableGroupToken Token { get; }
-        public IEnumerable<INotifyingEntityCollection> NotifyingCollections { get; }
         
         public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections, IObservableGroupCollectionTracker tracker)
         {
             Token = token;
-            NotifyingCollections = notifyingCollections;
             GroupTracker = tracker;
             
             _onEntityAdded = new Subject<IEntity>();
@@ -44,28 +42,15 @@ namespace EcsRx.Groups.Observable
             Subscriptions = new List<IDisposable>();
             CachedEntities = new EntityLookup();
 
-            GroupTracker.GroupMatchingChanged.Subscribe(OnEntityGroupChanged);
+            GroupTracker.GroupMatchingChanged.Subscribe(OnEntityGroupChanged).AddTo(Subscriptions);
 
             foreach (var entity in initialEntities)
             {
                 var currentlyMatches = GroupTracker.IsMatching(entity.Id);
                 if(currentlyMatches) { CachedEntities.Add(entity); }
             }
-
-            NotifyingCollections.ForEachRun(MonitorEntityChanges);
         }
         
-        private void MonitorEntityChanges(INotifyingEntityCollection notifyingCollection)
-        {
-            notifyingCollection.EntityAdded
-                .Subscribe(OnEntityAddedToCollection)
-                .AddTo(Subscriptions);
-
-            notifyingCollection.EntityRemoved
-                .Subscribe(OnEntityRemovedFromCollection)
-                .AddTo(Subscriptions);
-        }
-
         public void OnEntityGroupChanged(GroupStateChanged args)
         {
             if (args.GroupActionType == GroupActionType.JoinedGroup)
@@ -83,27 +68,6 @@ namespace EcsRx.Groups.Observable
                 CachedEntities.Remove(args.Entity.Id);
                 _onEntityRemoved.OnNext(args.Entity);
             }
-        }
-
-        public void OnEntityAddedToCollection(CollectionEntityEvent args)
-        {
-            if (CachedEntities.Contains(args.Entity.Id)) { return; }
-
-            var matches = GroupTracker.IsMatching(args.Entity.Id);
-            
-            if (matches)
-            {
-                CachedEntities.Add(args.Entity);
-                _onEntityAdded.OnNext(args.Entity);
-            }
-        }
-        
-        public void OnEntityRemovedFromCollection(CollectionEntityEvent args)
-        {
-            if (!CachedEntities.Contains(args.Entity.Id)) { return; }
-
-            CachedEntities.Remove(args.Entity.Id); 
-            _onEntityRemoved.OnNext(args.Entity);
         }
         
         public bool ContainsEntity(int id)

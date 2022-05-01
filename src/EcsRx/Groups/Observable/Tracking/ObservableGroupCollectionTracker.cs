@@ -22,10 +22,10 @@ namespace EcsRx.Groups.Observable.Tracking
         public LookupGroup LookupGroup { get; }
         public Subject<GroupStateChanged> OnGroupMatchingChanged { get; }
 
-        private IEnumerable<INotifyingEntityComponentChanges> NotifyingEntityComponentChanges { get; }
+        private IEnumerable<INotifyingCollection> NotifyingEntityComponentChanges { get; }
         public IObservable<GroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
 
-        public ObservableGroupCollectionTracker(LookupGroup lookupGroup, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityComponentChanges> notifyingEntityComponentChanges)
+        public ObservableGroupCollectionTracker(LookupGroup lookupGroup, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges)
         {
             NotifyingEntityComponentChanges = notifyingEntityComponentChanges;
             LookupGroup = lookupGroup;
@@ -36,8 +36,10 @@ namespace EcsRx.Groups.Observable.Tracking
             NotifyingEntityComponentChanges.ForEachRun(MonitorEntityChanges);
         }
         
-        public void MonitorEntityChanges(INotifyingEntityComponentChanges notifier)
+        public void MonitorEntityChanges(INotifyingCollection notifier)
         {
+            notifier.EntityAdded.Subscribe(OnEntityAdded).AddTo(_notifyingSubs);
+            notifier.EntityRemoved.Subscribe(OnEntityRemoved).AddTo(_notifyingSubs);
             notifier.EntityComponentsAdded.Subscribe(OnEntityComponentAdded).AddTo(_notifyingSubs);
             notifier.EntityComponentsRemoving.Subscribe(OnEntityComponentRemoving).AddTo(_notifyingSubs);
             notifier.EntityComponentsRemoved.Subscribe(OnEntityComponentRemoved).AddTo(_notifyingSubs);
@@ -45,6 +47,12 @@ namespace EcsRx.Groups.Observable.Tracking
         
         public bool IsMatching(int entityId) => EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes;
 
+        public void OnEntityAdded(CollectionEntityEvent args)
+        { EntityIdMatchTypes.Add(args.Entity.Id, LookupGroup.CalculateMatchingType(args.Entity)); }
+
+        public void OnEntityRemoved(CollectionEntityEvent args)
+        { EntityIdMatchTypes.Remove(args.Entity.Id); }
+        
         public void OnEntityComponentAdded(ComponentsChangedEvent args)
         {
             var entityMatchType = EntityIdMatchTypes[args.Entity.Id];

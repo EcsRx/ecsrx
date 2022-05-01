@@ -29,7 +29,7 @@ namespace EcsRx.Groups.Observable.Tracking
             OnGroupMatchingChanged = new Subject<GroupStateChanged>();
         }
         
-        public void StartTrackingEntity(IEntity entity)
+        public bool StartTrackingEntity(IEntity entity)
         {
             var entitySubs = new CompositeDisposable();
             entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity, LookupGroup)).AddTo(entitySubs);
@@ -37,7 +37,10 @@ namespace EcsRx.Groups.Observable.Tracking
             entity.ComponentsRemoved.Subscribe(x => OnEntityComponentRemoved(x, entity, LookupGroup)).AddTo(entitySubs);
             
             _entitySubscriptions.Add(entity.Id, entitySubs);
-            EntityIdMatchTypes.Add(entity.Id, LookupGroup.CalculateMatchingType(entity));
+            var matchingType = LookupGroup.CalculateMatchingType(entity);
+            EntityIdMatchTypes.Add(entity.Id, matchingType);
+
+            return matchingType == GroupMatchingType.MatchesNoExcludes;
         }
 
         public void StopTrackingEntity(IEntity entity)
@@ -48,6 +51,8 @@ namespace EcsRx.Groups.Observable.Tracking
             _entitySubscriptions.Remove(entity.Id);
             EntityIdMatchTypes.Remove(entity.Id);
         }
+
+        public bool IsMatching(int entityId) => EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes;
 
         public void OnEntityComponentAdded(int[] componentsAdded, IEntity entity, LookupGroup group)
         {

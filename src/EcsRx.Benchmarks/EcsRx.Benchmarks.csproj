@@ -18,7 +18,7 @@
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
       <PackageReference Include="NSubstitute" Version="4.3.0" />
-      <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="5.1.21" />
+      <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="6.0.28" />
     </ItemGroup>
 
 </Project>

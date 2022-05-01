@@ -7,14 +7,14 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LazyData.Numerics" Version="3.0.17" />
-    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="Ninject" Version="3.3.5" />
     <PackageReference Include="Persistity.Endpoints.Http" Version="2.0.41" />
     <PackageReference Include="Persistity.Serializers.LazyData.Binary" Version="2.0.41" />
     <PackageReference Include="Persistity.Serializers.LazyData.Json" Version="2.0.41" />
     <PackageReference Include="Spectre.Console" Version="0.44.0" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
-    <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="5.1.21" />
-    <PackageReference Include="SystemsRx.ReactiveData" Version="5.1.21" />
+    <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="6.0.28" />
+    <PackageReference Include="SystemsRx.ReactiveData" Version="6.0.28" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj">

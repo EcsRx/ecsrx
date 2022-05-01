@@ -45,16 +45,16 @@ namespace EcsRx.Groups.Observable
             _onEntityRemoving = new Subject<IEntity>();
 
             Subscriptions = new List<IDisposable>();
-            var applicableEntities = initialEntities.Where(x => Token.LookupGroup.Matches(x));
             CachedEntities = new EntityLookup();
 
             ObservableGroupTracker = trackerFactory.TrackGroup(token.LookupGroup);
             ObservableGroupTracker.GroupMatchingChanged.Subscribe(OnEntityGroupChanged);
 
-            foreach (var applicableEntity in applicableEntities)
+            foreach (var entity in initialEntities)
             {
-                CachedEntities.Add(applicableEntity);
-                ObservableGroupTracker.StartTrackingEntity(applicableEntity);
+                var currentlyMatches = ObservableGroupTracker.StartTrackingEntity(entity);
+                if(currentlyMatches)
+                { CachedEntities.Add(entity); }
             }
 
             NotifyingCollections.ForEachRun(MonitorEntityChanges);
@@ -94,9 +94,9 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.Contains(args.Entity.Id)) { return; }
 
-            ObservableGroupTracker.StartTrackingEntity(args.Entity);
+            var matches = ObservableGroupTracker.StartTrackingEntity(args.Entity);
             
-            if (Token.LookupGroup.Matches(args.Entity))
+            if (matches)
             {
                 CachedEntities.Add(args.Entity);
                 _onEntityAdded.OnNext(args.Entity);

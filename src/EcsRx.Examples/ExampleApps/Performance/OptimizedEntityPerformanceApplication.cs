@@ -28,7 +28,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         private List<IEntity> _entities;
 
         protected override void LoadModules()
-        { Container.LoadModule<OptimizedFrameworkModule>(); }
+        { Container.LoadModule<OptimizedEcsRxInfrastructureModule>(); }
         
         protected override void BindSystems()
         {}

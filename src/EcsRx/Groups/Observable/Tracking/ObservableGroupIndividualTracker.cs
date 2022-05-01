@@ -10,7 +10,7 @@ using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Groups.Observable.Tracking
 {
-    public class ObservableGroupIndividualTracker : IObservableGroupTracker
+    public class ObservableGroupIndividualTracker : IObservableGroupIndividualTracker
     {
         private CompositeDisposable _subs;
         
@@ -32,6 +32,8 @@ namespace EcsRx.Groups.Observable.Tracking
             
             CurrentMatchingType = CalculateMatchingType(entity, lookupGroup);
         }
+
+        public bool IsMatching() => CurrentMatchingType == GroupMatchingType.MatchesNoExcludes;
         
         public GroupMatchingType CalculateMatchingType(IEntity entity, LookupGroup group)
         {

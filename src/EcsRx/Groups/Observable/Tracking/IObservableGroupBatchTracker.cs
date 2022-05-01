@@ -4,7 +4,8 @@ namespace EcsRx.Groups.Observable.Tracking
 {
     public interface IObservableGroupBatchTracker : IObservableGroupTracker
     {
-        void StartTrackingEntity(IEntity entity);
+        bool StartTrackingEntity(IEntity entity);
         void StopTrackingEntity(IEntity entity);
+        bool IsMatching(int entityId);
     }
 }

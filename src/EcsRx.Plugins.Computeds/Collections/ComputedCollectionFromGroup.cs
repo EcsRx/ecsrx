@@ -6,10 +6,8 @@ using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
 using EcsRx.Entities;
 using EcsRx.Events.Collections;
-using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 using SystemsRx.Plugins.Computeds.Collections;
 
 namespace EcsRx.Plugins.Computeds.Collections

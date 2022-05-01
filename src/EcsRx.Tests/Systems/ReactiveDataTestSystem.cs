@@ -19,7 +19,7 @@ namespace EcsRx.Tests.Systems
 
         public void Process(IEntity entity, float reactionData)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

@@ -56,7 +56,7 @@ namespace EcsRx.Tests.EcsRx.Handlers
             var observableSubject = new Subject<ElapsedTime>();
             observableScheduler.OnUpdate.Returns(observableSubject);
             
-            var fakeGroup = new Group();
+            var fakeGroup = Group.Empty;
             observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
 
             var mockSystem = Substitute.For<IBasicEntitySystem>();

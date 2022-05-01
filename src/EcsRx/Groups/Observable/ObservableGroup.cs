@@ -22,7 +22,7 @@ namespace EcsRx.Groups.Observable
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
         public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
         public IObservable<IEntity> OnEntityRemoving => _onEntityRemoving;
-        public IObservableGroupBatchTracker GroupTracker { get; }
+        public IObservableGroupCollectionTracker GroupTracker { get; }
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
@@ -31,7 +31,7 @@ namespace EcsRx.Groups.Observable
         public ObservableGroupToken Token { get; }
         public IEnumerable<INotifyingEntityCollection> NotifyingCollections { get; }
         
-        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections, IObservableGroupBatchTracker tracker)
+        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections, IObservableGroupCollectionTracker tracker)
         {
             Token = token;
             NotifyingCollections = notifyingCollections;
@@ -48,7 +48,7 @@ namespace EcsRx.Groups.Observable
 
             foreach (var entity in initialEntities)
             {
-                var currentlyMatches = GroupTracker.StartTrackingEntity(entity);
+                var currentlyMatches = GroupTracker.IsMatching(entity.Id);
                 if(currentlyMatches) { CachedEntities.Add(entity); }
             }
 
@@ -89,7 +89,7 @@ namespace EcsRx.Groups.Observable
         {
             if (CachedEntities.Contains(args.Entity.Id)) { return; }
 
-            var matches = GroupTracker.StartTrackingEntity(args.Entity);
+            var matches = GroupTracker.IsMatching(args.Entity.Id);
             
             if (matches)
             {
@@ -102,7 +102,6 @@ namespace EcsRx.Groups.Observable
         {
             if (!CachedEntities.Contains(args.Entity.Id)) { return; }
 
-            GroupTracker.StopTrackingEntity(args.Entity);
             CachedEntities.Remove(args.Entity.Id); 
             _onEntityRemoved.OnNext(args.Entity);
         }

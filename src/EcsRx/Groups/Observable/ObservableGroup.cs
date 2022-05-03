@@ -41,7 +41,9 @@ namespace EcsRx.Groups.Observable
             Subscriptions = new List<IDisposable>();
             CachedEntities = new EntityLookup();
 
-            GroupTracker.GroupMatchingChanged.Subscribe(OnEntityGroupChanged).AddTo(Subscriptions);
+            GroupTracker.GroupMatchingChanged
+                .Subscribe(OnEntityGroupChanged)
+                .AddTo(Subscriptions);
 
             foreach (var entity in initialEntities)
             {

@@ -11,22 +11,22 @@ using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Groups.Observable.Tracking
 {
-    public class ObservableGroupBatchTracker : IObservableGroupBatchTracker
+    public class BatchObservableGroupTracker : IBatchObservableGroupTracker
     {
         private readonly Dictionary<int, IDisposable> _entitySubscriptions;
         
         public Dictionary<int, GroupMatchingType> EntityIdMatchTypes { get; }
         public LookupGroup LookupGroup { get; }
-        public Subject<GroupStateChanged> OnGroupMatchingChanged { get; }
+        public Subject<EntityGroupStateChanged> OnGroupMatchingChanged { get; }
 
-        public IObservable<GroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
+        public IObservable<EntityGroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
 
-        public ObservableGroupBatchTracker(LookupGroup lookupGroup)
+        public BatchObservableGroupTracker(LookupGroup lookupGroup)
         {
             _entitySubscriptions = new Dictionary<int, IDisposable>();
             EntityIdMatchTypes = new Dictionary<int, GroupMatchingType>();
             LookupGroup = lookupGroup;
-            OnGroupMatchingChanged = new Subject<GroupStateChanged>();
+            OnGroupMatchingChanged = new Subject<EntityGroupStateChanged>();
         }
         
         public bool StartTrackingEntity(IEntity entity)
@@ -69,8 +69,8 @@ namespace EcsRx.Groups.Observable.Tracking
                 if (LookupGroup.ContainsAnyExcludedComponents(componentsAdded))
                 {
                     EntityIdMatchTypes[entity.Id] = GroupMatchingType.MatchesWithExcludes;
-                    OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeavingGroup));
-                    OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeftGroup));
+                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup));
+                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
                 }
                 return;
             }
@@ -84,7 +84,7 @@ namespace EcsRx.Groups.Observable.Tracking
                 }
 
                 EntityIdMatchTypes[entity.Id] = GroupMatchingType.MatchesNoExcludes;
-                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.JoinedGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.JoinedGroup));
             }
         }
         
@@ -97,7 +97,7 @@ namespace EcsRx.Groups.Observable.Tracking
             if (entityMatchType == GroupMatchingType.MatchesNoExcludes)
             {
                 if(LookupGroup.ContainsAnyRequiredComponents(componentsRemoving))
-                { OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeavingGroup)); }
+                { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup)); }
             }
         }
         
@@ -114,7 +114,7 @@ namespace EcsRx.Groups.Observable.Tracking
                 { return; }
 
                 EntityIdMatchTypes[entity.Id] = GroupMatchingType.NoMatchesNoExcludes;
-                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeftGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
             }
 
             var containsAnyExcluded = LookupGroup.ContainsAnyExcludedComponents(entity);
@@ -128,7 +128,7 @@ namespace EcsRx.Groups.Observable.Tracking
             if (entityMatchType == GroupMatchingType.MatchesWithExcludes && containsAllComponents && !containsAnyExcluded)
             {
                 EntityIdMatchTypes[entity.Id] = GroupMatchingType.MatchesNoExcludes;
-                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.JoinedGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.JoinedGroup));
                 return;
             }
         }

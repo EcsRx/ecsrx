@@ -1,6 +1,6 @@
 namespace EcsRx.Groups.Observable.Tracking.Types
 {
-    public enum GroupActionType
+    public enum GroupActionType : byte
     {
         Unknown = 0,
         JoinedGroup = 1,

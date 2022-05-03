@@ -1,6 +1,6 @@
 namespace EcsRx.Groups.Observable.Tracking
 {
-    public interface IObservableGroupCollectionTracker : IObservableGroupTracker
+    public interface ICollectionObservableGroupTracker : IObservableGroupTracker
     {
         bool IsMatching(int entityId);
     }

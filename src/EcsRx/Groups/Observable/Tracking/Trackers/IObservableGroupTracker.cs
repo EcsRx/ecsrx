@@ -5,6 +5,6 @@ namespace EcsRx.Groups.Observable.Tracking
 {
     public interface IObservableGroupTracker : IDisposable
     {
-        IObservable<GroupStateChanged> GroupMatchingChanged { get; }
+        IObservable<EntityGroupStateChanged> GroupMatchingChanged { get; }
     }
 }

@@ -10,20 +10,20 @@ using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Groups.Observable.Tracking
 {
-    public class ObservableGroupIndividualTracker : IObservableGroupIndividualTracker
+    public class IndividualObservableGroupTracker : IIndividualObservableGroupTracker
     {
         private CompositeDisposable _subs;
         
         public GroupMatchingType CurrentMatchingType { get; private set; }
         public LookupGroup LookupGroup { get; }
-        public Subject<GroupStateChanged> OnGroupMatchingChanged { get; }
+        public Subject<EntityGroupStateChanged> OnGroupMatchingChanged { get; }
 
-        public IObservable<GroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
+        public IObservable<EntityGroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
 
-        public ObservableGroupIndividualTracker(IEntity entity, LookupGroup lookupGroup)
+        public IndividualObservableGroupTracker(IEntity entity, LookupGroup lookupGroup)
         {
             LookupGroup = lookupGroup;
-            OnGroupMatchingChanged = new Subject<GroupStateChanged>();
+            OnGroupMatchingChanged = new Subject<EntityGroupStateChanged>();
             _subs = new CompositeDisposable();
             
             entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity)).AddTo(_subs);
@@ -57,8 +57,8 @@ namespace EcsRx.Groups.Observable.Tracking
                 if (LookupGroup.ContainsAnyExcludedComponents(componentsAdded))
                 {
                     CurrentMatchingType = GroupMatchingType.MatchesWithExcludes;
-                    OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeavingGroup));
-                    OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeftGroup));
+                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup));
+                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
                 }
                 return;
             }
@@ -72,7 +72,7 @@ namespace EcsRx.Groups.Observable.Tracking
                 }
 
                 CurrentMatchingType = GroupMatchingType.MatchesNoExcludes;
-                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.JoinedGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.JoinedGroup));
             }
         }
         
@@ -84,7 +84,7 @@ namespace EcsRx.Groups.Observable.Tracking
             if (CurrentMatchingType == GroupMatchingType.NoMatchesNoExcludes)
             {
                 if(LookupGroup.ContainsAnyRequiredComponents(componentsRemoving))
-                { OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeavingGroup)); }
+                { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup)); }
             }
         }
         
@@ -100,7 +100,7 @@ namespace EcsRx.Groups.Observable.Tracking
                 { return; }
 
                 CurrentMatchingType = GroupMatchingType.NoMatchesNoExcludes;
-                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.LeftGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
             }
 
             var containsAnyExcluded = LookupGroup.ContainsAnyExcludedComponents(entity);
@@ -114,7 +114,7 @@ namespace EcsRx.Groups.Observable.Tracking
             if (CurrentMatchingType == GroupMatchingType.MatchesWithExcludes && containsAllComponents && !containsAnyExcluded)
             {
                 CurrentMatchingType = GroupMatchingType.MatchesNoExcludes;
-                OnGroupMatchingChanged.OnNext(new GroupStateChanged(entity, GroupActionType.JoinedGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.JoinedGroup));
                 return;
             }
         }

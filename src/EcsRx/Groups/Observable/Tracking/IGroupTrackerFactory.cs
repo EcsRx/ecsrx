@@ -6,11 +6,11 @@ namespace EcsRx.Groups.Observable.Tracking
 {
     public interface IGroupTrackerFactory
     {
-        IObservableGroupCollectionTracker TrackGroup(IGroup group, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges);
-        IObservableGroupCollectionTracker TrackGroup(LookupGroup group, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges);
-        IObservableGroupIndividualTracker TrackGroup(IEntity entity, IGroup group);
-        IObservableGroupIndividualTracker TrackGroup(IEntity entity, LookupGroup group);
-        IObservableGroupBatchTracker TrackGroup(IGroup group);
-        IObservableGroupBatchTracker TrackGroup(LookupGroup group);
+        ICollectionObservableGroupTracker TrackGroup(IGroup group, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges);
+        ICollectionObservableGroupTracker TrackGroup(LookupGroup group, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges);
+        IIndividualObservableGroupTracker TrackGroup(IEntity entity, IGroup group);
+        IIndividualObservableGroupTracker TrackGroup(IEntity entity, LookupGroup group);
+        IBatchObservableGroupTracker TrackGroup(IGroup group);
+        IBatchObservableGroupTracker TrackGroup(LookupGroup group);
     }
 }

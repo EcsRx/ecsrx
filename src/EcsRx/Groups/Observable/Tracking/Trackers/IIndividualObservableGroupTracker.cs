@@ -1,6 +1,6 @@
 ﻿namespace EcsRx.Groups.Observable.Tracking
 {
-    public interface IObservableGroupIndividualTracker : IObservableGroupTracker
+    public interface IIndividualObservableGroupTracker : IObservableGroupTracker
     {
         bool IsMatching();
     }

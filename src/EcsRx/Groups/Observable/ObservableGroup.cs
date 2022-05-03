@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using SystemsRx.Extensions;
-using EcsRx.Collections.Entity;
 using EcsRx.Entities;
-using EcsRx.Events.Collections;
 using EcsRx.Groups.Observable.Tracking;
 using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Types;
@@ -22,7 +20,7 @@ namespace EcsRx.Groups.Observable
         public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
         public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
         public IObservable<IEntity> OnEntityRemoving => _onEntityRemoving;
-        public IObservableGroupCollectionTracker GroupTracker { get; }
+        public ICollectionObservableGroupTracker GroupTracker { get; }
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
@@ -30,7 +28,7 @@ namespace EcsRx.Groups.Observable
         
         public ObservableGroupToken Token { get; }
         
-        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingEntityCollection> notifyingCollections, IObservableGroupCollectionTracker tracker)
+        public ObservableGroup(ObservableGroupToken token, IEnumerable<IEntity> initialEntities, ICollectionObservableGroupTracker tracker)
         {
             Token = token;
             GroupTracker = tracker;
@@ -51,7 +49,7 @@ namespace EcsRx.Groups.Observable
             }
         }
         
-        public void OnEntityGroupChanged(GroupStateChanged args)
+        public void OnEntityGroupChanged(EntityGroupStateChanged args)
         {
             if (args.GroupActionType == GroupActionType.JoinedGroup)
             {

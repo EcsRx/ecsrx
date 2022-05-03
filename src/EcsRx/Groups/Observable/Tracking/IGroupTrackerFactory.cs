@@ -9,9 +9,9 @@ namespace EcsRx.Groups.Observable.Tracking
     {
         ICollectionObservableGroupTracker TrackGroup(IGroup group, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges);
         ICollectionObservableGroupTracker TrackGroup(LookupGroup group, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges);
-        IIndividualObservableGroupTracker TrackGroup(IEntity entity, IGroup group);
-        IIndividualObservableGroupTracker TrackGroup(IEntity entity, LookupGroup group);
         IBatchObservableGroupTracker TrackGroup(IGroup group);
         IBatchObservableGroupTracker TrackGroup(LookupGroup group);
+        IIndividualObservableGroupTracker TrackGroup(IGroup group, IEntity entity);
+        IIndividualObservableGroupTracker TrackGroup(LookupGroup group, IEntity entity);
     }
 }

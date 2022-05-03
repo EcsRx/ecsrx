@@ -20,11 +20,11 @@ namespace EcsRx.Groups.Observable.Tracking
         public ICollectionObservableGroupTracker TrackGroup(LookupGroup group, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges)
         { return new CollectionObservableGroupTracker(group, initialEntities, notifyingEntityComponentChanges); }
 
-        public IIndividualObservableGroupTracker TrackGroup(IEntity entity, IGroup group)
-        { return TrackGroup(entity, ComponentTypeLookup.GetLookupGroupFor(group)); }
+        public IIndividualObservableGroupTracker TrackGroup(IGroup group, IEntity entity)
+        { return TrackGroup(ComponentTypeLookup.GetLookupGroupFor(group), entity); }
 
-        public IIndividualObservableGroupTracker TrackGroup(IEntity entity, LookupGroup group)
-        { return new IndividualObservableGroupTracker(entity, group); }
+        public IIndividualObservableGroupTracker TrackGroup(LookupGroup group, IEntity entity)
+        { return new IndividualObservableGroupTracker(group, entity); }
 
         public IBatchObservableGroupTracker TrackGroup(IGroup group)
         { return TrackGroup(ComponentTypeLookup.GetLookupGroupFor(group)); }

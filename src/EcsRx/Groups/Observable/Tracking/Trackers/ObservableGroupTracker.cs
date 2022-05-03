@@ -1,5 +1,5 @@
 using System;
-using EcsRx.Events.Collections;
+using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Types;
@@ -13,83 +13,89 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
                 
         public Subject<EntityGroupStateChanged> OnGroupMatchingChanged { get; }
         public IObservable<EntityGroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
-        
+
+        protected ObservableGroupTracker(LookupGroup lookupGroup)
+        {
+            LookupGroup = lookupGroup;
+            OnGroupMatchingChanged = new Subject<EntityGroupStateChanged>();
+        }
+
         public abstract void UpdateState(int entityId, GroupMatchingType newMatchingType);
         public abstract GroupMatchingType GetState(int entityId);
         public abstract void Dispose();
 
-        public void OnEntityComponentAdded(ComponentsChangedEvent args)
+        public void OnEntityComponentAdded(int[] componentsChanged, IEntity entity)
         {
-            var entityMatchType = GetState(args.Entity.Id);
+            var entityMatchType = GetState(entity.Id);
             if (entityMatchType == GroupMatchingType.NoMatchesWithExcludes || 
                 entityMatchType == GroupMatchingType.MatchesWithExcludes)
             { return; }
             
             if(entityMatchType == GroupMatchingType.MatchesNoExcludes)
             {
-                if (LookupGroup.ContainsAnyExcludedComponents(args.ComponentTypeIds))
+                if (LookupGroup.ContainsAnyExcludedComponents(componentsChanged))
                 {
-                    UpdateState(args.Entity.Id, GroupMatchingType.MatchesWithExcludes);
-                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeavingGroup));
-                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeftGroup));
+                    UpdateState(entity.Id, GroupMatchingType.MatchesWithExcludes);
+                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup));
+                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
                 }
                 return;
             }
 
-            if (LookupGroup.ContainsAllRequiredComponents(args.Entity))
+            if (LookupGroup.ContainsAllRequiredComponents(entity))
             {
-                if (LookupGroup.ContainsAnyExcludedComponents(args.Entity))
+                if (LookupGroup.ContainsAnyExcludedComponents(entity))
                 {
-                    UpdateState(args.Entity.Id, GroupMatchingType.MatchesWithExcludes);
+                    UpdateState(entity.Id, GroupMatchingType.MatchesWithExcludes);
                     return;
                 }
 
-                UpdateState(args.Entity.Id, GroupMatchingType.MatchesNoExcludes);
-                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.JoinedGroup));
+                UpdateState(entity.Id, GroupMatchingType.MatchesNoExcludes);
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.JoinedGroup));
             }
         }
         
-        public void OnEntityComponentRemoving(ComponentsChangedEvent args)
+        public void OnEntityComponentRemoving(int[] componentsChanged, IEntity entity)
         {
-            var entityMatchType = GetState(args.Entity.Id);
+            var entityMatchType = GetState(entity.Id);
             if (entityMatchType == GroupMatchingType.NoMatchesNoExcludes)
             { return; }
 
             if (entityMatchType == GroupMatchingType.MatchesNoExcludes)
             {
-                if(LookupGroup.ContainsAnyRequiredComponents(args.ComponentTypeIds))
-                { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeavingGroup)); }
+                if(LookupGroup.ContainsAnyRequiredComponents(componentsChanged))
+                { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup)); }
             }
         }
         
-        public void OnEntityComponentRemoved(ComponentsChangedEvent args)
+        public void OnEntityComponentRemoved(int[] componentsChanged, IEntity entity)
         {
-            var entityMatchType = GetState(args.Entity.Id);
+            var entityMatchType = GetState(entity.Id);
             if (entityMatchType == GroupMatchingType.NoMatchesNoExcludes)
             { return; }
 
-            var containsAllComponents = LookupGroup.ContainsAllRequiredComponents(args.Entity);
+            var containsAllComponents = LookupGroup.ContainsAllRequiredComponents(entity);
             if (entityMatchType == GroupMatchingType.MatchesNoExcludes)
             {
                 if(containsAllComponents)
                 { return; }
 
-                UpdateState(args.Entity.Id, GroupMatchingType.NoMatchesNoExcludes);
-                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeftGroup));
+                UpdateState(entity.Id, GroupMatchingType.NoMatchesNoExcludes);
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
             }
 
-            var containsAnyExcluded = LookupGroup.ContainsAnyExcludedComponents(args.Entity);
+            var containsAnyExcluded = LookupGroup.ContainsAnyExcludedComponents(entity);
             
             if (entityMatchType == GroupMatchingType.NoMatchesWithExcludes && !containsAnyExcluded)
             {
-                UpdateState(args.Entity.Id, GroupMatchingType.NoMatchesNoExcludes);
+                UpdateState(entity.Id, GroupMatchingType.NoMatchesNoExcludes);
                 return;
             }
             
             if (entityMatchType == GroupMatchingType.MatchesWithExcludes && containsAllComponents && !containsAnyExcluded)
             {
-                UpdateState(args.Entity.Id, GroupMatchingType.MatchesNoExcludes);
-                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.JoinedGroup));
+                UpdateState(entity.Id, GroupMatchingType.MatchesNoExcludes);
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.JoinedGroup));
                 return;
             }
         }

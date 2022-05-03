@@ -1,6 +1,6 @@
 using EcsRx.Entities;
 
-namespace EcsRx.Groups.Observable.Tracking
+namespace EcsRx.Groups.Observable.Tracking.Trackers
 {
     public interface IBatchObservableGroupTracker : ICollectionObservableGroupTracker
     {

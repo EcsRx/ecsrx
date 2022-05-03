@@ -12,7 +12,7 @@ using SystemsRx.MicroRx.Disposables;
 using SystemsRx.MicroRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
 
-namespace EcsRx.Groups.Observable.Tracking
+namespace EcsRx.Groups.Observable.Tracking.Trackers
 {
     public class CollectionObservableGroupTracker : ICollectionObservableGroupTracker
     {

@@ -3,6 +3,7 @@ using EcsRx.Collections.Entity;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Extensions;
+using EcsRx.Groups.Observable.Tracking.Trackers;
 
 namespace EcsRx.Groups.Observable.Tracking
 {

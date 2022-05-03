@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
+using EcsRx.Groups.Observable.Tracking.Trackers;
 
 namespace EcsRx.Groups.Observable.Tracking
 {

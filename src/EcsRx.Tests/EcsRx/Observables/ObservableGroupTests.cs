@@ -10,6 +10,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Groups.Observable.Tracking;
 using EcsRx.Groups.Observable.Tracking.Events;
+using EcsRx.Groups.Observable.Tracking.Trackers;
 using EcsRx.Groups.Observable.Tracking.Types;
 using NSubstitute;
 using Xunit;

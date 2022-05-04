@@ -15,6 +15,10 @@ IComputedGroup        		<-  This acts as another layer of filtration on an IObse
                           		i.e Top 5 entities with PlayerComponent sorted by Score
 ```
 
+Here is a diagram which shows at a high level how they all hook together.
+
+![](../diagrams/event-propagation.png)
+
 ## IObservableGroupManager
 
 The observable group manager maintains a collection of `IObservableGroup` so if you have 5 systems which all use the same group, there will only actually be 1 instance of the `IObservableGroup` that is shared between them all. 
@@ -23,9 +27,13 @@ The observable group manager maintains a collection of `IObservableGroup` so if 
 
 The observable group is created within and maintained by an `IEntityCollectionManager` and exposes all entities which match the associated group. It also exposes observables to represent when an entity has been added or removed from the underlying group.
 
-Under the hood, the observable group watches entities to see when they are added/removed from pools as well as when their components change. When this occurs it will check to see if it effects the current group and if so it updates it internal list accordingly.
+Under the hood, the observable group watches entities (via `IObservableGroupTrackers`) to see when they are added/removed from pools as well as when their components change. When this occurs it will check to see if it effects the current group and if so it updates it internal list accordingly.
 
 This has a huge performance benefit as it will stop you needing to evaluate linq chains into the underlying pools and just give you a cached list of all entities currently matching, given also that these observable groups are shared between any systems that require the same underlying components it can save a lot of resources.
+
+## IObservableGroupTracker
+
+This acts as the notifying mechanism for Observable groups to know when changes happen to the underlying entity data.
 
 ## IComputedGroup
 
@@ -45,7 +53,7 @@ This implementation has caching built in so it will try to keep a pre-evaluted l
 
 > This now needs the `EcsRx.Plugins.Computeds` nuget package, as the computed functionality has been moved there.
 
-## Querys
+## Query Object
 
 So up to this point we have discussed the general filtration process, however there are some extension methods which let you do more ad-hoc queries on data, these are not cached in any way but allow you to drill down into a subset of data in a pre-defined way, this overlaps a bit with the `IComputedGroup` but lets you query directly at the pool level or accessor level.
 

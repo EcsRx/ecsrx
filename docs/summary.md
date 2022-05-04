@@ -15,6 +15,7 @@
     * [Application Lifecycle](infrastructure/application-lifecycle.md)
     * [Dependency Management](infrastructure/dependency-injection-abstraction.md)
 * Framework Architecture
+    * [High Level Architecture](architecture/high-level-architecture.md)
     * [Entity Collections](architecture/entity-collections.md)
 * Plugins
     * [Overview](plugins/readme.md)

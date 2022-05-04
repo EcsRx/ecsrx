@@ -22,7 +22,7 @@ EcsRx is a reactive take on the common ECS pattern with a well separated design 
 
 The core framework is meant to be used primarily by .net applications/games, there is a unity specific version [here](https://github.com/ecsrx/ecsrx.unity) which builds on top of this core version, as well as a monogame game version [here](https://github.com/ecsrx/ecsrx.monogame).
 
-> It is also worth mentioning that this framework builds on top of [SystemsRx](https://github.com/EcsRx/SystemsRx), which can be used without EcsRx.
+> It is also worth mentioning that this framework builds on top of [SystemsRx](https://github.com/EcsRx/SystemsRx), which can be used without EcsRx for when you want Systems and Events but dont need the Entity Component aspects.
 
 ## Installation
 
@@ -113,7 +113,7 @@ The library was originally developed for unity (way before they had their own EC
 Off the back of this there have been a few other libraries that were created for EcsRx but now live as their own standalone libraries:
 
 - [LazyData](https://github.com/grofit/LazyData) - Was created as a serialization layer for EcsRx
-- [Persisty](https://github.com/grofit/Persistity) - Was created as an ETL style pipeline for EcsRx
+- [Persistity](https://github.com/grofit/Persistity) - Was created as an ETL style pipeline for EcsRx
 - [SystemsRx](https://github.com/ecsrx/systemsrx) - Was the supporting system/data layer for EcsRx
 
 ## Docs

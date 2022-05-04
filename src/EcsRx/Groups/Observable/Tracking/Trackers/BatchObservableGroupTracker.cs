@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using EcsRx.Entities;
 using EcsRx.Extensions;
+using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Types;
 using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Disposables;
@@ -33,15 +34,15 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
             if (EntityIdMatchTypes.ContainsKey(entity.Id))
             { return EntityIdMatchTypes[entity.Id] == GroupMatchingType.MatchesNoExcludes; }
             
+            var matchingType = LookupGroup.CalculateMatchingType(entity);
+            EntityIdMatchTypes.Add(entity.Id, matchingType);
+            
             var entitySubs = new CompositeDisposable();
             entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity)).AddTo(entitySubs);
             entity.ComponentsRemoving.Subscribe(x => OnEntityComponentRemoving(x, entity)).AddTo(entitySubs);
             entity.ComponentsRemoved.Subscribe(x => OnEntityComponentRemoved(x, entity)).AddTo(entitySubs);
             _entitySubscriptions.Add(entity.Id, entitySubs);
             
-            var matchingType = LookupGroup.CalculateMatchingType(entity);
-            EntityIdMatchTypes.Add(entity.Id, matchingType);
-
             return matchingType == GroupMatchingType.MatchesNoExcludes;
         }
 
@@ -49,6 +50,12 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         {
             if (!EntityIdMatchTypes.ContainsKey(entity.Id)) {return;}
 
+            if (EntityIdMatchTypes[entity.Id] == GroupMatchingType.MatchesNoExcludes)
+            {
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
+            }
+            
             _entitySubscriptions[entity.Id].Dispose();
             _entitySubscriptions.Remove(entity.Id);
             EntityIdMatchTypes.Remove(entity.Id);

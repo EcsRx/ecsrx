@@ -76,7 +76,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             {
                 systemExecutor.AddSystem(fakeSystem);
             }
-            catch (SystemAlreadyRegisteredException e)
+            catch (SystemAlreadyRegisteredException)
             {
                 exceptionWasRaised = true;
             }

@@ -1,9 +1,9 @@
 ﻿using System;
 using EcsRx.Entities;
 
-namespace EcsRx.Events.Collections
+namespace EcsRx.Collections.Events
 {
-    public struct CollectionEntityEvent : IEquatable<CollectionEntityEvent>
+    public readonly struct CollectionEntityEvent : IEquatable<CollectionEntityEvent>
     {
         public readonly IEntity Entity;
 

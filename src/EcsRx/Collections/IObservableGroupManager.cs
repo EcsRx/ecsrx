@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 
 namespace EcsRx.Collections
 {
-    public interface IObservableGroupManager
+    public interface IObservableGroupManager : IDisposable
     {
         IReadOnlyList<IObservableGroup> ObservableGroups { get; }
         IEnumerable<IObservableGroup> GetApplicableGroups(int[] componentTypeIds);

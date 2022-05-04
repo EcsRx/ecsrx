@@ -1,7 +1,6 @@
 ﻿using System;
 using SystemsRx.Events;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Groups;
 using EcsRx.Plugins.Views.Components;
 using EcsRx.Plugins.Views.Systems;

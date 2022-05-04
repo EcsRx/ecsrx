@@ -4,6 +4,7 @@ using System.Linq;
 using EcsRx.Components;
 using EcsRx.Entities;
 using EcsRx.Groups;
+using EcsRx.Groups.Observable.Tracking.Types;
 
 namespace EcsRx.Extensions
 {
@@ -140,6 +141,17 @@ namespace EcsRx.Extensions
             { return ContainsAllRequiredComponents(group, entity); }
             
             return ContainsAllRequiredComponents(group, entity) && !ContainsAnyExcludedComponents(group, entity);
+        }
+        
+        public static GroupMatchingType CalculateMatchingType(this LookupGroup group, IEntity entity)
+        {
+            var containsAllRequired = group.ContainsAllRequiredComponents(entity);
+            var containsAnyExcluded = group.ContainsAnyExcludedComponents(entity);
+            
+            if(containsAllRequired && containsAnyExcluded) { return GroupMatchingType.MatchesWithExcludes; }
+            if(containsAllRequired) { return GroupMatchingType.MatchesNoExcludes; }
+            if(containsAnyExcluded) { return GroupMatchingType.NoMatchesWithExcludes; }
+            return GroupMatchingType.NoMatchesNoExcludes;
         }
     }
 }

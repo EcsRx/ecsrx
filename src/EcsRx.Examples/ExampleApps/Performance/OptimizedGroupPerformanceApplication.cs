@@ -10,6 +10,7 @@ using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Examples.ExampleApps.Performance.Modules;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
+using SystemsRx.Infrastructure.Modules;
 
 namespace EcsRx.Examples.ExampleApps.Performance
 {
@@ -22,7 +23,10 @@ namespace EcsRx.Examples.ExampleApps.Performance
         private readonly RandomGroupFactory _groupFactory = new RandomGroupFactory();
 
         protected override void LoadModules()
-        { Container.LoadModule<OptimizedFrameworkModule>(); }
+        {
+            Container.LoadModule<FrameworkModule>();
+            Container.LoadModule<OptimizedEcsRxInfrastructureModule>();
+        }
 
         protected override void BindSystems()
         {}

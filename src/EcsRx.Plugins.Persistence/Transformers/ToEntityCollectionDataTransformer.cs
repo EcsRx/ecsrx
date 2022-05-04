@@ -1,7 +1,5 @@
 using System.Linq;
-using EcsRx.Collections;
 using EcsRx.Collections.Entity;
-using EcsRx.Events;
 using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers

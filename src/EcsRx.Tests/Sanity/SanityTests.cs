@@ -15,6 +15,7 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
+using EcsRx.Groups.Observable.Tracking;
 using SystemsRx.MicroRx.Events;
 using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Plugins.ReactiveSystems.Handlers;
@@ -53,7 +54,8 @@ namespace EcsRx.Tests.Sanity
             var entityFactory = new DefaultEntityFactory(new IdPool(), componentDatabase, componentLookupType);
             var collectionFactory = new DefaultEntityCollectionFactory(entityFactory);
             var entityDatabase = new EntityDatabase(collectionFactory);
-            var observableGroupFactory = new DefaultObservableObservableGroupFactory();
+            var groupTrackerFactory = new GroupTrackerFactory(componentLookupType);
+            var observableGroupFactory = new DefaultObservableObservableGroupFactory(groupTrackerFactory);
             var observableGroupManager = new ObservableGroupManager(observableGroupFactory, entityDatabase, componentLookupType);
 
             return (observableGroupManager, entityDatabase, componentDatabase, componentLookupType);

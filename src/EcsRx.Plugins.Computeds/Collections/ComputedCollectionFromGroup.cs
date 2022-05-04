@@ -2,14 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Collections.Events;
 using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
 using EcsRx.Entities;
-using EcsRx.Events.Collections;
-using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 using SystemsRx.Plugins.Computeds.Collections;
 
 namespace EcsRx.Plugins.Computeds.Collections
@@ -94,36 +92,21 @@ namespace EcsRx.Plugins.Computeds.Collections
         private void AddEntity(int entityId, T transformedData)
         {
             FilteredCache.Add(entityId, transformedData);
-            _onElementAdded.OnNext(new CollectionElementChangedEvent<T>
-            {
-                Index = entityId,
-                OldValue = default(T),
-                NewValue = transformedData
-            });
+            _onElementAdded.OnNext(new CollectionElementChangedEvent<T>(entityId, default(T), transformedData));
         }
 
         private void RemoveEntity(int entityId)
         {
             var currentValue = FilteredCache[entityId];
             FilteredCache.Remove(entityId);
-            _onElementRemoved.OnNext(new CollectionElementChangedEvent<T>
-            {
-                Index = entityId,
-                OldValue = currentValue,
-                NewValue = default(T)
-            });
+            _onElementRemoved.OnNext(new CollectionElementChangedEvent<T>(entityId, currentValue, default(T)));
         }
 
         private void ChangeEntity(int entityId, T transformedData)
         {
             var currentData = FilteredCache[entityId];
             FilteredCache[entityId] = transformedData;
-            _onElementChanged.OnNext(new CollectionElementChangedEvent<T>
-            {
-                Index = entityId,
-                OldValue = currentData,
-                NewValue = transformedData
-            });
+            _onElementChanged.OnNext(new CollectionElementChangedEvent<T>(entityId, currentData, transformedData));
         }
                        
         public void RefreshData()

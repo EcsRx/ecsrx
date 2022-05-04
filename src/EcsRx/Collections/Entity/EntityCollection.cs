@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using SystemsRx.MicroRx.Subjects;
+using EcsRx.Blueprints;
+using EcsRx.Collections.Events;
+using EcsRx.Entities;
+using EcsRx.Lookups;
 using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Disposables;
 using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
-using EcsRx.Blueprints;
-using EcsRx.Entities;
-using EcsRx.Events.Collections;
-using EcsRx.Lookups;
 
 namespace EcsRx.Collections.Entity
 {
-    public class EntityCollection : IEntityCollection, IDisposable
+public class EntityCollection : IEntityCollection, IDisposable
     {
         public int Id { get; }
         public IEntityFactory EntityFactory { get; }

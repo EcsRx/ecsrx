@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EcsRx.Events.Collections
+namespace EcsRx.Collections.Events
 {
-    public struct CollectionElementChangedEvent<T> : IEquatable<CollectionElementChangedEvent<T>>
+    public readonly struct CollectionElementChangedEvent<T> : IEquatable<CollectionElementChangedEvent<T>>
     {
-        public int Index;
-        public T OldValue;
-        public T NewValue;
+        public readonly int Index;
+        public readonly T OldValue;
+        public readonly T NewValue;
+
+        public CollectionElementChangedEvent(int index, T oldValue, T newValue)
+        {
+            Index = index;
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
 
         public bool Equals(CollectionElementChangedEvent<T> other)
         {

@@ -14,24 +14,25 @@ using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Groups.Observable;
+using EcsRx.Groups.Observable.Tracking;
+using EcsRx.Systems.Handlers;
 using SystemsRx.MicroRx.Events;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Modules
 {
-    public class OptimizedFrameworkModule : IDependencyModule
+    public class OptimizedEcsRxInfrastructureModule : IDependencyModule
     {
         public void Setup(IDependencyContainer container)
         {
-            container.Bind<IMessageBroker, MessageBroker>();
-            container.Bind<IEventSystem, EventSystem>();
             container.Bind<IIdPool, IdPool>();
             container.Bind<IEntityFactory, DefaultEntityFactory>();
             container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             container.Bind<IEntityDatabase, EntityDatabase>();
             container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
             container.Bind<IObservableGroupManager, ObservableGroupManager>();
-            container.Bind<IConventionalSystemHandler, ManualSystemHandler>();
-            container.Bind<ISystemExecutor, SystemExecutor>();
+            container.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
+            container.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
+            container.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
             
             var componentNamespace = typeof(Component1).Namespace;
             var componentTypes = typeof(Component1).Assembly.GetTypes().Where(x => x.Namespace == componentNamespace);

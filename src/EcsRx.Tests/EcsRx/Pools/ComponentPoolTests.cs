@@ -11,7 +11,6 @@ namespace EcsRx.Tests.EcsRx.Pools
         [Fact]
         public void should_allocate_up_front_components()
         {
-            var expansionSize = 100;
             var initialSize = 100;
             
             var componentPool = new ComponentPool<TestComponentOne>(initialSize);

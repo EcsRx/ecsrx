@@ -9,6 +9,7 @@ using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
+using EcsRx.Groups.Observable.Tracking;
 using EcsRx.Systems.Handlers;
 
 namespace EcsRx.Infrastructure.Modules
@@ -27,6 +28,7 @@ namespace EcsRx.Infrastructure.Modules
             container.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             container.Bind<IComponentDatabase, ComponentDatabase>();
+            container.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
         }
 
         private static object CreateDefaultTypeLookup(IDependencyContainer container)

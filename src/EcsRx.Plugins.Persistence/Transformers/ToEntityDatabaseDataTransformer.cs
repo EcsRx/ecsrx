@@ -1,10 +1,6 @@
 using System.Linq;
-using EcsRx.Collections;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
-using EcsRx.Entities;
-using EcsRx.Events;
-using EcsRx.Infrastructure;
 using EcsRx.Plugins.Persistence.Data;
 
 namespace EcsRx.Plugins.Persistence.Transformers

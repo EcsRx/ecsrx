@@ -10,9 +10,9 @@ using EcsRx.Lookups;
 
 namespace EcsRx.Collections
 {
-    public class ObservableGroupManager : IObservableGroupManager, IDisposable
+    public class ObservableGroupManager : IObservableGroupManager
     {
-        private readonly ObservableGroupLookup _observableGroups;
+        public ObservableGroupLookup _observableGroups { get; }
 
         public IReadOnlyList<IObservableGroup> ObservableGroups => _observableGroups;
 
@@ -40,9 +40,7 @@ namespace EcsRx.Collections
 
         public IObservableGroup GetObservableGroup(IGroup group, params int[] collectionIds)
         {
-            var requiredComponents = ComponentTypeLookup.GetComponentTypeIds(group.RequiredComponents);
-            var excludedComponents = ComponentTypeLookup.GetComponentTypeIds(group.ExcludedComponents);
-            var lookupGroup = new LookupGroup(requiredComponents, excludedComponents);
+            var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(group);
             
             var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionIds);
             if (_observableGroups.Contains(observableGroupToken)) 

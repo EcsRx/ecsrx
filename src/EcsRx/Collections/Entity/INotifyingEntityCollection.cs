@@ -1,5 +1,5 @@
 ﻿using System;
-using EcsRx.Events.Collections;
+using EcsRx.Collections.Events;
 
 namespace EcsRx.Collections.Entity
 {
@@ -7,9 +7,5 @@ namespace EcsRx.Collections.Entity
     {
         IObservable<CollectionEntityEvent> EntityAdded { get; }
         IObservable<CollectionEntityEvent> EntityRemoved { get; }
-
-        IObservable<ComponentsChangedEvent> EntityComponentsAdded { get; }
-        IObservable<ComponentsChangedEvent> EntityComponentsRemoving { get; }
-        IObservable<ComponentsChangedEvent> EntityComponentsRemoved { get; }
     }
 }

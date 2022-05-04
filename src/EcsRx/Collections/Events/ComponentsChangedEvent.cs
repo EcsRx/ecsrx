@@ -1,9 +1,9 @@
 ﻿using System;
 using EcsRx.Entities;
 
-namespace EcsRx.Events.Collections
+namespace EcsRx.Collections.Events
 {
-    public struct ComponentsChangedEvent : IEquatable<ComponentsChangedEvent>
+    public readonly struct ComponentsChangedEvent : IEquatable<ComponentsChangedEvent>
     {
         public readonly IEntity Entity;
         public readonly int[] ComponentTypeIds;

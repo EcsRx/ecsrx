@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Blueprints;
-using EcsRx.Collections;
 using EcsRx.Collections.Entity;
 using EcsRx.Components;
 using EcsRx.Entities;
@@ -62,11 +61,7 @@ namespace EcsRx.Extensions
         { return query.Execute(entityCollection); }
 
         public static IEntity CreateEntity(this IEntityCollection entityCollection, params IBlueprint[] blueprints)
-        {
-            var entity = entityCollection.CreateEntity();
-            entity.ApplyBlueprints(blueprints);
-            return entity;
-        }
+        { return CreateEntity(entityCollection, (IEnumerable<IBlueprint>)blueprints); }
 
         public static IEntity CreateEntity(this IEntityCollection entityCollection, IEnumerable<IBlueprint> blueprints)
         {

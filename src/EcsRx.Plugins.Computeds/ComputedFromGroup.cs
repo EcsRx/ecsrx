@@ -18,7 +18,7 @@ namespace EcsRx.Plugins.Computeds
         
         public IObservableGroup InternalObservableGroup { get; }
 
-        public ComputedFromGroup(IObservableGroup internalObservableGroup)
+        protected ComputedFromGroup(IObservableGroup internalObservableGroup)
         {
             InternalObservableGroup = internalObservableGroup;
             Subscriptions = new List<IDisposable>();

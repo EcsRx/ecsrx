@@ -1,5 +1,20 @@
 # Breaking Changes
 
+## 5.0.0 -> 6.0.0
+
+- Dropped explicit builds for `netframework` so now its only `netstandard2.0`
+- Root `Events` namespace has been removed and events live in related namespaces
+- `ObservableGroup` implementation now requires an `ICollectionObservableGroupTracker`
+
+## 4.0.0 -> 5.0.0 
+
+- Large parts of the system were moved to the `SystemsRx` project such as
+  - `ISystem`
+  - `ISystemExecutor`
+  - `IPool`
+- Some namespace refactors that would break existing code but should be quick to fix
+- EcsRx now has a dependency on `SystemsRx` and related projects it builds on top of
+
 ## 3.12.0 -> 4.0.0
 
 - `IEcsRxPlugin` has been renamed to `ISystemsRxPlugin` and lives in `SystemsRx.Infrastructure`

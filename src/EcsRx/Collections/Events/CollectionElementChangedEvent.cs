@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EcsRx.Events.Collections
+namespace EcsRx.Collections.Events
 {
     public readonly struct CollectionElementChangedEvent<T> : IEquatable<CollectionElementChangedEvent<T>>
     {

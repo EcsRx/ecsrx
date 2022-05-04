@@ -1,11 +1,8 @@
 ﻿using SystemsRx.Events;
-using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 using EcsRx.Entities;
-using EcsRx.Events;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Groups.Observable;
 using EcsRx.Plugins.Views.Components;
 using EcsRx.Plugins.Views.Pooling;
 using EcsRx.Systems;

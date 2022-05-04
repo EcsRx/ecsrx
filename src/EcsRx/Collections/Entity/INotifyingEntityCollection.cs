@@ -1,5 +1,5 @@
 ﻿using System;
-using EcsRx.Events.Collections;
+using EcsRx.Collections.Events;
 
 namespace EcsRx.Collections.Entity
 {

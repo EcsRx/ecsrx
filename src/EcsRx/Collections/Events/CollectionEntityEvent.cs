@@ -1,7 +1,7 @@
 ﻿using System;
 using EcsRx.Entities;
 
-namespace EcsRx.Events.Collections
+namespace EcsRx.Collections.Events
 {
     public readonly struct CollectionEntityEvent : IEquatable<CollectionEntityEvent>
     {

@@ -5,7 +5,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
-using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Groups.Observable.Tracking;

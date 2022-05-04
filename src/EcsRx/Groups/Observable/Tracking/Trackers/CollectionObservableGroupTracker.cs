@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Collections.Entity;
+using EcsRx.Collections.Events;
 using EcsRx.Entities;
-using EcsRx.Events.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Types;

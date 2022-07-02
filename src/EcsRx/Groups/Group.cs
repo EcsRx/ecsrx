@@ -21,9 +21,7 @@ namespace EcsRx.Groups
 
 		public Group(params Type[] requiredComponents) {
             if (requiredComponents is null)
-            {
-                throw new ArgumentNullException(nameof(requiredComponents));
-            }
+            { throw new ArgumentNullException(nameof(requiredComponents)); }
 
             RequiredComponents = requiredComponents.ToArray();
 			ExcludedComponents = Array.Empty<Type>();
@@ -32,14 +30,10 @@ namespace EcsRx.Groups
 	    public Group(IEnumerable<Type> requiredComponents, IEnumerable<Type> excludedComponents)
 	    {
             if (requiredComponents is null)
-            {
-                throw new ArgumentNullException(nameof(requiredComponents));
-            }
+            { throw new ArgumentNullException(nameof(requiredComponents)); }
 
             if (excludedComponents is null)
-            {
-                throw new ArgumentNullException(nameof(excludedComponents));
-            }
+            { throw new ArgumentNullException(nameof(excludedComponents)); }
 
             RequiredComponents = requiredComponents.ToArray();
 		    ExcludedComponents = excludedComponents.ToArray();

@@ -85,21 +85,18 @@ namespace EcsRx.Tests.Sanity
         }
 
         [Fact]
-        public void test()
+        public void entity_disposal_works_when_using_late_initialized_observable_groups_without_matches()
         {
             var (observableGroupManager, entityDatabase, _, _) = CreateFramework();
-            var test = observableGroupManager.GetObservableGroup(new Group(typeof(TestComponentOne)));
-            var test2 = observableGroupManager.GetObservableGroup(new Group(typeof(TestComponentOne), typeof(TestComponentTwo)));
-            test.OnEntityRemoving.Subscribe(_ => { });
-            test.OnEntityRemoved.Subscribe(_ => { });
-            test2.OnEntityRemoving.Subscribe(_ => { });
-            test2.OnEntityRemoved.Subscribe(_ => { });
 
             var collection = entityDatabase.GetCollection();
             var entityOne = collection.CreateEntity();
-            entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
+            entityOne.AddComponents(new TestComponentOne(), new TestComponentThree());
 
-            entityOne.Dispose();
+            // note, that this behaves differently for entities present before it is called.
+            _ = observableGroupManager.GetObservableGroup(new Group(typeof(TestComponentOne), typeof(TestComponentTwo)));
+
+            entityOne.Dispose(); // just asseting this doesn't throw an exception
         }
 
         [Fact]

@@ -46,22 +46,27 @@ namespace EcsRx.Collections
             if (_observableGroups.Contains(observableGroupToken)) 
             { return _observableGroups[observableGroupToken]; }
 
-            var entityMatches = EntityDatabase.GetEntitiesFor(lookupGroup, collectionIds);
             var configuration = new ObservableGroupConfiguration
             {
-                ObservableGroupToken = observableGroupToken,
-                InitialEntities = entityMatches
+                ObservableGroupToken = observableGroupToken
             };
 
             if (collectionIds != null && collectionIds.Length > 0)
-            { configuration.NotifyingCollections = EntityDatabase.Collections.Where(x => collectionIds.Contains(x.Id)); }
+            {
+                var targetedCollections = EntityDatabase.Collections.Where(x => collectionIds.Contains(x.Id));
+                configuration.NotifyingCollections = targetedCollections;
+                configuration.InitialEntities = targetedCollections.GetAllEntities();
+            }
             else
-            { configuration.NotifyingCollections = new []{EntityDatabase}; }
+            {
+                configuration.NotifyingCollections = new[] { EntityDatabase };
+                configuration.InitialEntities = EntityDatabase.Collections.GetAllEntities();
+            }
             
             var observableGroup = ObservableGroupFactory.Create(configuration);
             _observableGroups.Add(observableGroup);
 
-            return _observableGroups[observableGroupToken];
+            return observableGroup;
         }
 
         public void Dispose()

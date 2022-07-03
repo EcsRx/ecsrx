@@ -60,7 +60,7 @@ namespace EcsRx.Tests.Sanity
 
             return (observableGroupManager, entityDatabase, componentDatabase, componentLookupType);
         }
-        
+
         private SystemExecutor CreateExecutor(IObservableGroupManager observableGroupManager)
         {
             var threadHandler = new DefaultThreadHandler();
@@ -80,8 +80,23 @@ namespace EcsRx.Tests.Sanity
                 manualSystemHandler,
                 teardownHandler
             };
-            
+
             return new SystemExecutor(conventionalSystems);
+        }
+
+        [Fact]
+        public void entity_disposal_works_when_using_late_initialized_observable_groups_without_matches()
+        {
+            var (observableGroupManager, entityDatabase, _, _) = CreateFramework();
+
+            var collection = entityDatabase.GetCollection();
+            var entityOne = collection.CreateEntity();
+            entityOne.AddComponents(new TestComponentOne(), new TestComponentThree());
+
+            // note, that this behaves differently for entities present before it is called.
+            _ = observableGroupManager.GetObservableGroup(new Group(typeof(TestComponentOne), typeof(TestComponentTwo)));
+
+            entityOne.Dispose(); // just asseting this doesn't throw an exception
         }
 
         [Fact]
@@ -101,7 +116,7 @@ namespace EcsRx.Tests.Sanity
             Assert.Equal("woop", entityOne.GetComponent<TestComponentOne>().Data);
             Assert.Null(entityTwo.GetComponent<TestComponentTwo>().Data);
         }
-        
+
         [Fact]
         public void should_not_freak_out_when_removing_components_during_removing_event()
         {
@@ -118,23 +133,23 @@ namespace EcsRx.Tests.Sanity
 
             entityOne.AddComponents(new TestComponentOne(), new TestComponentTwo());
             entityOne.RemoveComponent<TestComponentOne>();
-            
+
             Assert.Equal(2, timesCalled);
         }
-        
+
         [Fact]
         public void should_treat_view_handler_as_setup_system_and_teardown_system()
         {
             var observableGroupManager = Substitute.For<IObservableGroupManager>();
             var setupSystemHandler = new SetupSystemHandler(observableGroupManager);
             var teardownSystemHandler = new TeardownSystemHandler(observableGroupManager);
-            
+
             var viewSystem = Substitute.For<IViewResolverSystem>();
-            
+
             Assert.True(setupSystemHandler.CanHandleSystem(viewSystem));
             Assert.True(teardownSystemHandler.CanHandleSystem(viewSystem));
         }
-        
+
         [Fact]
         public void should_trigger_both_setup_and_teardown_for_view_resolver()
         {
@@ -148,22 +163,22 @@ namespace EcsRx.Tests.Sanity
             viewResolverSystem.OnSetup = entity => { setupCalled = true; };
             var teardownCalled = false;
             viewResolverSystem.OnTeardown = entity => { teardownCalled = true; };
-            
+
             var collection = entityDatabase.GetCollection();
             var entityOne = collection.CreateEntity();
             entityOne.AddComponents(new TestComponentOne(), new ViewComponent());
 
             collection.RemoveEntity(entityOne.Id);
-            
+
             Assert.True(setupCalled);
             Assert.True(teardownCalled);
         }
-        
+
         [Fact]
         public void should_listen_to_multiple_collections_for_updates()
         {
             var (observableGroupManager, entityDatabase, _, _) = CreateFramework();
-            
+
             var group = new Group(typeof(TestComponentOne));
             var collection1 = entityDatabase.CreateCollection(1);
             var collection2 = entityDatabase.CreateCollection(2);
@@ -181,18 +196,18 @@ namespace EcsRx.Tests.Sanity
 
             var entity2 = collection2.CreateEntity();
             entity2.AddComponent<TestComponentOne>();
-            
+
             collection1.RemoveEntity(entity1.Id);
             collection2.RemoveEntity(entity2.Id);
-            
+
             Assert.Equal(2, addedTimesCalled);
             Assert.Equal(2, removingTimesCalled);
             Assert.Equal(2, removedTimesCalled);
         }
-        
+
         [Fact]
         public unsafe void should_keep_state_with_batches()
-        {            
+        {
             var (_, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
             var collection1 = entityDatabase.CreateCollection(1);
             var entity1 = collection1.CreateEntity();
@@ -205,7 +220,7 @@ namespace EcsRx.Tests.Sanity
             ref var structComponent1 = ref entity1.AddComponent<TestStructComponentOne>(4);
             var component1Allocation = entity1.ComponentAllocations[4];
             structComponent1.Data = startingInt;
-            
+
             ref var structComponent2 = ref entity1.AddComponent<TestStructComponentTwo>(5);
             var component2Allocation = entity1.ComponentAllocations[5];
             structComponent2.Data = startingFloat;
@@ -213,27 +228,27 @@ namespace EcsRx.Tests.Sanity
             var entities = new[] {entity1};
             var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
             var batch = batchBuilder.Build(entities);
-            
+
             ref var initialBatchData = ref batch.Batches[0];
             ref var component1 = ref *initialBatchData.Component1;
             ref var component2 = ref *initialBatchData.Component2;
             Assert.Equal(startingInt, component1.Data);
             Assert.Equal(startingFloat, component2.Data);
-            
+
             component1.Data = finalInt;
             component2.Data = finalFloat;
-            
+
             Assert.Equal(finalInt, (*batch.Batches[0].Component1).Data);
             Assert.Equal(finalInt, structComponent1.Data);
             Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
             Assert.Equal(finalFloat, (*batch.Batches[0].Component2).Data);
             Assert.Equal(finalFloat, structComponent2.Data);
-            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);        
+            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);
         }
-        
+
         [Fact]
         public unsafe void should_retain_pointer_through_new_struct()
-        {            
+        {
             var (_, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
             var collection1 = entityDatabase.CreateCollection(1);
             var entity1 = collection1.CreateEntity();
@@ -246,7 +261,7 @@ namespace EcsRx.Tests.Sanity
             ref var structComponent1 = ref entity1.AddComponent<TestStructComponentOne>(4);
             var component1Allocation = entity1.ComponentAllocations[4];
             structComponent1.Data = startingInt;
-            
+
             ref var structComponent2 = ref entity1.AddComponent<TestStructComponentTwo>(5);
             var component2Allocation = entity1.ComponentAllocations[5];
             structComponent2.Data = startingFloat;
@@ -254,14 +269,14 @@ namespace EcsRx.Tests.Sanity
             var entities = new[] {entity1};
             var batchBuilder = new BatchBuilder<TestStructComponentOne, TestStructComponentTwo>(componentDatabase, componentLookup);
             var batch = batchBuilder.Build(entities);
-            
+
             ref var initialBatchData = ref batch.Batches[0];
             ref var component1 = ref *initialBatchData.Component1;
             ref var component2 = ref *initialBatchData.Component2;
 
             Assert.Equal(startingInt, component1.Data);
             Assert.Equal(startingFloat, component2.Data);
-            
+
             component1 = new TestStructComponentOne {Data = finalInt};
             component2 = new TestStructComponentTwo {Data = finalFloat};
 
@@ -270,9 +285,9 @@ namespace EcsRx.Tests.Sanity
             Assert.Equal(finalInt, componentDatabase.Get<TestStructComponentOne>(4, component1Allocation).Data);
             Assert.Equal(finalFloat, (*batch.Batches[0].Component2).Data);
             Assert.Equal(finalFloat, structComponent2.Data);
-            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);        
+            Assert.Equal(finalFloat, componentDatabase.Get<TestStructComponentTwo>(5, component2Allocation).Data);
         }
-        
+
         [Fact]
         public void should_allocate_entities_correctly()
         {
@@ -280,7 +295,7 @@ namespace EcsRx.Tests.Sanity
             var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
             var collection = entityDatabase.GetCollection();
             var observableGroup = observableGroupManager.GetObservableGroup(new Group(typeof(ViewComponent), typeof(TestComponentOne)));
-            
+
             for (var i = 0; i < expectedSize; i++)
             {
                 var entity = collection.CreateEntity();
@@ -292,7 +307,7 @@ namespace EcsRx.Tests.Sanity
 
             var viewComponentPool = componentDatabase.GetPoolFor<ViewComponent>(componentLookup.GetComponentTypeId(typeof(ViewComponent)));
             Assert.Equal(expectedSize, viewComponentPool.Components.Length);
-            
+
             var testComponentPool = componentDatabase.GetPoolFor<TestComponentOne>(componentLookup.GetComponentTypeId(typeof(TestComponentOne)));
             Assert.Equal(expectedSize, testComponentPool.Components.Length);
         }

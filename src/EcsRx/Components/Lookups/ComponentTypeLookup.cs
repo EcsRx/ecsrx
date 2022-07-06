@@ -28,7 +28,16 @@ namespace EcsRx.Components.Lookups
         }
 
         public int GetComponentTypeId(Type type)
-        { return ComponentsByType[type]; }
+        {
+            try
+            {
+                return ComponentsByType[type];
+            }
+            catch (KeyNotFoundException ex) when (!typeof(IComponent).IsAssignableFrom(type))
+            {
+                throw new ArgumentException($"The supplied {nameof(type)} doesn't implement {nameof(IComponent)}. Additionally, there was no componentId was assigned to it. type = {type}", nameof(type), ex);
+            }
+        }
 
         public Type GetComponentType(int typeId)
         { return ComponentsById[typeId]; }

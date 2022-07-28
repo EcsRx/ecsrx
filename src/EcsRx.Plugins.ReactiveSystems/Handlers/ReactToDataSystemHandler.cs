@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using SystemsRx.Attributes;
 using SystemsRx.Executor.Handlers;
@@ -35,13 +36,15 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
         }
 
         // TODO: This is REALLY bad but currently no other way around the dynamic invocation lookup stuff
-        public Func<IEntity, IDisposable> CreateEntityProcessorFunction(ISystem system)
+        public IEnumerable<Func<IEntity, IDisposable>> CreateEntityProcessorFunctions(ISystem system)
         {
-            var genericDataType = system.GetGenericDataType(typeof(IReactToDataSystem<>));
-            var genericMethod = _processEntityMethod.MakeGenericMethod(genericDataType);
-            return entity => (IDisposable) genericMethod.Invoke(this, new object[] {system, entity});
-        }
+            var genericMethods = system.GetGenericDataTypes(typeof(IReactToDataSystem<>))
+                .Select(x => _processEntityMethod.MakeGenericMethod(x));
 
+            foreach (var genericMethod in genericMethods)
+            { yield return entity => (IDisposable) genericMethod.Invoke(this, new object[] {system, entity}); }
+        }
+        
         public IDisposable ProcessEntity<T>(IReactToDataSystem<T> system, IEntity entity)
         {
             var hasEntityPredicate = system.Group is IHasPredicate;
@@ -64,7 +67,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var processEntityFunction = CreateEntityProcessorFunction(system);
+            var processEntityFunctions = CreateEntityProcessorFunctions(system);
 
             var entityChangeSubscriptions = new CompositeDisposable();
             SystemSubscriptions.Add(system, entityChangeSubscriptions);
@@ -78,8 +81,13 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
-                    var subscription = processEntityFunction(x);
-                    entitySubscriptions.Add(x.Id, subscription);
+                    var entityDisposables = new CompositeDisposable();
+                    foreach (var processFunction in processEntityFunctions)
+                    {
+                        var subscription = processFunction(x);
+                        entityDisposables.Add(subscription);
+                    }
+                    entitySubscriptions.Add(x.Id, entityDisposables);
                 })
                 .AddTo(entityChangeSubscriptions);
             
@@ -92,8 +100,13 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
             foreach (var entity in observableGroup)
             {
-                var subscription = processEntityFunction(entity);
-                entitySubscriptions.Add(entity.Id, subscription);
+                var entityDisposables = new CompositeDisposable();
+                foreach (var processFunction in processEntityFunctions)
+                {
+                    var subscription = processFunction(entity);
+                    entityDisposables.Add(subscription);
+                }
+                entitySubscriptions.Add(entity.Id, entityDisposables);
             }
         }
 

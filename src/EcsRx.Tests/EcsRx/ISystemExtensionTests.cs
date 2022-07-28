@@ -1,4 +1,5 @@
-﻿using SystemsRx.Extensions;
+﻿using System.Linq;
+using SystemsRx.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Extensions;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using NSubstitute;
@@ -8,6 +9,8 @@ namespace EcsRx.Tests.EcsRx
 {
     public class ISystemExtensionTests
     {
+        public interface MultipleInterfaces : IReactToDataSystem<int>, IReactToDataSystem<float>{}
+
         [Fact]
         public void should_identify_if_system_is_reactive_data_system()
         {
@@ -19,9 +22,21 @@ namespace EcsRx.Tests.EcsRx
         public void should_get_interface_generic_type_from_reactive_data_system()
         {
             var fakeSystem = Substitute.For<IReactToDataSystem<int>>();
-            var genericType = fakeSystem.GetGenericDataType(typeof(IReactToDataSystem<>));
-            var typesMatch = genericType == typeof(int);
-            Assert.True(typesMatch);
+            var genericTypes = fakeSystem.GetGenericDataTypes(typeof(IReactToDataSystem<>)).ToArray();
+            
+            Assert.Equal(1, genericTypes.Length);
+            Assert.Contains(typeof(int), genericTypes);
+        }
+        
+        [Fact]
+        public void should_get_interface_generic_types_from_multiple_reactive_data_system()
+        {
+            var fakeSystem = Substitute.For<MultipleInterfaces>();
+            var genericTypes = fakeSystem.GetGenericDataTypes(typeof(IReactToDataSystem<>)).ToArray();
+            
+            Assert.Equal(2, genericTypes.Length);
+            Assert.Contains(typeof(int), genericTypes);
+            Assert.Contains(typeof(float), genericTypes);
         }
     }
 }

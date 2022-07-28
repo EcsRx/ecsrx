@@ -29,9 +29,6 @@ namespace EcsRx.Examples
         
         static void Main(string[] args)
         {
-            new ObservableGroupPerformanceApplication().StartApplication();
-            return;
-        /*
             var availableExamples = new []
             {
                 new Example("Scenario: Hello World", () => new HelloWorldExampleApplication().StartApplication()),
@@ -68,7 +65,7 @@ namespace EcsRx.Examples
                     .AddChoices(availableExamples);
             
             var exampleToRun = AnsiConsole.Prompt(exampleSelector);
-            exampleToRun.Executor();*/
+            exampleToRun.Executor();
         }
     }
 }

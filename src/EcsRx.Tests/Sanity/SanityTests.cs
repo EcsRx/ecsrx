@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SystemsRx.Events;
 using SystemsRx.Executor;
 using SystemsRx.Executor.Handlers;
@@ -47,7 +48,8 @@ namespace EcsRx.Tests.Sanity
                 {typeof(TestComponentThree), 2},
                 {typeof(ViewComponent), 3},
                 {typeof(TestStructComponentOne), 4},
-                {typeof(TestStructComponentTwo), 5}
+                {typeof(TestStructComponentTwo), 5},
+                {typeof(ComponentWithReactiveProperty), 6}
             };
             var componentLookupType = new ComponentTypeLookup(componentLookups);
             var componentDatabase = new ComponentDatabase(componentLookupType);
@@ -310,6 +312,27 @@ namespace EcsRx.Tests.Sanity
 
             var testComponentPool = componentDatabase.GetPoolFor<TestComponentOne>(componentLookup.GetComponentTypeId(typeof(TestComponentOne)));
             Assert.Equal(expectedSize, testComponentPool.Components.Length);
+        }
+        
+        [Fact]
+        public void should_handle_deletion_between_reactive_data_systems()
+        {
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var executor = CreateExecutor(observableGroupManager);
+
+            var entity = collection.CreateEntity();
+            entity.AddComponent(new ComponentWithReactiveProperty());
+
+            var systemA = new DeletingReactiveDataTestSystem1(collection);
+            var systemB = new DeletingReactiveDataTestSystem2();
+            executor.AddSystem(systemA);
+            executor.AddSystem(systemB);
+
+            var reactiveDataSystemsHandler = (ReactToDataSystemHandler)executor._conventionalSystemHandlers.Single(x => x is ReactToDataSystemHandler);
+            Assert.Equal(2, reactiveDataSystemsHandler.EntitySubscriptions.Count);
+            Assert.Empty(reactiveDataSystemsHandler.EntitySubscriptions[systemA].Values);
+            Assert.Empty(reactiveDataSystemsHandler.EntitySubscriptions[systemB].Values);
         }
     }
 }

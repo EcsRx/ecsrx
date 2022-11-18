@@ -98,15 +98,17 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            foreach (var entity in observableGroup)
+            var entitiesToProcess = observableGroup.ToArray();
+            foreach (var entity in entitiesToProcess)
             {
                 var entityDisposables = new CompositeDisposable();
+                entitySubscriptions.Add(entity.Id, entityDisposables);
+                
                 foreach (var processFunction in processEntityFunctions)
                 {
                     var subscription = processFunction(entity);
                     entityDisposables.Add(subscription);
                 }
-                entitySubscriptions.Add(entity.Id, entityDisposables);
             }
         }
 

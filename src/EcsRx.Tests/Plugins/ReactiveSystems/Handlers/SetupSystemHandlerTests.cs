@@ -48,7 +48,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             var observableGroupManager = Substitute.For<IObservableGroupManager>();
 
             var fakeGroup = Substitute.For<IGroup>();
-            fakeGroup.RequiredComponents.Returns(new Type[0]);
+            fakeGroup.RequiredComponents.Returns(Type.EmptyTypes);
             observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
             
             var mockSystem = Substitute.For<ISetupSystem>();
@@ -62,7 +62,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(0, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
         }
         
         [Fact]
@@ -182,7 +182,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(1, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
             Assert.True(systemHandler._entitySubscriptions[mockSystem].ContainsKey(fakeEntity2.Id));
         }
         

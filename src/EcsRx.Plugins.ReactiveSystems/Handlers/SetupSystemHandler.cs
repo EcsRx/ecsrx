@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SystemsRx.Attributes;
 using SystemsRx.Executor.Handlers;
 using SystemsRx.Extensions;
@@ -59,11 +60,15 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            foreach (var entity in observableGroup)
+            var entities = observableGroup.ToArray();
+            foreach (var entity in entities)
             {
+                var entityDisposables = new CompositeDisposable();
+                entitySubscriptions.Add(entity.Id, entityDisposables);
+                
                 var possibleSubscription = ProcessEntity(castSystem, entity);
                 if (possibleSubscription != null)
-                { entitySubscriptions.Add(entity.Id, possibleSubscription); }
+                { entityDisposables.Add(possibleSubscription); }
             }
         }
 

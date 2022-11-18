@@ -264,5 +264,43 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             mockEntityDisposable2.Received(1).Dispose();
             Assert.Equal(0, systemHandler.EntitySubscriptions.Count);
         }
+        
+        public interface IReactToMultipleDataSystem : IReactToDataSystem<string>, IReactToDataSystem<int> { }
+        
+        [Fact]
+        public void should_execute_system_with_multiple_interfaces_when_entity_added_to_group()
+        {
+            var fakeEntity1 = Substitute.For<IEntity>();
+            var fakeEntities = new List<IEntity> { fakeEntity1 };
+
+            var id1 = 1;
+            fakeEntity1.Id.Returns(id1);
+
+            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            mockObservableGroup.GetEnumerator().Returns(fakeEntities.GetEnumerator());
+            mockObservableGroup.OnEntityAdded.Returns(new Subject<IEntity>());
+            mockObservableGroup.OnEntityRemoved.Returns(new Subject<IEntity>());
+
+            var observableGroupManager = Substitute.For<IObservableGroupManager>();
+
+            var fakeGroup = Group.Empty;
+            observableGroupManager.GetObservableGroup(Arg.Is(fakeGroup), Arg.Any<int[]>()).Returns(mockObservableGroup);
+
+            var firstEntitySubjectString = new Subject<string>();
+            var firstEntitySubjectInt = new Subject<int>();
+            var mockSystem = Substitute.For<IReactToMultipleDataSystem>();
+            mockSystem.Group.Returns(fakeGroup);
+            ((IReactToDataSystem<string>)mockSystem).ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubjectString);
+            ((IReactToDataSystem<int>)mockSystem).ReactToData(Arg.Is(fakeEntity1)).Returns(firstEntitySubjectInt);
+
+            var systemHandler = new ReactToDataSystemHandler(observableGroupManager);
+            systemHandler.SetupSystem(mockSystem);
+
+            firstEntitySubjectString.OnNext("One");
+            firstEntitySubjectInt.OnNext(1);
+
+            mockSystem.Received(1).Process(Arg.Is(fakeEntity1), Arg.Is("One"));
+            mockSystem.Received(1).Process(Arg.Is(fakeEntity1), Arg.Is(1));
+        }
     }
 }

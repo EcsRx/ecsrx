@@ -315,7 +315,7 @@ namespace EcsRx.Tests.Sanity
         }
         
         [Fact]
-        public void should_handle_deletion_between_reactive_data_systems()
+        public void should_handle_deletion_while_setting_up_in_reactive_data_systems()
         {
             var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
             var collection = entityDatabase.GetCollection();
@@ -333,6 +333,48 @@ namespace EcsRx.Tests.Sanity
             Assert.Equal(2, reactiveDataSystemsHandler.EntitySubscriptions.Count);
             Assert.Empty(reactiveDataSystemsHandler.EntitySubscriptions[systemA].Values);
             Assert.Empty(reactiveDataSystemsHandler.EntitySubscriptions[systemB].Values);
+        }
+        
+        [Fact]
+        public void should_handle_deletion_while_setting_up_in_reactive_entity_systems()
+        {
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var executor = CreateExecutor(observableGroupManager);
+
+            var entity = collection.CreateEntity();
+            entity.AddComponent(new ComponentWithReactiveProperty());
+
+            var systemA = new DeletingReactiveEntityTestSystem1(collection);
+            var systemB = new DeletingReactiveEntityTestSystem2();
+            executor.AddSystem(systemA);
+            executor.AddSystem(systemB);
+
+            var systemHandler = (ReactToEntitySystemHandler)executor._conventionalSystemHandlers.Single(x => x is ReactToEntitySystemHandler);
+            Assert.Equal(2, systemHandler._entitySubscriptions.Count);
+            Assert.Empty(systemHandler._entitySubscriptions[systemA].Values);
+            Assert.Empty(systemHandler._entitySubscriptions[systemB].Values);
+        }
+        
+        [Fact]
+        public void should_handle_deletion_while_setting_up_in_setup_systems()
+        {
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var executor = CreateExecutor(observableGroupManager);
+
+            var entity = collection.CreateEntity();
+            entity.AddComponent(new ComponentWithReactiveProperty());
+
+            var systemA = new DeletingSetupTestSystem1(collection);
+            var systemB = new DeletingSetupTestSystem2();
+            executor.AddSystem(systemA);
+            executor.AddSystem(systemB);
+
+            var reactiveDataSystemsHandler = (SetupSystemHandler)executor._conventionalSystemHandlers.Single(x => x is SetupSystemHandler);
+            Assert.Equal(2, reactiveDataSystemsHandler._entitySubscriptions.Count);
+            Assert.Empty(reactiveDataSystemsHandler._entitySubscriptions[systemA].Values);
+            Assert.Empty(reactiveDataSystemsHandler._entitySubscriptions[systemB].Values);
         }
     }
 }

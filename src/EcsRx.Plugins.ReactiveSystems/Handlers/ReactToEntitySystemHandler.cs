@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SystemsRx.Attributes;
 using SystemsRx.Executor.Handlers;
 using SystemsRx.Extensions;
@@ -37,6 +38,8 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             var affinities = castSystem.GetGroupAffinities();
             var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group, affinities);            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
+            _entitySubscriptions.Add(system, entitySubscriptions);
+
             var entityChangeSubscriptions = new CompositeDisposable();
             _systemSubscriptions.Add(system, entityChangeSubscriptions);
            
@@ -55,13 +58,15 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
                 })
                 .AddTo(entityChangeSubscriptions);
 
-            foreach (var entity in observableGroup)
+            var entities = observableGroup.ToArray();
+            foreach (var entity in entities)
             {
+                var entityDisposables = new CompositeDisposable();
+                entitySubscriptions.Add(entity.Id, entityDisposables);
+                
                 var subscription = ProcessEntity(castSystem, entity);
-                entitySubscriptions.Add(entity.Id, subscription);
+                entityDisposables.Add(subscription);
             }
-            
-            _entitySubscriptions.Add(system, entitySubscriptions);
         }
 
         public void DestroySystem(ISystem system)

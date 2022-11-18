@@ -1,4 +1,5 @@
 using System;
+using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
@@ -7,14 +8,14 @@ using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.Systems
 {
-    public class DeletingReactiveDataTestSystem2 : IReactToDataSystem<int>
+    public class DeletingReactiveEntityTestSystem2 : IReactToEntitySystem
     {
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
+        
+        public IObservable<IEntity> ReactToEntity(IEntity entity)
+        { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber.Select(x => entity); }
 
-        public IObservable<int> ReactToData(IEntity entity)
-        { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber; }
-
-        public void Process(IEntity entity, int reactionData)
+        public void Process(IEntity entity)
         { throw new Exception("Should Not Get Called"); }
     }
 }

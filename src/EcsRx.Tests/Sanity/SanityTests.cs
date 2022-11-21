@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 using SystemsRx.Events;
 using SystemsRx.Executor;
 using SystemsRx.Executor.Handlers;
@@ -22,9 +23,12 @@ using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Plugins.ReactiveSystems.Handlers;
 using EcsRx.Plugins.Views.Components;
 using EcsRx.Plugins.Views.Systems;
+using EcsRx.Systems.Handlers;
+using EcsRx.Tests.Helpers;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
 using NSubstitute;
+using SystemsRx.Scheduling;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -63,15 +67,17 @@ namespace EcsRx.Tests.Sanity
             return (observableGroupManager, entityDatabase, componentDatabase, componentLookupType);
         }
 
-        private SystemExecutor CreateExecutor(IObservableGroupManager observableGroupManager)
+        private SystemExecutor CreateExecutor(IObservableGroupManager observableGroupManager, IUpdateScheduler updateScheduler = null)
         {
             var threadHandler = new DefaultThreadHandler();
+            updateScheduler ??= new DefaultUpdateScheduler();
             var reactsToEntityHandler = new ReactToEntitySystemHandler(observableGroupManager);
             var reactsToGroupHandler = new ReactToGroupSystemHandler(observableGroupManager, threadHandler);
             var reactsToDataHandler = new ReactToDataSystemHandler(observableGroupManager);
             var manualSystemHandler = new ManualSystemHandler();
             var setupHandler = new SetupSystemHandler(observableGroupManager);
             var teardownHandler = new TeardownSystemHandler(observableGroupManager);
+            var basicEntityHandler = new BasicEntitySystemHandler(observableGroupManager, threadHandler, updateScheduler);
 
             var conventionalSystems = new List<IConventionalSystemHandler>
             {
@@ -80,7 +86,8 @@ namespace EcsRx.Tests.Sanity
                 reactsToGroupHandler,
                 reactsToDataHandler,
                 manualSystemHandler,
-                teardownHandler
+                teardownHandler,
+                basicEntityHandler
             };
 
             return new SystemExecutor(conventionalSystems);
@@ -375,6 +382,46 @@ namespace EcsRx.Tests.Sanity
             Assert.Equal(2, reactiveDataSystemsHandler._entitySubscriptions.Count);
             Assert.Empty(reactiveDataSystemsHandler._entitySubscriptions[systemA].Values);
             Assert.Empty(reactiveDataSystemsHandler._entitySubscriptions[systemB].Values);
+        }
+
+        [Fact]
+        public void should_listen_for_removals_on_basic_entity_systems()
+        {
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var updateTrigger = new Subject<ElapsedTime>();
+            var updateScheduler = new ManualUpdateScheduler(updateTrigger);
+            var executor = CreateExecutor(observableGroupManager, updateScheduler);
+
+            var entity = collection.CreateEntity();
+            entity.AddComponent(new ComponentWithReactiveProperty());
+
+            var systemA = new DeletingBasicEntitySystem1(collection);
+            var systemB = new DeletingBasicEntitySystem2();
+            executor.AddSystem(systemA);
+            executor.AddSystem(systemB);
+            
+            updateTrigger.OnNext(new ElapsedTime());
+        }
+        
+        [Fact]
+        public void should_listen_for_removals_on_basic_entity_systems_2()
+        {
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var updateTrigger = new Subject<ElapsedTime>();
+            var updateScheduler = new ManualUpdateScheduler(updateTrigger);
+            var executor = CreateExecutor(observableGroupManager, updateScheduler);
+
+            var entity = collection.CreateEntity();
+            entity.AddComponent(new ComponentWithReactiveProperty());
+
+            var systemA = new DeletingReactiveDataTestSystem1(collection);
+            var systemB = new DeletingBasicEntitySystem2();
+            executor.AddSystem(systemA);
+            executor.AddSystem(systemB);
+            
+            updateTrigger.OnNext(new ElapsedTime());
         }
     }
 }

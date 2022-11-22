@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using SystemsRx.Extensions;
 using EcsRx.Entities;
-using EcsRx.Groups.Observable.Tracking;
 using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Trackers;
 using EcsRx.Groups.Observable.Tracking.Types;

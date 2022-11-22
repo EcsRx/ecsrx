@@ -46,8 +46,10 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
+                    var entityDisposables = new CompositeDisposable();
+                    entitySubscriptions.Add(x.Id, entityDisposables);
                     var entitySubscription = ProcessEntity(castSystem, x);
-                    entitySubscriptions.Add(x.Id, entitySubscription);
+                    entityDisposables.Add(entitySubscription);
                 })
                 .AddTo(entityChangeSubscriptions);
             

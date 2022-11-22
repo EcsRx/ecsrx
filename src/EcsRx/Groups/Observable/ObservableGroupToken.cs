@@ -21,17 +21,14 @@ namespace EcsRx.Groups.Observable
 
         public bool Equals(ObservableGroupToken other)
         {
-            return LookupGroup.RequiredComponents == other.LookupGroup.RequiredComponents
-                   && LookupGroup.ExcludedComponents == other.LookupGroup.ExcludedComponents
-                   && CollectionIds == other.CollectionIds;
+            return LookupGroup.Equals(other.LookupGroup) && CollectionIds == other.CollectionIds;
         }
         
         public override int GetHashCode()
         {
-            var requiredHash = LookupGroup.RequiredComponents?.GetHashCode() ?? 0;
-            var excludedHash = LookupGroup.ExcludedComponents?.GetHashCode() ?? 0;
+            var lookupHash = LookupGroup.GetHashCode();
             var poolHash = CollectionIds?.GetHashCode() ?? 0;
-            return requiredHash ^ excludedHash ^ poolHash;
+            return lookupHash ^ poolHash;
         }
         
     }

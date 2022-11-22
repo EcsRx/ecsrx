@@ -82,12 +82,12 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
                 .Subscribe(x =>
                 {
                     var entityDisposables = new CompositeDisposable();
+                    entitySubscriptions.Add(x.Id, entityDisposables);
                     foreach (var processFunction in processEntityFunctions)
                     {
                         var subscription = processFunction(x);
                         entityDisposables.Add(subscription);
                     }
-                    entitySubscriptions.Add(x.Id, entityDisposables);
                 })
                 .AddTo(entityChangeSubscriptions);
             

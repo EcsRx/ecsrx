@@ -107,7 +107,7 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
             Assert.Equal(1, systemHandler._entitySubscriptions.Count);
-            Assert.Equal(0, systemHandler._entitySubscriptions[mockSystem].Count);
+            Assert.Equal(2, systemHandler._entitySubscriptions[mockSystem].Count);
         }
         
         [Fact]

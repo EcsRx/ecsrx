@@ -423,5 +423,25 @@ namespace EcsRx.Tests.Sanity
             
             updateTrigger.OnNext(new ElapsedTime());
         }
+        
+        [Fact]
+        public void should_handle_removals_across_multiple_systems()
+        {
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var updateTrigger = new Subject<ElapsedTime>();
+            var updateScheduler = new ManualUpdateScheduler(updateTrigger);
+            var executor = CreateExecutor(observableGroupManager, updateScheduler);
+            
+            var systemA = new DeletingReactiveDataTestSystem1(collection);
+            var systemB = new DeletingBasicEntitySystem2();
+            executor.AddSystem(systemA);
+            executor.AddSystem(systemB);
+            
+            var entity = collection.CreateEntity();
+            entity.AddComponent(new ComponentWithReactiveProperty());
+            
+            updateTrigger.OnNext(new ElapsedTime());
+        }
     }
 }

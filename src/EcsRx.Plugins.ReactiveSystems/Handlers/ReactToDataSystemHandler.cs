@@ -81,6 +81,9 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
+                    // This occurs if we have an add elsewhere removing the entity before this one is called
+                    if (!observableGroup.ContainsEntity(x.Id)) { return; }
+                    
                     var entityDisposables = new CompositeDisposable();
                     entitySubscriptions.Add(x.Id, entityDisposables);
                     foreach (var processFunction in processEntityFunctions)
@@ -94,7 +97,8 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             observableGroup.OnEntityRemoved
                 .Subscribe(x =>
                 {
-                    entitySubscriptions.RemoveAndDispose(x.Id);
+                    if (entitySubscriptions.ContainsKey(x.Id)) 
+                    { entitySubscriptions.RemoveAndDispose(x.Id); }
                 })
                 .AddTo(entityChangeSubscriptions);
 

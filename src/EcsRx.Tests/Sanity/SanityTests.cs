@@ -405,7 +405,7 @@ namespace EcsRx.Tests.Sanity
         }
         
         [Fact]
-        public void should_listen_for_removals_on_basic_entity_systems_2()
+        public void should_handle_removals_during_add_between_different_system_types()
         {
             var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
             var collection = entityDatabase.GetCollection();
@@ -425,7 +425,7 @@ namespace EcsRx.Tests.Sanity
         }
         
         [Fact]
-        public void should_handle_removals_across_multiple_systems()
+        public void should_handle_removals_during_add_phase_across_two_systems()
         {
             var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
             var collection = entityDatabase.GetCollection();
@@ -437,6 +437,38 @@ namespace EcsRx.Tests.Sanity
             var systemB = new DeletingBasicEntitySystem2();
             executor.AddSystem(systemA);
             executor.AddSystem(systemB);
+            
+            var entity = collection.CreateEntity();
+            entity.AddComponent(new ComponentWithReactiveProperty());
+            
+            updateTrigger.OnNext(new ElapsedTime());
+        }
+        
+        [Fact]
+        public void should_handle_removals_during_add_phase_across_multiple_systems()
+        {
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var updateTrigger = new Subject<ElapsedTime>();
+            var updateScheduler = new ManualUpdateScheduler(updateTrigger);
+            var executor = CreateExecutor(observableGroupManager, updateScheduler);
+            
+            var system1 = new DeletingReactiveDataTestSystem1(collection);
+            var system2 = new DeletingReactiveDataTestSystem2();
+            var system3 = new DeletingReactiveEntityTestSystem1(collection);
+            var system4 = new DeletingReactiveEntityTestSystem2();
+            var system5 = new DeletingSetupTestSystem1(collection);
+            var system6 = new DeletingSetupTestSystem2();
+            var system7 = new DeletingBasicEntitySystem1(collection);
+            var system8 = new DeletingBasicEntitySystem2();
+            executor.AddSystem(system1);
+            executor.AddSystem(system2);
+            executor.AddSystem(system3);
+            executor.AddSystem(system4);
+            executor.AddSystem(system5);
+            executor.AddSystem(system6);
+            executor.AddSystem(system7);
+            executor.AddSystem(system8);
             
             var entity = collection.CreateEntity();
             entity.AddComponent(new ComponentWithReactiveProperty());

@@ -5,6 +5,8 @@ using EcsRx.Collections.Database;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Infrastructure.Modules;
+using EcsRx.Plugins.ReactiveSystems;
+using SystemsRx.Executor;
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
 using SystemsRx.Infrastructure.Modules;
@@ -21,6 +23,7 @@ namespace EcsRx.Benchmarks
         public IEntityDatabase EntityDatabase { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
+        public ISystemExecutor SystemExecutor { get; }
         
         public IObservableGroupManager ObservableGroupManager { get; }
 
@@ -29,11 +32,13 @@ namespace EcsRx.Benchmarks
             Container = new NinjectDependencyContainer();
             Container.LoadModule(new FrameworkModule());
             Container.LoadModule(new EcsRxInfrastructureModule());
+            Container.LoadModule(new ReactiveSystemsModule());
             
             EntityDatabase = Container.Resolve<IEntityDatabase>();
             ObservableGroupManager = Container.Resolve<IObservableGroupManager>();
             ComponentDatabase = Container.Resolve<IComponentDatabase>();
             ComponentTypeLookup = Container.Resolve<IComponentTypeLookup>();
+            SystemExecutor = Container.Resolve<ISystemExecutor>();
         }
 
         [GlobalSetup]

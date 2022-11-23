@@ -95,6 +95,8 @@ namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
 
             var addedSubject = new Subject<IEntity>();
             mockObservableGroup.OnEntityAdded.Returns(addedSubject);
+            mockObservableGroup.ContainsEntity(Arg.Is(fakeEntity1.Id)).Returns(true);
+            mockObservableGroup.ContainsEntity(Arg.Is(fakeEntity2.Id)).Returns(true);
             
             var observableGroupManager = Substitute.For<IObservableGroupManager>();
 

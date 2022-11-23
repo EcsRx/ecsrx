@@ -46,12 +46,9 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
-                    var entityDisposables = new CompositeDisposable();
-                    entitySubscriptions.Add(x.Id, entityDisposables);
-                    
-                    var possibleSubscription = ProcessEntity(castSystem, x);
-                    if(possibleSubscription != null) 
-                    { entityDisposables.Add(possibleSubscription); }
+                    // This occurs if we have an add elsewhere removing the entity before this one is called
+                    if (observableGroup.ContainsEntity(x.Id))
+                    { SetupEntity(castSystem, x, entitySubscriptions); }
                 })
                 .AddTo(entityChangeSubscriptions);
             
@@ -65,14 +62,20 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
             var entities = observableGroup.ToArray();
             foreach (var entity in entities)
-            {
-                var entityDisposables = new CompositeDisposable();
-                entitySubscriptions.Add(entity.Id, entityDisposables);
+            { SetupEntity(castSystem, entity, entitySubscriptions); }
+        }
+        
+        public void SetupEntity(ISetupSystem system, IEntity entity, Dictionary<int, IDisposable> subs)
+        {
+            subs.Add(entity.Id, null);
                 
-                var possibleSubscription = ProcessEntity(castSystem, entity);
-                if (possibleSubscription != null)
-                { entityDisposables.Add(possibleSubscription); }
-            }
+            var subscription = ProcessEntity(system, entity);
+            if(subscription == null) { return; }
+            
+            if (subs.ContainsKey(entity.Id))
+            { subs[entity.Id] = subscription; }
+            else
+            { subscription.Dispose(); }
         }
 
         public void DestroySystem(ISystem system)

@@ -67,7 +67,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
 
         public void SetupSystem(ISystem system)
         {
-            var processEntityFunctions = CreateEntityProcessorFunctions(system);
+            var processEntityFunctions = CreateEntityProcessorFunctions(system).ToArray();
 
             var entityChangeSubscriptions = new CompositeDisposable();
             SystemSubscriptions.Add(system, entityChangeSubscriptions);
@@ -81,34 +81,36 @@ namespace EcsRx.Plugins.ReactiveSystems.Handlers
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
                 {
-                    var entityDisposables = new CompositeDisposable();
-                    entitySubscriptions.Add(x.Id, entityDisposables);
-                    foreach (var processFunction in processEntityFunctions)
-                    {
-                        var subscription = processFunction(x);
-                        entityDisposables.Add(subscription);
-                    }
+                    // This occurs if we have an add elsewhere removing the entity before this one is called
+                    if (observableGroup.ContainsEntity(x.Id))
+                    { SetupEntity(processEntityFunctions, x, entitySubscriptions); }
                 })
                 .AddTo(entityChangeSubscriptions);
             
             observableGroup.OnEntityRemoved
                 .Subscribe(x =>
                 {
-                    entitySubscriptions.RemoveAndDispose(x.Id);
+                    if (entitySubscriptions.ContainsKey(x.Id)) 
+                    { entitySubscriptions.RemoveAndDispose(x.Id); }
                 })
                 .AddTo(entityChangeSubscriptions);
 
             var entitiesToProcess = observableGroup.ToArray();
             foreach (var entity in entitiesToProcess)
-            {
-                var entityDisposables = new CompositeDisposable();
-                entitySubscriptions.Add(entity.Id, entityDisposables);
+            { SetupEntity(processEntityFunctions, entity, entitySubscriptions); }
+        }
+        
+        public void SetupEntity(IEnumerable<Func<IEntity, IDisposable>> systemProcessors, IEntity entity, Dictionary<int, IDisposable> subs)
+        {
+            subs.Add(entity.Id, null);
                 
-                foreach (var processFunction in processEntityFunctions)
-                {
-                    var subscription = processFunction(entity);
-                    entityDisposables.Add(subscription);
-                }
+            foreach (var processFunction in systemProcessors)
+            {
+                var subscription = processFunction(entity);
+                if (subs.ContainsKey(entity.Id))
+                { subs[entity.Id] = subscription; }
+                else
+                { subscription.Dispose(); }
             }
         }
 

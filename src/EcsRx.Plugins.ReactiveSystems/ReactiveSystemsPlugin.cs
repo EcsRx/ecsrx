@@ -15,13 +15,7 @@ namespace EcsRx.Plugins.ReactiveSystems
         public Version Version { get; } = new Version("1.0.0");
         
         public void SetupDependencies(IDependencyContainer container)
-        {
-            container.Bind<IConventionalSystemHandler, ReactToEntitySystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToGroupSystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToDataSystemHandler>();
-            container.Bind<IConventionalSystemHandler, SetupSystemHandler>();
-            container.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
-        }
+        { container.LoadModule<ReactiveSystemsModule>(); }
 
         public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
     }

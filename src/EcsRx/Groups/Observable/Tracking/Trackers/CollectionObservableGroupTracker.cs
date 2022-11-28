@@ -50,7 +50,7 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         { EntityIdMatchTypes[entityId] = newMatchingType; }
 
         public override GroupMatchingType GetState(int entityId)
-        { return EntityIdMatchTypes[entityId]; }
+        { return EntityIdMatchTypes.ContainsKey(entityId) ? EntityIdMatchTypes[entityId] : GroupMatchingType.NoMatchesFound; }
         
         public bool IsMatching(int entityId) => EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes;
 
@@ -68,16 +68,15 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
 
         public void OnEntityRemoved(CollectionEntityEvent args)
         {
-            if (EntityIdMatchTypes.ContainsKey(args.Entity.Id))
-            {
-                var matchType = GetState(args.Entity.Id);
-                EntityIdMatchTypes.Remove(args.Entity.Id);
+            if (!EntityIdMatchTypes.ContainsKey(args.Entity.Id)) { return; }
+            
+            var matchType = GetState(args.Entity.Id);
+            EntityIdMatchTypes.Remove(args.Entity.Id);
 
-                if (matchType == GroupMatchingType.MatchesNoExcludes)
-                {
-                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeavingGroup));
-                    OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeftGroup));
-                }
+            if (matchType == GroupMatchingType.MatchesNoExcludes)
+            {
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeavingGroup));
+                OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeftGroup));
             }
         }
 

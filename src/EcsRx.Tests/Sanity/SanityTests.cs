@@ -27,6 +27,7 @@ using EcsRx.Systems.Handlers;
 using EcsRx.Tests.Helpers;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
+using EcsRx.Tests.Systems.DeletingScenarios;
 using NSubstitute;
 using SystemsRx.Scheduling;
 using Xunit;
@@ -472,6 +473,42 @@ namespace EcsRx.Tests.Sanity
             
             var entity = collection.CreateEntity();
             entity.AddComponent(new ComponentWithReactiveProperty());
+            
+            updateTrigger.OnNext(new ElapsedTime());
+        }
+        
+        [Fact]
+        public void should_handle_removals_during_add_phase_across_multiple_systems_with_overlapping_groups()
+        {
+            var (observableGroupManager, entityDatabase, componentDatabase, componentLookup) = CreateFramework();
+            var collection = entityDatabase.GetCollection();
+            var updateTrigger = new Subject<ElapsedTime>();
+            var updateScheduler = new ManualUpdateScheduler(updateTrigger);
+            var executor = CreateExecutor(observableGroupManager, updateScheduler);
+            
+            var system1 = new DeletingReactiveDataTestSystem1(collection);
+            var system2 = new DeletingReactiveDataTestSystem2();
+            var system3 = new DeletingOverlappingReactiveEntityTestSystem1(collection);
+            var system4 = new DeletingOverlappingReactiveEntityTestSystem2();
+            var system5 = new DeletingOverlappingSetupTestSystem1(collection);
+            var system6 = new DeletingOverlappingSetupTestSystem2();
+            var system7 = new DeletingOverlappingBasicEntitySystem1(collection);
+            var system8 = new DeletingOverlappingBasicEntitySystem2();
+            executor.AddSystem(system1);
+            executor.AddSystem(system2);
+            executor.AddSystem(system3);
+            executor.AddSystem(system4);
+            executor.AddSystem(system5);
+            executor.AddSystem(system6);
+            executor.AddSystem(system7);
+            executor.AddSystem(system8);
+            
+            var entity1 = collection.CreateEntity();
+            entity1.AddComponents(new ComponentWithReactiveProperty(), new TestComponentOne());
+            var entity2 = collection.CreateEntity();
+            entity2.AddComponents(new ComponentWithReactiveProperty(), new TestComponentTwo());
+            var entity3 = collection.CreateEntity();
+            entity3.AddComponents(new ComponentWithReactiveProperty(), new TestComponentThree());
             
             updateTrigger.OnNext(new ElapsedTime());
         }

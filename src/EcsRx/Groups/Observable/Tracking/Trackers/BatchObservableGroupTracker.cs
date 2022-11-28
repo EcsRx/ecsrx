@@ -27,7 +27,7 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         { EntityIdMatchTypes[entityId] = newMatchingType; }
 
         public override GroupMatchingType GetState(int entityId)
-        { return EntityIdMatchTypes[entityId]; }
+        { return EntityIdMatchTypes.ContainsKey(entityId) ? EntityIdMatchTypes[entityId] : GroupMatchingType.NoMatchesFound; }
         
         public bool StartTrackingEntity(IEntity entity)
         {
@@ -48,17 +48,18 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
 
         public void StopTrackingEntity(IEntity entity)
         {
-            if (!EntityIdMatchTypes.ContainsKey(entity.Id)) {return;}
+            if (!EntityIdMatchTypes.ContainsKey(entity.Id)) { return; }
 
-            if (EntityIdMatchTypes[entity.Id] == GroupMatchingType.MatchesNoExcludes)
+            var matchType = EntityIdMatchTypes[entity.Id];
+            _entitySubscriptions[entity.Id].Dispose();
+            _entitySubscriptions.Remove(entity.Id);
+            EntityIdMatchTypes.Remove(entity.Id);
+
+            if (matchType == GroupMatchingType.MatchesNoExcludes)
             {
                 OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeavingGroup));
                 OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(entity, GroupActionType.LeftGroup));
             }
-            
-            _entitySubscriptions[entity.Id].Dispose();
-            _entitySubscriptions.Remove(entity.Id);
-            EntityIdMatchTypes.Remove(entity.Id);
         }
         
         public override void Dispose()

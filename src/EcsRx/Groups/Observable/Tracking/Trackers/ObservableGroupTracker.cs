@@ -28,7 +28,8 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         {
             var entityMatchType = GetState(entity.Id);
             if (entityMatchType == GroupMatchingType.NoMatchesWithExcludes || 
-                entityMatchType == GroupMatchingType.MatchesWithExcludes)
+                entityMatchType == GroupMatchingType.MatchesWithExcludes ||
+                entityMatchType == GroupMatchingType.NoMatchesFound)
             { return; }
             
             if(entityMatchType == GroupMatchingType.MatchesNoExcludes)
@@ -58,7 +59,8 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         public void OnEntityComponentRemoving(int[] componentsChanged, IEntity entity)
         {
             var entityMatchType = GetState(entity.Id);
-            if (entityMatchType == GroupMatchingType.NoMatchesNoExcludes)
+            if (entityMatchType == GroupMatchingType.NoMatchesNoExcludes ||
+                entityMatchType == GroupMatchingType.NoMatchesFound)
             { return; }
 
             if (entityMatchType == GroupMatchingType.MatchesNoExcludes)
@@ -71,7 +73,8 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         public void OnEntityComponentRemoved(int[] componentsChanged, IEntity entity)
         {
             var entityMatchType = GetState(entity.Id);
-            if (entityMatchType == GroupMatchingType.NoMatchesNoExcludes)
+            if (entityMatchType == GroupMatchingType.NoMatchesNoExcludes ||
+                entityMatchType == GroupMatchingType.NoMatchesFound)
             { return; }
 
             var containsAllComponents = LookupGroup.ContainsAllRequiredComponents(entity);

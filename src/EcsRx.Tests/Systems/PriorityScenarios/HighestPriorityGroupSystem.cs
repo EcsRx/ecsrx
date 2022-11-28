@@ -1,11 +1,11 @@
-﻿using SystemsRx.Attributes;
-using EcsRx.Entities;
+﻿using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Plugins.Views.Systems;
 using EcsRx.Systems;
+using SystemsRx.Attributes;
 
-namespace EcsRx.Tests.Systems
+namespace EcsRx.Tests.Systems.PriorityScenarios
 {
     [Priority(100)]
     public class HighestPriorityGroupSystem : IGroupSystem

@@ -3,21 +3,26 @@ using EcsRx.Groups;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Plugins.Views.Systems;
 using EcsRx.Systems;
+using SystemsRx.Attributes;
 
-namespace EcsRx.Tests.Systems
+namespace EcsRx.Tests.Systems.PriorityScenarios
 {
-    public class DefaultPriorityGroupSystem : IGroupSystem
+    [Priority(-100)]
+    public class LowestPriorityGroupSystem : IGroupSystem
     {
         public IGroup Group => null;
     }
     
-    public class DefaultPrioritySetupSystem : ISetupSystem
+    [Priority(-101)]
+    public class LowestPrioritySetupSystem : ISetupSystem
     {
         public IGroup Group => null;
-        public void Setup(IEntity entity){}
+        
+        public void Setup(IEntity entity) {}
     }
     
-    public class DefaultPriorityViewResolverSystem : IViewResolverSystem
+    [Priority(-102)]
+    public class LowestPriorityViewResolverSystem : IViewResolverSystem
     {
         public IGroup Group => null;
         public void Teardown(IEntity entity){}

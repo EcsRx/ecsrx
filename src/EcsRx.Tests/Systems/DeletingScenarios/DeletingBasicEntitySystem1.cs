@@ -5,7 +5,7 @@ using EcsRx.Groups;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
 
-namespace EcsRx.Tests.Systems
+namespace EcsRx.Tests.Systems.DeletingScenarios
 {
     public class DeletingBasicEntitySystem1 : IBasicEntitySystem
     {

@@ -6,7 +6,7 @@ using EcsRx.Groups;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Tests.Models;
 
-namespace EcsRx.Tests.Systems
+namespace EcsRx.Tests.Systems.DeletingScenarios
 {
     public class DeletingReactiveEntityTestSystem2 : IReactToEntitySystem
     {

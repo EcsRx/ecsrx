@@ -5,15 +5,17 @@ using EcsRx.Groups;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Tests.Models;
 
-namespace EcsRx.Tests.Systems
+namespace EcsRx.Tests.Systems.DeletingScenarios
 {
-    public class DeletingSetupTestSystem1 : ISetupSystem
+    public class DeletingOverlappingSetupTestSystem1 : ISetupSystem
     {
-        public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
+        public IGroup Group => new Group()
+            .WithComponent<ComponentWithReactiveProperty>()
+            .WithComponent<TestComponentTwo>();
 
         public IEntityCollection EntityCollection { get; }
 
-        public DeletingSetupTestSystem1(IEntityCollection entityCollection)
+        public DeletingOverlappingSetupTestSystem1(IEntityCollection entityCollection)
         { EntityCollection = entityCollection; }
 
         public void Setup(IEntity entity)

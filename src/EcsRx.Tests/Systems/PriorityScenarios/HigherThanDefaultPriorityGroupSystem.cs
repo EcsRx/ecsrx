@@ -1,8 +1,8 @@
-﻿using SystemsRx.Attributes;
-using EcsRx.Groups;
+﻿using EcsRx.Groups;
 using EcsRx.Systems;
+using SystemsRx.Attributes;
 
-namespace EcsRx.Tests.Systems
+namespace EcsRx.Tests.Systems.PriorityScenarios
 {
     [Priority(1)]
     public class HigherThanDefaultPriorityGroupSystem : IGroupSystem

@@ -7,6 +7,7 @@ using EcsRx.Infrastructure;
 using EcsRx.Plugins.ReactiveSystems.Extensions;
 using EcsRx.Systems;
 using EcsRx.Tests.Systems;
+using EcsRx.Tests.Systems.PriorityScenarios;
 using NSubstitute;
 using Xunit;
 

@@ -11,6 +11,7 @@ using EcsRx.Groups;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Systems;
+using EcsRx.Tests.Systems.PriorityScenarios;
 using NSubstitute;
 using Xunit;
 

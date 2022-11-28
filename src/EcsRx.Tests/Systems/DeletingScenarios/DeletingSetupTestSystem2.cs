@@ -5,16 +5,13 @@ using EcsRx.Groups;
 using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Tests.Models;
 
-namespace EcsRx.Tests.Systems
+namespace EcsRx.Tests.Systems.DeletingScenarios
 {
-    public class DeletingReactiveDataTestSystem2 : IReactToDataSystem<int>
+    public class DeletingSetupTestSystem2 : ISetupSystem
     {
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
 
-        public IObservable<int> ReactToData(IEntity entity)
-        { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber; }
-
-        public void Process(IEntity entity, int reactionData)
+        public void Setup(IEntity entity)
         { throw new Exception("Should Not Get Called"); }
     }
 }

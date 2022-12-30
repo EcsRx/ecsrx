@@ -128,6 +128,11 @@ There is a book available which covers the main parts which can be found here:
 
 This can all be found within the [docs here](./docs/others/third-party-content.md)
 
+## Thanks
+
+Thanks to Jetbrains for providing free liceneses via their [Open Source Support program](https://jb.gg/OpenSourceSupport)
+
+[![Jetbrains][jetbrains-image]][jetbrains-url]
 
 [build-status-image]: https://ci.appveyor.com/api/projects/status/55d1256yrra6fmls/branch/master?svg=true
 [build-status-url]: https://ci.appveyor.com/project/grofit/ecsrx/branch/master
@@ -141,3 +146,6 @@ This can all be found within the [docs here](./docs/others/third-party-content.m
 [license-url]: https://github.com/EcsRx/ecsrx/blob/master/LICENSE
 [gitbook-image]: https://img.shields.io/static/v1.svg?label=Documentation&message=Read%20Now&color=Green&style=flat
 [gitbook-url]: https://ecsrx.gitbook.io/project/
+[jetbrains-image]: https://user-images.githubusercontent.com/927201/210093561-bd34ce62-944a-4508-a14b-f400847526f0.png
+[jetbrains-url]: https://jb.gg/OpenSourceSupport
+

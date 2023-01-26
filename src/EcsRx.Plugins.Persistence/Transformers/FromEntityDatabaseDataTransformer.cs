@@ -24,7 +24,15 @@ namespace EcsRx.Plugins.Persistence.Transformers
             entityDatabaseData.EntityCollections
                 .Select(EntityCollectionDataTransformer.Transform)
                 .Cast<IEntityCollection>()
-                .ForEachRun(entityDatabase.AddCollection);
+                .ForEachRun(x =>
+                {
+                    if (entityDatabase.Collections.Any(e => e.Id == x.Id))
+                    {
+                        entityDatabase.RemoveCollection(x.Id);
+                        
+                    }
+                    entityDatabase.AddCollection(x);
+                });
 
             return entityDatabase;
         }

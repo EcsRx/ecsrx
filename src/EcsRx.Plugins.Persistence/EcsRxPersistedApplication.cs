@@ -25,8 +25,8 @@ namespace EcsRx.Plugins.Persistence
         
         protected override void ResolveApplicationDependencies()
         {
-            SaveEntityDatabasePipeline = Container.Resolve<ISaveEntityDatabasePipeline>();
-            LoadEntityDatabasePipeline = Container.Resolve<ILoadEntityDatabasePipeline>();
+            SaveEntityDatabasePipeline = DependencyResolver.Resolve<ISaveEntityDatabasePipeline>();
+            LoadEntityDatabasePipeline = DependencyResolver.Resolve<ILoadEntityDatabasePipeline>();
 
             if(LoadOnStart)
             { LoadEntityDatabase().Wait(); }
@@ -40,8 +40,8 @@ namespace EcsRx.Plugins.Persistence
             if (!File.Exists(EntityDatabaseFile)) { return; }
             
             var entityDatabase = await LoadEntityDatabasePipeline.Execute();
-            Container.Unbind<IEntityDatabase>();
-            Container.Bind<IEntityDatabase>(x => x.ToInstance(entityDatabase));
+            DependencyRegistry.Unbind<IEntityDatabase>();
+            DependencyRegistry.Bind<IEntityDatabase>(x => x.ToInstance(entityDatabase));
         }
         
         protected virtual Task SaveEntityDatabase()

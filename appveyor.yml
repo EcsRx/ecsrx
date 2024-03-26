@@ -1,9 +1,9 @@
-version: 6.1.{build}
+version: 7.0.{build}
 branches:
   only:
   - master
   - build-test
-image: Visual Studio 2019
+image: Visual Studio 2022
 configuration: Release
 dotnet_csproj:
   patch: true
@@ -27,7 +27,7 @@ deploy:
     APPVEYOR_REPO_TAG: true
   server:
   api_key:
-    secure: tsjUobfOZt+J15taxXWLRjz2U2SdhOLf4L9D+dFWQ1XAnBbU4KGypOYdu57NjxUg
+    secure: xItHI+jcoXOw7VZoVj1gGOiH2zajMnpq0wQgXlp0SEl5PlAQ7epxowtpbqID7a4V
   skip_symbols: true
   symbol_server:
   artifact: /.*\.nupkg/

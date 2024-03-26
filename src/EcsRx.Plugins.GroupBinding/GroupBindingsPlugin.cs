@@ -14,9 +14,9 @@ namespace EcsRx.Plugins.GroupBinding
         public string Name => "Group Bindings";
         public Version Version { get; } = new Version("1.0.0");
         
-        public void SetupDependencies(IDependencyContainer container)
-        { container.Bind<IConventionalSystemHandler, GroupBindingSystemHandler>(); }
+        public void SetupDependencies(IDependencyRegistry registry)
+        { registry.Bind<IConventionalSystemHandler, GroupBindingSystemHandler>(); }
         
-        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
+        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyResolver resolver) => Array.Empty<ISystem>();
     }
 }

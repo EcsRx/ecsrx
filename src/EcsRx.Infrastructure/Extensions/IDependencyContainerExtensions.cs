@@ -12,24 +12,24 @@ namespace EcsRx.Infrastructure.Extensions
         /// <summary>
         /// Resolves an observable group
         /// </summary>
-        /// <param name="container">The container to action on</param>
+        /// <param name="resolver">The container to action on</param>
         /// <param name="group">The group to observe</param>
         /// <returns>The observable group</returns>
-        public static IObservableGroup ResolveObservableGroup(this IDependencyContainer container, IGroup group)
+        public static IObservableGroup ResolveObservableGroup(this IDependencyResolver resolver, IGroup group)
         {
-            var collectionManager = container.Resolve<IObservableGroupManager>();
+            var collectionManager = resolver.Resolve<IObservableGroupManager>();
             return collectionManager.GetObservableGroup(group);
         }
         
         /// <summary>
         /// Resolves an observable group
         /// </summary>
-        /// <param name="container">The container to action on</param>
+        /// <param name="resolver">The container to action on</param>
         /// <param name="componentTypes">The required components for the group to observe</param>
         /// <returns></returns>
-        public static IObservableGroup ResolveObservableGroup(this IDependencyContainer container, params Type[] componentTypes)
+        public static IObservableGroup ResolveObservableGroup(this IDependencyResolver resolver, params Type[] componentTypes)
         {
-            var collectionManager = container.Resolve<IObservableGroupManager>();
+            var collectionManager = resolver.Resolve<IObservableGroupManager>();
             var group = new Group(componentTypes);
             return collectionManager.GetObservableGroup(group);
         }

@@ -13,13 +13,13 @@ namespace EcsRx.Plugins.Persistence.Modules
 {
     public class LazyDataModule : IDependencyModule
     {
-        public void Setup(IDependencyContainer container)
+        public void Setup(IDependencyRegistry registry)
         {
-            container.Bind<TypeAnalyzerConfiguration>(x => x.AsSingleton());
+            registry.Bind<TypeAnalyzerConfiguration>(x => x.AsSingleton());
 
-            container.Bind<IPrimitiveChecker, BasicPrimitiveChecker>();
+            registry.Bind<IPrimitiveChecker, BasicPrimitiveChecker>();
             
-            container.Bind<IPrimitiveRegistry>(builder =>
+            registry.Bind<IPrimitiveRegistry>(builder =>
                 builder
                     .ToMethod(x =>
                         {
@@ -30,17 +30,17 @@ namespace EcsRx.Plugins.Persistence.Modules
                         })
                     .AsSingleton());
 
-            container.Bind<ITypeCreator, TypeCreator>();
-            container.Bind<ITypeAnalyzer, TypeAnalyzer>();
-            container.Bind<MappingConfiguration>(x => x.ToInstance(MappingConfiguration.Default)); 
-            container.Bind<EverythingTypeMapper>();
-            container.Bind<DefaultTypeMapper>();
-            container.Bind<ITypeMapper>(x => x.ToBoundType<DefaultTypeMapper>());
-            container.Bind<IMappingRegistry, MappingRegistry>();
+            registry.Bind<ITypeCreator, TypeCreator>();
+            registry.Bind<ITypeAnalyzer, TypeAnalyzer>();
+            registry.Bind<MappingConfiguration>(x => x.ToInstance(MappingConfiguration.Default)); 
+            registry.Bind<EverythingTypeMapper>();
+            registry.Bind<DefaultTypeMapper>();
+            registry.Bind<ITypeMapper>(x => x.ToBoundType<DefaultTypeMapper>());
+            registry.Bind<IMappingRegistry, MappingRegistry>();
 
-            container.Bind<IBinaryPrimitiveHandler, BasicBinaryPrimitiveHandler>();
-            container.Bind<IBinarySerializer, BinarySerializer>();
-            container.Bind<IBinaryDeserializer, BinaryDeserializer>();
+            registry.Bind<IBinaryPrimitiveHandler, BasicBinaryPrimitiveHandler>();
+            registry.Bind<IBinarySerializer, BinarySerializer>();
+            registry.Bind<IBinaryDeserializer, BinaryDeserializer>();
         }
     }
 }

@@ -14,13 +14,13 @@ namespace EcsRx.Plugins.Batching
         public string Name => "Batching";
         public Version Version { get; } = new Version("1.0.0");
 
-        public void SetupDependencies(IDependencyContainer container)
+        public void SetupDependencies(IDependencyRegistry registry)
         {
-            container.Bind<IBatchBuilderFactory, BatchBuilderFactory>(x => x.AsSingleton());
-            container.Bind<IReferenceBatchBuilderFactory, ReferenceBatchBuilderFactory>(x => x.AsSingleton());
-            container.Bind<IBatchManager, BatchManager>(x => x.AsSingleton());
+            registry.Bind<IBatchBuilderFactory, BatchBuilderFactory>(x => x.AsSingleton());
+            registry.Bind<IReferenceBatchBuilderFactory, ReferenceBatchBuilderFactory>(x => x.AsSingleton());
+            registry.Bind<IBatchManager, BatchManager>(x => x.AsSingleton());
         }
         
-        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
+        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyResolver resolver) => Array.Empty<ISystem>();
     }
 }

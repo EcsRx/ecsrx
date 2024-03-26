@@ -14,12 +14,13 @@ using SystemsRx.Infrastructure.Ninject;
 
 namespace EcsRx.Benchmarks
 {
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, warmupCount: 1, invocationCount: 1, targetCount: 10)]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, warmupCount: 1, invocationCount: 1, iterationCount: 10)]
     [MemoryDiagnoser]
     [MarkdownExporter]
     public abstract class EcsRxBenchmark
     {
-        public IDependencyContainer Container { get; }
+        public IDependencyRegistry DependencyRegistry { get; }
+        public IDependencyResolver DependencyResolver { get; }
         public IEntityDatabase EntityDatabase { get; }
         public IComponentDatabase ComponentDatabase { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
@@ -29,16 +30,17 @@ namespace EcsRx.Benchmarks
 
         protected EcsRxBenchmark()
         {
-            Container = new NinjectDependencyContainer();
-            Container.LoadModule(new FrameworkModule());
-            Container.LoadModule(new EcsRxInfrastructureModule());
-            Container.LoadModule(new ReactiveSystemsModule());
+            DependencyRegistry = new NinjectDependencyRegistry();
+            DependencyRegistry.LoadModule(new FrameworkModule());
+            DependencyRegistry.LoadModule(new EcsRxInfrastructureModule());
+            DependencyRegistry.LoadModule(new ReactiveSystemsModule());
+            DependencyResolver = DependencyRegistry.BuildResolver();
             
-            EntityDatabase = Container.Resolve<IEntityDatabase>();
-            ObservableGroupManager = Container.Resolve<IObservableGroupManager>();
-            ComponentDatabase = Container.Resolve<IComponentDatabase>();
-            ComponentTypeLookup = Container.Resolve<IComponentTypeLookup>();
-            SystemExecutor = Container.Resolve<ISystemExecutor>();
+            EntityDatabase = DependencyResolver.Resolve<IEntityDatabase>();
+            ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
+            ComponentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
+            ComponentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
+            SystemExecutor = DependencyResolver.Resolve<ISystemExecutor>();
         }
 
         [GlobalSetup]

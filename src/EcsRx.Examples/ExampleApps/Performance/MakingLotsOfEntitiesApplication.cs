@@ -16,7 +16,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
         protected override void BindSystems()
         {
-            Container.Bind<ISystem, ExampleBatchedSystem>();
+            DependencyRegistry.Bind<ISystem, ExampleBatchedSystem>();
         }
 
         protected override void ApplicationStarted()

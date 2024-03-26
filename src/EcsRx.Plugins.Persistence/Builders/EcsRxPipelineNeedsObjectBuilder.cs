@@ -14,19 +14,19 @@ namespace EcsRx.Plugins.Persistence.Builders
 {
     public class EcsRxPipelineNeedsObjectBuilder
     {
-        private readonly IDependencyContainer _container;
+        private readonly IDependencyResolver _resolver;
         private readonly List<IPipelineStep> _steps;
         
-        public EcsRxPipelineNeedsObjectBuilder(IDependencyContainer container, List<IPipelineStep> steps)
+        public EcsRxPipelineNeedsObjectBuilder(IDependencyResolver resolver, List<IPipelineStep> steps)
         {
-            _container = container;
+            _resolver = resolver;
             _steps = steps;
         }
 
-        public EcsRxPipelineNeedsObjectBuilder(List<IPipelineStep> steps, IDependencyContainer container)
+        public EcsRxPipelineNeedsObjectBuilder(List<IPipelineStep> steps, IDependencyResolver resolver)
         {
             _steps = steps;
-            _container = container;
+            _resolver = resolver;
         }
 
         public EcsRxPipelineNeedsObjectBuilder TransformWith(ITransformer transformer)
@@ -37,7 +37,7 @@ namespace EcsRx.Plugins.Persistence.Builders
         
         public EcsRxPipelineNeedsObjectBuilder TransformWith<T>() where T : ITransformer
         {
-            _steps.Add(new TransformStep(_container.Resolve<T>()));
+            _steps.Add(new TransformStep(_resolver.Resolve<T>()));
             return this;
         }
     
@@ -56,25 +56,25 @@ namespace EcsRx.Plugins.Persistence.Builders
         public EcsRxPipelineNeedsDataBuilder SerializeWith(ISerializer serializer, bool persistType = true)
         {
             _steps.Add(new SerializeStep(serializer, persistType));
-            return new EcsRxPipelineNeedsDataBuilder(_container, _steps);
+            return new EcsRxPipelineNeedsDataBuilder(_resolver, _steps);
         }
         
         public EcsRxPipelineNeedsDataBuilder SerializeWith<T>(bool persistType = true) where T : ISerializer
         {
-            _steps.Add(new SerializeStep(_container.Resolve<T>(), persistType));
-            return new EcsRxPipelineNeedsDataBuilder(_container, _steps);
+            _steps.Add(new SerializeStep(_resolver.Resolve<T>(), persistType));
+            return new EcsRxPipelineNeedsDataBuilder(_resolver, _steps);
         }
     
         public EcsRxPipelineNeedsDataBuilder ThenReceiveFrom(IReceiveDataEndpoint endpoint)
         {
             _steps.Add(new ReceiveEndpointStep(endpoint));
-            return new EcsRxPipelineNeedsDataBuilder(_container, _steps);
+            return new EcsRxPipelineNeedsDataBuilder(_resolver, _steps);
         }
         
         public EcsRxPipelineNeedsDataBuilder ThenReceiveFrom<T>() where T : IReceiveDataEndpoint
         {
-            _steps.Add(new ReceiveEndpointStep(_container.Resolve<T>()));
-            return new EcsRxPipelineNeedsDataBuilder(_container, _steps);
+            _steps.Add(new ReceiveEndpointStep(_resolver.Resolve<T>()));
+            return new EcsRxPipelineNeedsDataBuilder(_resolver, _steps);
         }
 
         public EcsRxPipelineNeedsObjectBuilder ThenReceiveFrom(Func<Task<object>> method)

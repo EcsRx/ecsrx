@@ -38,8 +38,8 @@ namespace EcsRx.Examples.ExampleApps.Performance
                 .Select(x => Activator.CreateInstance(x) as IComponent)
                 .ToArray();
 
-            var componentDatabase = Container.Resolve<IComponentDatabase>();
-            var componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
+            var componentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
+            var componentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)

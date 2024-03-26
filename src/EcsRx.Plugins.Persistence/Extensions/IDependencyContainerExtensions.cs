@@ -11,15 +11,17 @@ namespace EcsRx.Plugins.Persistence.Extensions
         /// <summary>
         /// Resolves a data pipeline
         /// </summary>
-        /// <param name="container">The container to action on</param>
+        /// <param name="resolver">The resolver to action on</param>
         /// <param name="name">The name of the pipeline</param>
         /// <returns>The pipeline with the given name</returns>
-        public static IPipeline ResolvePipeline(this IDependencyContainer container, string name)
+        public static IPipeline ResolvePipeline(this IDependencyResolver resolver, string name)
         {
-            if(!container.HasBinding<IPipeline>(name))
+            var pipeline = resolver.Resolve<IPipeline>(name);
+            
+            if(pipeline == null)
             { throw new Exception($"No pipeline registered with the name \"{name}\"");}
             
-            return container.Resolve<IPipeline>(name);
+            return pipeline;
         }
         
         /// <summary>
@@ -28,9 +30,9 @@ namespace EcsRx.Plugins.Persistence.Extensions
         /// <param name="container">The container to action on</param>
         /// <param name="name">The name of the pipeline</param>
         /// <param name="buildFunction">The action to build the pipeline</param>
-        public static void BuildPipeline(this IDependencyContainer container, string name, Func<EcsRxPipelineBuilder, EcsRxPipelineNeedsObjectBuilder> buildFunction)
+        public static void BuildPipeline(this IDependencyRegistry registry, string name, Func<EcsRxPipelineBuilder, EcsRxPipelineNeedsObjectBuilder> buildFunction)
         {
-            container.Bind<IPipeline>(builder => builder
+            registry.Bind<IPipeline>(builder => builder
                 .ToMethod(x =>
                 {
                     var pipelineBuilder = x.Resolve<EcsRxPipelineBuilder>();
@@ -46,9 +48,9 @@ namespace EcsRx.Plugins.Persistence.Extensions
         /// <param name="container">The container to action on</param>
         /// <param name="name">The name of the pipeline</param>
         /// <param name="buildFunction">The action to build the pipeline</param>
-        public static void BuildPipeline(this IDependencyContainer container, string name, Func<EcsRxPipelineBuilder, EcsRxPipelineNeedsDataBuilder> buildFunction)
+        public static void BuildPipeline(this IDependencyRegistry registry, string name, Func<EcsRxPipelineBuilder, EcsRxPipelineNeedsDataBuilder> buildFunction)
         {
-            container.Bind<IPipeline>(builder => builder
+            registry.Bind<IPipeline>(builder => builder
                 .ToMethod(x =>
                 {
                     var pipelineBuilder = x.Resolve<EcsRxPipelineBuilder>();

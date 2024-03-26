@@ -13,7 +13,7 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample
         protected override void LoadModules()
         {
             base.LoadModules();
-            Container.LoadModule<ComputedModule>();
+            DependencyRegistry.LoadModule<ComputedModule>();
         }
 
         protected override void ApplicationStarted()

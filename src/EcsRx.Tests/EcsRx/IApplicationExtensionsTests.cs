@@ -42,10 +42,10 @@ namespace EcsRx.Tests.EcsRx
                 highPrioritySetupSystem
             };
 
-            var mockContainer = Substitute.For<IDependencyContainer>();
+            var mockResolver = Substitute.For<IDependencyResolver>();
             var mockApplication = Substitute.For<IEcsRxApplication>();
-            mockContainer.ResolveAll(typeof(ISystem)).Returns(systemList);
-            mockApplication.Container.Returns(mockContainer);
+            mockResolver.ResolveAll(typeof(ISystem)).Returns(systemList);
+            mockApplication.DependencyResolver.Returns(mockResolver);
 
             var orderedSystems = ISystemsRxApplicationExtensions.GetAllBoundSystems(mockApplication).ToList();
 
@@ -84,10 +84,10 @@ namespace EcsRx.Tests.EcsRx
                 highPrioritySetupSystem
             };
 
-            var mockContainer = Substitute.For<IDependencyContainer>();
+            var mockResolver = Substitute.For<IDependencyResolver>();
             var mockApplication = Substitute.For<IEcsRxApplication>();
-            mockContainer.ResolveAll(typeof(ISystem)).Returns(systemList);
-            mockApplication.Container.Returns(mockContainer);
+            mockResolver.ResolveAll(typeof(ISystem)).Returns(systemList);
+            mockApplication.DependencyResolver.Returns(mockResolver);
 
             var orderedSystems = IEcsRxApplicationExtensions.GetAllBoundReactiveSystems(mockApplication).ToList();
 
@@ -132,10 +132,10 @@ namespace EcsRx.Tests.EcsRx
                 lowestPriorityViewSystem
             };
 
-            var mockContainer = Substitute.For<IDependencyContainer>();
+            var mockResolver = Substitute.For<IDependencyResolver>();
             var mockApplication = Substitute.For<IEcsRxApplication>();
-            mockContainer.ResolveAll(typeof(ISystem)).Returns(systemList);
-            mockApplication.Container.Returns(mockContainer);
+            mockResolver.ResolveAll(typeof(ISystem)).Returns(systemList);
+            mockApplication.DependencyResolver.Returns(mockResolver);
 
             var orderedSystems = ViewApplicationExtensions.GetAllBoundViewSystems(mockApplication).ToList();
 

@@ -28,7 +28,7 @@ namespace EcsRx.Examples.ExampleApps.Performance
         private List<IEntity> _entities;
 
         protected override void LoadModules()
-        { Container.LoadModule<OptimizedEcsRxInfrastructureModule>(); }
+        { DependencyRegistry.LoadModule<OptimizedEcsRxInfrastructureModule>(); }
         
         protected override void BindSystems()
         {}
@@ -46,8 +46,8 @@ namespace EcsRx.Examples.ExampleApps.Performance
 
             _availableComponentTypeIds = Enumerable.Range(0, 20).ToArray();
             
-            var componentDatabase = Container.Resolve<IComponentDatabase>();
-            var componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
+            var componentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
+            var componentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
                         
             _entities = new List<IEntity>();
             for (var i = 0; i < EntityCount; i++)

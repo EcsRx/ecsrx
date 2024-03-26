@@ -3,18 +3,18 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LazyData.Numerics" Version="3.0.17" />
-    <PackageReference Include="Ninject" Version="3.3.5" />
-    <PackageReference Include="Persistity.Endpoints.Http" Version="2.0.41" />
-    <PackageReference Include="Persistity.Serializers.LazyData.Binary" Version="2.0.41" />
-    <PackageReference Include="Persistity.Serializers.LazyData.Json" Version="2.0.41" />
-    <PackageReference Include="Spectre.Console" Version="0.44.0" />
-    <PackageReference Include="System.Reactive" Version="5.0.0" />
-    <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="6.1.32" />
-    <PackageReference Include="SystemsRx.ReactiveData" Version="6.1.32" />
+    <PackageReference Include="Ninject" Version="3.3.6" />
+    <PackageReference Include="Persistity.Endpoints.Http" Version="2.0.47" />
+    <PackageReference Include="Persistity.Serializers.LazyData.Binary" Version="2.0.47" />
+    <PackageReference Include="Persistity.Serializers.LazyData.Json" Version="2.0.47" />
+    <PackageReference Include="Spectre.Console" Version="0.48.0" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
+    <PackageReference Include="SystemsRx.Infrastructure.Ninject" Version="7.0.40" />
+    <PackageReference Include="SystemsRx.ReactiveData" Version="7.0.40" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj">

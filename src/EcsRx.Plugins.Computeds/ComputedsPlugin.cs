@@ -11,11 +11,11 @@ namespace EcsRx.Plugins.Computeds
         public string Name => "EcsRx Computeds";
         public Version Version { get; } = new Version("1.0.0");
         
-        public void SetupDependencies(IDependencyContainer container)
+        public void SetupDependencies(IDependencyRegistry registry)
         {
             // Nothing needs registering
         }
         
-        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
+        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyResolver resolver) => Array.Empty<ISystem>();
     }
 }

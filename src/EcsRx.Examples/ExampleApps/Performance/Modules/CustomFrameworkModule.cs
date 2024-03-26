@@ -22,25 +22,25 @@ namespace EcsRx.Examples.ExampleApps.Performance.Modules
 {
     public class OptimizedEcsRxInfrastructureModule : IDependencyModule
     {
-        public void Setup(IDependencyContainer container)
+        public void Setup(IDependencyRegistry registry)
         {
-            container.Bind<IIdPool, IdPool>();
-            container.Bind<IEntityFactory, DefaultEntityFactory>();
-            container.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
-            container.Bind<IEntityDatabase, EntityDatabase>();
-            container.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
-            container.Bind<IObservableGroupManager, ObservableGroupManager>();
-            container.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
-            container.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
-            container.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
+            registry.Bind<IIdPool, IdPool>();
+            registry.Bind<IEntityFactory, DefaultEntityFactory>();
+            registry.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
+            registry.Bind<IEntityDatabase, EntityDatabase>();
+            registry.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
+            registry.Bind<IObservableGroupManager, ObservableGroupManager>();
+            registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
+            registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
+            registry.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
             
             var componentNamespace = typeof(Component1).Namespace;
             var componentTypes = typeof(Component1).Assembly.GetTypes().Where(x => x.Namespace == componentNamespace);
             var explicitTypeLookups = componentTypes.Select((type, i) => new { type, i }).ToDictionary(x => x.type, x => x.i);
             var explicitComponentLookup = new ComponentTypeLookup(explicitTypeLookups);
 
-            container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToInstance = explicitComponentLookup});           
-            container.Bind<IComponentDatabase, ComponentDatabase>();
+            registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToInstance = explicitComponentLookup});           
+            registry.Bind<IComponentDatabase, ComponentDatabase>();
         }
     }
 }

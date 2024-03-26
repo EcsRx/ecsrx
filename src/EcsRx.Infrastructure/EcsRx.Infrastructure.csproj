@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>0.0.0</Version>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Title>EcsRx.Infrastructure</Title>
     <Authors>Grofit (LP)</Authors>
     <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ecsrx/ecsrx</PackageProjectUrl>
     <Description>A set of convention based classes to speed up the setup of projects using EcsRx</Description>
     <PackageTags>ecs rx reactive patterns ioc game-development view-separation xna monogame unity</PackageTags>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SystemsRx.Infrastructure" Version="6.1.32" />
+    <PackageReference Include="SystemsRx.Infrastructure" Version="7.0.40" />
   </ItemGroup>
 </Project>

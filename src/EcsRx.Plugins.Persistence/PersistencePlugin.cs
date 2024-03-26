@@ -13,12 +13,12 @@ namespace EcsRx.Plugins.Persistence
         public string Name => "Persistence Plugin";
         public Version Version { get; } = new Version("1.0.0");
 
-        public void SetupDependencies(IDependencyContainer container)
+        public void SetupDependencies(IDependencyRegistry registry)
         {
-            container.LoadModule<LazyDataModule>();
-            container.LoadModule<PersistityModule>();
+            registry.LoadModule<LazyDataModule>();
+            registry.LoadModule<PersistityModule>();
         }
         
-        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyContainer container) => Array.Empty<ISystem>();
+        public IEnumerable<ISystem> GetSystemsForRegistration(IDependencyResolver resolver) => Array.Empty<ISystem>();
     }
 }

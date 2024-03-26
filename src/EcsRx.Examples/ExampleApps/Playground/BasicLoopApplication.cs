@@ -28,10 +28,10 @@ namespace EcsRx.Examples.ExampleApps.Playground
         
         protected override void ApplicationStarted()
         {
-            _componentTypeLookup = Container.Resolve<IComponentTypeLookup>();
-            _componentDatabase = Container.Resolve<IComponentDatabase>();
-            _batchBuilderFactory = Container.Resolve<IBatchBuilderFactory>();
-            _referenceBatchBuilderFactory = Container.Resolve<IReferenceBatchBuilderFactory>();
+            _componentTypeLookup = DependencyResolver.Resolve<IComponentTypeLookup>();
+            _componentDatabase = DependencyResolver.Resolve<IComponentDatabase>();
+            _batchBuilderFactory = DependencyResolver.Resolve<IBatchBuilderFactory>();
+            _referenceBatchBuilderFactory = DependencyResolver.Resolve<IReferenceBatchBuilderFactory>();
             _collection = EntityDatabase.GetCollection();
 
             ClassComponent1TypeId = _componentTypeLookup.GetComponentTypeId(typeof(ClassComponent));

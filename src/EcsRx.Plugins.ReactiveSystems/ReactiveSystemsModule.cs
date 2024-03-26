@@ -7,13 +7,13 @@ namespace EcsRx.Plugins.ReactiveSystems
 {
     public class ReactiveSystemsModule : IDependencyModule
     {
-        public void Setup(IDependencyContainer container)
+        public void Setup(IDependencyRegistry registry)
         {
-            container.Bind<IConventionalSystemHandler, ReactToEntitySystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToGroupSystemHandler>();
-            container.Bind<IConventionalSystemHandler, ReactToDataSystemHandler>();
-            container.Bind<IConventionalSystemHandler, SetupSystemHandler>();
-            container.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactToEntitySystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactToGroupSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactToDataSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, SetupSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
         }
     }
 }

@@ -19,42 +19,42 @@ namespace EcsRx.Plugins.Persistence.Modules
     {
         public static readonly string DefaultEntityDatabaseFile = "entity-database.edb";
         
-        public void Setup(IDependencyContainer container)
+        public void Setup(IDependencyRegistry registry)
         {
-            container.Bind<IToEntityDataTransformer, ToEntityDataTransformer>();
-            container.Bind<IToEntityCollectionDataTransformer, ToEntityCollectionDataTransformer>();
-            container.Bind<IToEntityDatabaseDataTransformer, ToEntityDatabaseDataTransformer>();
-            container.Bind<IFromEntityDataTransformer, FromEntityDataTransformer>();
-            container.Bind<IFromEntityCollectionDataTransformer, FromEntityCollectionDataTransformer>();
-            container.Bind<IFromEntityDatabaseDataTransformer, FromEntityDatabaseDataTransformer>();
-            container.Bind<EcsRxPipelineBuilder>(builder => builder.ToMethod(x =>
+            registry.Bind<IToEntityDataTransformer, ToEntityDataTransformer>();
+            registry.Bind<IToEntityCollectionDataTransformer, ToEntityCollectionDataTransformer>();
+            registry.Bind<IToEntityDatabaseDataTransformer, ToEntityDatabaseDataTransformer>();
+            registry.Bind<IFromEntityDataTransformer, FromEntityDataTransformer>();
+            registry.Bind<IFromEntityCollectionDataTransformer, FromEntityCollectionDataTransformer>();
+            registry.Bind<IFromEntityDatabaseDataTransformer, FromEntityDatabaseDataTransformer>();
+            registry.Bind<EcsRxPipelineBuilder>(builder => builder.ToMethod(x =>
                 new EcsRxPipelineBuilder(x)).AsSingleton());
 
             // These are defaults, you can override these in your own app/plugin
-            container.Bind<ISaveEntityDatabasePipeline>(builder =>
+            registry.Bind<ISaveEntityDatabasePipeline>(builder =>
                 builder.ToMethod(CreateDefaultSavePipeline).AsSingleton());
             
-            container.Bind<ILoadEntityDatabasePipeline>(builder =>
+            registry.Bind<ILoadEntityDatabasePipeline>(builder =>
                 builder.ToMethod(CreateDefaultLoadPipeline).AsSingleton());
         }
 
-        public ISaveEntityDatabasePipeline CreateDefaultSavePipeline(IDependencyContainer container)
+        public ISaveEntityDatabasePipeline CreateDefaultSavePipeline(IDependencyResolver resolver)
         {
-            var mappingRegistry = new MappingRegistry(container.Resolve<EverythingTypeMapper>());
-            var primitiveTypeMappings = container.ResolveAll<IBinaryPrimitiveHandler>();
+            var mappingRegistry = new MappingRegistry(resolver.Resolve<EverythingTypeMapper>());
+            var primitiveTypeMappings = resolver.ResolveAll<IBinaryPrimitiveHandler>();
             var everythingSerializer = new LazyBinarySerializer(mappingRegistry, primitiveTypeMappings);
             var persistitySerializer = new BinarySerializer(everythingSerializer);
-            return CreateSavePipeline(container, persistitySerializer, DefaultEntityDatabaseFile);
+            return CreateSavePipeline(resolver, persistitySerializer, DefaultEntityDatabaseFile);
         }
 
-        public ILoadEntityDatabasePipeline CreateDefaultLoadPipeline(IDependencyContainer container)
+        public ILoadEntityDatabasePipeline CreateDefaultLoadPipeline(IDependencyResolver resolver)
         {
-            var mappingRegistry = new MappingRegistry(container.Resolve<EverythingTypeMapper>());
-            var typeCreator = container.Resolve<ITypeCreator>();
-            var primitiveTypeMappings = container.ResolveAll<IBinaryPrimitiveHandler>();
+            var mappingRegistry = new MappingRegistry(resolver.Resolve<EverythingTypeMapper>());
+            var typeCreator = resolver.Resolve<ITypeCreator>();
+            var primitiveTypeMappings = resolver.ResolveAll<IBinaryPrimitiveHandler>();
             var everythingDeserializer = new LazyBinaryDeserializer(mappingRegistry, typeCreator, primitiveTypeMappings);
             var persistityDeserializer = new BinaryDeserializer(everythingDeserializer);
-            return CreateLoadPipeline(container, persistityDeserializer, DefaultEntityDatabaseFile);
+            return CreateLoadPipeline(resolver, persistityDeserializer, DefaultEntityDatabaseFile);
         }
         
         /// <summary>
@@ -64,12 +64,12 @@ namespace EcsRx.Plugins.Persistence.Modules
         /// <param name="serializer">The serializer to use</param>
         /// <param name="filename">The filename to use</param>
         /// <returns>The save database pipeline with config provided</returns>
-        public static ISaveEntityDatabasePipeline CreateSavePipeline(IDependencyContainer container, 
+        public static ISaveEntityDatabasePipeline CreateSavePipeline(IDependencyResolver resolver, 
             ISerializer serializer, string filename)
         {
             return new DefaultSaveEntityDatabasePipeline(
-                container.Resolve<EcsRxPipelineBuilder>(), serializer, 
-                container.Resolve<IToEntityDatabaseDataTransformer>(), 
+                resolver.Resolve<EcsRxPipelineBuilder>(), serializer, 
+                resolver.Resolve<IToEntityDatabaseDataTransformer>(), 
                 new FileEndpoint(filename));
         }
 
@@ -80,12 +80,12 @@ namespace EcsRx.Plugins.Persistence.Modules
         /// <param name="deserializer">The deserializer to use</param>
         /// <param name="filename">The filename to use</param>
         /// <returns>The save database pipeline with config provided</returns>
-        public static ILoadEntityDatabasePipeline CreateLoadPipeline(IDependencyContainer container,
+        public static ILoadEntityDatabasePipeline CreateLoadPipeline(IDependencyResolver resolver,
             IDeserializer deserializer, string filename)
         {
             return new DefaultLoadEntityDatabasePipeline(
-                container.Resolve<EcsRxPipelineBuilder>(), deserializer,
-                container.Resolve<IFromEntityDatabaseDataTransformer>(), 
+                resolver.Resolve<EcsRxPipelineBuilder>(), deserializer,
+                resolver.Resolve<IFromEntityDatabaseDataTransformer>(), 
                 new FileEndpoint(filename));
         }
     }

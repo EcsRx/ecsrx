@@ -15,25 +15,25 @@ namespace EcsRx.Plugins.Persistence.Builders
 {
     public class EcsRxPipelineNeedsDataBuilder
     {
-        private readonly IDependencyContainer _container;
+        private readonly IDependencyResolver _resolver;
         private readonly List<IPipelineStep> _steps;
 
-        public EcsRxPipelineNeedsDataBuilder(IDependencyContainer container, List<IPipelineStep> steps)
+        public EcsRxPipelineNeedsDataBuilder(IDependencyResolver resolver, List<IPipelineStep> steps)
         {
-            _container = container;
+            _resolver = resolver;
             _steps = steps;
         }
 
         public EcsRxPipelineNeedsObjectBuilder DeserializeWith(IDeserializer deserializer, Type type)
         {
             _steps.Add(new DeserializeStep(deserializer, type));
-            return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
+            return new EcsRxPipelineNeedsObjectBuilder(_resolver, _steps);
         }
         
         public EcsRxPipelineNeedsObjectBuilder DeserializeWith<T>() where T : IDeserializer
         {
-            _steps.Add(new DeserializeStep(_container.Resolve<T>(), typeof(T)));
-            return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
+            _steps.Add(new DeserializeStep(_resolver.Resolve<T>(), typeof(T)));
+            return new EcsRxPipelineNeedsObjectBuilder(_resolver, _steps);
         }
         
         public EcsRxPipelineNeedsDataBuilder ProcessWith(IProcessor processor)
@@ -44,32 +44,32 @@ namespace EcsRx.Plugins.Persistence.Builders
         
         public EcsRxPipelineNeedsDataBuilder ProcessWith<T>() where T : IProcessor
         {
-            _steps.Add(new ProcessStep(_container.Resolve<T>()));
+            _steps.Add(new ProcessStep(_resolver.Resolve<T>()));
             return this;
         }
         
         public EcsRxPipelineNeedsObjectBuilder ThenSendTo(ISendDataEndpoint endpoint)
         {
             _steps.Add(new SendEndpointStep(endpoint));
-            return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
+            return new EcsRxPipelineNeedsObjectBuilder(_resolver, _steps);
         }
         
         public EcsRxPipelineNeedsObjectBuilder ThenSendTo<T>() where T : ISendDataEndpoint
         {
-            _steps.Add(new SendEndpointStep(_container.Resolve<T>()));
-            return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
+            _steps.Add(new SendEndpointStep(_resolver.Resolve<T>()));
+            return new EcsRxPipelineNeedsObjectBuilder(_resolver, _steps);
         }
         
         public EcsRxPipelineNeedsObjectBuilder ThenInvoke(Func<DataObject, object, Task<object>> method)
         {
             _steps.Add(new SendDataToObjectMethodStep(method));
-            return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
+            return new EcsRxPipelineNeedsObjectBuilder(_resolver, _steps);
         }
         
         public EcsRxPipelineNeedsObjectBuilder ThenInvoke(Func<DataObject, Task<object>> method)
         {
             _steps.Add(new SendDataToObjectMethodStep(method));
-            return new EcsRxPipelineNeedsObjectBuilder(_container, _steps);
+            return new EcsRxPipelineNeedsObjectBuilder(_resolver, _steps);
         }
         
         public EcsRxPipelineNeedsDataBuilder ThenInvoke(Func<DataObject, object, Task<DataObject>> method)

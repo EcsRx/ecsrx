@@ -2,13 +2,14 @@
 
     <PropertyGroup>
         <Version>0.0.0</Version>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <Title>EcsRx.Plugins.GroupBinding</Title>
         <Authors>Grofit (LP)</Authors>
         <PackageLicenseUrl>https://github.com/ecsrx/ecsrx/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/ecsrx/ecsrx</PackageProjectUrl>
         <Description>EcsRx plugin to allow auto resolving of IObservableGroup properties or fields</Description>
         <PackageTags>ecs rx reactive patterns ioc game-development xna monogame unity</PackageTags>
+        <LangVersion>8</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>

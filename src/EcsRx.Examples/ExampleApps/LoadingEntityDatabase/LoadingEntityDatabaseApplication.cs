@@ -12,7 +12,7 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
     // We extend from EcsRxPersistedApplication which has built in helpers for persisting entity DB
     public class LoadingEntityDatabaseApplication : EcsRxPersistedApplication
     {
-        public override IDependencyContainer Container { get; }  = new NinjectDependencyContainer();
+        public override IDependencyRegistry DependencyRegistry { get; }  = new NinjectDependencyRegistry();
 
         // Tell it to look for the JSON file now rather than the binary one
         public override string EntityDatabaseFile => JsonEntityDatabaseModule.CustomEntityDatabaseFile;
@@ -24,7 +24,7 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
             base.LoadModules();
             
             // Add support for serializing/deserializing System.Numerics
-            Container.LoadModule<EnableNumericsModule>();
+            DependencyRegistry.LoadModule<EnableNumericsModule>();
         }
         
         protected override void ResolveApplicationDependencies()
@@ -32,10 +32,10 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
             // Replace our default binary entity database with json,
             // we do this here as the plugins loaded by now and we need to override 
             // bindings set in place by the plugin.
-            Container.LoadModule<JsonEntityDatabaseModule>();
+            DependencyRegistry.LoadModule<JsonEntityDatabaseModule>();
             
             // Add our debug output pipeline for displaying the collections
-            Container.LoadModule<EntityDebugModule>();
+            DependencyRegistry.LoadModule<EntityDebugModule>();
             
             base.ResolveApplicationDependencies();
         }
@@ -48,7 +48,7 @@ namespace EcsRx.Examples.ExampleApps.LoadingEntityDatabase
         private void HandleInput()
         {
             var defaultCollection = EntityDatabase.GetCollection();
-            var debugPipeline = Container.ResolvePipeline(EntityDebugModule.DebugPipeline);
+            var debugPipeline = DependencyResolver.ResolvePipeline(EntityDebugModule.DebugPipeline);
             var randomBlueprint = new RandomEntityBlueprint();
 
             while (!_quit)

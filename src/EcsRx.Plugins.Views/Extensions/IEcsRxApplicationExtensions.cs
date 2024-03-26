@@ -18,7 +18,7 @@ namespace EcsRx.Plugins.Views.Extensions
         /// <remarks>This ordering will be Setup, ViewResolvers, Anything Else</remarks>
         public static IEnumerable<ISystem> GetAllBoundViewSystems(this IEcsRxApplication application)
         {
-            var allSystems = application.Container.ResolveAll<ISystem>();
+            var allSystems = application.DependencyResolver.ResolveAll<ISystem>();
 
             return allSystems
                     .OrderByDescending(x => x is ISetupSystem && !(x is IViewResolverSystem))

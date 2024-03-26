@@ -17,7 +17,7 @@ namespace EcsRx.Plugins.ReactiveSystems.Extensions
         /// <remarks>The ordering here will be Setup, Anything else</remarks>
         public static IEnumerable<ISystem> GetAllBoundReactiveSystems(this IEcsRxApplication application)
         {
-            var allSystems = application.Container.ResolveAll<ISystem>();
+            var allSystems = application.DependencyResolver.ResolveAll<ISystem>();
 
             return allSystems
                 .OrderByDescending(x => x is ISetupSystem)

@@ -12,7 +12,7 @@ namespace EcsRx.Examples.Application
 {
     public abstract class EcsRxConsoleApplication : EcsRxApplication
     {
-        public override IDependencyContainer Container { get; } = new NinjectDependencyContainer();
+        public override IDependencyRegistry DependencyRegistry { get; } = new NinjectDependencyRegistry();
 
         protected override void LoadPlugins()
         {

@@ -14,7 +14,7 @@ namespace EcsRx.Examples.ExampleApps.BatchedGroupExample
         protected override void LoadModules()
         {
             base.LoadModules();
-            Container.LoadModule<CustomComponentLookupsModule>();
+            DependencyRegistry.LoadModule<CustomComponentLookupsModule>();
         }
 
         protected override void ApplicationStarted()

@@ -9,11 +9,13 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Modules
 {
     public class ComputedModule : IDependencyModule
     {
-        public void Setup(IDependencyContainer container)
+        public void Setup(IDependencyRegistry registry)
         {
-            var namedHealthGroup = container.ResolveObservableGroup(new Group(typeof(HasHealthComponent), typeof(HasNameComponent)));
-            var computedHealthGroup = new LowestHealthComputedGroup(namedHealthGroup);
-            container.Bind<ILowestHealthComputedGroup>(x => x.ToInstance(computedHealthGroup));
+            registry.Bind<ILowestHealthComputedGroup>(x => x.ToMethod(y =>
+            {
+                var namedHealthGroup = y.ResolveObservableGroup(new Group(typeof(HasHealthComponent), typeof(HasNameComponent)));
+                return new LowestHealthComputedGroup(namedHealthGroup);
+            }));
         }
     }
 }

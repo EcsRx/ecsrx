@@ -21,7 +21,7 @@ namespace EcsRx.Infrastructure
         protected override void LoadModules()
         {
             base.LoadModules();
-            Container.LoadModule(new EcsRxInfrastructureModule());
+            DependencyRegistry.LoadModule(new EcsRxInfrastructureModule());
         }
 
         /// <summary>
@@ -31,8 +31,8 @@ namespace EcsRx.Infrastructure
         protected override void ResolveApplicationDependencies()
         {
             base.ResolveApplicationDependencies();
-            EntityDatabase = Container.Resolve<IEntityDatabase>();
-            ObservableGroupManager = Container.Resolve<IObservableGroupManager>();
+            EntityDatabase = DependencyResolver.Resolve<IEntityDatabase>();
+            ObservableGroupManager = DependencyResolver.Resolve<IObservableGroupManager>();
         }
     }
 }

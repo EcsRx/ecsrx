@@ -10,17 +10,17 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Modules
 {
     public class PipelineModule : IDependencyModule
     {
-        public void Setup(IDependencyContainer container)
+        public void Setup(IDependencyRegistry registry)
         {
             // By default only the binary stuff is loaded, but you can load json, yaml, bson etc
-            container.Bind<IJsonPrimitiveHandler, BasicJsonPrimitiveHandler>();
-            container.Bind<LazyJsonSerializer>();
-            container.Bind<LazyJsonDeserializer>();
-            container.Bind<JsonSerializer>();
-            container.Bind<JsonDeserializer>();
+            registry.Bind<IJsonPrimitiveHandler, BasicJsonPrimitiveHandler>();
+            registry.Bind<LazyJsonSerializer>();
+            registry.Bind<LazyJsonDeserializer>();
+            registry.Bind<JsonSerializer>();
+            registry.Bind<JsonDeserializer>();
             
             // Register our custom pipeline using the json stuff above
-            container.Bind<PostJsonHttpPipeline>();
+            registry.Bind<PostJsonHttpPipeline>();
         }
     }
 }

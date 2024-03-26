@@ -15,7 +15,7 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample
         protected override void LoadModules()
         {
             base.LoadModules();
-            Container.LoadModule<PipelineModule>();
+            DependencyRegistry.LoadModule<PipelineModule>();
         }
 
         protected override void ApplicationStarted()

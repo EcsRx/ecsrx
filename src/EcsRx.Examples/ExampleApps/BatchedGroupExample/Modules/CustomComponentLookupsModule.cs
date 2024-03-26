@@ -10,9 +10,9 @@ namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Modules
 {
     public class CustomComponentLookupsModule : IDependencyModule
     {
-        public void Setup(IDependencyContainer container)
+        public void Setup(IDependencyRegistry registry)
         {
-            container.Unbind<IComponentTypeLookup>();
+            registry.Unbind<IComponentTypeLookup>();
             var explicitTypeLookups = new Dictionary<Type, int>
             {
                 {typeof(NameComponent), ComponentLookupTypes.NameComponentId},
@@ -20,7 +20,7 @@ namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Modules
                 {typeof(MovementSpeedComponent), ComponentLookupTypes.MovementSpeedComponentId}
             };
             var explicitComponentLookup = new ComponentTypeLookup(explicitTypeLookups);
-            container.Bind<IComponentTypeLookup>(new BindingConfiguration{ToInstance = explicitComponentLookup});
+            registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToInstance = explicitComponentLookup});
         }
     }
 }

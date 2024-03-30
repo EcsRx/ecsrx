@@ -8,6 +8,6 @@ namespace EcsRx.Plugins.Transforms.Components
         /// <summary>
         /// The transform of the component
         /// </summary>
-        public Transform2D Transform { get; set; }
+        public Transform2D Transform { get; set; } = new Transform2D();
     }
 }

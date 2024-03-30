@@ -20,7 +20,7 @@
     <None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SystemsRx" Version="7.0.40" />
-    <PackageReference Include="SystemsRx.MicroRx" Version="7.0.40" />
+    <PackageReference Include="SystemsRx" Version="7.0.45" />
+    <PackageReference Include="SystemsRx.MicroRx" Version="7.0.45" />
   </ItemGroup>
 </Project>

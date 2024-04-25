@@ -71,7 +71,7 @@ namespace EcsRx.Plugins.Computeds.Groups
         public void RefreshEntities()
         {
             var applicableEntities = InternalObservableGroup.Where(IsEntityApplicable).ToArray();
-            var entitiesToRemove = InternalObservableGroup.Where(x => applicableEntities.All(y => y.Id != x.Id)).ToArray();
+            var entitiesToRemove = CachedEntities.Where(x => applicableEntities.All(y => y.Id != x.Id)).ToArray();
             var entitiesToAdd = applicableEntities.Where(x => !CachedEntities.Contains(x.Id)).ToArray();
             
             for (var i = entitiesToAdd.Length - 1; i >= 0; i--)

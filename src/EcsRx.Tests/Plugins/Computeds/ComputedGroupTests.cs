@@ -129,5 +129,73 @@ namespace EcsRx.Tests.Plugins.Computeds
             Assert.Equal(1, removingFiredTimes);
             Assert.Equal(1, removedFiredTimes);
         }
+
+        [Fact]
+        public void should_only_fire_events_from_refresh_when_cache_changed()
+        {
+
+            var applicableEntity = Substitute.For<IEntity>();
+            applicableEntity.Id.Returns(1);
+            applicableEntity.HasComponent<TestComponentOne>().Returns(false);
+
+            var inapplicableEntity = Substitute.For<IEntity>();
+            inapplicableEntity.Id.Returns(2);
+            inapplicableEntity.HasComponent<TestComponentOne>().Returns(false);
+
+            var dummyEntitySnapshot = new List<IEntity> { applicableEntity, inapplicableEntity };
+
+            var mockObservableGroup = Substitute.For<IObservableGroup>();
+            mockObservableGroup.GetEnumerator().Returns(x => dummyEntitySnapshot.GetEnumerator());
+            mockObservableGroup.OnEntityAdded.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnEntityRemoving.Returns(Observable.Empty<IEntity>());
+            mockObservableGroup.OnEntityRemoved.Returns(Observable.Empty<IEntity>());
+
+            var computedGroup = new TestComputedGroup(mockObservableGroup);
+
+            var addedFiredTimes = 0;
+            computedGroup.OnEntityAdded.Subscribe(x =>
+            {
+                addedFiredTimes++;
+            });
+
+            var removingFiredTimes = 0;
+            computedGroup.OnEntityRemoving.Subscribe(x =>
+            {
+                removingFiredTimes++;
+            });
+
+            var removedFiredTimes = 0;
+            computedGroup.OnEntityRemoved.Subscribe(x =>
+            {
+                removedFiredTimes++;
+            });
+
+            //No events should fire
+            computedGroup.RefreshEntities();
+
+            Assert.Equal(0, addedFiredTimes);
+            Assert.Equal(0, removingFiredTimes);
+            Assert.Equal(0, removedFiredTimes);
+
+            applicableEntity.HasComponent<TestComponentOne>().Returns(true);
+
+            //Add should fire only once
+            computedGroup.RefreshEntities();
+
+            Assert.Single(computedGroup.CachedEntities);
+            Assert.Equal(1, addedFiredTimes);
+            Assert.Equal(0, removingFiredTimes);
+            Assert.Equal(0, removedFiredTimes);
+
+            applicableEntity.HasComponent<TestComponentOne>().Returns(false);
+
+            //Remove should fire only once
+            computedGroup.RefreshEntities();
+
+            Assert.Empty(computedGroup.CachedEntities);
+            Assert.Equal(1, addedFiredTimes);
+            Assert.Equal(1, removingFiredTimes);
+            Assert.Equal(1, removedFiredTimes);
+        }
     }
 }

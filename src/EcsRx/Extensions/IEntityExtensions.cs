@@ -43,7 +43,7 @@ namespace EcsRx.Extensions
 
             return entity;
         }
-
+        
         /// <summary>
         /// Adds a component to the entity based on its type with default setup
         /// </summary>
@@ -181,8 +181,24 @@ namespace EcsRx.Extensions
             return false;
         }
         
+        /// <summary>
+        /// Adds all components to the entity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="components"></param>
         public static void AddComponents(this IEntity entity, params IComponent[] components)
         { entity.AddComponents(components); }
+        
+        /// <summary>
+        /// Allows you to create all components required for a group
+        /// </summary>
+        /// <param name="entity">The entity to add components to</param>
+        /// <param name="group">The group to create components for</param>
+        public static void AddComponentsFor(this IEntity entity, IGroup group)
+        {
+            var components = group.CreateRequiredComponents();
+            entity.AddComponents(components);
+        }
         
         public static void RemoveComponents(this IEntity entity, params int[] componentsTypeIds)
         { entity.RemoveComponents(componentsTypeIds); }

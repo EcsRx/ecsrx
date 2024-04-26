@@ -153,5 +153,18 @@ namespace EcsRx.Extensions
             if(containsAnyExcluded) { return GroupMatchingType.NoMatchesWithExcludes; }
             return GroupMatchingType.NoMatchesNoExcludes;
         }
+
+        /// <summary>
+        /// Creates empty components based on the required components for this group
+        /// </summary>
+        /// <param name="group">The group to take required components from</param>
+        /// <returns>The newly created components</returns>
+        public static IReadOnlyList<IComponent> CreateRequiredComponents(this IGroup group)
+        {
+            return group.RequiredComponents
+                .Select(Activator.CreateInstance)
+                .Cast<IComponent>()
+                .ToArray();
+        }
     }
 }

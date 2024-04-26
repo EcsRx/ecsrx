@@ -47,8 +47,17 @@ namespace EcsRx.Entities
         /// </summary>
         IEnumerable<IComponent> Components { get; }
 
+        /// <summary>
+        /// All allocations of components in the component database
+        /// </summary>
         IReadOnlyList<int> ComponentAllocations { get; }
 
+        /// <summary>
+        /// Adds all provided components to the entity
+        /// </summary>
+        /// <param name="components">The components to add</param>
+        void AddComponents(IReadOnlyList<IComponent> components);
+        
         /// <summary>
         /// Removes component types from the entity
         /// </summary>
@@ -73,12 +82,39 @@ namespace EcsRx.Entities
         /// <param name="componentTypeId">The id of the component type</param>
         /// <returns>The component instance if found, or null if not</returns>
         IComponent GetComponent(int componentTypeId);
-
+        
+        /// <summary>
+        /// Gets a component from its type id
+        /// </summary>
+        /// <param name="componentTypeId">The component type id</param>
+        /// <typeparam name="T">The type of the component</typeparam>
+        /// <returns>The ref of the component</returns>
+        /// <remarks>This is meant for struct based components</remarks>
         ref T GetComponent<T>(int componentTypeId) where T : IComponent;
         
+        /// <summary>
+        /// Adds a component from its type id
+        /// </summary>
+        /// <param name="componentTypeId">The component type id</param>
+        /// <typeparam name="T">The type of the component</typeparam>
+        /// <returns>The ref of the component</returns>
+        /// <remarks>This is meant for struct based components</remarks>
         ref T AddComponent<T>(int componentTypeId) where T : IComponent, new();
         
+        /// <summary>
+        /// Updates a component from its type id with the new values
+        /// </summary>
+        /// <param name="componentTypeId">The component type id</param>
+        /// <param name="newValue">The struct containing new values</param>
+        /// <typeparam name="T">The type of the component</typeparam>
+        /// <remarks>This is meant for struct based components</remarks>
         void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, IComponent;
+        
+        /// <summary>
+        /// Removes all components with matching type ids
+        /// </summary>
+        /// <param name="componentsTypeIds">The component type ids</param>
+        void RemoveComponents(IReadOnlyList<int> componentsTypeIds);
         
         /// <summary>
         /// Checks to see if the entity contains the given component type
@@ -93,8 +129,5 @@ namespace EcsRx.Entities
         /// <param name="componentTypeId">Type id of component to look for</param>
         /// <returns>true if the component can be found, false if it cant be</returns>
         bool HasComponent(int componentTypeId);
-
-        void AddComponents(IReadOnlyList<IComponent> components);
-        void RemoveComponents(IReadOnlyList<int> componentsTypeIds);
     }
 }

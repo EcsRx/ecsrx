@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Tests.Models;
@@ -83,6 +84,28 @@ namespace EcsRx.Tests.EcsRx
             Assert.True(dummyGroup.ContainsAny(dummyComponents3));
             Assert.True(dummyGroup.ContainsAny(dummyComponents4));
             Assert.False(dummyGroup.ContainsAny(dummyComponents5));
+        }
+        
+        
+        [Fact]
+        public void should_correctly_instantiate_required_components()
+        {
+            var requiredComponents = new[] {typeof(TestComponentOne), typeof(TestComponentTwo)};
+            var dummyGroup = new Group(requiredComponents);
+
+            var components1 = dummyGroup.CreateRequiredComponents();
+            Assert.NotNull(components1);
+            Assert.NotEmpty(components1);
+            Assert.Contains(components1, x => x is TestComponentOne);
+            Assert.Contains(components1, x => x is TestComponentTwo);
+
+            var components2 = dummyGroup.CreateRequiredComponents();
+            Assert.NotNull(components2);
+            Assert.NotEmpty(components2);
+            Assert.Contains(components2, x => x is TestComponentOne);
+            Assert.Contains(components2, x => x is TestComponentTwo);
+            
+            Assert.NotSame(components1, components2);
         }
     }
 }

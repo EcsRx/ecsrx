@@ -62,15 +62,16 @@ namespace EcsRx.Systems.Handlers
 
         private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IBasicEntitySystem castSystem, bool runParallel = false)
         {
+            var elapsedTime = UpdateScheduler.ElapsedTime;
             if (runParallel)
             {
                 _threadHandler.For(0, entities.Count, i =>
-                { castSystem.Process(entities[i]); });
+                { castSystem.Process(entities[i], elapsedTime); });
                 return;
             }
             
             for (var i = entities.Count - 1; i >= 0; i--)
-            { castSystem.Process(entities[i]); }
+            { castSystem.Process(entities[i], elapsedTime); }
         }
         
         public void DestroySystem(ISystem system)

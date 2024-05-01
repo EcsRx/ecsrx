@@ -10,18 +10,11 @@ namespace EcsRx.Examples.ExampleApps.DataPipelinesExample.Systems
     public class PlayerStateUpdaterEntitySystem : IBasicEntitySystem
     {
         public IGroup Group { get; } = new Group(typeof(PlayerStateComponent));
-        
-        public ITimeTracker TimeTracker { get; }
 
-        public PlayerStateUpdaterEntitySystem(ITimeTracker timeTracker)
-        {
-            TimeTracker = timeTracker;
-        }
-
-        public void Process(IEntity entity)
+        public void Process(IEntity entity, ElapsedTime elapsedTime)
         {
             var playerState = entity.GetComponent<PlayerStateComponent>();
-            playerState.PlayTime += TimeTracker.ElapsedTime.DeltaTime;
+            playerState.PlayTime += elapsedTime.DeltaTime;
         }
     }
 }

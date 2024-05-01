@@ -4,6 +4,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
+using SystemsRx.Scheduling;
 
 namespace EcsRx.Tests.Systems.DeletingScenarios
 {
@@ -11,7 +12,7 @@ namespace EcsRx.Tests.Systems.DeletingScenarios
     {
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
 
-        public void Process(IEntity entity)
+        public void Process(IEntity entity, ElapsedTime elapsedTime)
         { throw new Exception("Should Not Be Called"); }
     }
 }

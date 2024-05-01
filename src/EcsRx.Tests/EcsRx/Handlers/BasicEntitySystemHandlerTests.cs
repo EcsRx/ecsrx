@@ -67,7 +67,7 @@ namespace EcsRx.Tests.EcsRx.Handlers
             
             observableSubject.OnNext(new ElapsedTime());
             
-            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntity>());
+            mockSystem.ReceivedWithAnyArgs(2).Process(Arg.Any<IEntity>(), default);
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }
@@ -108,7 +108,7 @@ namespace EcsRx.Tests.EcsRx.Handlers
             
             observableSubject.OnNext(new ElapsedTime());
             
-            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Is(entityToMatch));
+            mockSystem.ReceivedWithAnyArgs(1).Process(Arg.Is(entityToMatch), default);
             Assert.Equal(1, systemHandler._systemSubscriptions.Count);
             Assert.NotNull(systemHandler._systemSubscriptions[mockSystem]);
         }

@@ -1,4 +1,5 @@
 using EcsRx.Entities;
+using SystemsRx.Scheduling;
 
 namespace EcsRx.Systems
 {
@@ -14,7 +15,8 @@ namespace EcsRx.Systems
         /// <summary>
         /// The processor to handle the entity
         /// </summary>
-        /// <param name="entity">The entity to use</param>
-        void Process(IEntity entity);
+        /// <param name="entity">The entity to process</param>
+        /// <param name="elapsedTime">The elapsedTime since last update</param>
+        void Process(IEntity entity, ElapsedTime elapsedTime);
     }
 }

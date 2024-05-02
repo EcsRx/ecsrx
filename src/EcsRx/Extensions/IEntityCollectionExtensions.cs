@@ -62,6 +62,9 @@ namespace EcsRx.Extensions
 
         public static IEntity CreateEntity(this IEntityCollection entityCollection, params IBlueprint[] blueprints)
         { return CreateEntity(entityCollection, (IEnumerable<IBlueprint>)blueprints); }
+        
+        public static IEntity CreateEntity<T>(this IEntityCollection entityCollection) where T : IBlueprint, new()
+        { return CreateEntity(entityCollection, new T()); }
 
         public static IEntity CreateEntity(this IEntityCollection entityCollection, IEnumerable<IBlueprint> blueprints)
         {

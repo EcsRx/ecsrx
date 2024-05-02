@@ -46,6 +46,17 @@ entity.ApplyBlueprint(new DefaultActorBlueprint())
 	.ApplyBlueprint(new SetupNetworkingBlueprint());
 ```
 
+
+## How much should a blueprint do?
+
+This is ultimately up to you, but it was conceived as a way to do bulk component assignments to entities with a small 
+amount of config or logic setup. Anything more than that should probably be handled by `SetupSystems` or some other object.
+
+For example a blueprint ideally shouldnt need to have anything injected into it, so if you need to setup complex data 
+like setting up a sprite or texture, or some other data payload from a 3rd party source, its recommended you let the blueprint
+add the component to the entity, then have some system that catches that entity once its got the component added and then
+have the system provide the 3rd party dependency data and set it up (i.e a `SetupSystem`).
+
 ## Blurb
 
 Generally you would just use a single blueprint to setup an object, and currently this can only be done in code, however 

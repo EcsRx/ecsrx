@@ -13,8 +13,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SystemsRx.Infrastructure" Version="7.1.57" />
-      <PackageReference Include="SystemsRx.Plugins.Transforms" Version="7.1.57" />
+      <PackageReference Include="SystemsRx.Infrastructure" Version="7.1.59" />
+      <PackageReference Include="SystemsRx.Plugins.Transforms" Version="7.1.59" />
     </ItemGroup>
 
     <ItemGroup>

@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="SystemsRx.Plugins.Computeds" Version="7.1.55" />
+      <PackageReference Include="SystemsRx.Plugins.Computeds" Version="7.1.57" />
     </ItemGroup>
 
 </Project>

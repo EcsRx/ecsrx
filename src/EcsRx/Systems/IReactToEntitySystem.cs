@@ -1,8 +1,7 @@
 using System;
 using EcsRx.Entities;
-using EcsRx.Systems;
 
-namespace EcsRx.Plugins.ReactiveSystems.Systems
+namespace EcsRx.Systems
 {
     /// <summary>
     /// React To Entity systems react as and when the entity needs to be processed,

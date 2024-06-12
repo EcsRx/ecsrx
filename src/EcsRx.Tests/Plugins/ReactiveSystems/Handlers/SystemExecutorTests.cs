@@ -2,7 +2,6 @@
 using SystemsRx.Exceptions;
 using SystemsRx.Executor;
 using SystemsRx.Executor.Handlers;
-using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using EcsRx.Tests.Systems.Handlers;
 using NSubstitute;

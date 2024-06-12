@@ -1,7 +1,7 @@
 ﻿using System.Linq;
+using EcsRx.Extensions;
 using SystemsRx.Extensions;
-using EcsRx.Plugins.ReactiveSystems.Extensions;
-using EcsRx.Plugins.ReactiveSystems.Systems;
+using EcsRx.Systems;
 using NSubstitute;
 using Xunit;
 

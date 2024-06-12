@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Systems;
 using SystemsRx.Extensions;
 using SystemsRx.Infrastructure.Extensions;
 using SystemsRx.Systems;
-using EcsRx.Infrastructure;
-using EcsRx.Plugins.ReactiveSystems.Systems;
 
-namespace EcsRx.Plugins.ReactiveSystems.Extensions
+namespace EcsRx.Infrastructure.Extensions
 {
     public static class IEcsRxApplicationExtensions
     {

@@ -1,7 +1,6 @@
 ﻿using EcsRx.Entities;
-using EcsRx.Systems;
 
-namespace EcsRx.Plugins.ReactiveSystems.Systems
+namespace EcsRx.Systems
 {
     /// <summary>
     /// Setup systems are run ONCE when an entity joins a given group,

@@ -1,4 +1,4 @@
-namespace EcsRx.Plugins.ReactiveSystems.Systems
+namespace EcsRx.Systems
 {
     public interface IReactToGroupExSystem : IReactToGroupSystem
     {

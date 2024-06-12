@@ -1,8 +1,7 @@
 using System;
 using EcsRx.Entities;
-using EcsRx.Systems;
 
-namespace EcsRx.Plugins.ReactiveSystems.Systems
+namespace EcsRx.Systems
 {
     /// <summary>
     /// React to data systems are a more advanced version of React To Entity systems,

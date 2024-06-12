@@ -1,10 +1,9 @@
 ﻿using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Ninject;
 using EcsRx.Infrastructure;
+using EcsRx.Infrastructure.Extensions;
 using EcsRx.Plugins.Batching;
 using EcsRx.Plugins.Persistence;
-using EcsRx.Plugins.ReactiveSystems;
-using EcsRx.Plugins.ReactiveSystems.Extensions;
 using EcsRx.Plugins.Views;
 
 namespace EcsRx.Examples.Application
@@ -15,7 +14,6 @@ namespace EcsRx.Examples.Application
 
         protected override void LoadPlugins()
         {
-            RegisterPlugin(new ReactiveSystemsPlugin());
             RegisterPlugin(new ViewsPlugin());
             RegisterPlugin(new BatchPlugin());
             RegisterPlugin(new PersistencePlugin());

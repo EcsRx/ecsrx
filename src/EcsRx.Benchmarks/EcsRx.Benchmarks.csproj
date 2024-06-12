@@ -10,7 +10,6 @@
       <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj" />
       <ProjectReference Include="..\EcsRx.Plugins.Batching\EcsRx.Plugins.Batching.csproj" />
       <ProjectReference Include="..\EcsRx.Plugins.Persistence\EcsRx.Plugins.Persistence.csproj" />
-      <ProjectReference Include="..\EcsRx.Plugins.ReactiveSystems\EcsRx.Plugins.ReactiveSystems.csproj" />
       <ProjectReference Include="..\EcsRx.Plugins.Views\EcsRx.Plugins.Views.csproj" />
     </ItemGroup>
 

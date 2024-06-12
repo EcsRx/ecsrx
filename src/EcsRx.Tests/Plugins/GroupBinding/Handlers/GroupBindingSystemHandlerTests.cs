@@ -4,7 +4,6 @@ using EcsRx.Collections;
 using EcsRx.Groups;
 using EcsRx.Plugins.GroupBinding.Exceptions;
 using EcsRx.Plugins.GroupBinding.Systems.Handlers;
-using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
 using EcsRx.Tests.Plugins.GroupBinding.Handlers.Helpers;

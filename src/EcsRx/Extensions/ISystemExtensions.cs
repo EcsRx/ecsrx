@@ -3,6 +3,7 @@ using System.Reflection;
 using EcsRx.Attributes;
 using EcsRx.Groups;
 using EcsRx.Systems;
+using SystemsRx.Extensions;
 using SystemsRx.Systems;
 
 namespace EcsRx.Extensions
@@ -30,5 +31,11 @@ namespace EcsRx.Extensions
             var collectionAffinityAttribute = (CollectionAffinityAttribute)memberInfo.GetCustomAttribute(typeof(CollectionAffinityAttribute), true);
             return collectionAffinityAttribute?.CollectionIds;
         }
+        
+        public static bool IsSystemReactive(this ISystem system)
+        { return system is IReactToEntitySystem || system is IReactToGroupSystem || system.IsReactiveDataSystem(); }
+
+        public static bool IsReactiveDataSystem(this ISystem system)
+        { return system.MatchesSystemTypeWithGeneric(typeof(IReactToDataSystem<>)); }
     }
 }

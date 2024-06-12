@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
+using EcsRx.Collections;
+using EcsRx.Extensions;
 using SystemsRx.Attributes;
 using SystemsRx.Executor.Handlers;
 using SystemsRx.Extensions;
-using SystemsRx.Systems;
-using EcsRx.Collections;
-using EcsRx.Extensions;
 using SystemsRx.MicroRx.Disposables;
 using SystemsRx.MicroRx.Extensions;
-using EcsRx.Plugins.ReactiveSystems.Systems;
-using EcsRx.Systems;
+using SystemsRx.Systems;
 
-namespace EcsRx.Plugins.ReactiveSystems.Handlers
+namespace EcsRx.Systems.Handlers
 {
     [Priority(10)]
     public class TeardownSystemHandler : IConventionalSystemHandler

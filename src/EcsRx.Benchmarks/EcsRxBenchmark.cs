@@ -5,7 +5,6 @@ using EcsRx.Collections.Database;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Infrastructure.Modules;
-using EcsRx.Plugins.ReactiveSystems;
 using SystemsRx.Executor;
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
@@ -33,7 +32,6 @@ namespace EcsRx.Benchmarks
             DependencyRegistry = new NinjectDependencyRegistry();
             DependencyRegistry.LoadModule(new FrameworkModule());
             DependencyRegistry.LoadModule(new EcsRxInfrastructureModule());
-            DependencyRegistry.LoadModule(new ReactiveSystemsModule());
             DependencyResolver = DependencyRegistry.BuildResolver();
             
             EntityDatabase = DependencyResolver.Resolve<IEntityDatabase>();

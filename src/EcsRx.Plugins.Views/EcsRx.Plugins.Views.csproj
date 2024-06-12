@@ -14,7 +14,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EcsRx.Infrastructure\EcsRx.Infrastructure.csproj" />
-      <ProjectReference Include="..\EcsRx.Plugins.ReactiveSystems\EcsRx.Plugins.ReactiveSystems.csproj" />
       <ProjectReference Include="..\EcsRx\EcsRx.csproj" />
     </ItemGroup>
 

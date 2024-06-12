@@ -1,19 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SystemsRx.Attributes;
-using SystemsRx.Executor.Handlers;
-using SystemsRx.Extensions;
-using SystemsRx.Systems;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
+using SystemsRx.Attributes;
+using SystemsRx.Executor.Handlers;
+using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Disposables;
 using SystemsRx.MicroRx.Extensions;
-using EcsRx.Plugins.ReactiveSystems.Systems;
+using SystemsRx.Systems;
 
-namespace EcsRx.Plugins.ReactiveSystems.Handlers
+namespace EcsRx.Systems.Handlers
 {
     [Priority(3)]
     public class ReactToEntitySystemHandler : IConventionalSystemHandler

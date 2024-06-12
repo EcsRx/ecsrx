@@ -5,13 +5,13 @@ using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using SystemsRx.MicroRx.Subjects;
 using EcsRx.Systems;
 using EcsRx.Systems.Handlers;
 using NSubstitute;
+using SystemsRx.MicroRx.Subjects;
 using Xunit;
 
-namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
+namespace EcsRx.Tests.EcsRx.Handlers
 {
     public class SetupSystemHandlerTests
     {

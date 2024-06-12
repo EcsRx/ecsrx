@@ -1,13 +1,13 @@
 ﻿using System.Text;
-using SystemsRx.Exceptions;
-using SystemsRx.Executor;
-using SystemsRx.Executor.Handlers;
 using EcsRx.Systems;
 using EcsRx.Tests.Systems.Handlers;
 using NSubstitute;
+using SystemsRx.Exceptions;
+using SystemsRx.Executor;
+using SystemsRx.Executor.Handlers;
 using Xunit;
 
-namespace EcsRx.Tests.Plugins.ReactiveSystems.Handlers
+namespace EcsRx.Tests.EcsRx.Handlers
 {
     public class SystemExecutorTests
     {

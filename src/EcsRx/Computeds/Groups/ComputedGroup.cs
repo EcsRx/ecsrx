@@ -2,15 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using SystemsRx.Extensions;
 using EcsRx.Entities;
-using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Lookups;
+using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
 
-namespace EcsRx.Plugins.Computeds.Groups
+namespace EcsRx.Computeds.Groups
 {
     public abstract class ComputedGroup : IObservableGroup, IDisposable
     {

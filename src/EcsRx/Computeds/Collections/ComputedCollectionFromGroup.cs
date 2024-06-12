@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EcsRx.Collections.Events;
-using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
+using SystemsRx.Computeds.Collections;
+using SystemsRx.Extensions;
 using SystemsRx.MicroRx.Extensions;
-using SystemsRx.Plugins.Computeds.Collections;
+using SystemsRx.MicroRx.Subjects;
 
-namespace EcsRx.Plugins.Computeds.Collections
+namespace EcsRx.Computeds.Collections
 {
     public abstract class ComputedCollectionFromGroup<T> : IComputedCollection<T>, IDisposable
     {

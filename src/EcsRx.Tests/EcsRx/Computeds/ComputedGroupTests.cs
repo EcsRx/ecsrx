@@ -4,13 +4,13 @@ using System.Reactive.Subjects;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using SystemsRx.MicroRx.Extensions;
+using EcsRx.Tests.EcsRx.Computeds.Models;
 using EcsRx.Tests.Models;
-using EcsRx.Tests.Plugins.Computeds.Models;
 using NSubstitute;
+using SystemsRx.MicroRx.Extensions;
 using Xunit;
 
-namespace EcsRx.Tests.Plugins.Computeds
+namespace EcsRx.Tests.EcsRx.Computeds
 {
     public class ComputedGroupTests
     {

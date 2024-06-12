@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EcsRx.Computeds.Collections;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
-using SystemsRx.MicroRx.Subjects;
-using EcsRx.Plugins.Computeds.Collections;
 using EcsRx.Tests.Models;
+using SystemsRx.MicroRx.Subjects;
 
-namespace EcsRx.Tests.Plugins.Computeds.Models
+namespace EcsRx.Tests.EcsRx.Computeds.Models
 {
     public class TestComputedCollectionFromGroup : ComputedCollectionFromGroup<int>
     {

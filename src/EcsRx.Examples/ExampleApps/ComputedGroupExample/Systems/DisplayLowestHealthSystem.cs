@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using EcsRx.Computeds.Groups;
 using SystemsRx.Extensions;
 using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
@@ -9,7 +10,6 @@ using EcsRx.Examples.ExampleApps.ComputedGroupExample.Extensions;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using EcsRx.Plugins.Computeds.Groups;
 using EcsRx.Systems;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems

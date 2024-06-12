@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using EcsRx.Groups.Observable;
 using SystemsRx.Computeds;
 using SystemsRx.Extensions;
-using EcsRx.Groups.Observable;
 using SystemsRx.MicroRx.Extensions;
 using SystemsRx.MicroRx.Subjects;
 
-namespace EcsRx.Plugins.Computeds
+namespace EcsRx.Computeds
 {
     public abstract class ComputedFromGroup<T> : IComputed<T>, IDisposable
     {

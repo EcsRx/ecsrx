@@ -3,7 +3,7 @@ using SystemsRx.Attributes;
 using EcsRx.Entities;
 using EcsRx.Examples.Custom.Groups;
 using EcsRx.Groups;
-using EcsRx.Plugins.ReactiveSystems.Systems;
+using EcsRx.Systems;
 
 namespace EcsRx.Examples.Custom.Systems
 {

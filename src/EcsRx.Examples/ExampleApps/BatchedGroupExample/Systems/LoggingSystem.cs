@@ -6,7 +6,7 @@ using EcsRx.Examples.ExampleApps.BatchedGroupExample.Lookups;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using EcsRx.Plugins.ReactiveSystems.Systems;
+using EcsRx.Systems;
 
 namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Systems
 {

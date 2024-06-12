@@ -1,6 +1,5 @@
 ﻿using EcsRx.Entities;
 using EcsRx.Groups;
-using EcsRx.Plugins.ReactiveSystems.Systems;
 using EcsRx.Plugins.Views.Systems;
 using EcsRx.Systems;
 

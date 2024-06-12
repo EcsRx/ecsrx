@@ -4,7 +4,7 @@ using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Plugins.ReactiveSystems.Systems;
+using EcsRx.Systems;
 using EcsRx.Tests.Models;
 
 namespace EcsRx.Tests.Systems.DeletingScenarios

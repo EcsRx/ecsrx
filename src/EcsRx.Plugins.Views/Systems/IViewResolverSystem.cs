@@ -1,4 +1,4 @@
-using EcsRx.Plugins.ReactiveSystems.Systems;
+using EcsRx.Systems;
 
 namespace EcsRx.Plugins.Views.Systems
 {

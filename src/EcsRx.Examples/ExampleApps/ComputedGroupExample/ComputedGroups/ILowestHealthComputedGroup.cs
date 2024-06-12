@@ -1,4 +1,4 @@
-﻿using EcsRx.Plugins.Computeds.Groups;
+﻿using EcsRx.Computeds.Groups;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups
 {

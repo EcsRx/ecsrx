@@ -9,7 +9,7 @@ using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Extensions;
 using EcsRx.Groups;
-using EcsRx.Plugins.ReactiveSystems.Systems;
+using EcsRx.Systems;
 
 namespace EcsRx.Benchmarks.Benchmarks
 {

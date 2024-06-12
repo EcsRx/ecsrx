@@ -18,17 +18,25 @@ namespace EcsRx.Infrastructure.Modules
     {
         public void Setup(IDependencyRegistry registry)
         {
+            // Register ECS specific infrastructure
             registry.Bind<IIdPool, IdPool>();
             registry.Bind<IEntityFactory, DefaultEntityFactory>();
             registry.Bind<IEntityCollectionFactory, DefaultEntityCollectionFactory>();
             registry.Bind<IEntityDatabase, EntityDatabase>();
             registry.Bind<IObservableGroupFactory, DefaultObservableObservableGroupFactory>();
             registry.Bind<IObservableGroupManager, ObservableGroupManager>();
-            registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
             registry.Bind<IComponentTypeAssigner, DefaultComponentTypeAssigner>();
             registry.Bind<IComponentTypeLookup>(new BindingConfiguration{ToMethod = CreateDefaultTypeLookup});           
             registry.Bind<IComponentDatabase, ComponentDatabase>();
             registry.Bind<IGroupTrackerFactory, GroupTrackerFactory>();
+            
+            // Register ECS specific system handlers
+            registry.Bind<IConventionalSystemHandler, BasicEntitySystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactToEntitySystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactToGroupSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, ReactToDataSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, SetupSystemHandler>();
+            registry.Bind<IConventionalSystemHandler, TeardownSystemHandler>();
         }
 
         private static object CreateDefaultTypeLookup(IDependencyResolver resolver)

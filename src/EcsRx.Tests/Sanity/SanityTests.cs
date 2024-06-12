@@ -20,7 +20,6 @@ using EcsRx.Groups.Observable;
 using EcsRx.Groups.Observable.Tracking;
 using SystemsRx.MicroRx.Events;
 using EcsRx.Plugins.Batching.Builders;
-using EcsRx.Plugins.ReactiveSystems.Handlers;
 using EcsRx.Plugins.Views.Components;
 using EcsRx.Plugins.Views.Systems;
 using EcsRx.Systems.Handlers;

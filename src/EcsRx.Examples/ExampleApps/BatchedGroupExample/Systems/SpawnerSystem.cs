@@ -1,10 +1,10 @@
 using System;
-using System.Reactive.Linq;
 using SystemsRx.Systems.Conventional;
 using EcsRx.Blueprints;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Blueprints;
+using R3;
 
 namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Systems
 {

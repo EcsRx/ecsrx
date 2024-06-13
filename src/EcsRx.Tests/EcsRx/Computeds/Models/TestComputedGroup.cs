@@ -4,7 +4,7 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Tests.Models;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 
 namespace EcsRx.Tests.EcsRx.Computeds.Models
 {
@@ -15,7 +15,7 @@ namespace EcsRx.Tests.EcsRx.Computeds.Models
         public TestComputedGroup(IObservableGroup internalObservableGroup) : base(internalObservableGroup)
         { }
 
-        public override IObservable<bool> RefreshWhen()
+        public override Observable<bool> RefreshWhen()
         { return ManuallyRefresh; }
         
         public override bool IsEntityApplicable(IEntity entity)

@@ -1,10 +1,10 @@
-using System;
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
+using R3;
 
 namespace EcsRx.Tests.Systems.DeletingScenarios
 {
@@ -16,7 +16,7 @@ namespace EcsRx.Tests.Systems.DeletingScenarios
         public DeletingReactiveDataTestSystem1(IEntityCollection entityCollection)
         { EntityCollection = entityCollection; }
 
-        public IObservable<int> ReactToData(IEntity entity)
+        public Observable<int> ReactToData(IEntity entity)
         { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber; }
 
         public void Process(IEntity entity, int reactionData)

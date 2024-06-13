@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using R3;
 
 namespace EcsRx.Components
 {
@@ -36,7 +37,7 @@ namespace EcsRx.Components
         /// <summary>
         /// To notify when a pool has extended
         /// </summary>
-        IObservable<bool> OnPoolExtending { get; }
+        Observable<bool> OnPoolExtending { get; }
         
         /// <summary>
         /// Automatically expand the pool

@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Tests.EcsRx.Computeds.Models;
 using EcsRx.Tests.Models;
 using NSubstitute;
-using SystemsRx.MicroRx.Extensions;
+using R3;
 using Xunit;
 
 namespace EcsRx.Tests.EcsRx.Computeds

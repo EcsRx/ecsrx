@@ -4,7 +4,7 @@ using System.Linq;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 using IComponent = EcsRx.Components.IComponent;
 
 namespace EcsRx.Entities
@@ -13,9 +13,9 @@ namespace EcsRx.Entities
     {
         public static readonly int NotAllocated = -1;
         
-        public IObservable<int[]> ComponentsAdded => _onComponentsAdded;
-        public IObservable<int[]> ComponentsRemoving => _onComponentsRemoving;
-        public IObservable<int[]> ComponentsRemoved => _onComponentsRemoved;
+        public Observable<int[]> ComponentsAdded => _onComponentsAdded;
+        public Observable<int[]> ComponentsRemoving => _onComponentsRemoving;
+        public Observable<int[]> ComponentsRemoved => _onComponentsRemoved;
         
         private readonly Subject<int[]> _onComponentsAdded;
         private readonly Subject<int[]> _onComponentsRemoving;

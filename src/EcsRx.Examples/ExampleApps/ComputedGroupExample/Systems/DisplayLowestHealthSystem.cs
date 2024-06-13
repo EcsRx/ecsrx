@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using EcsRx.Computeds.Groups;
 using SystemsRx.Extensions;
-using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.ComputedGroups;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Extensions;
-using EcsRx.Extensions;
-using EcsRx.Groups;
-using EcsRx.Groups.Observable;
-using EcsRx.Systems;
+using R3;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
 {
@@ -26,12 +21,12 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
         }
 
         public void StartSystem()
-        { Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(UpdateListings).AddTo(_subscriptions); }
+        { Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe(x => UpdateListings()).AddTo(_subscriptions); }
         
         public void StopSystem()
         { _subscriptions.DisposeAll(); }
 
-        public void UpdateListings(long _)
+        public void UpdateListings()
         {
             Console.SetCursorPosition(0,0);
             Console.Clear();

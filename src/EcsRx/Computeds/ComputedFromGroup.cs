@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using EcsRx.Groups.Observable;
+using R3;
 using SystemsRx.Computeds;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Computeds
 {
@@ -14,7 +13,6 @@ namespace EcsRx.Computeds
         public readonly List<IDisposable> Subscriptions;
         
         private readonly Subject<T> _onDataChanged;
-        private bool _needsUpdate;
         
         public IObservableGroup InternalObservableGroup { get; }
 
@@ -29,7 +27,7 @@ namespace EcsRx.Computeds
             RefreshData();
         }
                 
-        public IDisposable Subscribe(IObserver<T> observer)
+        public IDisposable Subscribe(Observer<T> observer)
         { return _onDataChanged.Subscribe(observer); }
 
         public T Value => GetData();
@@ -42,12 +40,7 @@ namespace EcsRx.Computeds
         }
 
         public void RequestUpdate(object _ = null)
-        {
-            _needsUpdate = true;
-            
-            if(_onDataChanged.HasObservers)
-            { RefreshData(); }
-        }
+        { RefreshData(); }
 
         public void RefreshData()
         {
@@ -56,7 +49,6 @@ namespace EcsRx.Computeds
             
             CachedData = newData;
             _onDataChanged.OnNext(CachedData);
-            _needsUpdate = false;
         }
         
         /// <summary>
@@ -68,7 +60,7 @@ namespace EcsRx.Computeds
         /// The bool is throw away, but is a workaround for not having a Unit class
         /// </remarks>
         /// <returns>An observable trigger that should trigger when the group should refresh</returns>
-        public abstract IObservable<bool> RefreshWhen();
+        public abstract Observable<bool> RefreshWhen();
         
         /// <summary>
         /// The method to generate given data from the data source
@@ -78,12 +70,7 @@ namespace EcsRx.Computeds
         public abstract T Transform(IObservableGroup observableGroup);
 
         public T GetData()
-        {
-            if(_needsUpdate)
-            { RefreshData(); }
-
-            return CachedData;
-        }
+        { return CachedData; }
 
         public virtual void Dispose()
         {

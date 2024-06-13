@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.ComputedGroupExample.Components;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;
+using R3;
 
 namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
 {
@@ -16,7 +16,7 @@ namespace EcsRx.Examples.ExampleApps.ComputedGroupExample.Systems
         public IGroup Group { get; } = new Group(typeof(HasHealthComponent));
         private Random _random = new Random();
         
-        public IObservable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
+        public Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromMilliseconds(500)).Select(x => observableGroup); }
 
         public void Process(IEntity entity)

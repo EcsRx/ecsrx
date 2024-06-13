@@ -1,9 +1,7 @@
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable.Tracking.Types;
-using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Disposables;
-using SystemsRx.MicroRx.Extensions;
+using R3;
 
 namespace EcsRx.Groups.Observable.Tracking.Trackers
 {

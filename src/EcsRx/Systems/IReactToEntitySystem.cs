@@ -1,5 +1,6 @@
 using System;
 using EcsRx.Entities;
+using R3;
 
 namespace EcsRx.Systems
 {
@@ -21,7 +22,7 @@ namespace EcsRx.Systems
         /// </summary>
         /// <param name="entity">The entity to react to</param>
         /// <returns>Observable indicating when the system should execute</returns>
-        IObservable<IEntity> ReactToEntity(IEntity entity);
+        Observable<IEntity> ReactToEntity(IEntity entity);
 
         /// <summary>
         /// The processor to handle the entity reaction

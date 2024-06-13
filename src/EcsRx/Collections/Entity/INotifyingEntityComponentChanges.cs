@@ -1,12 +1,13 @@
 using System;
 using EcsRx.Collections.Events;
+using R3;
 
 namespace EcsRx.Collections.Entity
 {
     public interface INotifyingEntityComponentChanges
     {
-        IObservable<ComponentsChangedEvent> EntityComponentsAdded { get; }
-        IObservable<ComponentsChangedEvent> EntityComponentsRemoving { get; }
-        IObservable<ComponentsChangedEvent> EntityComponentsRemoved { get; }
+        Observable<ComponentsChangedEvent> EntityComponentsAdded { get; }
+        Observable<ComponentsChangedEvent> EntityComponentsRemoving { get; }
+        Observable<ComponentsChangedEvent> EntityComponentsRemoved { get; }
     }
 }

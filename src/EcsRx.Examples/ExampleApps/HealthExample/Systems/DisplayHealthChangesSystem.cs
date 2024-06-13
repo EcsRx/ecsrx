@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive.Linq;
 using System.Text;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.HealthExample.Components;
@@ -7,6 +6,7 @@ using EcsRx.Examples.Extensions;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
+using R3;
 
 namespace EcsRx.Examples.ExampleApps.HealthExample.Systems
 {
@@ -15,7 +15,7 @@ namespace EcsRx.Examples.ExampleApps.HealthExample.Systems
         public IGroup Group => new Group(typeof(HealthComponent));
         private const int HealthSegments = 10;
 
-        public IObservable<float> ReactToData(IEntity entity)
+        public Observable<float> ReactToData(IEntity entity)
         {
             var healthComponent = entity.GetComponent<HealthComponent>();
             return healthComponent.Health.WithValueChange().Select(CalculateDamageTaken);

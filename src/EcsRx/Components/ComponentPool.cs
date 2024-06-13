@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 using SystemsRx.Pools;
 
 namespace EcsRx.Components
@@ -17,7 +17,7 @@ namespace EcsRx.Components
         public int IndexesRemaining => IndexPool.AvailableIndexes.Count;
         public int ExpansionSize { get; private set; }
         
-        public IObservable<bool> OnPoolExtending => _onPoolExtending;
+        public Observable<bool> OnPoolExtending => _onPoolExtending;
         private readonly Subject<bool> _onPoolExtending;
 
         public ComponentPool(int expansionSize) : this(expansionSize, expansionSize)

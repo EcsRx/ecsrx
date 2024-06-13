@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Disposables;
-using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 using EcsRx.Collections.Entity;
 using EcsRx.Collections.Events;
 using EcsRx.Lookups;
+using R3;
 
 namespace EcsRx.Collections.Database
 {
@@ -20,13 +18,13 @@ namespace EcsRx.Collections.Database
 
         public IEntityCollectionFactory EntityCollectionFactory { get; }
         
-        public IObservable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
-        public IObservable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
-        public IObservable<ComponentsChangedEvent> EntityComponentsAdded => _onEntityComponentsAdded;
-        public IObservable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
-        public IObservable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
-        public IObservable<IEntityCollection> CollectionAdded => _onCollectionAdded;
-        public IObservable<IEntityCollection> CollectionRemoved => _onCollectionRemoved;
+        public Observable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
+        public Observable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
+        public Observable<ComponentsChangedEvent> EntityComponentsAdded => _onEntityComponentsAdded;
+        public Observable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
+        public Observable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
+        public Observable<IEntityCollection> CollectionAdded => _onCollectionAdded;
+        public Observable<IEntityCollection> CollectionRemoved => _onCollectionRemoved;
 
         private readonly Subject<IEntityCollection> _onCollectionAdded;
         private readonly Subject<IEntityCollection> _onCollectionRemoved;

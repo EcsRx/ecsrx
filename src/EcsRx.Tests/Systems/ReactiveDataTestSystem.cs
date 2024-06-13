@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
+using R3;
 
 namespace EcsRx.Tests.Systems
 {
@@ -12,7 +12,7 @@ namespace EcsRx.Tests.Systems
     {
         public IGroup Group => new Group().WithComponent<TestComponentOne>();
 
-        public IObservable<float> ReactToData(IEntity entity)
+        public Observable<float> ReactToData(IEntity entity)
         {
             return Observable.Timer(TimeSpan.FromSeconds(1)).Select(x => 0.1f);
         }

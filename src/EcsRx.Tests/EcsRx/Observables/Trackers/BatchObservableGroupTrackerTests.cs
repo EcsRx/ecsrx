@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using EcsRx.Collections.Entity;
-using EcsRx.Collections.Events;
 using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Trackers;
 using EcsRx.Groups.Observable.Tracking.Types;
 using NSubstitute;
+using R3;
 using Xunit;
 
 namespace EcsRx.Tests.EcsRx.Observables.Trackers

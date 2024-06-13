@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable;
 using EcsRx.Tests.EcsRx.Computeds.Models;
 using EcsRx.Tests.Models;
 using NSubstitute;
-using SystemsRx.MicroRx.Extensions;
+using R3;
 using Xunit;
 
 namespace EcsRx.Tests.EcsRx.Computeds
@@ -263,7 +261,7 @@ namespace EcsRx.Tests.EcsRx.Computeds
             mockObservableGroup.GetEnumerator().Returns(x => fakeEntities.GetEnumerator());
             
             var computedGroupData = new TestComputedCollectionFromGroup(mockObservableGroup);
-            computedGroupData.Subscribe(x => {});
+           // computedGroupData.Subscribe(x => {});
 
             fakeEntities.Remove(fakeEntity2);
             removingSubject.OnNext(fakeEntity2);

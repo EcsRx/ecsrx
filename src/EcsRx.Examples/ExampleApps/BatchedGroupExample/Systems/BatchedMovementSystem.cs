@@ -1,6 +1,5 @@
 using System;
 using System.Numerics;
-using System.Reactive.Linq;
 using SystemsRx.Threading;
 using EcsRx.Collections;
 using EcsRx.Components.Database;
@@ -8,6 +7,7 @@ using EcsRx.Components.Lookups;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsRx.Plugins.Batching.Factories;
 using EcsRx.Plugins.Batching.Systems;
+using R3;
 
 namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Systems
 {
@@ -17,7 +17,7 @@ namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Systems
             : base(componentDatabase, componentTypeLookup, batchBuilderFactory, threadHandler, observableGroupManager)
         {}
 
-        protected override IObservable<bool> ReactWhen()
+        protected override Observable<bool> ReactWhen()
         { return Observable.Interval(TimeSpan.FromSeconds(0.5f)).Select(x => true); }
 
         protected override void Process(int entityId, ref PositionComponent positionComponent, ref MovementSpeedComponent movementSpeedComponent)

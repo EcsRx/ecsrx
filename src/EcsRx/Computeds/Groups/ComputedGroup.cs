@@ -5,9 +5,8 @@ using System.Linq;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
 using EcsRx.Lookups;
+using R3;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Computeds.Groups
 {
@@ -17,9 +16,9 @@ namespace EcsRx.Computeds.Groups
         public readonly IList<IDisposable> Subscriptions;
         
         public ObservableGroupToken Token => InternalObservableGroup.Token;
-        public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
-        public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
-        public IObservable<IEntity> OnEntityRemoving => _onEntityRemoving;
+        public Observable<IEntity> OnEntityAdded => _onEntityAdded;
+        public Observable<IEntity> OnEntityRemoved => _onEntityRemoved;
+        public Observable<IEntity> OnEntityRemoving => _onEntityRemoving;
 
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
@@ -102,7 +101,7 @@ namespace EcsRx.Computeds.Groups
         /// The bool is throw away, but is a workaround for not having a Unit class
         /// </remarks>
         /// <returns>An observable trigger that should trigger when the group should refresh</returns>
-        public abstract IObservable<bool> RefreshWhen();
+        public abstract Observable<bool> RefreshWhen();
         
         /// <summary>
         /// The method to check if the entity is applicable to this computed group

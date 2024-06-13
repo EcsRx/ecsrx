@@ -1,18 +1,16 @@
 using System;
 using System.Collections.Generic;
-using SystemsRx.Executor.Handlers;
 using SystemsRx.Scheduling;
-using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 using SystemsRx.Threading;
 using EcsRx.Collections;
 using EcsRx.Entities;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using SystemsRx.MicroRx.Subjects;
 using EcsRx.Systems;
 using EcsRx.Systems.Handlers;
 using NSubstitute;
+using R3;
 using Xunit;
 
 namespace EcsRx.Tests.EcsRx.Handlers

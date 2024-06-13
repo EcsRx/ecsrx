@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using R3;
+
 using EcsRx.Collections.Events;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
 using SystemsRx.Computeds.Collections;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Computeds.Collections
 {
@@ -17,9 +17,9 @@ namespace EcsRx.Computeds.Collections
         public IDictionary<int, T> FilteredCache { get; }
         public List<IDisposable> Subscriptions { get; }
         
-        public IObservable<CollectionElementChangedEvent<T>> OnAdded => _onElementAdded;
-        public IObservable<CollectionElementChangedEvent<T>> OnRemoved => _onElementChanged;
-        public IObservable<CollectionElementChangedEvent<T>> OnUpdated => _onElementChanged;
+        public Observable<CollectionElementChangedEvent<T>> OnAdded => _onElementAdded;
+        public Observable<CollectionElementChangedEvent<T>> OnRemoved => _onElementChanged;
+        public Observable<CollectionElementChangedEvent<T>> OnUpdated => _onElementChanged;
 
         public IObservableGroup InternalObservableGroup { get; }
         public IEnumerable<T> Value => GetData();
@@ -30,7 +30,6 @@ namespace EcsRx.Computeds.Collections
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementAdded;
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementChanged;
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementRemoved;
-        private bool _needsUpdate;
 
         protected ComputedCollectionFromGroup(IObservableGroup internalObservableGroup)
         {
@@ -48,7 +47,7 @@ namespace EcsRx.Computeds.Collections
         }
         
         
-        public IDisposable Subscribe(IObserver<IEnumerable<T>> observer)
+        public IDisposable Subscribe(Observer<IEnumerable<T>> observer)
         { return _onDataChanged.Subscribe(observer); }
         
         public void MonitorChanges()
@@ -60,10 +59,7 @@ namespace EcsRx.Computeds.Collections
 
         public void RequestUpdate(object _ = null)
         {
-            _needsUpdate = true;
-            
-            if(_onDataChanged.HasObservers || _onElementAdded.HasObservers || _onElementChanged.HasObservers || _onElementRemoved.HasObservers)
-            { RefreshData(); }
+            RefreshData();
         }
 
         private void ProcessEntity(IEntity entity)
@@ -122,7 +118,6 @@ namespace EcsRx.Computeds.Collections
             { RemoveEntity(id);}
             
             _onDataChanged.OnNext(FilteredCache.Values);
-            _needsUpdate = false;
         }
 
         /// <summary>
@@ -134,7 +129,7 @@ namespace EcsRx.Computeds.Collections
         /// The bool is throw away, but is a workaround for not having a Unit class
         /// </remarks>
         /// <returns>An observable trigger that should trigger when the group should refresh</returns>
-        public abstract IObservable<bool> RefreshWhen();     
+        public abstract Observable<bool> RefreshWhen();     
         
         /// <summary>
         /// The method to see if this entity should be transformed
@@ -159,12 +154,7 @@ namespace EcsRx.Computeds.Collections
         { return data; }
 
         public IEnumerable<T> GetData()
-        {
-            if(_needsUpdate)
-            { RefreshData(); }
-            
-            return PostProcess(FilteredCache.Values);
-        }
+        { return PostProcess(FilteredCache.Values); }
 
         public IEnumerator<T> GetEnumerator()
         { return GetData().GetEnumerator(); }

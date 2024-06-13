@@ -1,11 +1,12 @@
 ﻿using System;
 using EcsRx.Collections.Events;
+using R3;
 
 namespace EcsRx.Collections.Entity
 {
     public interface INotifyingEntityCollection
     {
-        IObservable<CollectionEntityEvent> EntityAdded { get; }
-        IObservable<CollectionEntityEvent> EntityRemoved { get; }
+        Observable<CollectionEntityEvent> EntityAdded { get; }
+        Observable<CollectionEntityEvent> EntityRemoved { get; }
     }
 }

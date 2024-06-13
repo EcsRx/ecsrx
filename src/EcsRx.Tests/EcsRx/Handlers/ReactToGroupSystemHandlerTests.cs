@@ -7,7 +7,7 @@ using EcsRx.Groups.Observable;
 using EcsRx.Systems;
 using EcsRx.Systems.Handlers;
 using NSubstitute;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 using SystemsRx.Threading;
 using Xunit;
 

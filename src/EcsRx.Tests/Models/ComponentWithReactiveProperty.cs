@@ -1,6 +1,6 @@
 using System;
 using EcsRx.Components;
-using SystemsRx.ReactiveData;
+using R3;
 
 namespace EcsRx.Tests.Models
 {

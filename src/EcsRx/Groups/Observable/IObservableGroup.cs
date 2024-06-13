@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using R3;
 using EcsRx.Entities;
 
 namespace EcsRx.Groups.Observable
@@ -30,17 +31,17 @@ namespace EcsRx.Groups.Observable
         /// <summary>
         /// Event stream for when an entity has been added to this group
         /// </summary>
-        IObservable<IEntity> OnEntityAdded { get; }
+        Observable<IEntity> OnEntityAdded { get; }
         
         /// <summary>
         /// Event stream for when an entity has been removed from this group
         /// </summary>
-        IObservable<IEntity> OnEntityRemoved { get; }
+        Observable<IEntity> OnEntityRemoved { get; }
         
         /// <summary>
         /// Event stream for when an entity is about to be removed from this group
         /// </summary>
-        IObservable<IEntity> OnEntityRemoving { get; }
+        Observable<IEntity> OnEntityRemoving { get; }
         
         /// <summary>
         /// Checks if the observable group contains a given entity

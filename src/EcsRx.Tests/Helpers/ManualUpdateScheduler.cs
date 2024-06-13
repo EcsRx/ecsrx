@@ -1,5 +1,4 @@
-using System;
-using System.Reactive.Subjects;
+using R3;
 using SystemsRx.Scheduling;
 
 namespace EcsRx.Tests.Helpers
@@ -16,8 +15,8 @@ namespace EcsRx.Tests.Helpers
         public void Dispose()
         { ElapsedTimeTrigger.Dispose(); }
 
-        public IObservable<ElapsedTime> OnPreUpdate => ElapsedTimeTrigger;
-        public IObservable<ElapsedTime> OnUpdate => ElapsedTimeTrigger;
-        public IObservable<ElapsedTime> OnPostUpdate => ElapsedTimeTrigger;
+        public Observable<ElapsedTime> OnPreUpdate => ElapsedTimeTrigger;
+        public Observable<ElapsedTime> OnUpdate => ElapsedTimeTrigger;
+        public Observable<ElapsedTime> OnPostUpdate => ElapsedTimeTrigger;
     }
 }

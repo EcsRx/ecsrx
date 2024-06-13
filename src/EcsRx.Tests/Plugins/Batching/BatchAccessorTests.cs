@@ -1,15 +1,13 @@
-using System.Reactive.Linq;
-using EcsRx.Collections;
 using EcsRx.Components;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
-using SystemsRx.MicroRx.Subjects;
 using EcsRx.Plugins.Batching.Accessors;
 using EcsRx.Plugins.Batching.Builders;
 using EcsRx.Tests.Models;
 using NSubstitute;
+using R3;
 using Xunit;
 
 namespace EcsRx.Tests.Plugins.Batching

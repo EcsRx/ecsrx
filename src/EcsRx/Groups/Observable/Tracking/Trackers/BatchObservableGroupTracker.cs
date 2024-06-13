@@ -4,9 +4,8 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Types;
+using R3;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Disposables;
-using SystemsRx.MicroRx.Extensions;
 
 namespace EcsRx.Groups.Observable.Tracking.Trackers
 {

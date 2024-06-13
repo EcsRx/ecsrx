@@ -7,8 +7,7 @@ using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Trackers;
 using EcsRx.Groups.Observable.Tracking.Types;
 using EcsRx.Lookups;
-using SystemsRx.MicroRx.Extensions;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 
 namespace EcsRx.Groups.Observable
 {
@@ -17,9 +16,9 @@ namespace EcsRx.Groups.Observable
         public readonly EntityLookup CachedEntities;
         public readonly List<IDisposable> Subscriptions;
 
-        public IObservable<IEntity> OnEntityAdded => _onEntityAdded;
-        public IObservable<IEntity> OnEntityRemoved => _onEntityRemoved;
-        public IObservable<IEntity> OnEntityRemoving => _onEntityRemoving;
+        public Observable<IEntity> OnEntityAdded => _onEntityAdded;
+        public Observable<IEntity> OnEntityRemoved => _onEntityRemoved;
+        public Observable<IEntity> OnEntityRemoving => _onEntityRemoving;
         public ICollectionObservableGroupTracker GroupTracker { get; }
 
         private readonly Subject<IEntity> _onEntityAdded;

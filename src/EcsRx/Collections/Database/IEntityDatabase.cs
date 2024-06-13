@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using EcsRx.Groups;
+using R3;
 
 namespace EcsRx.Collections.Database
 {
@@ -20,12 +21,12 @@ namespace EcsRx.Collections.Database
         /// <summary>
         /// Fired when a collection has been added
         /// </summary>
-        IObservable<IEntityCollection> CollectionAdded { get; }
+        Observable<IEntityCollection> CollectionAdded { get; }
         
         /// <summary>
         /// Fired when a collection has been removed
         /// </summary>
-        IObservable<IEntityCollection> CollectionRemoved { get; }
+        Observable<IEntityCollection> CollectionRemoved { get; }
         
         /// <summary>
         /// Creates a new collection within the database

@@ -1,5 +1,4 @@
 using System;
-using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Components;
 using EcsRx.Examples.ExampleApps.BatchedGroupExample.Lookups;
@@ -7,6 +6,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;
+using R3;
 
 namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Systems
 {
@@ -14,7 +14,7 @@ namespace EcsRx.Examples.ExampleApps.BatchedGroupExample.Systems
     {
         public IGroup Group { get; } = new Group(typeof(NameComponent), typeof(PositionComponent));
 
-        public IObservable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
+        public Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(1)).Select(x => observableGroup); }
         
         public void Process(IEntity entity)

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using SystemsRx.MicroRx.Subjects;
 using EcsRx.Blueprints;
 using EcsRx.Collections.Events;
 using EcsRx.Entities;
 using EcsRx.Lookups;
+using R3;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Disposables;
-using SystemsRx.MicroRx.Extensions;
 
 namespace EcsRx.Collections.Entity
 {
@@ -20,11 +18,11 @@ public class EntityCollection : IEntityCollection, IDisposable
         public readonly EntityLookup EntityLookup;
         public readonly IDictionary<int, IDisposable> EntitySubscriptions;
 
-        public IObservable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
-        public IObservable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
-        public IObservable<ComponentsChangedEvent> EntityComponentsAdded => _onEntityComponentsAdded;
-        public IObservable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
-        public IObservable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
+        public Observable<CollectionEntityEvent> EntityAdded => _onEntityAdded;
+        public Observable<CollectionEntityEvent> EntityRemoved => _onEntityRemoved;
+        public Observable<ComponentsChangedEvent> EntityComponentsAdded => _onEntityComponentsAdded;
+        public Observable<ComponentsChangedEvent> EntityComponentsRemoving => _onEntityComponentsRemoving;
+        public Observable<ComponentsChangedEvent> EntityComponentsRemoved => _onEntityComponentsRemoved;
         
         private readonly Subject<CollectionEntityEvent> _onEntityAdded;
         private readonly Subject<CollectionEntityEvent> _onEntityRemoved;

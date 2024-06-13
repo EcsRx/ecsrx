@@ -1,18 +1,14 @@
 using System;
 using SystemsRx.Extensions;
-using SystemsRx.Systems;
 using SystemsRx.Systems.Conventional;
 using SystemsRx.Threading;
 using EcsRx.Collections;
 using EcsRx.Components.Database;
 using EcsRx.Components.Lookups;
 using EcsRx.Entities;
-using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
-using SystemsRx.MicroRx.Disposables;
-using SystemsRx.MicroRx.Extensions;
-using EcsRx.Systems;
+using R3;
 
 namespace EcsRx.Plugins.Batching.Systems
 {
@@ -43,7 +39,7 @@ namespace EcsRx.Plugins.Batching.Systems
         /// This describes when the system should be processed
         /// </summary>
         /// <returns>A trigger indicating that the process should run</returns>
-        protected abstract IObservable<bool> ReactWhen();
+        protected abstract Observable<bool> ReactWhen();
 
         /// <summary>
         /// Do anything before the batch gets processed
@@ -87,7 +83,7 @@ namespace EcsRx.Plugins.Batching.Systems
         /// <returns>The observable stream that should be subscribed to</returns>
         /// <remarks>Out the box it will just pass through the observable but in a lot of cases you may want to
         /// throttle the group changes so multiple ones within a single frame would be run once.</remarks>
-        protected virtual IObservable<IEntity> ProcessGroupSubscription(IObservable<IEntity> groupChange)
+        protected virtual Observable<IEntity> ProcessGroupSubscription(Observable<IEntity> groupChange)
         { return groupChange; }
 
         private void RunBatch()

@@ -9,9 +9,8 @@ using EcsRx.Groups;
 using SystemsRx.Attributes;
 using SystemsRx.Executor.Handlers;
 using SystemsRx.Extensions;
-using SystemsRx.MicroRx.Disposables;
-using SystemsRx.MicroRx.Extensions;
 using SystemsRx.Systems;
+using R3;
 
 namespace EcsRx.Systems.Handlers
 {

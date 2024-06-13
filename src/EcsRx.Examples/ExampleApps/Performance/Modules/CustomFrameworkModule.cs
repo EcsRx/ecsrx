@@ -16,7 +16,6 @@ using EcsRx.Examples.ExampleApps.Performance.Components.Specific;
 using EcsRx.Groups.Observable;
 using EcsRx.Groups.Observable.Tracking;
 using EcsRx.Systems.Handlers;
-using SystemsRx.MicroRx.Events;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Modules
 {

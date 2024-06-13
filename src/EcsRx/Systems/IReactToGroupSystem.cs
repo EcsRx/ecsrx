@@ -1,6 +1,6 @@
-using System;
 using EcsRx.Entities;
 using EcsRx.Groups.Observable;
+using R3;
 
 namespace EcsRx.Systems
 {
@@ -26,7 +26,7 @@ namespace EcsRx.Systems
         /// <remarks>
         /// In most use cases you probably want to run this every update/interval
         /// </remarks>
-        IObservable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup);
+        Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup);
         
         /// <summary>
         /// The processor for the entity

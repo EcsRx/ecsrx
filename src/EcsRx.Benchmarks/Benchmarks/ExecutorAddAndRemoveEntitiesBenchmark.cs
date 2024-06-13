@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reactive.Linq;
 using BenchmarkDotNet.Attributes;
 using EcsRx.Collections.Entity;
 using EcsRx.Components;
@@ -10,6 +9,7 @@ using EcsRx.Examples.ExampleApps.Performance.Helper;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
+using R3;
 
 namespace EcsRx.Benchmarks.Benchmarks
 {
@@ -20,8 +20,8 @@ namespace EcsRx.Benchmarks.Benchmarks
         public AddAndRemoveEntitySystem(IGroup group)
         { Group = group; }
 
-        public IObservable<IEntity> ReactToEntity(IEntity entity)
-        { return Observable.Empty(entity); }
+        public Observable<IEntity> ReactToEntity(IEntity entity)
+        { return Observable.Empty<IEntity>(); }
 
         public void Process(IEntity entity)
         {}

@@ -1,5 +1,4 @@
 using System;
-using System.Reactive.Linq;
 using System.Threading;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.Performance.Components;
@@ -7,6 +6,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;
+using R3;
 
 namespace EcsRx.Examples.ExampleApps.Performance.Systems
 {
@@ -14,8 +14,8 @@ namespace EcsRx.Examples.ExampleApps.Performance.Systems
     {
         public IGroup Group { get; } = new Group(typeof(SimpleReadComponent), typeof(SimpleWriteComponent));
         
-        public IObservable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
-        { return Observable.Interval(TimeSpan.FromSeconds(1)).StartWith().Select(x => observableGroup); }
+        public Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
+        { return Observable.Interval(TimeSpan.FromSeconds(1)).Select(x => observableGroup); }
 
         public void Process(IEntity entity)
         {

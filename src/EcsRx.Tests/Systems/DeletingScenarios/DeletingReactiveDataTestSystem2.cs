@@ -4,6 +4,7 @@ using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Systems;
 using EcsRx.Tests.Models;
+using R3;
 
 namespace EcsRx.Tests.Systems.DeletingScenarios
 {
@@ -11,7 +12,7 @@ namespace EcsRx.Tests.Systems.DeletingScenarios
     {
         public IGroup Group => new Group().WithComponent<ComponentWithReactiveProperty>();
 
-        public IObservable<int> ReactToData(IEntity entity)
+        public Observable<int> ReactToData(IEntity entity)
         { return entity.GetComponent<ComponentWithReactiveProperty>().SomeNumber; }
 
         public void Process(IEntity entity, int reactionData)

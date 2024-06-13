@@ -5,6 +5,7 @@ using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
 using EcsRx.Lookups;
 using NSubstitute;
+using R3;
 using Xunit;
 
 namespace EcsRx.Tests.EcsRx.Database

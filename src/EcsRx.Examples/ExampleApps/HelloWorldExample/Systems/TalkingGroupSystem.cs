@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Reactive.Linq;
 using EcsRx.Entities;
 using EcsRx.Examples.ExampleApps.HelloWorldExample.Components;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
 using EcsRx.Systems;
+using R3;
 
 namespace EcsRx.Examples.ExampleApps.HelloWorldExample.Systems
 {
@@ -13,7 +13,7 @@ namespace EcsRx.Examples.ExampleApps.HelloWorldExample.Systems
     {
         public IGroup Group => new Group(typeof(CanTalkComponent));
 
-        public IObservable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
+        public Observable<IObservableGroup> ReactToGroup(IObservableGroup observableGroup)
         { return Observable.Interval(TimeSpan.FromSeconds(2)).Select(x => observableGroup); }
 
         public void Process(IEntity entity)

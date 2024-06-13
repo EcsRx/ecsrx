@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reactive.Linq;
+﻿using R3;
 
 namespace EcsRx.Examples.Extensions
 {
@@ -17,7 +16,7 @@ namespace EcsRx.Examples.Extensions
 
     public static class IObservableExtensions
     {
-        public static IObservable<ValueChanges<T>> WithValueChange<T>(this IObservable<T> source)
+        public static Observable<ValueChanges<T>> WithValueChange<T>(this Observable<T> source)
         {
             return source.Scan(new ValueChanges<T>(default(T), default(T)),
                 (acc, current) => new ValueChanges<T>(acc.CurrentValue, current));

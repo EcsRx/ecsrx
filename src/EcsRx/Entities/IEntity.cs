@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EcsRx.Components;
+using R3;
 
 namespace EcsRx.Entities
 {
@@ -15,7 +16,7 @@ namespace EcsRx.Entities
         /// <remarks>
         /// If you are adding components individually it will be fired once per interaction, its better to batch them
         /// </remarks>
-        IObservable<int[]> ComponentsAdded { get; }
+        Observable<int[]> ComponentsAdded { get; }
         
         /// <summary>
         /// Triggered every time components are about to be removed from the entity
@@ -23,7 +24,7 @@ namespace EcsRx.Entities
         /// <remarks>
         /// If you are removing components individually it will be fired once per interaction, its better to batch them
         /// </remarks>
-        IObservable<int[]> ComponentsRemoving { get; }
+        Observable<int[]> ComponentsRemoving { get; }
         
         /// <summary>
         /// Triggered every time components have been removed removed from the entity
@@ -31,7 +32,7 @@ namespace EcsRx.Entities
         /// <remarks>
         /// If you are removing components individually it will be fired once per interaction, its better to batch them
         /// </remarks>
-        IObservable<int[]> ComponentsRemoved { get; }
+        Observable<int[]> ComponentsRemoved { get; }
         
         /// <summary>
         /// The Id of the entity

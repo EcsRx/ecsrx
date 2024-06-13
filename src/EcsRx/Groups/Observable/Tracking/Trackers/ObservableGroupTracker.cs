@@ -3,7 +3,7 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Groups.Observable.Tracking.Events;
 using EcsRx.Groups.Observable.Tracking.Types;
-using SystemsRx.MicroRx.Subjects;
+using R3;
 
 namespace EcsRx.Groups.Observable.Tracking.Trackers
 {
@@ -12,7 +12,7 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         public LookupGroup LookupGroup { get; }
                 
         public Subject<EntityGroupStateChanged> OnGroupMatchingChanged { get; }
-        public IObservable<EntityGroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
+        public Observable<EntityGroupStateChanged> GroupMatchingChanged => OnGroupMatchingChanged;
 
         protected ObservableGroupTracker(LookupGroup lookupGroup)
         {

@@ -7,6 +7,7 @@ using EcsRx.Entities;
 using EcsRx.Extensions;
 using EcsRx.Tests.Models;
 using NSubstitute;
+using R3;
 using Xunit;
 
 namespace EcsRx.Tests.EcsRx

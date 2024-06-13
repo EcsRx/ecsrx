@@ -2,6 +2,7 @@
 using EcsRx.Collections.Entity;
 using EcsRx.Entities;
 using NSubstitute;
+using R3;
 using Xunit;
 
 namespace EcsRx.Tests.EcsRx.Database

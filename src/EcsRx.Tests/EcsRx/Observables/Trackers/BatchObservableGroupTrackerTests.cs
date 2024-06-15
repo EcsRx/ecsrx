@@ -21,6 +21,9 @@ namespace EcsRx.Tests.EcsRx.Observables.Trackers
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
+            applicableEntity.ComponentsAdded.Returns(new Subject<int[]>());
+            applicableEntity.ComponentsRemoving.Returns(new Subject<int[]>());
+            applicableEntity.ComponentsRemoved.Returns(new Subject<int[]>());
             applicableEntity.HasComponent(Arg.Is<int>(x => lookupGroup.RequiredComponents.Contains(x))).Returns(true);
 
             var groupTracker = new BatchObservableGroupTracker(lookupGroup);
@@ -38,6 +41,9 @@ namespace EcsRx.Tests.EcsRx.Observables.Trackers
 
             var unApplicableEntity = Substitute.For<IEntity>();
             unApplicableEntity.Id.Returns(1);
+            unApplicableEntity.ComponentsAdded.Returns(new Subject<int[]>());
+            unApplicableEntity.ComponentsRemoving.Returns(new Subject<int[]>());
+            unApplicableEntity.ComponentsRemoved.Returns(new Subject<int[]>());
             unApplicableEntity.HasComponent(Arg.Is<int>(x => lookupGroup.RequiredComponents.Contains(x))).Returns(false);
 
             var groupTracker = new BatchObservableGroupTracker(lookupGroup);
@@ -55,6 +61,9 @@ namespace EcsRx.Tests.EcsRx.Observables.Trackers
 
             var applicableEntity = Substitute.For<IEntity>();
             applicableEntity.Id.Returns(1);
+            applicableEntity.ComponentsAdded.Returns(new Subject<int[]>());
+            applicableEntity.ComponentsRemoving.Returns(new Subject<int[]>());
+            applicableEntity.ComponentsRemoved.Returns(new Subject<int[]>());
             applicableEntity.HasComponent(Arg.Is<int>(x => lookupGroup.RequiredComponents.Contains(x))).Returns(true);
 
             var actualEventData = new List<EntityGroupStateChanged>();

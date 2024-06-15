@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using EcsRx.Collections.Database;
 using EcsRx.Collections.Entity;
+using EcsRx.Collections.Events;
 using EcsRx.Lookups;
 using NSubstitute;
 using R3;
@@ -15,7 +17,16 @@ namespace EcsRx.Tests.EcsRx.Database
         [Fact]
         public void should_create_default_collection_when_running_constructor()
         {
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
+            
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
             var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             var collectionLookup = (CollectionLookup)entityDatabase.GetType()
                 .GetField("_collections", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -31,9 +42,17 @@ namespace EcsRx.Tests.EcsRx.Database
             var expectedEntityCollection = new EntityCollection(22, null);
             var wasCalled = false;
             
-            var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
-            var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
             
+            var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
+            var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             entityDatabase.CollectionAdded.Subscribe(x => wasCalled = true);
             entityDatabase.AddCollection(expectedEntityCollection);
             
@@ -47,7 +66,16 @@ namespace EcsRx.Tests.EcsRx.Database
             var expectedEntityCollection = new EntityCollection(22, null);
             var wasCalled = false;
             
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
+            
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
             var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             
             entityDatabase.CollectionAdded.Subscribe(x => wasCalled = true);
@@ -71,7 +99,16 @@ namespace EcsRx.Tests.EcsRx.Database
             var expectedEntityCollection = new EntityCollection(22, null);
             var wasCalled = false;
             
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
+            
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
             var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             var collectionLookup = (CollectionLookup)entityDatabase.GetType()
                 .GetField("_collections", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -93,7 +130,16 @@ namespace EcsRx.Tests.EcsRx.Database
             var expectedEntityCollection = new EntityCollection(22, null);
             var wasCalled = false;
             
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
+            
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
             var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             var collectionLookup = (CollectionLookup)entityDatabase.GetType()
                 .GetField("_collections", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -111,7 +157,16 @@ namespace EcsRx.Tests.EcsRx.Database
         {
             var expectedEntityCollection = new EntityCollection(22, null);
             
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
+            
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
             var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             var collectionLookup = (CollectionLookup)entityDatabase.GetType()
                 .GetField("_collections", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -128,7 +183,16 @@ namespace EcsRx.Tests.EcsRx.Database
         {
             var missingEntityCollection = new EntityCollection(22, null);
             
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
+            
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
             var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             var actualCollection = entityDatabase.GetCollection(missingEntityCollection.Id);
             Assert.Null(actualCollection);
@@ -139,7 +203,16 @@ namespace EcsRx.Tests.EcsRx.Database
         {
             var expectedEntityCollection = new EntityCollection(22, null);
             
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
+            
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
             var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             var collectionLookup = (CollectionLookup)entityDatabase.GetType()
                 .GetField("_collections", BindingFlags.Instance | BindingFlags.NonPublic)
@@ -156,7 +229,16 @@ namespace EcsRx.Tests.EcsRx.Database
         {
             var expectedEntityCollection = new EntityCollection(22, null);
             
+            var mockEntityCollection = Substitute.For<IEntityCollection>();
+            mockEntityCollection.EntityAdded.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityRemoved.Returns(new Subject<CollectionEntityEvent>());
+            mockEntityCollection.EntityComponentsAdded.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoving.Returns(new Subject<ComponentsChangedEvent>());
+            mockEntityCollection.EntityComponentsRemoved.Returns(new Subject<ComponentsChangedEvent>());
+            
             var mockEntityCollectionFactory = Substitute.For<IEntityCollectionFactory>();
+            mockEntityCollectionFactory.Create(Arg.Is<int>(0)).Returns(mockEntityCollection);
+            
             var entityDatabase = new EntityDatabase(mockEntityCollectionFactory);
             Assert.Throws<KeyNotFoundException>(() => entityDatabase[expectedEntityCollection.Id]);
         }

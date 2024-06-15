@@ -95,7 +95,7 @@ namespace EcsRx.Systems.Handlers
             { return reactObservable.Subscribe(system.Process); }
 
             var groupPredicate = system.Group as IHasPredicate;
-            return reactObservable
+            return reactObservable?
                 .Subscribe(x =>
                 {
                     if(groupPredicate.CanProcessEntity(x))

@@ -14,9 +14,10 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
 {
     public class CollectionObservableGroupTracker : ObservableGroupTracker, ICollectionObservableGroupTracker
     {
-        private CompositeDisposable _notifyingSubs;
+        private readonly CompositeDisposable _notifyingSubs;
         public Dictionary<int, GroupMatchingType> EntityIdMatchTypes { get; }
         private IEnumerable<INotifyingCollection> NotifyingEntityComponentChanges { get; }
+        private readonly object _lock = new object();
 
         public CollectionObservableGroupTracker(LookupGroup lookupGroup, IEnumerable<IEntity> initialEntities, IEnumerable<INotifyingCollection> notifyingEntityComponentChanges)
             :base(lookupGroup)
@@ -30,37 +31,56 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         
         public void MonitorEntityChanges(INotifyingCollection notifier)
         {
-            notifier.EntityAdded.Subscribe(OnEntityAdded).AddTo(_notifyingSubs);
-            notifier.EntityRemoved.Subscribe(OnEntityRemoved).AddTo(_notifyingSubs);
-            
-            notifier.EntityComponentsAdded
-                .Subscribe(x => OnEntityComponentAdded(x.ComponentTypeIds, x.Entity))
-                .AddTo(_notifyingSubs);
-            
-            notifier.EntityComponentsRemoving
-                .Subscribe(x => OnEntityComponentRemoving(x.ComponentTypeIds, x.Entity))
-                .AddTo(_notifyingSubs);
-            
-            notifier.EntityComponentsRemoved
-                .Subscribe(x => OnEntityComponentRemoved(x.ComponentTypeIds, x.Entity))
-                .AddTo(_notifyingSubs);
+            lock (_lock)
+            {
+                notifier.EntityAdded.Subscribe(OnEntityAdded).AddTo(_notifyingSubs);
+                notifier.EntityRemoved.Subscribe(OnEntityRemoved).AddTo(_notifyingSubs);
+                
+                notifier.EntityComponentsAdded
+                    .Subscribe(x => OnEntityComponentAdded(x.ComponentTypeIds, x.Entity))
+                    .AddTo(_notifyingSubs);
+                
+                notifier.EntityComponentsRemoving
+                    .Subscribe(x => OnEntityComponentRemoving(x.ComponentTypeIds, x.Entity))
+                    .AddTo(_notifyingSubs);
+                
+                notifier.EntityComponentsRemoved
+                    .Subscribe(x => OnEntityComponentRemoved(x.ComponentTypeIds, x.Entity))
+                    .AddTo(_notifyingSubs);
+            }
         }
-        
+
         public override void UpdateState(int entityId, GroupMatchingType newMatchingType)
-        { EntityIdMatchTypes[entityId] = newMatchingType; }
+        {
+            lock (_lock)
+            { EntityIdMatchTypes[entityId] = newMatchingType; }
+            
+        }
 
         public override GroupMatchingType GetState(int entityId)
-        { return EntityIdMatchTypes.ContainsKey(entityId) ? EntityIdMatchTypes[entityId] : GroupMatchingType.NoMatchesFound; }
+        {
+            lock (_lock)
+            { return EntityIdMatchTypes.ContainsKey(entityId) ? EntityIdMatchTypes[entityId] : GroupMatchingType.NoMatchesFound; }
+        }
         
-        public bool IsMatching(int entityId) => EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes;
+        public bool IsMatching(int entityId)
+        {
+            lock (_lock)
+            { return EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes; }
+        }
 
         public void OnEntityAdded(CollectionEntityEvent args)
         {
-            if (EntityIdMatchTypes.ContainsKey(args.Entity.Id))
-            { return; }
+            GroupMatchingType matchType;
             
-            var matchType = LookupGroup.CalculateMatchingType(args.Entity);
-            EntityIdMatchTypes.Add(args.Entity.Id, matchType);
+            lock (_lock)
+            {
+                if (EntityIdMatchTypes.ContainsKey(args.Entity.Id))
+                { return; }
+            
+                matchType = LookupGroup.CalculateMatchingType(args.Entity);
+                EntityIdMatchTypes.Add(args.Entity.Id, matchType);
+            }
             
             if(matchType == GroupMatchingType.MatchesNoExcludes)
             { OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.JoinedGroup)); }
@@ -68,11 +88,15 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
 
         public void OnEntityRemoved(CollectionEntityEvent args)
         {
-            if (!EntityIdMatchTypes.ContainsKey(args.Entity.Id)) { return; }
+            GroupMatchingType matchType;
+            lock (_lock)
+            {
+                if (!EntityIdMatchTypes.ContainsKey(args.Entity.Id)) { return; }
             
-            var matchType = GetState(args.Entity.Id);
-            EntityIdMatchTypes.Remove(args.Entity.Id);
-
+                matchType = GetState(args.Entity.Id);
+                EntityIdMatchTypes.Remove(args.Entity.Id);
+            }
+            
             if (matchType == GroupMatchingType.MatchesNoExcludes)
             {
                 OnGroupMatchingChanged.OnNext(new EntityGroupStateChanged(args.Entity, GroupActionType.LeavingGroup));
@@ -82,8 +106,11 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
 
         public override void Dispose()
         {
-            OnGroupMatchingChanged?.Dispose();
-            _notifyingSubs.Dispose();
+            lock (_lock)
+            {
+                OnGroupMatchingChanged?.Dispose();
+                _notifyingSubs.Dispose();
+            }
         }
     }
 }

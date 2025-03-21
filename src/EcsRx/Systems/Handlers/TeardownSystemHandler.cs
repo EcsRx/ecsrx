@@ -16,6 +16,7 @@ namespace EcsRx.Systems.Handlers
     {
         public readonly IObservableGroupManager ObservableGroupManager;
         public readonly IDictionary<ISystem, IDisposable> SystemSubscriptions;
+        private readonly object _lock = new object();
         
         public TeardownSystemHandler(IObservableGroupManager observableGroupManager)
         {
@@ -29,7 +30,9 @@ namespace EcsRx.Systems.Handlers
         public void SetupSystem(ISystem system)
         {
             var entityChangeSubscriptions = new CompositeDisposable();
-            SystemSubscriptions.Add(system, entityChangeSubscriptions);
+
+            lock (_lock)
+            { SystemSubscriptions.Add(system, entityChangeSubscriptions); }
 
             var castSystem = (ITeardownSystem) system;
             var affinities = castSystem.GetGroupAffinities();
@@ -42,12 +45,14 @@ namespace EcsRx.Systems.Handlers
 
         public void DestroySystem(ISystem system)
         {
-            SystemSubscriptions.RemoveAndDispose(system);
+            lock (_lock)
+            { SystemSubscriptions.RemoveAndDispose(system); }
         }       
 
         public void Dispose()
         {
-            SystemSubscriptions.DisposeAll();
+            lock (_lock)
+            { SystemSubscriptions.DisposeAll(); }
         }
     }
 }

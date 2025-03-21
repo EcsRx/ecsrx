@@ -10,9 +10,11 @@ using SystemsRx.MicroRx.Extensions;
 
 namespace EcsRx.Groups.Observable.Tracking.Trackers
 {
-    public class BatchObservableGroupTracker : ObservableGroupTracker, IBatchObservableGroupTracker
+public class BatchObservableGroupTracker : ObservableGroupTracker, IBatchObservableGroupTracker
     {
         private readonly Dictionary<int, IDisposable> _entitySubscriptions;
+        private readonly object _lock = new object();
+        
         public Dictionary<int, GroupMatchingType> EntityIdMatchTypes { get; }
 
         public BatchObservableGroupTracker(LookupGroup lookupGroup) : base(lookupGroup)
@@ -21,39 +23,61 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
             EntityIdMatchTypes = new Dictionary<int, GroupMatchingType>();
         }
         
-        public bool IsMatching(int entityId) => EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes;
-        
+        public bool IsMatching(int entityId)
+        {
+            lock (_lock)
+            { return EntityIdMatchTypes[entityId] == GroupMatchingType.MatchesNoExcludes; }
+        }
+
         public override void UpdateState(int entityId, GroupMatchingType newMatchingType)
-        { EntityIdMatchTypes[entityId] = newMatchingType; }
+        {
+            lock (_lock)
+            { EntityIdMatchTypes[entityId] = newMatchingType; }
+        }
 
         public override GroupMatchingType GetState(int entityId)
-        { return EntityIdMatchTypes.ContainsKey(entityId) ? EntityIdMatchTypes[entityId] : GroupMatchingType.NoMatchesFound; }
+        {
+            lock (_lock)
+            { return EntityIdMatchTypes.ContainsKey(entityId) ? EntityIdMatchTypes[entityId] : GroupMatchingType.NoMatchesFound; }
+        }
         
         public bool StartTrackingEntity(IEntity entity)
         {
-            if (EntityIdMatchTypes.ContainsKey(entity.Id))
-            { return EntityIdMatchTypes[entity.Id] == GroupMatchingType.MatchesNoExcludes; }
+            lock (_lock)
+            {
+                if (EntityIdMatchTypes.ContainsKey(entity.Id))
+                { return EntityIdMatchTypes[entity.Id] == GroupMatchingType.MatchesNoExcludes; }
+            }
             
             var matchingType = LookupGroup.CalculateMatchingType(entity);
-            EntityIdMatchTypes.Add(entity.Id, matchingType);
-            
             var entitySubs = new CompositeDisposable();
+            
+            lock (_lock)
+            {
+                EntityIdMatchTypes.Add(entity.Id, matchingType);
+                _entitySubscriptions.Add(entity.Id, entitySubs);
+            }
+            
             entity.ComponentsAdded.Subscribe(x => OnEntityComponentAdded(x, entity)).AddTo(entitySubs);
             entity.ComponentsRemoving.Subscribe(x => OnEntityComponentRemoving(x, entity)).AddTo(entitySubs);
             entity.ComponentsRemoved.Subscribe(x => OnEntityComponentRemoved(x, entity)).AddTo(entitySubs);
-            _entitySubscriptions.Add(entity.Id, entitySubs);
             
             return matchingType == GroupMatchingType.MatchesNoExcludes;
         }
 
         public void StopTrackingEntity(IEntity entity)
         {
-            if (!EntityIdMatchTypes.ContainsKey(entity.Id)) { return; }
+            GroupMatchingType matchType;
+            
+            lock (_lock)
+            {
+                if (!EntityIdMatchTypes.ContainsKey(entity.Id)) { return; }
 
-            var matchType = EntityIdMatchTypes[entity.Id];
-            _entitySubscriptions[entity.Id].Dispose();
-            _entitySubscriptions.Remove(entity.Id);
-            EntityIdMatchTypes.Remove(entity.Id);
+                matchType = EntityIdMatchTypes[entity.Id];
+                _entitySubscriptions[entity.Id].Dispose();
+                _entitySubscriptions.Remove(entity.Id);
+                EntityIdMatchTypes.Remove(entity.Id);
+            }
 
             if (matchType == GroupMatchingType.MatchesNoExcludes)
             {
@@ -64,8 +88,11 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         
         public override void Dispose()
         {
-            OnGroupMatchingChanged?.Dispose();
-            _entitySubscriptions.DisposeAll();
+            lock (_lock)
+            {
+                OnGroupMatchingChanged?.Dispose();
+                _entitySubscriptions.DisposeAll();
+            }
         }
     }
 }

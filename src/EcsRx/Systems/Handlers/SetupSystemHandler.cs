@@ -21,6 +21,8 @@ namespace EcsRx.Systems.Handlers
         public readonly IDictionary<ISystem, IDictionary<int, IDisposable>> _entitySubscriptions;
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         
+        private readonly object _lock = new object();
+        
         public SetupSystemHandler(IObservableGroupManager observableGroupManager)
         {
             ObservableGroupManager = observableGroupManager;
@@ -34,9 +36,13 @@ namespace EcsRx.Systems.Handlers
         public void SetupSystem(ISystem system)
         {
             var entitySubscriptions = new Dictionary<int, IDisposable>();
-            _entitySubscriptions.Add(system, entitySubscriptions);
             var entityChangeSubscriptions = new CompositeDisposable();
-            _systemSubscriptions.Add(system, entityChangeSubscriptions);
+
+            lock (_lock)
+            {
+                _entitySubscriptions.Add(system, entitySubscriptions);
+                _systemSubscriptions.Add(system, entityChangeSubscriptions);
+            }
 
             var castSystem = (ISetupSystem) system;
             var affinities = castSystem.GetGroupAffinities();
@@ -66,19 +72,26 @@ namespace EcsRx.Systems.Handlers
         
         public void SetupEntity(ISetupSystem system, IEntity entity, Dictionary<int, IDisposable> subs)
         {
-            subs.Add(entity.Id, null);
+            lock (_lock)
+            { subs.Add(entity.Id, null); }
                 
             var subscription = ProcessEntity(system, entity);
             if(subscription == null) { return; }
-            
-            if (subs.ContainsKey(entity.Id))
-            { subs[entity.Id] = subscription; }
-            else
-            { subscription.Dispose(); }
+
+            lock (_lock)
+            {
+                if (subs.ContainsKey(entity.Id))
+                { subs[entity.Id] = subscription; }
+                else
+                { subscription.Dispose(); }
+            }
         }
 
         public void DestroySystem(ISystem system)
-        { _systemSubscriptions.RemoveAndDispose(system); }
+        {
+            lock (_lock)
+            { _systemSubscriptions.RemoveAndDispose(system); }
+        }
 
         public IDisposable ProcessEntity(ISetupSystem system, IEntity entity)
         {
@@ -111,7 +124,8 @@ namespace EcsRx.Systems.Handlers
 
         public void Dispose()
         {
-            _systemSubscriptions.DisposeAll();
+            lock (_lock)
+            { _systemSubscriptions.DisposeAll(); }
         }
     }
 }

@@ -12,7 +12,7 @@ using SystemsRx.MicroRx.Subjects;
 
 namespace EcsRx.Groups.Observable
 {
-    public class ObservableGroup : IObservableGroup
+public class ObservableGroup : IObservableGroup
     {
         public readonly EntityLookup CachedEntities;
         public readonly List<IDisposable> Subscriptions;
@@ -25,6 +25,8 @@ namespace EcsRx.Groups.Observable
         private readonly Subject<IEntity> _onEntityAdded;
         private readonly Subject<IEntity> _onEntityRemoved;
         private readonly Subject<IEntity> _onEntityRemoving;
+        
+        private readonly object _lock = new object();
         
         public ObservableGroupToken Token { get; }
         
@@ -55,7 +57,8 @@ namespace EcsRx.Groups.Observable
         {
             if (args.GroupActionType == GroupActionType.JoinedGroup)
             {
-                CachedEntities.Add(args.Entity);
+                lock (_lock)
+                { CachedEntities.Add(args.Entity); }
                 _onEntityAdded.OnNext(args.Entity);
                 return;
             }
@@ -65,24 +68,34 @@ namespace EcsRx.Groups.Observable
 
             if (args.GroupActionType == GroupActionType.LeftGroup)
             {
-                CachedEntities.Remove(args.Entity.Id);
+                lock (_lock)
+                { CachedEntities.Remove(args.Entity.Id); }
                 _onEntityRemoved.OnNext(args.Entity);
             }
         }
-        
+
         public bool ContainsEntity(int id)
-        { return CachedEntities.Contains(id); }
-        
+        {
+            lock(_lock)
+            { return CachedEntities.Contains(id); }
+        }
+
         public IEntity GetEntity(int id)
-        { return CachedEntities[id]; }
+        {
+            lock (_lock)
+            { return CachedEntities[id]; }
+        }
 
         public void Dispose()
         {
-            Subscriptions.DisposeAll();
-            GroupTracker.Dispose();
-            _onEntityAdded.Dispose();
-            _onEntityRemoved.Dispose();
-            _onEntityRemoving.Dispose();
+            lock (_lock)
+            {
+                Subscriptions.DisposeAll();
+                GroupTracker.Dispose();
+                _onEntityAdded.Dispose();
+                _onEntityRemoved.Dispose();
+                _onEntityRemoving.Dispose();
+            }
         }
 
         public IEnumerator<IEntity> GetEnumerator()
@@ -91,8 +104,22 @@ namespace EcsRx.Groups.Observable
         IEnumerator IEnumerable.GetEnumerator()
         { return GetEnumerator(); }
 
-        public int Count => CachedEntities.Count;
+        public int Count
+        {
+            get
+            {
+                lock (_lock)
+                { return CachedEntities.Count; }
+            }
+        }
 
-        public IEntity this[int index] => CachedEntities.GetByIndex(index);
+        public IEntity this[int index]
+        {
+            get
+            {
+                lock (_lock)
+                { return CachedEntities.GetByIndex(index); }
+            }
+        }
     }
 }

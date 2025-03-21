@@ -23,14 +23,32 @@ namespace EcsRx.Computeds.Collections
 
         public IObservableGroup InternalObservableGroup { get; }
         public IEnumerable<T> Value => GetData();
-        public T this[int index] => FilteredCache[index];
-        public int Count => FilteredCache.Count;
+        
+        public T this[int index]
+        {
+            get
+            {
+                lock (_lock)
+                { return FilteredCache[index]; }
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                lock (_lock)
+                { return FilteredCache.Count; }
+            }
+        }
         
         private readonly Subject<IEnumerable<T>> _onDataChanged;
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementAdded;
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementChanged;
         private readonly Subject<CollectionElementChangedEvent<T>> _onElementRemoved;
         private bool _needsUpdate;
+        
+        private readonly object _lock = new object();
 
         protected ComputedCollectionFromGroup(IObservableGroup internalObservableGroup)
         {
@@ -46,7 +64,6 @@ namespace EcsRx.Computeds.Collections
             MonitorChanges();
             RefreshData();
         }
-        
         
         public IDisposable Subscribe(IObserver<IEnumerable<T>> observer)
         { return _onDataChanged.Subscribe(observer); }
@@ -72,50 +89,70 @@ namespace EcsRx.Computeds.Collections
 
             if (!isApplicable)
             {
-                if (!FilteredCache.ContainsKey(entity.Id)) 
-                { return; }
+                lock (_lock)
+                {
+                    if (!FilteredCache.ContainsKey(entity.Id)) 
+                    { return; }
+                }
 
                 RemoveEntity(entity.Id);
                 return;
             }
 
-            var transformedData = Transform(entity);
-            if (FilteredCache.ContainsKey(entity.Id))
+            lock (_lock)
             {
-                ChangeEntity(entity.Id, transformedData);
-                return;
+                var transformedData = Transform(entity);
+                if (FilteredCache.ContainsKey(entity.Id))
+                {
+                    ChangeEntity(entity.Id, transformedData);
+                    return;
+                }
+    
+                AddEntity(entity.Id, transformedData);
             }
-
-            AddEntity(entity.Id, transformedData);
         }
 
         private void AddEntity(int entityId, T transformedData)
         {
-            FilteredCache.Add(entityId, transformedData);
+            lock(_lock)
+            { FilteredCache.Add(entityId, transformedData); }
             _onElementAdded.OnNext(new CollectionElementChangedEvent<T>(entityId, default(T), transformedData));
         }
 
         private void RemoveEntity(int entityId)
         {
-            var currentValue = FilteredCache[entityId];
-            FilteredCache.Remove(entityId);
+            T currentValue;
+            lock (_lock)
+            {
+               currentValue = FilteredCache[entityId];
+                FilteredCache.Remove(entityId); 
+            }
             _onElementRemoved.OnNext(new CollectionElementChangedEvent<T>(entityId, currentValue, default(T)));
         }
 
         private void ChangeEntity(int entityId, T transformedData)
         {
-            var currentData = FilteredCache[entityId];
-            FilteredCache[entityId] = transformedData;
+            T currentData;
+            lock (_lock)
+            {
+                currentData = FilteredCache[entityId];
+                FilteredCache[entityId] = transformedData;
+            }
+
             _onElementChanged.OnNext(new CollectionElementChangedEvent<T>(entityId, currentData, transformedData));
         }
                        
         public void RefreshData()
         {
-            var unprocessedIds = FilteredCache.Keys.ToList();
-            foreach (var entity in InternalObservableGroup)
+            List<int> unprocessedIds;
+            lock (_lock)
             {
-                unprocessedIds.Remove(entity.Id);
-                ProcessEntity(entity);
+                unprocessedIds = FilteredCache.Keys.ToList();
+                foreach (var entity in InternalObservableGroup)
+                {
+                    unprocessedIds.Remove(entity.Id);
+                    ProcessEntity(entity);
+                }  
             }
 
             foreach(var id in unprocessedIds)
@@ -163,7 +200,8 @@ namespace EcsRx.Computeds.Collections
             if(_needsUpdate)
             { RefreshData(); }
             
-            return PostProcess(FilteredCache.Values);
+            lock(_lock)
+            { return PostProcess(FilteredCache.Values); }
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -174,11 +212,14 @@ namespace EcsRx.Computeds.Collections
 
         public void Dispose()
         {
-            Subscriptions.DisposeAll();
-            _onDataChanged?.Dispose();
-            _onElementAdded?.Dispose();
-            _onElementChanged?.Dispose();
-            _onElementRemoved?.Dispose();
+            lock (_lock)
+            {
+                Subscriptions.DisposeAll();
+                _onDataChanged?.Dispose();
+                _onElementAdded?.Dispose();
+                _onElementChanged?.Dispose();
+                _onElementRemoved?.Dispose();
+            }
         }
     }
 }

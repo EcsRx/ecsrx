@@ -20,6 +20,8 @@ namespace EcsRx.Collections
         public IObservableGroupFactory ObservableGroupFactory { get; }
         public IComponentTypeLookup ComponentTypeLookup { get; }
         
+        private readonly object _lock = new object();
+        
         public ObservableGroupManager(IObservableGroupFactory observableGroupFactory, IEntityDatabase entityDatabase, IComponentTypeLookup componentTypeLookup)
         {
             ObservableGroupFactory = observableGroupFactory;
@@ -31,50 +33,62 @@ namespace EcsRx.Collections
 
         public IEnumerable<IObservableGroup> GetApplicableGroups(int[] componentTypeIds)
         {
-            for (var i = _observableGroups.Count - 1; i >= 0; i--)
+            lock (_lock)
             {
-                if (_observableGroups[i].Token.LookupGroup.Matches(componentTypeIds))
-                { yield return _observableGroups[i]; }
+                for (var i = _observableGroups.Count - 1; i >= 0; i--)
+                {
+                    if (_observableGroups[i].Token.LookupGroup.Matches(componentTypeIds))
+                    { yield return _observableGroups[i]; }
+                }
             }
         }
 
         public IObservableGroup GetObservableGroup(IGroup group, params int[] collectionIds)
         {
             var lookupGroup = ComponentTypeLookup.GetLookupGroupFor(group);
-            
             var observableGroupToken = new ObservableGroupToken(lookupGroup, collectionIds);
-            if (_observableGroups.Contains(observableGroupToken)) 
-            { return _observableGroups[observableGroupToken]; }
+            
+            lock (_lock)
+            {
+                if (_observableGroups.Contains(observableGroupToken)) 
+                { return _observableGroups[observableGroupToken]; }
+            }
 
             var configuration = new ObservableGroupConfiguration
             {
                 ObservableGroupToken = observableGroupToken
             };
 
-            if (collectionIds != null && collectionIds.Length > 0)
+            lock (_lock)
             {
-                var targetedCollections = EntityDatabase.Collections.Where(x => collectionIds.Contains(x.Id));
-                configuration.NotifyingCollections = targetedCollections;
-                configuration.InitialEntities = targetedCollections.GetAllEntities();
-            }
-            else
-            {
-                configuration.NotifyingCollections = new[] { EntityDatabase };
-                configuration.InitialEntities = EntityDatabase.Collections.GetAllEntities();
-            }
-            
-            var observableGroup = ObservableGroupFactory.Create(configuration);
-            _observableGroups.Add(observableGroup);
+                if (collectionIds != null && collectionIds.Length > 0)
+                {
+                    var targetedCollections = EntityDatabase.Collections.Where(x => collectionIds.Contains(x.Id));
+                    configuration.NotifyingCollections = targetedCollections;
+                    configuration.InitialEntities = targetedCollections.GetAllEntities();
+                }
+                else
+                {
+                    configuration.NotifyingCollections = new[] { EntityDatabase };
+                    configuration.InitialEntities = EntityDatabase.Collections.GetAllEntities();
+                }
+                
+                var observableGroup = ObservableGroupFactory.Create(configuration);
+                _observableGroups.Add(observableGroup);
 
-            return observableGroup;
+                return observableGroup;
+            }
         }
 
         public void Dispose()
         {
-            foreach (var observableGroup in _observableGroups)
-            { (observableGroup as IDisposable)?.Dispose(); }
+            lock (_lock)
+            {
+                foreach (var observableGroup in _observableGroups)
+                { observableGroup?.Dispose(); }
 
-            EntityDatabase.Dispose();
+                EntityDatabase.Dispose();
+            }
         }
     }
 }

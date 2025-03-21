@@ -15,6 +15,7 @@ namespace EcsRx.Computeds
         
         private readonly Subject<T> _onDataChanged;
         private bool _needsUpdate;
+        private readonly object _lock = new object();
         
         public IObservableGroup InternalObservableGroup { get; }
 
@@ -51,10 +52,13 @@ namespace EcsRx.Computeds
 
         public void RefreshData()
         {
-            var newData = Transform(InternalObservableGroup);
-            if (newData.Equals(CachedData)) { return; }
+            lock (_lock)
+            {
+                var newData = Transform(InternalObservableGroup);
+                if (newData.Equals(CachedData)) { return; }
+                CachedData = newData;
+            }
             
-            CachedData = newData;
             _onDataChanged.OnNext(CachedData);
             _needsUpdate = false;
         }

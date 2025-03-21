@@ -21,6 +21,8 @@ namespace EcsRx.Systems.Handlers
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IObservableGroupManager ObservableGroupManager;
         
+        private readonly object _lock = new object();
+        
         public ReactToEntitySystemHandler(IObservableGroupManager observableGroupManager)
         {
             ObservableGroupManager = observableGroupManager;
@@ -37,10 +39,13 @@ namespace EcsRx.Systems.Handlers
             var affinities = castSystem.GetGroupAffinities();
             var observableGroup = ObservableGroupManager.GetObservableGroup(castSystem.Group, affinities);            
             var entitySubscriptions = new Dictionary<int, IDisposable>();
-            _entitySubscriptions.Add(system, entitySubscriptions);
-
             var entityChangeSubscriptions = new CompositeDisposable();
-            _systemSubscriptions.Add(system, entityChangeSubscriptions);
+
+            lock (_lock)
+            {
+                _entitySubscriptions.Add(system, entitySubscriptions);
+                _systemSubscriptions.Add(system, entityChangeSubscriptions);
+            }
            
             observableGroup.OnEntityAdded
                 .Subscribe(x =>
@@ -67,24 +72,31 @@ namespace EcsRx.Systems.Handlers
 
         public void SetupEntity(IReactToEntitySystem system, IEntity entity, Dictionary<int, IDisposable> subs)
         {
-            subs.Add(entity.Id, null);
+            lock (_lock)
+            { subs.Add(entity.Id, null); }
                 
             var subscription = ProcessEntity(system, entity);
-            
-            if (subs.ContainsKey(entity.Id))
-            { subs[entity.Id] = subscription; }
-            else
-            { subscription.Dispose(); }
+
+            lock (_lock)
+            {
+                if (subs.ContainsKey(entity.Id))
+                { subs[entity.Id] = subscription; }
+                else
+                { subscription.Dispose(); }
+            }
         }
 
         public void DestroySystem(ISystem system)
         {
-            _systemSubscriptions.RemoveAndDispose(system);
+            lock (_lock)
+            {
+                _systemSubscriptions.RemoveAndDispose(system);
             
-            var entitySubscriptions = _entitySubscriptions[system];
-            entitySubscriptions.Values.DisposeAll();
-            entitySubscriptions.Clear();
-            _entitySubscriptions.Remove(system);
+                var entitySubscriptions = _entitySubscriptions[system];
+                entitySubscriptions.Values.DisposeAll();
+                entitySubscriptions.Clear();
+                _entitySubscriptions.Remove(system);
+            }
         }
         
         public IDisposable ProcessEntity(IReactToEntitySystem system, IEntity entity)
@@ -96,7 +108,7 @@ namespace EcsRx.Systems.Handlers
             { return reactObservable.Subscribe(system.Process); }
 
             var groupPredicate = system.Group as IHasPredicate;
-            return reactObservable
+            return reactObservable?
                 .Subscribe(x =>
                 {
                     if(groupPredicate.CanProcessEntity(x))
@@ -106,13 +118,16 @@ namespace EcsRx.Systems.Handlers
 
         public void Dispose()
         {
-            _systemSubscriptions.DisposeAll();
-            foreach (var entitySubscriptions in _entitySubscriptions.Values)
+            lock (_lock)
             {
-                entitySubscriptions.Values.DisposeAll();
-                entitySubscriptions.Clear();
+                _systemSubscriptions.DisposeAll();
+                foreach (var entitySubscriptions in _entitySubscriptions.Values)
+                {
+                    entitySubscriptions.Values.DisposeAll();
+                    entitySubscriptions.Clear();
+                }
+                _entitySubscriptions.Clear();
             }
-            _entitySubscriptions.Clear();
         }
     }
 }

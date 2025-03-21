@@ -19,6 +19,7 @@ namespace EcsRx.Components
         
         public IObservable<bool> OnPoolExtending => _onPoolExtending;
         private readonly Subject<bool> _onPoolExtending;
+        private readonly object _lock = new object();
 
         public ComponentPool(int expansionSize) : this(expansionSize, expansionSize)
         { }
@@ -35,37 +36,50 @@ namespace EcsRx.Components
 
         public int Allocate()
         {
-            if(IndexesRemaining == 0) 
-            { Expand(); }
-            return IndexPool.AllocateInstance();
+            lock (_lock)
+            {
+                if(IndexesRemaining == 0) 
+                { Expand(); }
+                return IndexPool.AllocateInstance();
+            }
         }
 
         public void Release(int index)
         {
-            var instance = Components[index];
+            lock (_lock)
+            {
+                var instance = Components[index];
             
-            if(!IsStructType)
-            { Components[index] = default; }
+                if(!IsStructType)
+                { Components[index] = default; }
             
-            if(instance is IDisposable disposable)
-            { disposable.Dispose(); }
+                if(instance is IDisposable disposable)
+                { disposable.Dispose(); }
             
-            IndexPool.ReleaseInstance(index);
+                IndexPool.ReleaseInstance(index);
+            }
         }
 
-        public void Set(int index, object value) => Components.SetValue(value, index);
+        public void Set(int index, object value)
+        {
+            lock (_lock)
+            { Components.SetValue(value, index); }
+        }
 
         public void Expand()
         { Expand(ExpansionSize); }
         
         public void Expand(int amountToAdd)
         {
-            var newCount = Components.Length + amountToAdd;
-            var newEntries = new T[newCount];            
-            Components.CopyTo(newEntries, 0);
-            IndexPool.Expand(newCount-1);
-            Components = newEntries;
-            Count = newCount;
+            lock (_lock)
+            {
+                var newCount = Components.Length + amountToAdd;
+                var newEntries = new T[newCount];            
+                Components.CopyTo(newEntries, 0);
+                IndexPool.Expand(newCount-1);
+                Components = newEntries;
+                Count = newCount;
+            }
             
             _onPoolExtending.OnNext(true);
         }

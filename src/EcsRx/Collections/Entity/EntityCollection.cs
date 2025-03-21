@@ -32,6 +32,8 @@ public class EntityCollection : IEntityCollection, IDisposable
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoving;
         private readonly Subject<ComponentsChangedEvent> _onEntityComponentsRemoved;
         
+        private readonly object _lock = new object();
+        
         public EntityCollection(int id, IEntityFactory entityFactory)
         {
             EntityLookup = new EntityLookup();
@@ -48,29 +50,39 @@ public class EntityCollection : IEntityCollection, IDisposable
 
         public void SubscribeToEntity(IEntity entity)
         {
-            var entityDisposable = new CompositeDisposable();
-            entity.ComponentsAdded.Subscribe(x => _onEntityComponentsAdded.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
-            entity.ComponentsRemoving.Subscribe(x => _onEntityComponentsRemoving.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
-            entity.ComponentsRemoved.Subscribe(x => _onEntityComponentsRemoved.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
-            EntitySubscriptions.Add(entity.Id, entityDisposable);
+            lock (_lock)
+            {
+                var entityDisposable = new CompositeDisposable();
+                entity.ComponentsAdded.Subscribe(x => _onEntityComponentsAdded.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
+                entity.ComponentsRemoving.Subscribe(x => _onEntityComponentsRemoving.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
+                entity.ComponentsRemoved.Subscribe(x => _onEntityComponentsRemoved.OnNext(new ComponentsChangedEvent(entity, x))).AddTo(entityDisposable);
+                EntitySubscriptions.Add(entity.Id, entityDisposable);
+            }
         }
 
         public void UnsubscribeFromEntity(int entityId)
-        { EntitySubscriptions.RemoveAndDispose(entityId); }
+        {
+            lock (_lock)
+            { EntitySubscriptions.RemoveAndDispose(entityId); }
+        }
         
         public IEntity CreateEntity(IBlueprint blueprint = null, int? id = null)
         {
-            if (id.HasValue && EntityLookup.Contains(id.Value))
-            { throw new InvalidOperationException("id already exists"); }
+            IEntity entity;
+            lock (_lock)
+            {
+                if (id.HasValue && EntityLookup.Contains(id.Value))
+                { throw new InvalidOperationException("id already exists"); }
 
-            var entity = EntityFactory.Create(id);
+                entity = EntityFactory.Create(id);
 
-            EntityLookup.Add(entity);
+                EntityLookup.Add(entity);
+                SubscribeToEntity(entity);
+            }
+
             _onEntityAdded.OnNext(new CollectionEntityEvent(entity));
-            SubscribeToEntity(entity);
-           
             blueprint?.Apply(entity);
-
+            
             return entity;
         }
 
@@ -79,31 +91,42 @@ public class EntityCollection : IEntityCollection, IDisposable
 
         public void RemoveEntity(int id, bool disposeOnRemoval = true)
         {
-            var entity = GetEntity(id);
-            EntityLookup.Remove(id);
-
-            var entityId = entity.Id;
-
-            if (disposeOnRemoval)
+            IEntity entity;
+            lock (_lock)
             {
-                entity.Dispose();
-                EntityFactory.Destroy(entityId);
-            }
+                entity = GetEntity(id);
+                EntityLookup.Remove(id);
+
+                var entityId = entity.Id;
+
+                if (disposeOnRemoval)
+                {
+                    entity.Dispose();
+                    EntityFactory.Destroy(entityId);
+                }
             
-            UnsubscribeFromEntity(entityId);
+                UnsubscribeFromEntity(entityId);
+            }
             
             _onEntityRemoved.OnNext(new CollectionEntityEvent(entity));
         }
 
         public void AddEntity(IEntity entity)
         {
-            EntityLookup.Add(entity);
+            lock (_lock)
+            {
+                EntityLookup.Add(entity);
+                SubscribeToEntity(entity);
+            }
+            
             _onEntityAdded.OnNext(new CollectionEntityEvent(entity));
-            SubscribeToEntity(entity);
         }
 
         public bool ContainsEntity(int id)
-        { return EntityLookup.Contains(id); }
+        {
+            lock (_lock)
+            { return EntityLookup.Contains(id); }
+        }
 
         public IEnumerator<IEntity> GetEnumerator()
         { return EntityLookup.GetEnumerator(); }
@@ -113,17 +136,35 @@ public class EntityCollection : IEntityCollection, IDisposable
 
         public void Dispose()
         {
-            _onEntityAdded.Dispose();
-            _onEntityRemoved.Dispose();
-            _onEntityComponentsAdded.Dispose();
-            _onEntityComponentsRemoving.Dispose();
-            _onEntityComponentsRemoved.Dispose();
+            lock (_lock)
+            {
+                _onEntityAdded.Dispose();
+                _onEntityRemoved.Dispose();
+                _onEntityComponentsAdded.Dispose();
+                _onEntityComponentsRemoving.Dispose();
+                _onEntityComponentsRemoved.Dispose();
 
-            EntityLookup.Clear();
-            EntitySubscriptions.RemoveAndDisposeAll();
+                EntityLookup.Clear();
+                EntitySubscriptions.RemoveAndDisposeAll();
+            }
         }
 
-        public int Count => EntityLookup.Count;
-        public IEntity this[int index] => EntityLookup.GetByIndex(index);
+        public int Count
+        {
+            get
+            {
+                lock (_lock)
+                { return EntityLookup.Count; }
+            }
+        }
+
+        public IEntity this[int index]
+        {
+            get
+            {
+                lock (_lock)
+                { return EntityLookup.GetByIndex(index); }
+            }
+        }
     }
 }

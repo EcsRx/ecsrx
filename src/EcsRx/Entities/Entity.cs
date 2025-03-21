@@ -9,7 +9,7 @@ using IComponent = EcsRx.Components.IComponent;
 
 namespace EcsRx.Entities
 {
-    public class Entity : IEntity
+public class Entity : IEntity
     {
         public static readonly int NotAllocated = -1;
         
@@ -20,6 +20,8 @@ namespace EcsRx.Entities
         private readonly Subject<int[]> _onComponentsAdded;
         private readonly Subject<int[]> _onComponentsRemoving;
         private readonly Subject<int[]> _onComponentsRemoved;
+        
+        private readonly object _lock = new object();
         
         public int Id { get; }
         
@@ -33,10 +35,13 @@ namespace EcsRx.Entities
         {
             get
             {
-                for (var componentTypeId = 0; componentTypeId < InternalComponentAllocations.Length; componentTypeId++)
+                lock (_lock)
                 {
-                    if(InternalComponentAllocations[componentTypeId] != NotAllocated)
-                    { yield return GetComponent(componentTypeId);}
+                    for (var componentTypeId = 0; componentTypeId < InternalComponentAllocations.Length; componentTypeId++)
+                    {
+                        if(InternalComponentAllocations[componentTypeId] != NotAllocated)
+                        { yield return GetComponent(componentTypeId);}
+                    }
                 }
             }
         }
@@ -59,22 +64,29 @@ namespace EcsRx.Entities
 
         public void EmptyAllAllocations()
         {
-            for (var i = 0; i < InternalComponentAllocations.Length; i++)
-            { InternalComponentAllocations[i] = NotAllocated; }
+            lock (_lock)
+            {
+                for (var i = 0; i < InternalComponentAllocations.Length; i++)
+                { InternalComponentAllocations[i] = NotAllocated; }
+            }
         }
         
         public void AddComponents(IReadOnlyList<IComponent> components)
         {
-            var componentTypeIds = new int[components.Count];
-            for (var i = 0; i < components.Count; i++)
+            int[] componentTypeIds;
+            lock (_lock)
             {
-                var componentTypeId = ComponentTypeLookup.GetComponentTypeId(components[i].GetType());
-                var allocationId = ComponentDatabase.Allocate(componentTypeId);
-                InternalComponentAllocations[componentTypeId] = allocationId;
-                ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
-                componentTypeIds[i] = componentTypeId;
+                componentTypeIds = new int[components.Count];
+                for (var i = 0; i < components.Count; i++)
+                {
+                    var componentTypeId = ComponentTypeLookup.GetComponentTypeId(components[i].GetType());
+                    var allocationId = ComponentDatabase.Allocate(componentTypeId);
+                    InternalComponentAllocations[componentTypeId] = allocationId;
+                    ComponentDatabase.Set(componentTypeId, allocationId, components[i]);
+                    componentTypeIds[i] = componentTypeId;
+                }
             }
-            
+           
             _onComponentsAdded.OnNext(componentTypeIds);
         }
 
@@ -82,18 +94,24 @@ namespace EcsRx.Entities
         {
             var defaultComponent = ComponentTypeLookup.CreateDefault<T>();
             var allocationId = ComponentDatabase.Allocate(componentTypeId);
-            InternalComponentAllocations[componentTypeId] = allocationId;
-            ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
+
+            lock (_lock)
+            {
+                InternalComponentAllocations[componentTypeId] = allocationId;
+                ComponentDatabase.Set(componentTypeId, allocationId, defaultComponent);
+            }
             
             _onComponentsAdded.OnNext(new []{componentTypeId});
-            
             return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationId);
         }
         
         public void UpdateComponent<T>(int componentTypeId, T newValue) where T : struct, IComponent
         {
-            var allocationId = InternalComponentAllocations[componentTypeId];
-            ComponentDatabase.Set(componentTypeId, allocationId, newValue);
+            lock (_lock)
+            {
+                var allocationId = InternalComponentAllocations[componentTypeId];
+                ComponentDatabase.Set(componentTypeId, allocationId, newValue);
+            }
         }
         
         public void RemoveComponents(params Type[] componentTypes)
@@ -104,17 +122,21 @@ namespace EcsRx.Entities
         
         public void RemoveComponents(IReadOnlyList<int> componentsTypeIds)
         {
-            var sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
-            if(sanitisedComponentsIds.Length == 0) { return; }
-            
-            _onComponentsRemoving.OnNext(sanitisedComponentsIds);
-
-            for (var i = 0; i < sanitisedComponentsIds.Length; i++)
+            int[] sanitisedComponentsIds;
+            lock (_lock)
             {
-                var componentId = sanitisedComponentsIds[i];
-                var allocationIndex = InternalComponentAllocations[componentId];
-                ComponentDatabase.Remove(componentId, allocationIndex);
-                InternalComponentAllocations[componentId] = NotAllocated;
+                sanitisedComponentsIds = componentsTypeIds.Where(HasComponent).ToArray();
+                if(sanitisedComponentsIds.Length == 0) { return; }
+            
+                _onComponentsRemoving.OnNext(sanitisedComponentsIds);
+
+                for (var i = 0; i < sanitisedComponentsIds.Length; i++)
+                {
+                    var componentId = sanitisedComponentsIds[i];
+                    var allocationIndex = InternalComponentAllocations[componentId];
+                    ComponentDatabase.Remove(componentId, allocationIndex);
+                    InternalComponentAllocations[componentId] = NotAllocated;
+                }
             }
             
             _onComponentsRemoved.OnNext(sanitisedComponentsIds);
@@ -130,7 +152,10 @@ namespace EcsRx.Entities
         }
 
         public bool HasComponent(int componentTypeId)
-        { return InternalComponentAllocations[componentTypeId] != NotAllocated; }
+        {
+            lock (_lock)
+            { return InternalComponentAllocations[componentTypeId] != NotAllocated; }
+        }
 
         public IComponent GetComponent(Type componentType)
         {
@@ -140,14 +165,20 @@ namespace EcsRx.Entities
 
         public IComponent GetComponent(int componentTypeId)
         {
-            var allocationIndex = InternalComponentAllocations[componentTypeId];
-            return ComponentDatabase.Get(allocationIndex, componentTypeId);
+            lock (_lock)
+            {
+                var allocationIndex = InternalComponentAllocations[componentTypeId];
+                return ComponentDatabase.Get(allocationIndex, componentTypeId);
+            }
         }
 
         public ref T GetComponent<T>(int componentTypeId) where T : IComponent
         {
-            var allocationIndex = InternalComponentAllocations[componentTypeId];
-            return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationIndex);
+            lock (_lock)
+            {
+                var allocationIndex = InternalComponentAllocations[componentTypeId];
+                return ref ComponentDatabase.GetRef<T>(componentTypeId, allocationIndex);
+            }
         }
 
         public override int GetHashCode()
@@ -155,10 +186,13 @@ namespace EcsRx.Entities
 
         public void Dispose()
         {
-            RemoveAllComponents();
-            _onComponentsAdded.Dispose();
-            _onComponentsRemoving.Dispose();
-            _onComponentsRemoved.Dispose();
+            lock (_lock)
+            {
+                RemoveAllComponents();
+                _onComponentsAdded.Dispose();
+                _onComponentsRemoving.Dispose();
+                _onComponentsRemoved.Dispose();
+            }
         }
     }
 }

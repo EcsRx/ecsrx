@@ -9,7 +9,8 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
 {
     public class IndividualObservableGroupTracker : ObservableGroupTracker, IIndividualObservableGroupTracker
     {
-        private CompositeDisposable _subs;
+        private readonly CompositeDisposable _subs;
+        private readonly object _lock = new object();
         public GroupMatchingType CurrentMatchingType { get; private set; }
 
         public IndividualObservableGroupTracker(LookupGroup lookupGroup, IEntity entity) : base(lookupGroup)
@@ -24,15 +25,21 @@ namespace EcsRx.Groups.Observable.Tracking.Trackers
         public bool IsMatching() => CurrentMatchingType == GroupMatchingType.MatchesNoExcludes;
 
         public override void UpdateState(int entityId, GroupMatchingType newMatchingType)
-        { CurrentMatchingType = newMatchingType; }
+        {
+            lock(_lock)
+            { CurrentMatchingType = newMatchingType; }
+        }
 
         public override GroupMatchingType GetState(int entityId)
         { return CurrentMatchingType; }
 
         public override void Dispose()
         {
-            OnGroupMatchingChanged?.Dispose();
-            _subs.Dispose();
+            lock (_lock)
+            {
+                OnGroupMatchingChanged?.Dispose();
+                _subs.Dispose();
+            }
         }
     }
 }

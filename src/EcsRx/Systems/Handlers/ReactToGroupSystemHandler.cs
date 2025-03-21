@@ -21,6 +21,8 @@ namespace EcsRx.Systems.Handlers
         public readonly IDictionary<ISystem, IDisposable> _systemSubscriptions;
         public readonly IThreadHandler _threadHandler;
         
+        private readonly object _lock = new object();
+        
         public ReactToGroupSystemHandler(IObservableGroupManager observableGroupManager, IThreadHandler threadHandler)
         {
             _observableGroupManager = observableGroupManager;
@@ -49,8 +51,10 @@ namespace EcsRx.Systems.Handlers
                 { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x, (IReactToGroupExSystem)castSystem, runParallel)); }
                 else
                 { noPredicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x, castSystem, runParallel)); }
+
+                lock (_lock)
+                { _systemSubscriptions.Add(system, noPredicateSub); }
                 
-                _systemSubscriptions.Add(system, noPredicateSub);
                 return;
             }
 
@@ -61,8 +65,9 @@ namespace EcsRx.Systems.Handlers
             { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToList(), (IReactToGroupExSystem)castSystem, runParallel)); }
             else
             { predicateSub = reactObservable.Subscribe(x => ExecuteForGroup(x.Where(groupPredicate.CanProcessEntity).ToList(), castSystem, runParallel)); }
-            
-            _systemSubscriptions.Add(system, predicateSub);
+
+            lock (_lock)
+            { _systemSubscriptions.Add(system, predicateSub); }
         }
 
         private void ExecuteForGroup(IReadOnlyList<IEntity> entities, IReactToGroupSystem system, bool runParallel = false)
@@ -87,15 +92,21 @@ namespace EcsRx.Systems.Handlers
             ExecuteForGroup(entities, castSystem, runParallel);
             system.AfterProcessing();
         }
-        
+
 
         public void DestroySystem(ISystem system)
-        { _systemSubscriptions.RemoveAndDispose(system); }
+        {
+            lock (_lock)
+            { _systemSubscriptions.RemoveAndDispose(system); }
+        }
 
         public void Dispose()
         {
-            _systemSubscriptions.Values.DisposeAll();
-            _systemSubscriptions.Clear();
+            lock (_lock)
+            {
+                _systemSubscriptions.Values.DisposeAll();
+                _systemSubscriptions.Clear();
+            }
         }
     }
 }

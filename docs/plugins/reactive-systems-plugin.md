@@ -8,7 +8,7 @@ This interface implies that you want to setup entities, so it will match all ent
 
 ## ITeardownSystem
 
-This is similar to `ISetupSystem`, but is triggered when an entity's is removed from a specified group, this for example can be useful if you need to free up some resources related to the entity/components that have been removed.
+This is similar to `ISetupSystem`, but is triggered when an entity is removed from a specified group, this for example can be useful if you need to free up some resources related to the entity/components that have been removed.
 
 ## IReactToEntitySystem
 

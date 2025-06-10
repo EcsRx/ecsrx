@@ -2,6 +2,8 @@
 
 EcsRx is a reactive take on the common ECS pattern with a well separated design using rx and adhering to IoC and other sensible design patterns.
 
+> This library is stable and works fine, but has been somewhat superceded by [EcsR3](https://github.com/EcsRx/EcsR3) which has evolved much further along, some changes from there may get back ported but its recommended you use [EcsR3](https://github.com/EcsRx/EcsR3) instead of this if you are able to.
+
 [![Build Status][build-status-image]][build-status-url]
 [![Code Quality Status][codacy-image]][codacy-url]
 [![License][license-image]][license-url]
@@ -130,7 +132,7 @@ This can all be found within the [docs here](./docs/others/third-party-content.m
 
 ## Thanks
 
-Thanks to Jetbrains for providing free liceneses via their [Open Source Support program](https://jb.gg/OpenSourceSupport)
+Thanks to Jetbrains for providing free liceneses up until 2024 via their [Open Source Support program](https://jb.gg/OpenSourceSupport)
 
 [![Jetbrains][jetbrains-image]][jetbrains-url]
 

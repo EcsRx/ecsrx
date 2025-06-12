@@ -132,7 +132,7 @@ This can all be found within the [docs here](./docs/others/third-party-content.m
 
 ## Thanks
 
-Thanks to Jetbrains for providing free liceneses up until 2024 via their [Open Source Support program](https://jb.gg/OpenSourceSupport)
+Thanks to Jetbrains for providing free liceneses via their [Open Source Support program](https://jb.gg/OpenSourceSupport)
 
 [![Jetbrains][jetbrains-image]][jetbrains-url]
 

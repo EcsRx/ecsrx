@@ -148,6 +148,6 @@ Thanks to Jetbrains for providing free liceneses via their [Open Source Support 
 [license-url]: https://github.com/EcsRx/ecsrx/blob/master/LICENSE
 [gitbook-image]: https://img.shields.io/static/v1.svg?label=Documentation&message=Read%20Now&color=Green&style=flat
 [gitbook-url]: https://ecsrx.gitbook.io/project/
-[jetbrains-image]: https://user-images.githubusercontent.com/927201/210093561-bd34ce62-944a-4508-a14b-f400847526f0.png
+[jetbrains-image]: https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg
 [jetbrains-url]: https://jb.gg/OpenSourceSupport
 
